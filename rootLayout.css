@@ -1,0 +1,34 @@
+html, body, .rootContainer, .mapControls, .tileMap {
+    height: 100%;
+}
+
+.rootContainer:before {
+    content: '';
+    height: 100%;
+    float: left;
+}
+
+.heightTaker {
+    position: relative;
+    z-index: 1;
+}
+
+.heightTaker:after {
+    content: '';
+    clear: both;
+    display: block;
+}
+
+.levelMap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.mapControls {
+    width: 20%;
+    float: left;
+}
+.mapControls, .tileMap {
+    overflow: auto;
+}

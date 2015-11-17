@@ -40,6 +40,9 @@ type ViewModel struct {
 	MapHeight *ko.Observable `js:"mapHeight"`
 	TileRows  *ko.Observable `js:"tileRows"`
 
+	Levels        *ko.Observable `js:"levels"`
+	SelectedLevel *ko.Observable `js:"selectedLevel"`
+
 	LevelTextures *ko.Observable `js:"levelTextures"`
 
 	ShouldShowFloorTexture   *ko.Observable `js:"shouldShowFloorTexture"`
@@ -67,12 +70,23 @@ type Tile struct {
 	TileType *ko.Observable `js:"tileType"`
 }
 
+type Level struct {
+	*ko.BaseViewModel
+	ID int `js:"id"`
+
+	IsSelected *ko.Observable `js:"isSelected"`
+
+	Select func() `js:"select"`
+}
+
 func New() *ViewModel {
 	self := new(ViewModel)
 	self.BaseViewModel = ko.NewBaseViewModel()
 	self.MapWidth = ko.NewObservable(0)
 	self.MapHeight = ko.NewObservable(0)
 	self.TileRows = ko.NewObservableArray()
+	self.Levels = ko.NewObservableArray()
+	self.SelectedLevel = ko.NewObservable(-1)
 	self.LevelTextures = ko.NewObservableArray()
 	self.LevelTextures.RateLimit(500, true)
 
@@ -157,34 +171,55 @@ func main() {
 	vm.MapWidth.Set(64)
 	vm.MapHeight.Set(64)
 
+	loadLevel := func(levelID int) {
+		var levelTextures model.LevelTextures
+		getResource(fmt.Sprintf("/projects/test1/archive/level/%d/textures", levelID), &levelTextures, func() {
+			vm.LevelTextures.RemoveAll()
+			for _, id := range levelTextures.IDs {
+				vm.LevelTextures.Push(id)
+			}
+			println("textures found: ", vm.LevelTextures.Length())
+		}, func() {})
+
+		var tileMap model.Tiles
+		getResource(fmt.Sprintf("/projects/test1/archive/level/%d/tiles", levelID), &tileMap, func() {
+			for y, row := range tileMap.Table {
+				for x, tileData := range row {
+					var tileRow TileRow
+					var tile Tile
+
+					tile.BaseViewModel = ko.NewBaseViewModel()
+					tileRow.BaseViewModel = ko.NewBaseViewModel()
+					tileRow.FromJS(vm.TileRows.Index(vm.TileRows.Length() - 1 - y))
+					tile.FromJS(tileRow.TileColumns.Index(x))
+					tile.TileType.Set(tileData.Properties.Type)
+					tile.FloorTextureIndex.Set(tileData.Properties.RealWorld.FloorTexture)
+					tile.FloorTextureRotations.Set(fmt.Sprintf("rotations%d", tileData.Properties.RealWorld.FloorTextureRotations))
+					tile.CeilingTextureIndex.Set(tileData.Properties.RealWorld.CeilingTexture)
+					tile.CeilingTextureRotations.Set(fmt.Sprintf("rotations%d", tileData.Properties.RealWorld.CeilingTextureRotations))
+				}
+			}
+		}, func() {})
+	}
+
+	selectLevel := func(levelID int) func() {
+		return func() {
+			vm.SelectedLevel.Set(levelID)
+			loadLevel(levelID)
+		}
+	}
+
+	for levelID := 0; levelID < 16; levelID++ {
+		level := new(Level)
+		level.BaseViewModel = ko.NewBaseViewModel()
+		level.ID = levelID
+		level.IsSelected = ko.NewComputed(func() interface{} {
+			return vm.SelectedLevel.Get().Int() == levelID
+		})
+		level.Select = selectLevel(levelID)
+		vm.Levels.Push(level)
+	}
+
 	ko.ApplyBindings(vm)
 
-	var levelTextures model.LevelTextures
-	getResource("/projects/test1/archive/level/1/textures", &levelTextures, func() {
-		vm.LevelTextures.RemoveAll()
-		for _, id := range levelTextures.IDs {
-			vm.LevelTextures.Push(id)
-		}
-		println("textures found: ", vm.LevelTextures.Length())
-	}, func() {})
-
-	var tileMap model.Tiles
-	getResource(fmt.Sprintf("/projects/test1/archive/level/1/tiles"), &tileMap, func() {
-		for y, row := range tileMap.Table {
-			for x, tileData := range row {
-				var tileRow TileRow
-				var tile Tile
-
-				tile.BaseViewModel = ko.NewBaseViewModel()
-				tileRow.BaseViewModel = ko.NewBaseViewModel()
-				tileRow.FromJS(vm.TileRows.Index(vm.TileRows.Length() - 1 - y))
-				tile.FromJS(tileRow.TileColumns.Index(x))
-				tile.TileType.Set(tileData.Properties.Type)
-				tile.FloorTextureIndex.Set(tileData.Properties.RealWorld.FloorTexture)
-				tile.FloorTextureRotations.Set(fmt.Sprintf("rotations%d", tileData.Properties.RealWorld.FloorTextureRotations))
-				tile.CeilingTextureIndex.Set(tileData.Properties.RealWorld.CeilingTexture)
-				tile.CeilingTextureRotations.Set(fmt.Sprintf("rotations%d", tileData.Properties.RealWorld.CeilingTextureRotations))
-			}
-		}
-	}, func() {})
 }

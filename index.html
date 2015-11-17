@@ -2,28 +2,61 @@
 
 <html lang="en">
 <head>
-   <meta charset="utf-8">
-   <title>Shocked - Client</title>
-   <link rel="stylesheet" type="text/css" href="reset.css" />
-   <link rel="stylesheet" type="text/css" href="client.css" />
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shocked - Client</title>
+  <link rel="stylesheet" type="text/css" href="reset.css" />
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/uikit/2.23.0/css/uikit.gradient.min.css" />
+  <link rel="stylesheet" type="text/css" href="rootLayout.css" />
+  <link rel="stylesheet" type="text/css" href="client.css" />
 </head>
-<body style="background: black;">
-   <div>
-   <table style="width: 2048px">
-       <tbody data-bind="foreach: { data: tileRows, as: 'tileRow' }">
-           <tr data-bind="foreach: { data: tileRow.tileColumns, as: 'tile' }">
-               <td>
-                  <div style="position: relative; width: 32px; height: 32px">
-                     <div class="tile" style="width: 32px; height: 32px; background-size: 100% 100%;" data-bind="visible: $root.shouldShowFloorTexture, style: { backgroundImage: tile.floorTextureUrl }, css: tile.floorTextureRotations"></div>
-                     <div class="tile" style="width: 32px; height: 32px; background-size: 100% 100%;" data-bind="visible: $root.shouldShowCeilingTexture, style: { backgroundImage: tile.ceilingTextureUrl }, css: tile.ceilingTextureRotations"></div>
-                     <div class="tile" data-bind="css: 'tileType-'+tile.tileType()">&nbsp;</div>
-                  </div>
-               </td>
-           </tr>
-       </tbody>
-   </table>
-   </div>
+<body>
+<div class="rootContainer">
+  <div style="max-height: 100px">
+
+  <div class="uk-margin">
+    <nav class="uk-navbar">
+        <ul class="uk-navbar-nav">
+            <li><a href="#">Project</a></li>
+            <li class="uk-active"><a href="#">Map</a></li>
+            <li><a href="#">Other</a></li>
+        </ul>
+    </nav>
+  </div>
+
+  <div class="heightTaker">
+    <div class="levelMap">
+      <div class="mapControls">
+
+        <div class="uk-margin">
+          <div data-uk-button-radio data-bind="foreach: { data: levels, as: 'level' }">
+            <button class="uk-button" data-bind="click: level.select, text: level.id"></button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="tileMap" style="background: black;">
+        <table style="width: 2048px; height: 2048px;">
+           <tbody data-bind="foreach: { data: tileRows, as: 'tileRow' }">
+               <tr data-bind="foreach: { data: tileRow.tileColumns, as: 'tile' }">
+                   <td>
+                      <div style="position: relative; width: 32px; height: 32px">
+                         <div class="tile" style="width: 32px; height: 32px; background-size: 100% 100%;" data-bind="visible: $root.shouldShowFloorTexture, style: { backgroundImage: tile.floorTextureUrl }, css: tile.floorTextureRotations"></div>
+                         <div class="tile" style="width: 32px; height: 32px; background-size: 100% 100%;" data-bind="visible: $root.shouldShowCeilingTexture, style: { backgroundImage: tile.ceilingTextureUrl }, css: tile.ceilingTextureRotations"></div>
+                         <div class="tile" data-bind="css: 'tileType-'+tile.tileType()">&nbsp;</div>
+                      </div>
+                   </td>
+               </tr>
+           </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/uikit/2.23.0/js/uikit.min.js"></script>
 <script type="text/javascript" src="client.js"></script>
 </html>
