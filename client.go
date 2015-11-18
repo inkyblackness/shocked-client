@@ -204,8 +204,10 @@ func main() {
 
 	selectLevel := func(levelID int) func() {
 		return func() {
-			vm.SelectedLevel.Set(levelID)
-			loadLevel(levelID)
+			if vm.SelectedLevel.Get().Int() != levelID {
+				vm.SelectedLevel.Set(levelID)
+				loadLevel(levelID)
+			}
 		}
 	}
 
