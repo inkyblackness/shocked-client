@@ -22,6 +22,36 @@
    transform: rotate(270deg);
 }
 
+.wall-north {
+   border-top: 1px solid #00FF00;
+}
+
+.wall-south {
+   border-bottom: 1px solid #00FF00;
+}
+
+.wall-east {
+   border-right: 1px solid #00FF00;
+}
+
+.wall-west {
+   border-left: 1px solid #00FF00;
+}
+
+.wall-southWestToNorthEast {
+   width: 45px;
+   border-bottom: 1px solid #00FF00;
+   transform: rotate(-45deg);
+   transform-origin: 0% 100%;
+}
+
+.wall-southEastToNorthWest {
+   width: 45px;
+   border-top: 1px solid #00FF00;
+   transform: rotate(45deg);
+   transform-origin: 0% 0%;
+}
+
 .tileType-solid {
    width: 32px;
    height: 32px;
