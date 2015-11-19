@@ -20,6 +20,7 @@ var vm = {
    levels: ko.observableArray(),
    selectedLevel: ko.observable(-1),
    levelTextures: ko.observableArray(),
+   levelTextureUrls: ko.observableArray(),
 
    textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
    selectedTextureDisplay: ko.observable("Floor")
@@ -80,10 +81,11 @@ var isTileOpenWest = function(tileType) {
 var computeTextureUrl = function(indexObservable) {
    return function() {
       var textureIndex = indexObservable();
+      var urls = vm.levelTextureUrls();
       var url = "";
 
-      if ((textureIndex >= 0) && (textureIndex < vm.levelTextures().length)) {
-         url = "/projects/test1/textures/" + vm.levelTextures()[textureIndex] + "/large/png";
+      if ((textureIndex >= 0) && (textureIndex < urls.length)) {
+         url = urls[textureIndex];
       }
 
       return "url(" + url + ")";
@@ -172,7 +174,9 @@ vm.mapHeight.subscribe(function(newHeight) {
 var loadLevel = function(levelId) {
    getResource("/projects/test1/archive/level/" + levelId + "/textures", function(levelTextures) {
       vm.levelTextures.removeAll();
+      vm.levelTextureUrls.removeAll();
       levelTextures.ids.forEach(function(id) {
+         vm.levelTextureUrls.push("/projects/test1/textures/" + id + "/large/png");
          vm.levelTextures.push(id);
       });
    }, function() {});
