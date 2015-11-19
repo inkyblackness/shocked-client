@@ -45,11 +45,10 @@
                <tr data-bind="foreach: { data: tileRow.tileColumns, as: 'tile' }">
                    <td>
                       <div style="position: relative; width: 32px; height: 32px">
-                         <div class="tile" style="width: 32px; height: 32px; background-size: 100% 100%;" data-bind="visible: $root.shouldShowFloorTexture, style: { backgroundImage: tile.floorTextureUrl }, css: tile.floorTextureRotations"></div>
-                         <div class="tile" style="width: 32px; height: 32px; background-size: 100% 100%;" data-bind="visible: $root.shouldShowCeilingTexture, style: { backgroundImage: tile.ceilingTextureUrl }, css: tile.ceilingTextureRotations"></div>
+                         <div class="tile tileTexture" data-bind="visible: $root.shouldShowFloorTexture, style: { backgroundImage: tile.floorTextureUrl }, css: tile.floorTextureRotations"></div>
+                         <div class="tile tileTexture" data-bind="visible: $root.shouldShowCeilingTexture, style: { backgroundImage: tile.ceilingTextureUrl }, css: tile.ceilingTextureRotations"></div>
                          <div class="tile" data-bind="css: 'tileType-'+tile.tileType()"></div>
-                         <div class="tile" data-bind="css: { 'wall-southEastToNorthWest': tile.hasWallSouthEastToNorthWest() }"></div>
-                         <div class="tile" data-bind="css: { 'wall-southWestToNorthEast': tile.hasWallSouthWestToNorthEast() }"></div>
+                         <div class="tile" data-bind="css: { 'wall-southEastToNorthWest': tile.hasWallSouthEastToNorthWest(), 'wall-southWestToNorthEast': tile.hasWallSouthWestToNorthEast() }"></div>
                          <div class="tile" data-bind="css: { 'wall-north': tile.hasWallNorth(), 'wall-south': tile.hasWallSouth(), 'wall-east': tile.hasWallEast(), 'wall-west': tile.hasWallWest() }"></div>
                       </div>
                    </td>

@@ -6,6 +6,12 @@
    bottom: 0;
 }
 
+.tileTexture {
+   width: 32px;
+   height: 32px;
+   background-size: 100% 100%;
+}
+
 .rotations0 {
    transform: rotate(0deg);
 }
