@@ -21,9 +21,16 @@ var vm = {
    selectedLevel: ko.observable(-1),
    levelTextures: ko.observableArray(),
 
-   shouldShowFloorTexture: ko.observable(true),
-   shouldShowCeilingTexture: ko.observable(false)
+   textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
+   selectedTextureDisplay: ko.observable("Floor")
 };
+
+vm.shouldShowFloorTexture = ko.computed(function() {
+   return vm.selectedTextureDisplay() === "Floor";
+});
+vm.shouldShowCeilingTexture = ko.computed(function() {
+   return vm.selectedTextureDisplay() === "Ceiling";
+});
 
 ko.applyBindings(vm);
 
