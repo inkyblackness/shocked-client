@@ -14,6 +14,12 @@ var getResource = function(url, onSuccess, onFailure) {
 };
 
 var vm = {
+   tileTypes: ["", "open", "solid",
+      "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
+      "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest",
+      "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest",
+      "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"],
+
    mapWidth: ko.observable(0),
    mapHeight: ko.observable(0),
    tileRows: ko.observableArray(),
@@ -27,6 +33,7 @@ var vm = {
 
    selectedTiles: ko.observableArray(),
 
+   selectedTileType: ko.observable(""),
    selectedTileFloorTextureIndex: ko.observable(-1),
    selectedTileCeilingTextureIndex: ko.observable(-1)
 };
@@ -97,13 +104,16 @@ var unifier = function(resetValue) {
 };
 
 vm.selectedTiles.subscribe(function(newList) {
+   var tileTypeUnifier = unifier("");
    var floorTextureIndexUnifier = unifier(-1);
    var ceilingTextureIndexUnifier = unifier(-1);
 
    newList.forEach(function(tile) {
+      tileTypeUnifier.add(tile.tileType());
       floorTextureIndexUnifier.add(tile.floorTextureIndex());
       ceilingTextureIndexUnifier.add(tile.ceilingTextureIndex());
    });
+   vm.selectedTileType(tileTypeUnifier.get());
    vm.selectedTileFloorTextureIndex(floorTextureIndexUnifier.get());
    vm.selectedTileCeilingTextureIndex(ceilingTextureIndexUnifier.get());
 });

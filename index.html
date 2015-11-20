@@ -43,6 +43,11 @@
         </p>
 
         <p>
+          Selected Tile Type:
+          <select data-bind="options: tileTypes, value: selectedTileType"></select>
+        </p>
+
+        <p>
           Selected Floor:
           <img style="border: solid 1px black;" data-bind="attr: { src: $root.selectedTileFloorTextureUrl }" width="64px" height="64px">
         </p>
