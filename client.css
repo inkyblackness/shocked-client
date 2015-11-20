@@ -12,6 +12,12 @@
    background-size: 100% 100%;
 }
 
+.tileSelected {
+   width: 32px;
+   height: 32px;
+   background: rgba(255, 255, 255, 0.66);
+}
+
 .rotations0 {
    transform: rotate(0deg);
 }
