@@ -27,7 +27,22 @@ var vm = {
 
    selectedTiles: ko.observableArray(),
 
-   selectedTileFloorTextureIndex: ko.observable(-1)
+   selectedTileFloorTextureIndex: ko.observable(-1),
+   selectedTileCeilingTextureIndex: ko.observable(-1)
+};
+
+var computeTextureUrl = function(indexObservable) {
+   return function() {
+      var textureIndex = indexObservable();
+      var urls = vm.levelTextureUrls();
+      var url = "";
+
+      if ((textureIndex >= 0) && (textureIndex < urls.length)) {
+         url = urls[textureIndex];
+      }
+
+      return url;
+   }
 };
 
 vm.shouldShowFloorTexture = ko.computed(function() {
@@ -36,17 +51,8 @@ vm.shouldShowFloorTexture = ko.computed(function() {
 vm.shouldShowCeilingTexture = ko.computed(function() {
    return vm.selectedTextureDisplay() === "Ceiling";
 });
-vm.selectedTileFloorTextureUrl = ko.computed(function() {
-   var index = vm.selectedTileFloorTextureIndex();
-   var levelTextureUrls = vm.levelTextureUrls();
-   var url = "";
-
-   if ((index >= 0) && (index < levelTextureUrls.length)) {
-      url = levelTextureUrls[index];
-   }
-
-   return url;
-});
+vm.selectedTileFloorTextureUrl = ko.computed(computeTextureUrl(vm.selectedTileFloorTextureIndex));
+vm.selectedTileCeilingTextureUrl = ko.computed(computeTextureUrl(vm.selectedTileCeilingTextureIndex));
 
 vm.selectTile = function(tile, event) {
    var newState = !tile.isSelected();
@@ -92,11 +98,14 @@ var unifier = function(resetValue) {
 
 vm.selectedTiles.subscribe(function(newList) {
    var floorTextureIndexUnifier = unifier(-1);
+   var ceilingTextureIndexUnifier = unifier(-1);
 
    newList.forEach(function(tile) {
       floorTextureIndexUnifier.add(tile.floorTextureIndex());
+      ceilingTextureIndexUnifier.add(tile.ceilingTextureIndex());
    });
    vm.selectedTileFloorTextureIndex(floorTextureIndexUnifier.get());
+   vm.selectedTileCeilingTextureIndex(ceilingTextureIndexUnifier.get());
 });
 
 var getTile = function(x, y) {
@@ -141,20 +150,6 @@ var isTileOpenEast = function(tileType) {
 var isTileOpenWest = function(tileType) {
    return tileType !== "solid" && tileType !== "diagonalOpenSouthEast" && tileType !== "diagonalOpenNorthEast";
 }
-
-var computeTextureUrl = function(indexObservable) {
-   return function() {
-      var textureIndex = indexObservable();
-      var urls = vm.levelTextureUrls();
-      var url = "";
-
-      if ((textureIndex >= 0) && (textureIndex < urls.length)) {
-         url = urls[textureIndex];
-      }
-
-      return "url(" + url + ")";
-   }
-};
 
 var createTile = function(x, y) {
    var tile = {

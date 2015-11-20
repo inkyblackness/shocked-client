@@ -46,6 +46,10 @@
           Selected Floor:
           <img style="border: solid 1px black;" data-bind="attr: { src: $root.selectedTileFloorTextureUrl }" width="64px" height="64px">
         </p>
+        <p>
+          Selected Ceiling:
+          <img style="border: solid 1px black;" data-bind="attr: { src: $root.selectedTileCeilingTextureUrl }" width="64px" height="64px">
+        </p>
 
         <p>
           Level Textures:
@@ -68,8 +72,8 @@
                <tr data-bind="foreach: { data: tileRow.tileColumns, as: 'tile' }">
                    <td style="overflow: hidden;" data-bind="click: $root.selectTile">
                       <div style="position: relative; width: 32px; height: 32px">
-                         <div class="tile tileTexture" data-bind="visible: $root.shouldShowFloorTexture, style: { backgroundImage: tile.floorTextureUrl }, css: tile.floorTextureRotations"></div>
-                         <div class="tile tileTexture" data-bind="visible: $root.shouldShowCeilingTexture, style: { backgroundImage: tile.ceilingTextureUrl }, css: tile.ceilingTextureRotations"></div>
+                         <div class="tile tileTexture" data-bind="visible: $root.shouldShowFloorTexture, style: { backgroundImage: 'url('+tile.floorTextureUrl()+')' }, css: tile.floorTextureRotations"></div>
+                         <div class="tile tileTexture" data-bind="visible: $root.shouldShowCeilingTexture, style: { backgroundImage: 'url('+tile.ceilingTextureUrl()+')' }, css: tile.ceilingTextureRotations"></div>
                          <div class="tile" data-bind="css: 'tileType-'+tile.tileType()"></div>
                          <div class="tile" data-bind="css: { 'wall-southEastToNorthWest': tile.hasWallSouthEastToNorthWest(), 'wall-southWestToNorthEast': tile.hasWallSouthWestToNorthEast() }"></div>
                          <div class="tile" data-bind="css: { 'wall-north': tile.hasWallNorth(), 'wall-south': tile.hasWallSouth(), 'wall-east': tile.hasWallEast(), 'wall-west': tile.hasWallWest() }"></div>
