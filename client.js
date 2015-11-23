@@ -71,7 +71,7 @@ var vm = {
 };
 
 vm.projects.selected.subscribe(function(project) {
-   if (project !== null) {
+   if (project) {
       getResource(project.href + "/archive/levels", function(levels) {
          vm.levels.available(levels.items);
       }, function() {});
@@ -317,7 +317,7 @@ vm.mapHeight.subscribe(function(newHeight) {
 });
 
 vm.map.selectedLevel.subscribe(function(level) {
-   if (level !== null) {
+   if (level) {
       getResource(level.href + "/textures", function(levelTextures) {
          vm.levelTextures.removeAll();
          vm.levelTextureUrls.removeAll();
