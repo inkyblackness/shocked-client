@@ -13,6 +13,22 @@ var getResource = function(url, onSuccess, onFailure) {
    $.ajax(options);
 };
 
+var putResource = function(url, data, onSuccess, onFailure) {
+   var options = {
+      method: "PUT",
+      url: url,
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(data),
+      jsonp: false,
+      processData: false,
+      success: onSuccess,
+      error: onFailure
+   };
+
+   $.ajax(options);
+};
+
 var vm = {
    tileTypes: ["", "open", "solid",
       "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
@@ -118,6 +134,35 @@ vm.selectedTiles.subscribe(function(newList) {
    vm.selectedTileCeilingTextureIndex(ceilingTextureIndexUnifier.get());
 });
 
+var updateTileProperties = function(tile, tileData) {
+   tile.tileType(tileData.properties.type);
+   tile.floorHeight(tileData.properties.floorHeight);
+   tile.ceilingHeight(tileData.properties.ceilingHeight);
+   tile.slopeHeight(tileData.properties.slopeHeight);
+
+   tile.floorTextureIndex(tileData.properties.realWorld.floorTexture);
+   tile.floorTextureRotations("rotations" + tileData.properties.realWorld.floorTextureRotations);
+   tile.ceilingTextureIndex(tileData.properties.realWorld.ceilingTexture);
+   tile.ceilingTextureRotations("rotations" + tileData.properties.realWorld.ceilingTextureRotations);
+};
+
+vm.selectedTileType.subscribe(function(newType) {
+   if (newType !== "") {
+      vm.selectedTiles().forEach(function(tile) {
+         var properties = {
+            type: newType,
+         };
+
+         var tileUrl = "/projects/test1/archive/level/" + vm.selectedLevel() + "/tiles/" + tile.y + "/" + tile.x;
+         if (tile.tileType() !== newType) {
+            putResource(tileUrl, properties, function(tileData) {
+               updateTileProperties(tile, tileData);
+            }, function() {});
+         }
+      });
+   }
+});
+
 var getTile = function(x, y) {
    var tileRows = vm.tileRows();
    var rowIndex = 64 - 1 - y;
@@ -164,7 +209,12 @@ var isTileOpenWest = function(tileType) {
 var createTile = function(x, y) {
    var tile = {
       x: x,
+      y: y,
       tileType: ko.observable("solid"),
+      floorHeight: ko.observable(0),
+      ceilingHeight: ko.observable(0),
+      slopeHeight: ko.observable(0),
+
       floorTextureIndex: ko.observable(-1),
       floorTextureRotations: ko.observable("rotations0"),
       
@@ -257,11 +307,7 @@ var loadLevel = function(levelId) {
                var rowIndex = 64 - 1 - y;
                var tile = vm.tileRows()[rowIndex].tileColumns()[x];
 
-               tile.tileType(tileData.properties.type);
-               tile.floorTextureIndex(tileData.properties.realWorld.floorTexture);
-               tile.floorTextureRotations("rotations" + tileData.properties.realWorld.floorTextureRotations);
-               tile.ceilingTextureIndex(tileData.properties.realWorld.ceilingTexture);
-               tile.ceilingTextureRotations("rotations" + tileData.properties.realWorld.ceilingTextureRotations);
+               updateTileProperties(tile, tileData);
             }, 0);
          });
       });
