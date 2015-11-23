@@ -15,27 +15,26 @@
 <div class="rootContainer">
   <div style="max-height: 100px">
 
-    <div class="uk-margin">
-      <nav class="uk-navbar">
-          <ul class="uk-navbar-nav">
-              <li><a href="#">Project</a></li>
-              <li class="uk-active"><a href="#">Map</a></li>
-              <li><a href="#">Other</a></li>
-          </ul>
-      </nav>
+    <div data-bind="foreach: { data: mainSections, as: 'section' }">
+      <span><input type="radio" name="mainSection" data-bind="checkedValue: section, checked: $root.selectedMainSection" /><span data-bind="text: section" /></span>
     </div>
 
   </div>
 
   <div class="heightTaker">
-    <div class="levelMap">
+    <div data-bind="visible: selectedMainSection() === 'project'">
+      <h2>Project</h2>
+      <p>
+      Active: <select data-bind="options: projects.available, optionsText: 'id', optionsCaption: '', value: projects.selected"></select>
+      </p>
+    </div>
+
+    <div class="levelMap" data-bind="visible: selectedMainSection() === 'map'">
       <div class="mapControls">
 
-        <div class="uk-margin">
-          <div data-uk-button-radio data-bind="foreach: { data: levels, as: 'level' }">
-            <button class="uk-button" data-bind="click: level.select, text: level.id"></button>
-          </div>
-        </div>
+        <p>
+        Active: <select data-bind="options: levels.available, optionsText: 'id', optionsCaption: '', value: map.selectedLevel"></select>
+        </p>
 
         <p>
           Map Texture: 
@@ -95,6 +94,5 @@
 </body>
 <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript" src="//knockoutjs.com/downloads/knockout-3.4.0.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/uikit/2.23.0/js/uikit.min.js"></script>
 <script type="text/javascript" src="client.js"></script>
 </html>

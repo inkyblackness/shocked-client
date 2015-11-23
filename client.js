@@ -30,6 +30,23 @@ var putResource = function(url, data, onSuccess, onFailure) {
 };
 
 var vm = {
+   mainSections: ko.observableArray(["project", "map"]),
+   selectedMainSection: ko.observable("project"),
+
+   projects: {
+      available: ko.observableArray(),
+      selected: ko.observable()
+   },
+
+   levels: {
+      available: ko.observableArray()
+   },
+
+   map: {
+      selectedLevel: ko.observable()
+
+   },
+
    tileTypes: ["", "open", "solid",
       "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
       "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest",
@@ -39,8 +56,7 @@ var vm = {
    mapWidth: ko.observable(0),
    mapHeight: ko.observable(0),
    tileRows: ko.observableArray(),
-   levels: ko.observableArray(),
-   selectedLevel: ko.observable(-1),
+
    levelTextures: ko.observableArray(),
    levelTextureUrls: ko.observableArray(),
 
@@ -53,6 +69,16 @@ var vm = {
    selectedTileFloorTextureIndex: ko.observable(-1),
    selectedTileCeilingTextureIndex: ko.observable(-1)
 };
+
+vm.projects.selected.subscribe(function(project) {
+   if (project !== null) {
+      getResource(project.href + "/archive/levels", function(levels) {
+         vm.levels.available(levels.items);
+      }, function() {});
+   } else {
+      vm.levels.available([]);
+   }
+});
 
 var computeTextureUrl = function(indexObservable) {
    return function() {
@@ -153,7 +179,7 @@ vm.selectedTileType.subscribe(function(newType) {
             type: newType,
          };
 
-         var tileUrl = "/projects/test1/archive/level/" + vm.selectedLevel() + "/tiles/" + tile.y + "/" + tile.x;
+         var tileUrl = vm.map.selectedLevel().href + "/tiles/" + tile.y + "/" + tile.x;
          if (tile.tileType() !== newType) {
             putResource(tileUrl, properties, function(tileData) {
                updateTileProperties(tile, tileData);
@@ -290,56 +316,37 @@ vm.mapHeight.subscribe(function(newHeight) {
    }
 });
 
-var loadLevel = function(levelId) {
-   getResource("/projects/test1/archive/level/" + levelId + "/textures", function(levelTextures) {
-      vm.levelTextures.removeAll();
-      vm.levelTextureUrls.removeAll();
-      levelTextures.ids.forEach(function(id) {
-         vm.levelTextureUrls.push("/projects/test1/textures/" + id + "/large/png");
-         vm.levelTextures.push(id);
-      });
-   }, function() {});
-
-   getResource("/projects/test1/archive/level/" + levelId + "/tiles", function(tileMap) {
-      tileMap.Table.forEach(function(row, y) {
-         row.forEach(function(tileData, x) {
-            setTimeout(function() {
-               var rowIndex = 64 - 1 - y;
-               var tile = vm.tileRows()[rowIndex].tileColumns()[x];
-
-               updateTileProperties(tile, tileData);
-            }, 0);
+vm.map.selectedLevel.subscribe(function(level) {
+   if (level !== null) {
+      getResource(level.href + "/textures", function(levelTextures) {
+         vm.levelTextures.removeAll();
+         vm.levelTextureUrls.removeAll();
+         levelTextures.ids.forEach(function(id) {
+            vm.levelTextureUrls.push(vm.projects.selected().href + "/textures/" + id + "/large/png");
+            vm.levelTextures.push(id);
          });
-      });
-   }, function() {});
-};
+      }, function() {});
 
-var selectLevel = function(levelId) {
-   return function() {
-      if (vm.selectedLevel() !== levelId) {
-         vm.selectedLevel(levelId);
-         loadLevel(levelId)
-      }
-   };
-};
+      getResource(level.href + "/tiles", function(tileMap) {
+         tileMap.Table.forEach(function(row, y) {
+            row.forEach(function(tileData, x) {
+               setTimeout(function() {
+                  var rowIndex = 64 - 1 - y;
+                  var tile = vm.tileRows()[rowIndex].tileColumns()[x];
 
-var listLevel = function(levelId) {
-   var level = {
-      id: levelId,
-      isSelected: ko.computed(function() {
-         return vm.selectedLevel() === levelId;
-      }),
-      select: selectLevel(levelId)
-   };
+                  updateTileProperties(tile, tileData);
+               }, 0);
+            });
+         });
+      }, function() {});
 
-   vm.levels.push(level);
-}
-
-for (var levelId = 0; levelId < 16; levelId++) {
-   listLevel(levelId);
-}
+      vm.mapWidth(64);
+      vm.mapHeight(64);
+   }
+});
 
 ko.applyBindings(vm);
 
-vm.mapWidth(64);
-vm.mapHeight(64);
+getResource("/projects", function(projects) {
+   vm.projects.available(projects.items);
+}, function() {});
