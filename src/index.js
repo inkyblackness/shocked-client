@@ -1,33 +1,9 @@
+/* global window, ko */
+"use strict";
+
+var rest = require("./rest.js");
+
 ko.options.deferUpdates = true;
-
-var getResource = function(url, onSuccess, onFailure) {
-   var options = {
-      method: "GET",
-      url: url,
-      dataType: "json",
-      jsonp: false,
-      success: onSuccess,
-      error: onFailure
-   };
-
-   $.ajax(options);
-};
-
-var putResource = function(url, data, onSuccess, onFailure) {
-   var options = {
-      method: "PUT",
-      url: url,
-      dataType: "json",
-      contentType: "application/json",
-      data: JSON.stringify(data),
-      jsonp: false,
-      processData: false,
-      success: onSuccess,
-      error: onFailure
-   };
-
-   $.ajax(options);
-};
 
 var vm = {
    mainSections: ko.observableArray(["project", "map"]),
@@ -51,7 +27,8 @@ var vm = {
       "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
       "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest",
       "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest",
-      "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"],
+      "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"
+   ],
 
    mapWidth: ko.observable(0),
    mapHeight: ko.observable(0),
@@ -72,7 +49,7 @@ var vm = {
 
 vm.projects.selected.subscribe(function(project) {
    if (project) {
-      getResource(project.href + "/archive/levels", function(levels) {
+      rest.getResource(project.href + "/archive/levels", function(levels) {
          vm.levels.available(levels.items);
       }, function() {});
    } else {
@@ -91,7 +68,7 @@ var computeTextureUrl = function(indexObservable) {
       }
 
       return url;
-   }
+   };
 };
 
 vm.shouldShowFloorTexture = ko.computed(function() {
@@ -181,7 +158,7 @@ vm.selectedTileType.subscribe(function(newType) {
 
          var tileUrl = vm.map.selectedLevel().href + "/tiles/" + tile.y + "/" + tile.x;
          if (tile.tileType() !== newType) {
-            putResource(tileUrl, properties, function(tileData) {
+            rest.putResource(tileUrl, properties, function(tileData) {
                updateTileProperties(tile, tileData);
             }, function() {});
          }
@@ -196,7 +173,7 @@ var getTile = function(x, y) {
    var tile = null;
 
    if ((rowIndex >= 0) && (rowIndex < tileRows.length)) {
-      tileColumns = tileRows[rowIndex].tileColumns()
+      tileColumns = tileRows[rowIndex].tileColumns();
       if ((x >= 0) && (x < tileColumns.length)) {
          tile = tileColumns[x];
       }
@@ -218,19 +195,19 @@ var getTileType = function(x, y) {
 
 var isTileOpenSouth = function(tileType) {
    return tileType !== "solid" && tileType !== "diagonalOpenNorthEast" && tileType !== "diagonalOpenNorthWest";
-}
+};
 
 var isTileOpenNorth = function(tileType) {
    return tileType !== "solid" && tileType !== "diagonalOpenSouthEast" && tileType !== "diagonalOpenSouthWest";
-}
+};
 
 var isTileOpenEast = function(tileType) {
    return tileType !== "solid" && tileType !== "diagonalOpenSouthWest" && tileType !== "diagonalOpenNorthWest";
-}
+};
 
 var isTileOpenWest = function(tileType) {
    return tileType !== "solid" && tileType !== "diagonalOpenSouthEast" && tileType !== "diagonalOpenNorthEast";
-}
+};
 
 var createTile = function(x, y) {
    var tile = {
@@ -243,7 +220,7 @@ var createTile = function(x, y) {
 
       floorTextureIndex: ko.observable(-1),
       floorTextureRotations: ko.observable("rotations0"),
-      
+
       ceilingTextureIndex: ko.observable(-1),
       ceilingTextureRotations: ko.observable("rotations0"),
 
@@ -277,7 +254,7 @@ var createTile = function(x, y) {
    });
 
    return tile;
-}
+};
 
 var resizeColumns = function(tileRow, newWidth) {
    var list = tileRow.tileColumns;
@@ -318,7 +295,7 @@ vm.mapHeight.subscribe(function(newHeight) {
 
 vm.map.selectedLevel.subscribe(function(level) {
    if (level) {
-      getResource(level.href + "/textures", function(levelTextures) {
+      rest.getResource(level.href + "/textures", function(levelTextures) {
          vm.levelTextures.removeAll();
          vm.levelTextureUrls.removeAll();
          levelTextures.ids.forEach(function(id) {
@@ -327,10 +304,10 @@ vm.map.selectedLevel.subscribe(function(level) {
          });
       }, function() {});
 
-      getResource(level.href + "/tiles", function(tileMap) {
+      rest.getResource(level.href + "/tiles", function(tileMap) {
          tileMap.Table.forEach(function(row, y) {
             row.forEach(function(tileData, x) {
-               setTimeout(function() {
+               window.setTimeout(function() {
                   var rowIndex = 64 - 1 - y;
                   var tile = vm.tileRows()[rowIndex].tileColumns()[x];
 
@@ -347,6 +324,6 @@ vm.map.selectedLevel.subscribe(function(level) {
 
 ko.applyBindings(vm);
 
-getResource("/projects", function(projects) {
+rest.getResource("/projects", function(projects) {
    vm.projects.available(projects.items);
 }, function() {});
