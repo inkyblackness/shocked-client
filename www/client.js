@@ -32,7 +32,10 @@ var vm = {
    },
 
    map: {
-      selectedLevel: ko.observable()
+      selectedLevel: ko.observable(),
+
+      sizeX: ko.observable(0),
+      sizeY: ko.observable(0)
 
    },
 
@@ -43,8 +46,6 @@ var vm = {
       "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"
    ],
 
-   mapWidth: ko.observable(0),
-   mapHeight: ko.observable(0),
    tileRows: ko.observableArray(),
 
    levelTextures: ko.observableArray(),
@@ -258,7 +259,7 @@ var resizeColumns = function(tileRow, newWidth) {
    }
 };
 
-vm.mapWidth.subscribe(function(newWidth) {
+vm.map.sizeX.subscribe(function(newWidth) {
    vm.tileRows().forEach(function(tileRow) {
       resizeColumns(tileRow, newWidth);
    });
@@ -270,12 +271,12 @@ var createTileRow = function(y) {
       tileColumns: ko.observableArray()
    };
 
-   resizeColumns(tileRow, vm.mapWidth());
+   resizeColumns(tileRow, vm.map.sizeX());
 
    return tileRow;
 };
 
-vm.mapHeight.subscribe(function(newHeight) {
+vm.map.sizeY.subscribe(function(newHeight) {
    while (vm.tileRows().length > newHeight) {
       vm.tileRows.pop();
    }
@@ -308,8 +309,8 @@ vm.map.selectedLevel.subscribe(function(level) {
          });
       }, function() {});
 
-      vm.mapWidth(64);
-      vm.mapHeight(64);
+      vm.map.sizeX(64);
+      vm.map.sizeY(64);
    }
 });
 
