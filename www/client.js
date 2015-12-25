@@ -570,9 +570,9 @@ var updateTileProperties = function(tile, tileData) {
    tile.slopeHeight(tileData.properties.slopeHeight);
 
    tile.floorTextureIndex(tileData.properties.realWorld.floorTexture);
-   tile.floorTextureRotations("rotations" + tileData.properties.realWorld.floorTextureRotations);
+   tile.floorTextureRotations(tileData.properties.realWorld.floorTextureRotations);
    tile.ceilingTextureIndex(tileData.properties.realWorld.ceilingTexture);
-   tile.ceilingTextureRotations("rotations" + tileData.properties.realWorld.ceilingTextureRotations);
+   tile.ceilingTextureRotations(tileData.properties.realWorld.ceilingTextureRotations);
 };
 
 var isTileOpenSouth = function(tileType) {
@@ -802,10 +802,10 @@ MapAdapter.prototype.createTile = function(x, y) {
       slopeHeight: ko.observable(0),
 
       floorTextureIndex: ko.observable(-1),
-      floorTextureRotations: ko.observable("rotations0"),
+      floorTextureRotations: ko.observable(0),
 
       ceilingTextureIndex: ko.observable(-1),
-      ceilingTextureRotations: ko.observable("rotations0"),
+      ceilingTextureRotations: ko.observable(0),
 
       isSelected: ko.observable(false)
    };
