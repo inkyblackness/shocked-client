@@ -19,6 +19,13 @@ var defer = require("./browser/defer.js");
 ko.options.deferUpdates = true;
 
 var vm = {
+   tileTypes: ["", "open", "solid",
+      "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
+      "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest",
+      "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest",
+      "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"
+   ],
+
    mainSections: ko.observableArray(["project", "map"]),
    selectedMainSection: ko.observable("project"),
 
@@ -34,22 +41,14 @@ var vm = {
    map: {
       selectedLevel: ko.observable(),
 
+      levelTextures: ko.observableArray(),
+      levelTextureUrls: ko.observableArray(),
+
       sizeX: ko.observable(0),
-      sizeY: ko.observable(0)
+      sizeY: ko.observable(0),
+      tileRows: ko.observableArray()
 
    },
-
-   tileTypes: ["", "open", "solid",
-      "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
-      "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest",
-      "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest",
-      "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"
-   ],
-
-   tileRows: ko.observableArray(),
-
-   levelTextures: ko.observableArray(),
-   levelTextureUrls: ko.observableArray(),
 
    textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
    selectedTextureDisplay: ko.observable("Floor"),
@@ -74,7 +73,7 @@ vm.projects.selected.subscribe(function(project) {
 var computeTextureUrl = function(indexObservable) {
    return function() {
       var textureIndex = indexObservable();
-      var urls = vm.levelTextureUrls();
+      var urls = vm.map.levelTextureUrls();
       var url = "";
 
       if ((textureIndex >= 0) && (textureIndex < urls.length)) {
@@ -159,7 +158,7 @@ vm.selectedTileType.subscribe(function(newType) {
 });
 
 var getTile = function(x, y) {
-   var tileRows = vm.tileRows();
+   var tileRows = vm.map.tileRows();
    var rowIndex = 64 - 1 - y;
    var tileColumns;
    var tile = null;
@@ -260,7 +259,7 @@ var resizeColumns = function(tileRow, newWidth) {
 };
 
 vm.map.sizeX.subscribe(function(newWidth) {
-   vm.tileRows().forEach(function(tileRow) {
+   vm.map.tileRows().forEach(function(tileRow) {
       resizeColumns(tileRow, newWidth);
    });
 });
@@ -277,22 +276,22 @@ var createTileRow = function(y) {
 };
 
 vm.map.sizeY.subscribe(function(newHeight) {
-   while (vm.tileRows().length > newHeight) {
-      vm.tileRows.pop();
+   while (vm.map.tileRows().length > newHeight) {
+      vm.map.tileRows.pop();
    }
-   while (vm.tileRows().length < newHeight) {
-      vm.tileRows.push(createTileRow(newHeight - vm.tileRows().length - 1));
+   while (vm.map.tileRows().length < newHeight) {
+      vm.map.tileRows.push(createTileRow(newHeight - vm.map.tileRows().length - 1));
    }
 });
 
 vm.map.selectedLevel.subscribe(function(level) {
    if (level) {
       rest.getResource(level.href + "/textures", function(levelTextures) {
-         vm.levelTextures.removeAll();
-         vm.levelTextureUrls.removeAll();
+         vm.map.levelTextures.removeAll();
+         vm.map.levelTextureUrls.removeAll();
          levelTextures.ids.forEach(function(id) {
-            vm.levelTextureUrls.push(vm.projects.selected().href + "/textures/" + id + "/large/png");
-            vm.levelTextures.push(id);
+            vm.map.levelTextureUrls.push(vm.projects.selected().href + "/textures/" + id + "/large/png");
+            vm.map.levelTextures.push(id);
          });
       }, function() {});
 
@@ -301,7 +300,7 @@ vm.map.selectedLevel.subscribe(function(level) {
             row.forEach(function(tileData, x) {
                defer(function() {
                   var rowIndex = 64 - 1 - y;
-                  var tile = vm.tileRows()[rowIndex].tileColumns()[x];
+                  var tile = vm.map.tileRows()[rowIndex].tileColumns()[x];
 
                   updateTileProperties(tile, tileData);
                });

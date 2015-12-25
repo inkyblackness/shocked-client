@@ -61,7 +61,7 @@
         <div style="width: 100%; overflow: auto;">
           <table>
             <tbody>
-              <tr style="width: 100%;" data-bind="foreach: { data: levelTextureUrls }">
+              <tr style="width: 100%;" data-bind="foreach: { data: map.levelTextureUrls }">
                 <td style="width: 64px; height: 64px; border: solid 1px black; "><img data-bind="attr: { src: $data }" width="64px" height="64px"></td>
               </tr>
             </tbody>
@@ -72,7 +72,7 @@
 
       <div class="tileMap" style="background: black;">
         <table style="width: 2048px; height: 2048px;">
-           <tbody data-bind="foreach: { data: tileRows, as: 'tileRow' }">
+           <tbody data-bind="foreach: { data: map.tileRows, as: 'tileRow' }">
                <tr data-bind="foreach: { data: tileRow.tileColumns, as: 'tile' }">
                    <td style="overflow: hidden;" data-bind="click: $root.selectTile">
                       <div style="position: relative; width: 32px; height: 32px">
