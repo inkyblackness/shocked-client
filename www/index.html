@@ -38,7 +38,7 @@
 
         <p>
           Map Texture: 
-          <select data-bind="options: textureDisplay, value: selectedTextureDisplay"></select>
+          <select data-bind="options: map.textureDisplay, value: map.selectedTextureDisplay"></select>
         </p>
 
         <p>
@@ -76,8 +76,8 @@
                <tr data-bind="foreach: { data: tileRow.tileColumns, as: 'tile' }">
                    <td style="overflow: hidden;" data-bind="click: $root.selectTile">
                       <div style="position: relative; width: 32px; height: 32px">
-                         <div class="tile tileTexture" data-bind="visible: $root.shouldShowFloorTexture, style: { backgroundImage: 'url('+tile.floorTextureUrl()+')' }, css: tile.floorTextureRotations"></div>
-                         <div class="tile tileTexture" data-bind="visible: $root.shouldShowCeilingTexture, style: { backgroundImage: 'url('+tile.ceilingTextureUrl()+')' }, css: tile.ceilingTextureRotations"></div>
+                         <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowFloorTexture, style: { backgroundImage: 'url('+tile.floorTextureUrl()+')' }, css: tile.floorTextureRotations"></div>
+                         <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowCeilingTexture, style: { backgroundImage: 'url('+tile.ceilingTextureUrl()+')' }, css: tile.ceilingTextureRotations"></div>
                          <div class="tile" data-bind="css: 'tileType-'+tile.tileType()"></div>
                          <div class="tile" data-bind="css: { 'wall-southEastToNorthWest': tile.hasWallSouthEastToNorthWest(), 'wall-southWestToNorthEast': tile.hasWallSouthWestToNorthEast() }"></div>
                          <div class="tile" data-bind="css: { 'wall-north': tile.hasWallNorth(), 'wall-south': tile.hasWallSouth(), 'wall-east': tile.hasWallEast(), 'wall-west': tile.hasWallWest() }"></div>

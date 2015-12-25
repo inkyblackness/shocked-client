@@ -35,12 +35,12 @@ var vm = {
 
       sizeX: ko.observable(0),
       sizeY: ko.observable(0),
-      tileRows: ko.observableArray()
+      tileRows: ko.observableArray(),
+
+      textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
+      selectedTextureDisplay: ko.observable("Floor")
 
    },
-
-   textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
-   selectedTextureDisplay: ko.observable("Floor"),
 
    selectedTiles: ko.observableArray(),
 
@@ -73,11 +73,11 @@ var computeTextureUrl = function(indexObservable) {
    };
 };
 
-vm.shouldShowFloorTexture = ko.computed(function() {
-   return vm.selectedTextureDisplay() === "Floor";
+vm.map.shouldShowFloorTexture = ko.computed(function() {
+   return vm.map.selectedTextureDisplay() === "Floor";
 });
-vm.shouldShowCeilingTexture = ko.computed(function() {
-   return vm.selectedTextureDisplay() === "Ceiling";
+vm.map.shouldShowCeilingTexture = ko.computed(function() {
+   return vm.map.selectedTextureDisplay() === "Ceiling";
 });
 vm.selectedTileFloorTextureUrl = ko.computed(computeTextureUrl(vm.selectedTileFloorTextureIndex));
 vm.selectedTileCeilingTextureUrl = ko.computed(computeTextureUrl(vm.selectedTileCeilingTextureIndex));
