@@ -1,8 +1,20 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/* global window, ko, $ */
+/* global window */
+"use strict";
+
+var defer = function(cb) {
+   window.setTimeout(cb, 0);
+};
+
+module.exports = defer;
+
+},{}],2:[function(require,module,exports){
+/* global ko */
 "use strict";
 
 var rest = require("./rest.js");
+var unifier = require("./unifier.js");
+var defer = require("./browser/defer.js");
 
 ko.options.deferUpdates = true;
 
@@ -101,32 +113,10 @@ vm.selectTile = function(tile, event) {
    }
 };
 
-var unifier = function(resetValue) {
-   var first = true;
-   var unique = true;
-   var resultValue = resetValue;
-   var stateObj = {
-      add: function(singleValue) {
-         if (first) {
-            resultValue = singleValue;
-            first = false;
-         } else if (resultValue !== singleValue) {
-            unique = false;
-            resultValue = resetValue;
-         }
-      },
-      get: function() {
-         return resultValue;
-      }
-   };
-
-   return stateObj;
-};
-
 vm.selectedTiles.subscribe(function(newList) {
-   var tileTypeUnifier = unifier("");
-   var floorTextureIndexUnifier = unifier(-1);
-   var ceilingTextureIndexUnifier = unifier(-1);
+   var tileTypeUnifier = unifier.withResetValue("");
+   var floorTextureIndexUnifier = unifier.withResetValue(-1);
+   var ceilingTextureIndexUnifier = unifier.withResetValue(-1);
 
    newList.forEach(function(tile) {
       tileTypeUnifier.add(tile.tileType());
@@ -308,12 +298,12 @@ vm.map.selectedLevel.subscribe(function(level) {
       rest.getResource(level.href + "/tiles", function(tileMap) {
          tileMap.Table.forEach(function(row, y) {
             row.forEach(function(tileData, x) {
-               window.setTimeout(function() {
+               defer(function() {
                   var rowIndex = 64 - 1 - y;
                   var tile = vm.tileRows()[rowIndex].tileColumns()[x];
 
                   updateTileProperties(tile, tileData);
-               }, 0);
+               });
             });
          });
       }, function() {});
@@ -329,7 +319,7 @@ rest.getResource("/projects", function(projects) {
    vm.projects.available(projects.items);
 }, function() {});
 
-},{"./rest.js":2}],2:[function(require,module,exports){
+},{"./browser/defer.js":1,"./rest.js":3,"./unifier.js":4}],3:[function(require,module,exports){
 /* global $ */
 "use strict";
 
@@ -366,4 +356,32 @@ rest.putResource = function(url, data, onSuccess, onFailure) {
 
 module.exports = rest;
 
-},{}]},{},[1]);
+},{}],4:[function(require,module,exports){
+/* global $ */
+"use strict";
+
+var unifier = {};
+
+unifier.withResetValue = function(resetValue) {
+   var first = true;
+   var resultValue = resetValue;
+   var stateObj = {
+      add: function(singleValue) {
+         if (first) {
+            resultValue = singleValue;
+            first = false;
+         } else if (resultValue !== singleValue) {
+            resultValue = resetValue;
+         }
+      },
+      get: function() {
+         return resultValue;
+      }
+   };
+
+   return stateObj;
+};
+
+module.exports = unifier;
+
+},{}]},{},[2]);

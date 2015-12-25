@@ -1,7 +1,9 @@
-/* global window, ko */
+/* global ko */
 "use strict";
 
 var rest = require("./rest.js");
+var unifier = require("./unifier.js");
+var defer = require("./browser/defer.js");
 
 ko.options.deferUpdates = true;
 
@@ -100,32 +102,10 @@ vm.selectTile = function(tile, event) {
    }
 };
 
-var unifier = function(resetValue) {
-   var first = true;
-   var unique = true;
-   var resultValue = resetValue;
-   var stateObj = {
-      add: function(singleValue) {
-         if (first) {
-            resultValue = singleValue;
-            first = false;
-         } else if (resultValue !== singleValue) {
-            unique = false;
-            resultValue = resetValue;
-         }
-      },
-      get: function() {
-         return resultValue;
-      }
-   };
-
-   return stateObj;
-};
-
 vm.selectedTiles.subscribe(function(newList) {
-   var tileTypeUnifier = unifier("");
-   var floorTextureIndexUnifier = unifier(-1);
-   var ceilingTextureIndexUnifier = unifier(-1);
+   var tileTypeUnifier = unifier.withResetValue("");
+   var floorTextureIndexUnifier = unifier.withResetValue(-1);
+   var ceilingTextureIndexUnifier = unifier.withResetValue(-1);
 
    newList.forEach(function(tile) {
       tileTypeUnifier.add(tile.tileType());
@@ -307,12 +287,12 @@ vm.map.selectedLevel.subscribe(function(level) {
       rest.getResource(level.href + "/tiles", function(tileMap) {
          tileMap.Table.forEach(function(row, y) {
             row.forEach(function(tileData, x) {
-               window.setTimeout(function() {
+               defer(function() {
                   var rowIndex = 64 - 1 - y;
                   var tile = vm.tileRows()[rowIndex].tileColumns()[x];
 
                   updateTileProperties(tile, tileData);
-               }, 0);
+               });
             });
          });
       }, function() {});
