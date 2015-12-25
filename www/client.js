@@ -9,11 +9,48 @@ var defer = function(cb) {
 module.exports = defer;
 
 },{}],2:[function(require,module,exports){
+/* global $ */
+"use strict";
+
+var rest = {};
+
+rest.getResource = function(url, onSuccess, onFailure) {
+   var options = {
+      method: "GET",
+      url: url,
+      dataType: "json",
+      jsonp: false,
+      success: onSuccess,
+      error: onFailure
+   };
+
+   $.ajax(options);
+};
+
+rest.putResource = function(url, data, onSuccess, onFailure) {
+   var options = {
+      method: "PUT",
+      url: url,
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(data),
+      jsonp: false,
+      processData: false,
+      success: onSuccess,
+      error: onFailure
+   };
+
+   $.ajax(options);
+};
+
+module.exports = rest;
+
+},{}],3:[function(require,module,exports){
 /* global ko */
 "use strict";
 
-var rest = require("./rest.js");
-var unifier = require("./unifier.js");
+var unifier = require("./util/unifier.js");
+var rest = require("./browser/rest.js");
 var defer = require("./browser/defer.js");
 
 ko.options.deferUpdates = true;
@@ -318,44 +355,7 @@ rest.getResource("/projects", function(projects) {
    vm.projects.available(projects.items);
 }, function() {});
 
-},{"./browser/defer.js":1,"./rest.js":3,"./unifier.js":4}],3:[function(require,module,exports){
-/* global $ */
-"use strict";
-
-var rest = {};
-
-rest.getResource = function(url, onSuccess, onFailure) {
-   var options = {
-      method: "GET",
-      url: url,
-      dataType: "json",
-      jsonp: false,
-      success: onSuccess,
-      error: onFailure
-   };
-
-   $.ajax(options);
-};
-
-rest.putResource = function(url, data, onSuccess, onFailure) {
-   var options = {
-      method: "PUT",
-      url: url,
-      dataType: "json",
-      contentType: "application/json",
-      data: JSON.stringify(data),
-      jsonp: false,
-      processData: false,
-      success: onSuccess,
-      error: onFailure
-   };
-
-   $.ajax(options);
-};
-
-module.exports = rest;
-
-},{}],4:[function(require,module,exports){
+},{"./browser/defer.js":1,"./browser/rest.js":2,"./util/unifier.js":4}],4:[function(require,module,exports){
 /* global $ */
 "use strict";
 
@@ -383,4 +383,4 @@ unifier.withResetValue = function(resetValue) {
 
 module.exports = unifier;
 
-},{}]},{},[2]);
+},{}]},{},[3]);

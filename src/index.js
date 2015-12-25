@@ -1,8 +1,8 @@
 /* global ko */
 "use strict";
 
-var rest = require("./rest.js");
-var unifier = require("./unifier.js");
+var unifier = require("./util/unifier.js");
+var rest = require("./browser/rest.js");
 var defer = require("./browser/defer.js");
 
 ko.options.deferUpdates = true;
