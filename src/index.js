@@ -12,13 +12,6 @@ var injector = new infuse.Injector();
 ko.options.deferUpdates = true;
 
 var vm = {
-   tileTypes: ["", "open", "solid",
-      "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
-      "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest",
-      "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest",
-      "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"
-   ],
-
    mainSections: ko.observableArray(["project", "map"]),
    selectedMainSection: ko.observable("project")
 };

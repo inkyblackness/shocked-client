@@ -42,6 +42,13 @@ function MapAdapter() {
 MapAdapter.prototype.postConstruct = function() {
    var rest = this.rest;
    var vmMap = {
+      tileTypes: ["", "open", "solid",
+         "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
+         "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest",
+         "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest",
+         "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"
+      ],
+
       selectedLevel: ko.observable(),
 
       levelTextures: ko.observableArray(),

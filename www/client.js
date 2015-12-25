@@ -460,13 +460,6 @@ var injector = new infuse.Injector();
 ko.options.deferUpdates = true;
 
 var vm = {
-   tileTypes: ["", "open", "solid",
-      "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
-      "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest",
-      "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest",
-      "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"
-   ],
-
    mainSections: ko.observableArray(["project", "map"]),
    selectedMainSection: ko.observable("project")
 };
@@ -595,6 +588,13 @@ function MapAdapter() {
 MapAdapter.prototype.postConstruct = function() {
    var rest = this.rest;
    var vmMap = {
+      tileTypes: ["", "open", "solid",
+         "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast",
+         "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest",
+         "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest",
+         "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"
+      ],
+
       selectedLevel: ko.observable(),
 
       levelTextures: ko.observableArray(),
