@@ -1,4 +1,404 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+/*
+Copyright (c) | 2016 | infuse.js | Romuald Quantin | www.soundstep.com | romu@soundstep.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+and associated documentation files (the "Software"), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+(function(infuse) {
+
+    'use strict';
+
+    infuse.version = '1.0.0';
+
+    // regex from angular JS (https://github.com/angular/angular.js)
+    var FN_ARGS = /^function\s*[^\(]*\(\s*([^\)]*)\)/m;
+    var FN_ARG_SPLIT = /,/;
+    var FN_ARG = /^\s*(_?)(\S+?)\1\s*$/;
+    var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+
+    function contains(arr, value) {
+        var i = arr.length;
+        while (i--) {
+            if (arr[i] === value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    infuse.errors = {
+        MAPPING_BAD_PROP: '[Error infuse.Injector.mapClass/mapValue] the first parameter is invalid, a string is expected',
+        MAPPING_BAD_VALUE: '[Error infuse.Injector.mapClass/mapValue] the second parameter is invalid, it can\'t null or undefined, with property: ',
+        MAPPING_BAD_CLASS: '[Error infuse.Injector.mapClass/mapValue] the second parameter is invalid, a function is expected, with property: ',
+        MAPPING_BAD_SINGLETON: '[Error infuse.Injector.mapClass] the third parameter is invalid, a boolean is expected, with property: ',
+        MAPPING_ALREADY_EXISTS: '[Error infuse.Injector.mapClass/mapValue] this mapping already exists, with property: ',
+        CREATE_INSTANCE_INVALID_PARAM: '[Error infuse.Injector.createInstance] invalid parameter, a function is expected',
+        NO_MAPPING_FOUND: '[Error infuse.Injector.getInstance] no mapping found',
+        INJECT_INSTANCE_IN_ITSELF_PROPERTY: '[Error infuse.Injector.getInjectedValue] A matching property has been found in the target, you can\'t inject an instance in itself',
+        INJECT_INSTANCE_IN_ITSELF_CONSTRUCTOR: '[Error infuse.Injector.getInjectedValue] A matching constructor parameter has been found in the target, you can\'t inject an instance in itself',
+        DEPENDENCIES_MISSING_IN_STRICT_MODE: '[Error infuse.Injector.getDependencies] An "inject" property (array) that describes the dependencies is missing in strict mode.'
+    };
+
+    var MappingVO = function(prop, value, cl, singleton) {
+        this.prop = prop;
+        this.value = value;
+        this.cl = cl;
+        this.singleton = singleton || false;
+    };
+
+    var validateProp = function(prop) {
+        if (typeof prop !== 'string') {
+            throw new Error(infuse.errors.MAPPING_BAD_PROP);
+        }
+    };
+
+    var validateValue = function(prop, val) {
+        if (val === undefined || val === null) {
+            throw new Error(infuse.errors.MAPPING_BAD_VALUE + prop);
+        }
+    };
+
+    var validateClass = function(prop, val) {
+        if (typeof val !== 'function') {
+            throw new Error(infuse.errors.MAPPING_BAD_CLASS + prop);
+        }
+    };
+
+    var validateBooleanSingleton = function(prop, singleton) {
+        if (typeof singleton !== 'boolean') {
+            throw new Error(infuse.errors.MAPPING_BAD_SINGLETON + prop);
+        }
+    };
+
+    var validateConstructorInjectionLoop = function(name, cl) {
+        var params = infuse.getDependencies(cl);
+        if (contains(params, name)) {
+            throw new Error(infuse.errors.INJECT_INSTANCE_IN_ITSELF_CONSTRUCTOR);
+        }
+    };
+
+    var validatePropertyInjectionLoop = function(name, target) {
+        if (target.hasOwnProperty(name)) {
+            throw new Error(infuse.errors.INJECT_INSTANCE_IN_ITSELF_PROPERTY);
+        }
+    };
+
+    infuse.Injector = function() {
+        this.mappings = {};
+        this.parent = null;
+        this.strictMode = false;
+    };
+
+    infuse.getDependencies = function(cl) {
+        var args = [];
+        var deps;
+
+        function extractName(all, underscore, name) {
+            args.push(name);
+        }
+
+        if (cl.hasOwnProperty('inject') && Object.prototype.toString.call(cl.inject) === '[object Array]' && cl.inject.length > 0) {
+            deps = cl.inject;
+        }
+
+        var clStr = cl.toString().replace(STRIP_COMMENTS, '');
+        var argsFlat = clStr.match(FN_ARGS);
+        var spl = argsFlat[1].split(FN_ARG_SPLIT);
+
+        for (var i=0, l=spl.length; i<l; i++) {
+            // Only override arg with non-falsey deps value at same key
+            var arg = (deps && deps[i]) ? deps[i] : spl[i];
+            arg.replace(FN_ARG, extractName);
+        }
+
+        return args;
+    };
+
+    infuse.Injector.prototype = {
+
+        createChild: function() {
+            var injector = new infuse.Injector();
+            injector.parent = this;
+            injector.strictMode = this.strictMode;
+            return injector;
+        },
+
+        getMappingVo: function(prop) {
+            if (!this.mappings) {
+                return null;
+            }
+            if (this.mappings[prop]) {
+                return this.mappings[prop];
+            }
+            if (this.parent) {
+                return this.parent.getMappingVo(prop);
+            }
+            return null;
+        },
+
+        mapValue: function(prop, val) {
+            if (this.mappings[prop]) {
+                throw new Error(infuse.errors.MAPPING_ALREADY_EXISTS + prop);
+            }
+            validateProp(prop);
+            validateValue(prop, val);
+            this.mappings[prop] = new MappingVO(prop, val, undefined, undefined);
+            return this;
+        },
+
+        mapClass: function(prop, cl, singleton) {
+            if (this.mappings[prop]) {
+                throw new Error(infuse.errors.MAPPING_ALREADY_EXISTS + prop);
+            }
+            validateProp(prop);
+            validateClass(prop, cl);
+            if (singleton) {
+                validateBooleanSingleton(prop, singleton);
+            }
+            this.mappings[prop] = new MappingVO(prop, null, cl, singleton);
+            return this;
+        },
+
+        removeMapping: function(prop) {
+            this.mappings[prop] = null;
+            delete this.mappings[prop];
+            return this;
+        },
+
+        hasMapping: function(prop) {
+            return !!this.mappings[prop];
+        },
+
+        hasInheritedMapping: function(prop) {
+            return !!this.getMappingVo(prop);
+        },
+
+        getMapping: function(value) {
+            for (var name in this.mappings) {
+                if (this.mappings.hasOwnProperty(name)) {
+                    var vo = this.mappings[name];
+                    if (vo.value === value || vo.cl === value) {
+                        return vo.prop;
+                    }
+                }
+            }
+            return undefined;
+        },
+
+        getValue: function(prop) {
+            var vo = this.mappings[prop];
+            if (!vo) {
+                if (this.parent) {
+                    vo = this.parent.getMappingVo.apply(this.parent, arguments);
+                }
+                else {
+                    throw new Error(infuse.errors.NO_MAPPING_FOUND);
+                }
+            }
+            if (vo.cl) {
+                var args = Array.prototype.slice.call(arguments);
+                args[0] = vo.cl;
+                if (vo.singleton) {
+                    if (!vo.value) {
+                        vo.value = this.createInstance.apply(this, args);
+                    }
+                    return vo.value;
+                }
+                else {
+                    return this.createInstance.apply(this, args);
+                }
+            }
+            return vo.value;
+        },
+
+        getClass: function(prop) {
+            var vo = this.mappings[prop];
+            if (!vo) {
+                if (this.parent) {
+                    vo = this.parent.getMappingVo.apply(this.parent, arguments);
+                }
+                else {
+                    return undefined;
+                }
+            }
+            if (vo.cl) {
+                return vo.cl;
+            }
+            return undefined;
+        },
+
+        instantiate: function(TargetClass) {
+            if (typeof TargetClass !== 'function') {
+                throw new Error(infuse.errors.CREATE_INSTANCE_INVALID_PARAM);
+            }
+            if (this.strictMode && !TargetClass.hasOwnProperty('inject')) {
+                throw new Error(infuse.errors.DEPENDENCIES_MISSING_IN_STRICT_MODE);
+            }
+            var args = [null];
+            var params = infuse.getDependencies(TargetClass);
+            for (var i=0, l=params.length; i<l; i++) {
+                if (arguments.length > i+1 && arguments[i+1] !== undefined && arguments[i+1] !== null) {
+                    // argument found
+                    args.push(arguments[i+1]);
+                }
+                else {
+                    var name = params[i];
+                    // no argument found
+                    var vo = this.getMappingVo(name);
+                    if (!!vo) {
+                        // found mapping
+                        var val = this.getInjectedValue(vo, name);
+                        args.push(val);
+                    }
+                    else {
+                        // no mapping found
+                        args.push(undefined);
+                    }
+                }
+            }
+            return new (Function.prototype.bind.apply(TargetClass, args))();
+        },
+
+        inject: function (target, isParent) {
+            if (this.parent) {
+                this.parent.inject(target, true);
+            }
+            for (var name in this.mappings) {
+                if (this.mappings.hasOwnProperty(name)) {
+                    var vo = this.getMappingVo(name);
+                    if (target.hasOwnProperty(vo.prop) || (target.constructor && target.constructor.prototype && target.constructor.prototype.hasOwnProperty(vo.prop)) ) {
+                        target[name] = this.getInjectedValue(vo, name);
+                    }
+                }
+            }
+            if (typeof target.postConstruct === 'function' && !isParent) {
+                target.postConstruct();
+            }
+            return this;
+        },
+
+        getInjectedValue: function(vo, name) {
+            var val = vo.value;
+            var injectee;
+            if (vo.cl) {
+                if (vo.singleton) {
+                    if (!vo.value) {
+                        validateConstructorInjectionLoop(name, vo.cl);
+                        vo.value = this.instantiate(vo.cl);
+                        injectee = vo.value;
+                    }
+                    val = vo.value;
+                }
+                else {
+                    validateConstructorInjectionLoop(name, vo.cl);
+                    val = this.instantiate(vo.cl);
+                    injectee = val;
+                }
+            }
+            if (injectee) {
+                validatePropertyInjectionLoop(name, injectee);
+                this.inject(injectee);
+            }
+            return val;
+        },
+
+        createInstance: function() {
+            var instance = this.instantiate.apply(this, arguments);
+            this.inject(instance);
+            return instance;
+        },
+
+        getValueFromClass: function(cl) {
+            for (var name in this.mappings) {
+                if (this.mappings.hasOwnProperty(name)) {
+                    var vo = this.mappings[name];
+                    if (vo.cl === cl) {
+                        if (vo.singleton) {
+                            if (!vo.value) {
+                                vo.value = this.createInstance.apply(this, arguments);
+                            }
+                            return vo.value;
+                        }
+                        else {
+                            return this.createInstance.apply(this, arguments);
+                        }
+                    }
+                }
+            }
+            if (this.parent) {
+                return this.parent.getValueFromClass.apply(this.parent, arguments);
+            } else {
+                throw new Error(infuse.errors.NO_MAPPING_FOUND);
+            }
+        },
+
+        dispose: function() {
+            this.mappings = {};
+        }
+
+    };
+
+    if (!Function.prototype.bind) {
+        Function.prototype.bind = function bind(that) {
+            var target = this;
+            if (typeof target !== 'function') {
+                throw new Error('Error, you must bind a function.');
+            }
+            var args = Array.prototype.slice.call(arguments, 1); // for normal call
+            var bound = function () {
+                if (this instanceof bound) {
+                    var F = function(){};
+                    F.prototype = target.prototype;
+                    var self = new F();
+                    var result = target.apply(
+                        self,
+                        args.concat(Array.prototype.slice.call(arguments))
+                    );
+                    if (Object(result) === result) {
+                        return result;
+                    }
+                    return self;
+                } else {
+                    return target.apply(
+                        that,
+                        args.concat(Array.prototype.slice.call(arguments))
+                    );
+                }
+            };
+            return bound;
+        };
+    }
+
+    // register for AMD module
+    if (typeof define === 'function' && typeof define.amd !== 'undefined') {
+        define("infuse", infuse);
+    }
+
+    // export for node.js
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+        module.exports = infuse;
+    }
+    if (typeof exports !== 'undefined') {
+        exports = infuse;
+    }
+
+})(this['infuse'] = this['infuse'] || {});
+
+},{}],2:[function(require,module,exports){
 /* global window */
 "use strict";
 
@@ -8,7 +408,7 @@ var defer = function(cb) {
 
 module.exports = defer;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 /* global $ */
 "use strict";
 
@@ -45,13 +445,17 @@ rest.putResource = function(url, data, onSuccess, onFailure) {
 
 module.exports = rest;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /* global ko */
 "use strict";
 
 var unifier = require("./util/unifier.js");
 var rest = require("./browser/rest.js");
 var defer = require("./browser/defer.js");
+
+var infuse = require("infuse.js");
+var injector = new infuse.Injector();
+//injector.strictMode = true;
 
 ko.options.deferUpdates = true;
 
@@ -64,298 +468,30 @@ var vm = {
    ],
 
    mainSections: ko.observableArray(["project", "map"]),
-   selectedMainSection: ko.observable("project"),
-
-   projects: {
-      available: ko.observableArray(),
-      selected: ko.observable()
-   },
-
-   levels: {
-      available: ko.observableArray()
-   },
-
-   map: {
-      selectedLevel: ko.observable(),
-
-      levelTextures: ko.observableArray(),
-      levelTextureUrls: ko.observableArray(),
-
-      sizeX: ko.observable(0),
-      sizeY: ko.observable(0),
-      tileRows: ko.observableArray(),
-
-      textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
-      selectedTextureDisplay: ko.observable("Floor"),
-
-      selectedTiles: ko.observableArray(),
-
-      selectedTileType: ko.observable(""),
-      selectedTileFloorTextureIndex: ko.observable(-1),
-      selectedTileCeilingTextureIndex: ko.observable(-1)
-   }
+   selectedMainSection: ko.observable("project")
 };
 
-vm.projects.selected.subscribe(function(project) {
-   if (project) {
-      rest.getResource(project.href + "/archive/levels", function(levels) {
-         vm.levels.available(levels.items);
-      }, function() {});
-   } else {
-      vm.levels.available([]);
-   }
+injector.mapValue("rest", rest);
+injector.mapValue("sys", {
+   defer: defer
 });
 
-var computeTextureUrl = function(indexObservable) {
-   return function() {
-      var textureIndex = indexObservable();
-      var urls = vm.map.levelTextureUrls();
-      var url = "";
+injector.mapValue("vm", vm);
 
-      if ((textureIndex >= 0) && (textureIndex < urls.length)) {
-         url = urls[textureIndex];
-      }
+var ProjectsAdapter = require("./vmAdapter/ProjectsAdapter");
+injector.mapClass("projectsAdapter", ProjectsAdapter, true);
+var LevelsAdapter = require("./vmAdapter/LevelsAdapter");
+injector.mapClass("levelsAdapter", LevelsAdapter, true);
+var MapAdapter = require("./vmAdapter/MapAdapter");
+injector.mapClass("mapAdapter", MapAdapter, true);
 
-      return url;
-   };
-};
-
-vm.map.shouldShowFloorTexture = ko.computed(function() {
-   return vm.map.selectedTextureDisplay() === "Floor";
-});
-vm.map.shouldShowCeilingTexture = ko.computed(function() {
-   return vm.map.selectedTextureDisplay() === "Ceiling";
-});
-vm.map.selectedTileFloorTextureUrl = ko.computed(computeTextureUrl(vm.map.selectedTileFloorTextureIndex));
-vm.map.selectedTileCeilingTextureUrl = ko.computed(computeTextureUrl(vm.map.selectedTileCeilingTextureIndex));
-
-vm.map.onTileClicked = function(tile, event) {
-   var newState = !tile.isSelected();
-
-   tile.isSelected(newState);
-   if (event.ctrlKey) {
-      if (newState) {
-         vm.map.selectedTiles.push(tile);
-      } else {
-         vm.map.selectedTiles.remove(tile);
-      }
-   } else {
-      vm.map.selectedTiles.removeAll().forEach(function(other) {
-         other.isSelected(false);
-      });
-      if (newState) {
-         vm.map.selectedTiles.push(tile);
-      }
-   }
-};
-
-vm.map.selectedTiles.subscribe(function(newList) {
-   var tileTypeUnifier = unifier.withResetValue("");
-   var floorTextureIndexUnifier = unifier.withResetValue(-1);
-   var ceilingTextureIndexUnifier = unifier.withResetValue(-1);
-
-   newList.forEach(function(tile) {
-      tileTypeUnifier.add(tile.tileType());
-      floorTextureIndexUnifier.add(tile.floorTextureIndex());
-      ceilingTextureIndexUnifier.add(tile.ceilingTextureIndex());
-   });
-   vm.map.selectedTileType(tileTypeUnifier.get());
-   vm.map.selectedTileFloorTextureIndex(floorTextureIndexUnifier.get());
-   vm.map.selectedTileCeilingTextureIndex(ceilingTextureIndexUnifier.get());
-});
-
-var updateTileProperties = function(tile, tileData) {
-   tile.tileType(tileData.properties.type);
-   tile.floorHeight(tileData.properties.floorHeight);
-   tile.ceilingHeight(tileData.properties.ceilingHeight);
-   tile.slopeHeight(tileData.properties.slopeHeight);
-
-   tile.floorTextureIndex(tileData.properties.realWorld.floorTexture);
-   tile.floorTextureRotations("rotations" + tileData.properties.realWorld.floorTextureRotations);
-   tile.ceilingTextureIndex(tileData.properties.realWorld.ceilingTexture);
-   tile.ceilingTextureRotations("rotations" + tileData.properties.realWorld.ceilingTextureRotations);
-};
-
-vm.map.selectedTileType.subscribe(function(newType) {
-   if (newType !== "") {
-      vm.map.selectedTiles().forEach(function(tile) {
-         var properties = {
-            type: newType,
-         };
-
-         var tileUrl = vm.map.selectedLevel().href + "/tiles/" + tile.y + "/" + tile.x;
-         if (tile.tileType() !== newType) {
-            rest.putResource(tileUrl, properties, function(tileData) {
-               updateTileProperties(tile, tileData);
-            }, function() {});
-         }
-      });
-   }
-});
-
-var getTile = function(x, y) {
-   var tileRows = vm.map.tileRows();
-   var rowIndex = 64 - 1 - y;
-   var tileColumns;
-   var tile = null;
-
-   if ((rowIndex >= 0) && (rowIndex < tileRows.length)) {
-      tileColumns = tileRows[rowIndex].tileColumns();
-      if ((x >= 0) && (x < tileColumns.length)) {
-         tile = tileColumns[x];
-      }
-   }
-
-   return tile;
-};
-
-var getTileType = function(x, y) {
-   var tileType = "solid";
-   var tile = getTile(x, y);
-
-   if (tile !== null) {
-      tileType = tile.tileType();
-   }
-
-   return tileType;
-};
-
-var isTileOpenSouth = function(tileType) {
-   return tileType !== "solid" && tileType !== "diagonalOpenNorthEast" && tileType !== "diagonalOpenNorthWest";
-};
-
-var isTileOpenNorth = function(tileType) {
-   return tileType !== "solid" && tileType !== "diagonalOpenSouthEast" && tileType !== "diagonalOpenSouthWest";
-};
-
-var isTileOpenEast = function(tileType) {
-   return tileType !== "solid" && tileType !== "diagonalOpenSouthWest" && tileType !== "diagonalOpenNorthWest";
-};
-
-var isTileOpenWest = function(tileType) {
-   return tileType !== "solid" && tileType !== "diagonalOpenSouthEast" && tileType !== "diagonalOpenNorthEast";
-};
-
-var createTile = function(x, y) {
-   var tile = {
-      x: x,
-      y: y,
-      tileType: ko.observable("solid"),
-      floorHeight: ko.observable(0),
-      ceilingHeight: ko.observable(0),
-      slopeHeight: ko.observable(0),
-
-      floorTextureIndex: ko.observable(-1),
-      floorTextureRotations: ko.observable("rotations0"),
-
-      ceilingTextureIndex: ko.observable(-1),
-      ceilingTextureRotations: ko.observable("rotations0"),
-
-      isSelected: ko.observable(false)
-   };
-
-   tile.floorTextureUrl = ko.computed(computeTextureUrl(tile.floorTextureIndex));
-   tile.ceilingTextureUrl = ko.computed(computeTextureUrl(tile.ceilingTextureIndex));
-
-   tile.hasWallSouthWestToNorthEast = ko.computed(function() {
-      var tileType = tile.tileType();
-
-      return tileType === "diagonalOpenNorthWest" || tileType === "diagonalOpenSouthEast";
-   });
-   tile.hasWallSouthEastToNorthWest = ko.computed(function() {
-      var tileType = tile.tileType();
-
-      return tileType === "diagonalOpenNorthEast" || tileType === "diagonalOpenSouthWest";
-   });
-   tile.hasWallNorth = ko.computed(function() {
-      return isTileOpenNorth(tile.tileType()) && !isTileOpenSouth(getTileType(x, y + 1));
-   });
-   tile.hasWallSouth = ko.computed(function() {
-      return isTileOpenSouth(tile.tileType()) && !isTileOpenNorth(getTileType(x, y - 1));
-   });
-   tile.hasWallEast = ko.computed(function() {
-      return isTileOpenEast(tile.tileType()) && !isTileOpenWest(getTileType(x + 1, y));
-   });
-   tile.hasWallWest = ko.computed(function() {
-      return isTileOpenWest(tile.tileType()) && !isTileOpenEast(getTileType(x - 1, y));
-   });
-
-   return tile;
-};
-
-var resizeColumns = function(tileRow, newWidth) {
-   var list = tileRow.tileColumns;
-
-   while (list().length > newWidth) {
-      list.pop();
-   }
-   while (list().length < newWidth) {
-      list().push(createTile(list().length, tileRow.y));
-   }
-};
-
-vm.map.sizeX.subscribe(function(newWidth) {
-   vm.map.tileRows().forEach(function(tileRow) {
-      resizeColumns(tileRow, newWidth);
-   });
-});
-
-var createTileRow = function(y) {
-   var tileRow = {
-      y: y,
-      tileColumns: ko.observableArray()
-   };
-
-   resizeColumns(tileRow, vm.map.sizeX());
-
-   return tileRow;
-};
-
-vm.map.sizeY.subscribe(function(newHeight) {
-   while (vm.map.tileRows().length > newHeight) {
-      vm.map.tileRows.pop();
-   }
-   while (vm.map.tileRows().length < newHeight) {
-      vm.map.tileRows.push(createTileRow(newHeight - vm.map.tileRows().length - 1));
-   }
-});
-
-vm.map.selectedLevel.subscribe(function(level) {
-   if (level) {
-      rest.getResource(level.href + "/textures", function(levelTextures) {
-         vm.map.levelTextures.removeAll();
-         vm.map.levelTextureUrls.removeAll();
-         levelTextures.ids.forEach(function(id) {
-            vm.map.levelTextureUrls.push(vm.projects.selected().href + "/textures/" + id + "/large/png");
-            vm.map.levelTextures.push(id);
-         });
-      }, function() {});
-
-      rest.getResource(level.href + "/tiles", function(tileMap) {
-         tileMap.Table.forEach(function(row, y) {
-            row.forEach(function(tileData, x) {
-               defer(function() {
-                  var rowIndex = 64 - 1 - y;
-                  var tile = vm.map.tileRows()[rowIndex].tileColumns()[x];
-
-                  updateTileProperties(tile, tileData);
-               });
-            });
-         });
-      }, function() {});
-
-      vm.map.sizeX(64);
-      vm.map.sizeY(64);
-   }
-});
+var projectsAdapter = injector.getValue("projectsAdapter");
+var levelsAdapter = injector.getValue("levelsAdapter");
+var mapAdapter = injector.getValue("mapAdapter");
 
 ko.applyBindings(vm);
 
-rest.getResource("/projects", function(projects) {
-   vm.projects.available(projects.items);
-}, function() {});
-
-},{"./browser/defer.js":1,"./browser/rest.js":2,"./util/unifier.js":4}],4:[function(require,module,exports){
+},{"./browser/defer.js":2,"./browser/rest.js":3,"./util/unifier.js":5,"./vmAdapter/LevelsAdapter":6,"./vmAdapter/MapAdapter":7,"./vmAdapter/ProjectsAdapter":8,"infuse.js":1}],5:[function(require,module,exports){
 /* global $ */
 "use strict";
 
@@ -383,4 +519,357 @@ unifier.withResetValue = function(resetValue) {
 
 module.exports = unifier;
 
-},{}]},{},[3]);
+},{}],6:[function(require,module,exports){
+/* global ko */
+"use strict";
+
+function LevelsAdapter() {
+   this.projectsAdapter = null;
+
+   this.vm = null;
+   this.rest = null;
+}
+
+LevelsAdapter.prototype.postConstruct = function() {
+   var rest = this.rest;
+   var vmLevels = {
+      available: ko.observableArray()
+   };
+
+   this.vm.levels = vmLevels;
+   this.vm.projects.selected.subscribe(function(project) {
+      if (project) {
+         rest.getResource(project.href + "/archive/levels", function(levels) {
+            vmLevels.available(levels.items);
+         }, function() {});
+      } else {
+         vmLevels.available([]);
+      }
+   });
+};
+
+module.exports = LevelsAdapter;
+
+},{}],7:[function(require,module,exports){
+/* global ko */
+"use strict";
+
+var unifier = require("../../util/unifier.js");
+
+var updateTileProperties = function(tile, tileData) {
+   tile.tileType(tileData.properties.type);
+   tile.floorHeight(tileData.properties.floorHeight);
+   tile.ceilingHeight(tileData.properties.ceilingHeight);
+   tile.slopeHeight(tileData.properties.slopeHeight);
+
+   tile.floorTextureIndex(tileData.properties.realWorld.floorTexture);
+   tile.floorTextureRotations("rotations" + tileData.properties.realWorld.floorTextureRotations);
+   tile.ceilingTextureIndex(tileData.properties.realWorld.ceilingTexture);
+   tile.ceilingTextureRotations("rotations" + tileData.properties.realWorld.ceilingTextureRotations);
+};
+
+var isTileOpenSouth = function(tileType) {
+   return tileType !== "solid" && tileType !== "diagonalOpenNorthEast" && tileType !== "diagonalOpenNorthWest";
+};
+
+var isTileOpenNorth = function(tileType) {
+   return tileType !== "solid" && tileType !== "diagonalOpenSouthEast" && tileType !== "diagonalOpenSouthWest";
+};
+
+var isTileOpenEast = function(tileType) {
+   return tileType !== "solid" && tileType !== "diagonalOpenSouthWest" && tileType !== "diagonalOpenNorthWest";
+};
+
+var isTileOpenWest = function(tileType) {
+   return tileType !== "solid" && tileType !== "diagonalOpenSouthEast" && tileType !== "diagonalOpenNorthEast";
+};
+
+function MapAdapter() {
+   this.projectsAdapter = null;
+
+   this.vm = null;
+   this.rest = null;
+   this.sys = null;
+}
+
+MapAdapter.prototype.postConstruct = function() {
+   var rest = this.rest;
+   var vmMap = {
+      selectedLevel: ko.observable(),
+
+      levelTextures: ko.observableArray(),
+      levelTextureUrls: ko.observableArray(),
+
+      sizeX: ko.observable(0),
+      sizeY: ko.observable(0),
+      tileRows: ko.observableArray(),
+
+      textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
+      selectedTextureDisplay: ko.observable("Floor"),
+
+      selectedTiles: ko.observableArray(),
+
+      selectedTileType: ko.observable(""),
+      selectedTileFloorTextureIndex: ko.observable(-1),
+      selectedTileCeilingTextureIndex: ko.observable(-1)
+   };
+
+   this.vm.map = vmMap;
+   vmMap.onTileClicked = this.getTileClickedHandler();
+   vmMap.shouldShowFloorTexture = ko.computed(function() {
+      return vmMap.selectedTextureDisplay() === "Floor";
+   });
+   vmMap.shouldShowCeilingTexture = ko.computed(function() {
+      return vmMap.selectedTextureDisplay() === "Ceiling";
+   });
+   vmMap.selectedTileFloorTextureUrl = ko.computed(this.computeTextureUrl(vmMap.selectedTileFloorTextureIndex));
+   vmMap.selectedTileCeilingTextureUrl = ko.computed(this.computeTextureUrl(vmMap.selectedTileCeilingTextureIndex));
+
+   vmMap.selectedTiles.subscribe(function(newList) {
+      var tileTypeUnifier = unifier.withResetValue("");
+      var floorTextureIndexUnifier = unifier.withResetValue(-1);
+      var ceilingTextureIndexUnifier = unifier.withResetValue(-1);
+
+      newList.forEach(function(tile) {
+         tileTypeUnifier.add(tile.tileType());
+         floorTextureIndexUnifier.add(tile.floorTextureIndex());
+         ceilingTextureIndexUnifier.add(tile.ceilingTextureIndex());
+      });
+      vmMap.selectedTileType(tileTypeUnifier.get());
+      vmMap.selectedTileFloorTextureIndex(floorTextureIndexUnifier.get());
+      vmMap.selectedTileCeilingTextureIndex(ceilingTextureIndexUnifier.get());
+   });
+
+   vmMap.selectedTileType.subscribe(function(newType) {
+      if (newType !== "") {
+         vmMap.selectedTiles().forEach(function(tile) {
+            var properties = {
+               type: newType,
+            };
+
+            var tileUrl = vmMap.selectedLevel().href + "/tiles/" + tile.y + "/" + tile.x;
+            if (tile.tileType() !== newType) {
+               rest.putResource(tileUrl, properties, function(tileData) {
+                  updateTileProperties(tile, tileData);
+               }, function() {});
+            }
+         });
+      }
+   });
+
+   var self = this;
+
+   vmMap.sizeX.subscribe(function(newWidth) {
+      vmMap.tileRows().forEach(function(tileRow) {
+         self.resizeColumns(tileRow, newWidth);
+      });
+   });
+
+   vmMap.sizeY.subscribe(function(newHeight) {
+      while (vmMap.tileRows().length > newHeight) {
+         vmMap.tileRows.pop();
+      }
+      while (vmMap.tileRows().length < newHeight) {
+         vmMap.tileRows.push(self.createTileRow(newHeight - vmMap.tileRows().length - 1));
+      }
+   });
+
+   var vmProjects = this.vm.projects;
+
+   vmMap.selectedLevel.subscribe(function(level) {
+      if (level) {
+         rest.getResource(level.href + "/textures", function(levelTextures) {
+            vmMap.levelTextures.removeAll();
+            vmMap.levelTextureUrls.removeAll();
+            levelTextures.ids.forEach(function(id) {
+               vmMap.levelTextureUrls.push(vmProjects.selected().href + "/textures/" + id + "/large/png");
+               vmMap.levelTextures.push(id);
+            });
+         }, function() {});
+
+         rest.getResource(level.href + "/tiles", function(tileMap) {
+            tileMap.Table.forEach(function(row, y) {
+               row.forEach(function(tileData, x) {
+                  self.sys.defer(function() {
+                     var rowIndex = 64 - 1 - y;
+                     var tile = vmMap.tileRows()[rowIndex].tileColumns()[x];
+
+                     updateTileProperties(tile, tileData);
+                  });
+               });
+            });
+         }, function() {});
+
+         vmMap.sizeX(64);
+         vmMap.sizeY(64);
+      }
+   });
+
+};
+
+MapAdapter.prototype.computeTextureUrl = function(indexObservable) {
+   var levelTextureUrls = this.vm.map.levelTextureUrls;
+
+   return function() {
+      var textureIndex = indexObservable();
+      var urls = levelTextureUrls();
+      var url = "";
+
+      if ((textureIndex >= 0) && (textureIndex < urls.length)) {
+         url = urls[textureIndex];
+      }
+
+      return url;
+   };
+};
+
+MapAdapter.prototype.getTileClickedHandler = function() {
+   var vmMap = this.vm.map;
+
+   return function(tile, event) {
+      var newState = !tile.isSelected();
+
+      tile.isSelected(newState);
+      if (event.ctrlKey) {
+         if (newState) {
+            vmMap.selectedTiles.push(tile);
+         } else {
+            vmMap.selectedTiles.remove(tile);
+         }
+      } else {
+         vmMap.selectedTiles.removeAll().forEach(function(other) {
+            other.isSelected(false);
+         });
+         if (newState) {
+            vmMap.selectedTiles.push(tile);
+         }
+      }
+   };
+};
+
+MapAdapter.prototype.getTile = function(x, y) {
+   var tileRows = this.vm.map.tileRows();
+   var rowIndex = 64 - 1 - y;
+   var tileColumns;
+   var tile = null;
+
+   if ((rowIndex >= 0) && (rowIndex < tileRows.length)) {
+      tileColumns = tileRows[rowIndex].tileColumns();
+      if ((x >= 0) && (x < tileColumns.length)) {
+         tile = tileColumns[x];
+      }
+   }
+
+   return tile;
+};
+
+MapAdapter.prototype.getTileType = function(x, y) {
+   var tileType = "solid";
+   var tile = this.getTile(x, y);
+
+   if (tile !== null) {
+      tileType = tile.tileType();
+   }
+
+   return tileType;
+};
+
+MapAdapter.prototype.createTile = function(x, y) {
+   var self = this;
+   var getTileType = function(x, y) {
+      return self.getTileType(x, y);
+   };
+   var tile = {
+      x: x,
+      y: y,
+      tileType: ko.observable("solid"),
+      floorHeight: ko.observable(0),
+      ceilingHeight: ko.observable(0),
+      slopeHeight: ko.observable(0),
+
+      floorTextureIndex: ko.observable(-1),
+      floorTextureRotations: ko.observable("rotations0"),
+
+      ceilingTextureIndex: ko.observable(-1),
+      ceilingTextureRotations: ko.observable("rotations0"),
+
+      isSelected: ko.observable(false)
+   };
+
+   tile.floorTextureUrl = ko.computed(this.computeTextureUrl(tile.floorTextureIndex));
+   tile.ceilingTextureUrl = ko.computed(this.computeTextureUrl(tile.ceilingTextureIndex));
+
+   tile.hasWallSouthWestToNorthEast = ko.computed(function() {
+      var tileType = tile.tileType();
+
+      return tileType === "diagonalOpenNorthWest" || tileType === "diagonalOpenSouthEast";
+   });
+   tile.hasWallSouthEastToNorthWest = ko.computed(function() {
+      var tileType = tile.tileType();
+
+      return tileType === "diagonalOpenNorthEast" || tileType === "diagonalOpenSouthWest";
+   });
+   tile.hasWallNorth = ko.computed(function() {
+      return isTileOpenNorth(tile.tileType()) && !isTileOpenSouth(getTileType(x, y + 1));
+   });
+   tile.hasWallSouth = ko.computed(function() {
+      return isTileOpenSouth(tile.tileType()) && !isTileOpenNorth(getTileType(x, y - 1));
+   });
+   tile.hasWallEast = ko.computed(function() {
+      return isTileOpenEast(tile.tileType()) && !isTileOpenWest(getTileType(x + 1, y));
+   });
+   tile.hasWallWest = ko.computed(function() {
+      return isTileOpenWest(tile.tileType()) && !isTileOpenEast(getTileType(x - 1, y));
+   });
+
+   return tile;
+};
+
+MapAdapter.prototype.resizeColumns = function(tileRow, newWidth) {
+   var list = tileRow.tileColumns;
+
+   while (list().length > newWidth) {
+      list.pop();
+   }
+   while (list().length < newWidth) {
+      list().push(this.createTile(list().length, tileRow.y));
+   }
+};
+
+MapAdapter.prototype.createTileRow = function(y) {
+   var tileRow = {
+      y: y,
+      tileColumns: ko.observableArray()
+   };
+
+   this.resizeColumns(tileRow, this.vm.map.sizeX());
+
+   return tileRow;
+};
+
+module.exports = MapAdapter;
+
+},{"../../util/unifier.js":5}],8:[function(require,module,exports){
+/* global ko */
+"use strict";
+
+function ProjectsAdapter() {
+   this.vm = null;
+   this.rest = null;
+}
+
+ProjectsAdapter.prototype.postConstruct = function() {
+   var vmProjects = {
+      available: ko.observableArray(),
+      selected: ko.observable()
+   };
+
+   this.vm.projects = vmProjects;
+   this.rest.getResource("/projects", function(projects) {
+      vmProjects.available(projects.items);
+   }, function() {});
+};
+
+module.exports = ProjectsAdapter;
+
+},{}]},{},[4]);
