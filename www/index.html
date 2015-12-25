@@ -69,6 +69,27 @@
           </table>
         </div>
 
+        <h3>Level Objects (<span data-bind="text: $root.map.filteredLevelObjects().length + '/' + $root.map.levelObjects().length"></span>)</h3>
+        <div style="width: 100%; height: 200px; overflow: auto;">
+          <table style="border-spacing: 5px; border-collapse: separate;">
+            <thead>
+              <tr style="width: 100%;">
+                <td>Idx</td>
+                <td>ID</td>
+                <td>Pos</td>
+              </tr>
+            </thead>
+            <tbody data-bind="foreach: { data: map.filteredLevelObjects, as: 'object' }">
+              <tr style="width: 100%;">
+                <td><span data-bind="text: object.raw.id"></span></td>
+                <td><span data-bind="text: object.raw.class + '/' + object.raw.subclass + '/' + object.raw.type"></span></td>
+                <td><span data-bind="text: object.raw.properties.tileX + '-' + object.raw.properties.tileY"></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+
       </div>
 
       <div class="tileMap" style="background: black;">

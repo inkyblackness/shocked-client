@@ -55,6 +55,8 @@ MapAdapter.prototype.postConstruct = function() {
       levelTextures: ko.observableArray(),
       levelTextureUrls: ko.observableArray(),
 
+      levelObjects: ko.observableArray(),
+
       sizeX: ko.observable(0),
       sizeY: ko.observable(0),
       tileRows: ko.observableArray(),
@@ -117,6 +119,31 @@ MapAdapter.prototype.postConstruct = function() {
       }
    });
 
+   vmMap.filteredLevelObjects = ko.computed(function() {
+      var allObjects = vmMap.levelObjects();
+      var selectedTiles = vmMap.selectedTiles();
+      var result = [];
+
+      if (selectedTiles.length === 0) {
+         result = allObjects;
+      } else {
+         allObjects.forEach(function(object) {
+            var isIncluded = false;
+
+            selectedTiles.forEach(function(tile) {
+               if ((tile.x === object.raw.properties.tileX) && (tile.y === object.raw.properties.tileY)) {
+                  isIncluded = true;
+               }
+            });
+            if (isIncluded) {
+               result.push(object);
+            }
+         });
+      }
+
+      return result;
+   });
+
    var self = this;
 
    vmMap.sizeX.subscribe(function(newWidth) {
@@ -144,6 +171,16 @@ MapAdapter.prototype.postConstruct = function() {
             levelTextures.ids.forEach(function(id) {
                vmMap.levelTextureUrls.push(vmProjects.selected().href + "/textures/" + id + "/large/png");
                vmMap.levelTextures.push(id);
+            });
+         }, function() {});
+
+         rest.getResource(level.href + "/objects", function(levelObjects) {
+            vmMap.levelObjects.removeAll();
+            levelObjects.table.forEach(function(raw) {
+               var entry = {
+                  raw: raw
+               };
+               vmMap.levelObjects.push(entry);
             });
          }, function() {});
 
