@@ -1,37 +1,36 @@
 /* global ko */
 "use strict";
 
-var unifier = require("./util/unifier.js");
-var rest = require("./browser/rest.js");
-var defer = require("./browser/defer.js");
-
 var infuse = require("infuse.js");
 var injector = new infuse.Injector();
-//injector.strictMode = true;
 
-ko.options.deferUpdates = true;
-
-var vm = {
-   mainSections: ko.observableArray(["project", "map"]),
-   selectedMainSection: ko.observable("project")
-};
-
-injector.mapValue("rest", rest);
+injector.mapValue("rest", require("./browser/rest.js"));
 injector.mapValue("sys", {
-   defer: defer
+   defer: require("./browser/defer.js")
 });
 
-injector.mapValue("vm", vm);
+injector.mapClass("vm", require("./ViewModel.js"), true);
+injector.mapClass("projectsAdapter", require("./vmAdapter/ProjectsAdapter"), true);
+injector.mapClass("levelsAdapter", require("./vmAdapter/LevelsAdapter"), true);
+injector.mapClass("mapAdapter", require("./vmAdapter/MapAdapter"), true);
 
-var ProjectsAdapter = require("./vmAdapter/ProjectsAdapter");
-injector.mapClass("projectsAdapter", ProjectsAdapter, true);
-var LevelsAdapter = require("./vmAdapter/LevelsAdapter");
-injector.mapClass("levelsAdapter", LevelsAdapter, true);
-var MapAdapter = require("./vmAdapter/MapAdapter");
-injector.mapClass("mapAdapter", MapAdapter, true);
+function Application() {
+   this.vm = null;
+   this.projectsAdapter = null;
+   this.levelsAdapter = null;
+   this.mapAdapter = null;
+}
 
-var projectsAdapter = injector.getValue("projectsAdapter");
-var levelsAdapter = injector.getValue("levelsAdapter");
-var mapAdapter = injector.getValue("mapAdapter");
+Application.prototype.postConstruct = function() {
+   ko.applyBindings(this.vm);
+};
 
-ko.applyBindings(vm);
+injector.mapClass("app", Application, true);
+
+module.exports = {
+   Application: Application,
+   injector: injector,
+   buildAndRun: function() {
+      return injector.getValue("app");
+   }
+};

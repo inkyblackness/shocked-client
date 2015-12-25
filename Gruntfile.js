@@ -32,7 +32,9 @@ module.exports = function(grunt) {
             src: ["src/index.js"],
             dest: "www/client.js",
             options: {
-               standalone: "app"
+               browserifyOptions: {
+                  standalone: "client"
+               }
             }
          }
       },

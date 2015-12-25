@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.client = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*
 Copyright (c) | 2016 | infuse.js | Romuald Quantin | www.soundstep.com | romu@soundstep.com
 
@@ -399,6 +399,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 })(this['infuse'] = this['infuse'] || {});
 
 },{}],2:[function(require,module,exports){
+/* global ko */
+"use strict";
+
+ko.options.deferUpdates = true;
+
+function ViewModel() {}
+
+ViewModel.prototype.postConstruct = function() {
+   this.mainSections = ko.observableArray(["project", "map"]);
+   this.selectedMainSection = ko.observable("project");
+};
+
+module.exports = ViewModel;
+
+},{}],3:[function(require,module,exports){
 /* global window */
 "use strict";
 
@@ -408,7 +423,7 @@ var defer = function(cb) {
 
 module.exports = defer;
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 /* global $ */
 "use strict";
 
@@ -445,46 +460,45 @@ rest.putResource = function(url, data, onSuccess, onFailure) {
 
 module.exports = rest;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /* global ko */
 "use strict";
 
-var unifier = require("./util/unifier.js");
-var rest = require("./browser/rest.js");
-var defer = require("./browser/defer.js");
-
 var infuse = require("infuse.js");
 var injector = new infuse.Injector();
-//injector.strictMode = true;
 
-ko.options.deferUpdates = true;
-
-var vm = {
-   mainSections: ko.observableArray(["project", "map"]),
-   selectedMainSection: ko.observable("project")
-};
-
-injector.mapValue("rest", rest);
+injector.mapValue("rest", require("./browser/rest.js"));
 injector.mapValue("sys", {
-   defer: defer
+   defer: require("./browser/defer.js")
 });
 
-injector.mapValue("vm", vm);
+injector.mapClass("vm", require("./ViewModel.js"), true);
+injector.mapClass("projectsAdapter", require("./vmAdapter/ProjectsAdapter"), true);
+injector.mapClass("levelsAdapter", require("./vmAdapter/LevelsAdapter"), true);
+injector.mapClass("mapAdapter", require("./vmAdapter/MapAdapter"), true);
 
-var ProjectsAdapter = require("./vmAdapter/ProjectsAdapter");
-injector.mapClass("projectsAdapter", ProjectsAdapter, true);
-var LevelsAdapter = require("./vmAdapter/LevelsAdapter");
-injector.mapClass("levelsAdapter", LevelsAdapter, true);
-var MapAdapter = require("./vmAdapter/MapAdapter");
-injector.mapClass("mapAdapter", MapAdapter, true);
+function Application() {
+   this.vm = null;
+   this.projectsAdapter = null;
+   this.levelsAdapter = null;
+   this.mapAdapter = null;
+}
 
-var projectsAdapter = injector.getValue("projectsAdapter");
-var levelsAdapter = injector.getValue("levelsAdapter");
-var mapAdapter = injector.getValue("mapAdapter");
+Application.prototype.postConstruct = function() {
+   ko.applyBindings(this.vm);
+};
 
-ko.applyBindings(vm);
+injector.mapClass("app", Application, true);
 
-},{"./browser/defer.js":2,"./browser/rest.js":3,"./util/unifier.js":5,"./vmAdapter/LevelsAdapter":6,"./vmAdapter/MapAdapter":7,"./vmAdapter/ProjectsAdapter":8,"infuse.js":1}],5:[function(require,module,exports){
+module.exports = {
+   Application: Application,
+   injector: injector,
+   buildAndRun: function() {
+      return injector.getValue("app");
+   }
+};
+
+},{"./ViewModel.js":2,"./browser/defer.js":3,"./browser/rest.js":4,"./vmAdapter/LevelsAdapter":7,"./vmAdapter/MapAdapter":8,"./vmAdapter/ProjectsAdapter":9,"infuse.js":1}],6:[function(require,module,exports){
 /* global $ */
 "use strict";
 
@@ -512,7 +526,7 @@ unifier.withResetValue = function(resetValue) {
 
 module.exports = unifier;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /* global ko */
 "use strict";
 
@@ -543,7 +557,7 @@ LevelsAdapter.prototype.postConstruct = function() {
 
 module.exports = LevelsAdapter;
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /* global ko */
 "use strict";
 
@@ -849,7 +863,7 @@ MapAdapter.prototype.createTileRow = function(y) {
 
 module.exports = MapAdapter;
 
-},{"../../util/unifier.js":5}],8:[function(require,module,exports){
+},{"../../util/unifier.js":6}],9:[function(require,module,exports){
 /* global ko */
 "use strict";
 
@@ -872,4 +886,5 @@ ProjectsAdapter.prototype.postConstruct = function() {
 
 module.exports = ProjectsAdapter;
 
-},{}]},{},[4]);
+},{}]},{},[5])(5)
+});
