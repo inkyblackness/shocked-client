@@ -49,15 +49,14 @@ var vm = {
       tileRows: ko.observableArray(),
 
       textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
-      selectedTextureDisplay: ko.observable("Floor")
+      selectedTextureDisplay: ko.observable("Floor"),
 
-   },
+      selectedTiles: ko.observableArray(),
 
-   selectedTiles: ko.observableArray(),
-
-   selectedTileType: ko.observable(""),
-   selectedTileFloorTextureIndex: ko.observable(-1),
-   selectedTileCeilingTextureIndex: ko.observable(-1)
+      selectedTileType: ko.observable(""),
+      selectedTileFloorTextureIndex: ko.observable(-1),
+      selectedTileCeilingTextureIndex: ko.observable(-1)
+   }
 };
 
 vm.projects.selected.subscribe(function(project) {
@@ -90,8 +89,8 @@ vm.map.shouldShowFloorTexture = ko.computed(function() {
 vm.map.shouldShowCeilingTexture = ko.computed(function() {
    return vm.map.selectedTextureDisplay() === "Ceiling";
 });
-vm.selectedTileFloorTextureUrl = ko.computed(computeTextureUrl(vm.selectedTileFloorTextureIndex));
-vm.selectedTileCeilingTextureUrl = ko.computed(computeTextureUrl(vm.selectedTileCeilingTextureIndex));
+vm.map.selectedTileFloorTextureUrl = ko.computed(computeTextureUrl(vm.map.selectedTileFloorTextureIndex));
+vm.map.selectedTileCeilingTextureUrl = ko.computed(computeTextureUrl(vm.map.selectedTileCeilingTextureIndex));
 
 vm.selectTile = function(tile, event) {
    var newState = !tile.isSelected();
@@ -99,21 +98,21 @@ vm.selectTile = function(tile, event) {
    tile.isSelected(newState);
    if (event.ctrlKey) {
       if (newState) {
-         vm.selectedTiles.push(tile);
+         vm.map.selectedTiles.push(tile);
       } else {
-         vm.selectedTiles.remove(tile);
+         vm.map.selectedTiles.remove(tile);
       }
    } else {
-      vm.selectedTiles.removeAll().forEach(function(other) {
+      vm.map.selectedTiles.removeAll().forEach(function(other) {
          other.isSelected(false);
       });
       if (newState) {
-         vm.selectedTiles.push(tile);
+         vm.map.selectedTiles.push(tile);
       }
    }
 };
 
-vm.selectedTiles.subscribe(function(newList) {
+vm.map.selectedTiles.subscribe(function(newList) {
    var tileTypeUnifier = unifier.withResetValue("");
    var floorTextureIndexUnifier = unifier.withResetValue(-1);
    var ceilingTextureIndexUnifier = unifier.withResetValue(-1);
@@ -123,9 +122,9 @@ vm.selectedTiles.subscribe(function(newList) {
       floorTextureIndexUnifier.add(tile.floorTextureIndex());
       ceilingTextureIndexUnifier.add(tile.ceilingTextureIndex());
    });
-   vm.selectedTileType(tileTypeUnifier.get());
-   vm.selectedTileFloorTextureIndex(floorTextureIndexUnifier.get());
-   vm.selectedTileCeilingTextureIndex(ceilingTextureIndexUnifier.get());
+   vm.map.selectedTileType(tileTypeUnifier.get());
+   vm.map.selectedTileFloorTextureIndex(floorTextureIndexUnifier.get());
+   vm.map.selectedTileCeilingTextureIndex(ceilingTextureIndexUnifier.get());
 });
 
 var updateTileProperties = function(tile, tileData) {
@@ -140,9 +139,9 @@ var updateTileProperties = function(tile, tileData) {
    tile.ceilingTextureRotations("rotations" + tileData.properties.realWorld.ceilingTextureRotations);
 };
 
-vm.selectedTileType.subscribe(function(newType) {
+vm.map.selectedTileType.subscribe(function(newType) {
    if (newType !== "") {
-      vm.selectedTiles().forEach(function(tile) {
+      vm.map.selectedTiles().forEach(function(tile) {
          var properties = {
             type: newType,
          };

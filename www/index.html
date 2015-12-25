@@ -43,16 +43,16 @@
 
         <p>
           Selected Tile Type:
-          <select data-bind="options: tileTypes, value: selectedTileType"></select>
+          <select data-bind="options: tileTypes, value: map.selectedTileType"></select>
         </p>
 
         <p>
           Selected Floor:
-          <img style="border: solid 1px black;" data-bind="attr: { src: $root.selectedTileFloorTextureUrl }" width="64px" height="64px">
+          <img style="border: solid 1px black;" data-bind="attr: { src: $root.map.selectedTileFloorTextureUrl }" width="64px" height="64px">
         </p>
         <p>
           Selected Ceiling:
-          <img style="border: solid 1px black;" data-bind="attr: { src: $root.selectedTileCeilingTextureUrl }" width="64px" height="64px">
+          <img style="border: solid 1px black;" data-bind="attr: { src: $root.map.selectedTileCeilingTextureUrl }" width="64px" height="64px">
         </p>
 
         <p>
