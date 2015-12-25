@@ -74,7 +74,7 @@
         <table style="width: 2048px; height: 2048px;">
            <tbody data-bind="foreach: { data: map.tileRows, as: 'tileRow' }">
                <tr data-bind="foreach: { data: tileRow.tileColumns, as: 'tile' }">
-                   <td style="overflow: hidden;" data-bind="click: $root.selectTile">
+                   <td style="overflow: hidden;" data-bind="click: $root.map.onTileClicked">
                       <div style="position: relative; width: 32px; height: 32px">
                          <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowFloorTexture, style: { backgroundImage: 'url('+tile.floorTextureUrl()+')' }, css: tile.floorTextureRotations"></div>
                          <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowCeilingTexture, style: { backgroundImage: 'url('+tile.ceilingTextureUrl()+')' }, css: tile.ceilingTextureRotations"></div>

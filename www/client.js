@@ -92,7 +92,7 @@ vm.map.shouldShowCeilingTexture = ko.computed(function() {
 vm.map.selectedTileFloorTextureUrl = ko.computed(computeTextureUrl(vm.map.selectedTileFloorTextureIndex));
 vm.map.selectedTileCeilingTextureUrl = ko.computed(computeTextureUrl(vm.map.selectedTileCeilingTextureIndex));
 
-vm.selectTile = function(tile, event) {
+vm.map.onTileClicked = function(tile, event) {
    var newState = !tile.isSelected();
 
    tile.isSelected(newState);
