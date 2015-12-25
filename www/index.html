@@ -35,29 +35,30 @@
         <p>
         Active: <select data-bind="options: levels.available, optionsText: 'id', optionsCaption: '', value: map.selectedLevel"></select>
         </p>
-
         <p>
           Map Texture: 
           <select data-bind="options: map.textureDisplay, value: map.selectedTextureDisplay"></select>
         </p>
 
+        <h3>Tile Selection</h3>
         <p>
-          Selected Tile Type:
+          Tile Type:
           <select data-bind="options: map.tileTypes, value: map.selectedTileType"></select>
         </p>
-
         <p>
-          Selected Floor:
+          Floor Texture (<span data-bind="text: $root.map.selectedTileFloorTextureIndex"></span>):
           <img style="border: solid 1px black;" data-bind="attr: { src: $root.map.selectedTileFloorTextureUrl }" width="64px" height="64px">
         </p>
         <p>
-          Selected Ceiling:
+          Ceiling Texture (<span data-bind="text: $root.map.selectedTileCeilingTextureIndex"></span>):
           <img style="border: solid 1px black;" data-bind="attr: { src: $root.map.selectedTileCeilingTextureUrl }" width="64px" height="64px">
         </p>
-
         <p>
-          Level Textures:
+          Wall Texture (<span data-bind="text: $root.map.selectedTileWallTextureIndex"></span>):
+          <img style="border: solid 1px black;" data-bind="attr: { src: $root.map.selectedTileWallTextureUrl }" width="64px" height="64px">
         </p>
+
+        <h3>Level Textures (<span data-bind="text: $root.map.levelTextureUrls().length"></span>)</h3>
         <div style="width: 100%; overflow: auto;">
           <table>
             <tbody>

@@ -13,6 +13,7 @@ var updateTileProperties = function(tile, tileData) {
    tile.floorTextureRotations(tileData.properties.realWorld.floorTextureRotations);
    tile.ceilingTextureIndex(tileData.properties.realWorld.ceilingTexture);
    tile.ceilingTextureRotations(tileData.properties.realWorld.ceilingTextureRotations);
+   tile.wallTextureIndex(tileData.properties.realWorld.wallTexture);
 };
 
 var isTileOpenSouth = function(tileType) {
@@ -65,7 +66,8 @@ MapAdapter.prototype.postConstruct = function() {
 
       selectedTileType: ko.observable(""),
       selectedTileFloorTextureIndex: ko.observable(-1),
-      selectedTileCeilingTextureIndex: ko.observable(-1)
+      selectedTileCeilingTextureIndex: ko.observable(-1),
+      selectedTileWallTextureIndex: ko.observable(-1)
    };
 
    this.vm.map = vmMap;
@@ -78,20 +80,24 @@ MapAdapter.prototype.postConstruct = function() {
    });
    vmMap.selectedTileFloorTextureUrl = ko.computed(this.computeTextureUrl(vmMap.selectedTileFloorTextureIndex));
    vmMap.selectedTileCeilingTextureUrl = ko.computed(this.computeTextureUrl(vmMap.selectedTileCeilingTextureIndex));
+   vmMap.selectedTileWallTextureUrl = ko.computed(this.computeTextureUrl(vmMap.selectedTileWallTextureIndex));
 
    vmMap.selectedTiles.subscribe(function(newList) {
       var tileTypeUnifier = unifier.withResetValue("");
       var floorTextureIndexUnifier = unifier.withResetValue(-1);
       var ceilingTextureIndexUnifier = unifier.withResetValue(-1);
+      var wallTextureIndexUnifier = unifier.withResetValue(-1);
 
       newList.forEach(function(tile) {
          tileTypeUnifier.add(tile.tileType());
          floorTextureIndexUnifier.add(tile.floorTextureIndex());
          ceilingTextureIndexUnifier.add(tile.ceilingTextureIndex());
+         wallTextureIndexUnifier.add(tile.wallTextureIndex());
       });
       vmMap.selectedTileType(tileTypeUnifier.get());
       vmMap.selectedTileFloorTextureIndex(floorTextureIndexUnifier.get());
       vmMap.selectedTileCeilingTextureIndex(ceilingTextureIndexUnifier.get());
+      vmMap.selectedTileWallTextureIndex(wallTextureIndexUnifier.get());
    });
 
    vmMap.selectedTileType.subscribe(function(newType) {
@@ -247,11 +253,14 @@ MapAdapter.prototype.createTile = function(x, y) {
       ceilingTextureIndex: ko.observable(-1),
       ceilingTextureRotations: ko.observable(0),
 
+      wallTextureIndex: ko.observable(-1),
+
       isSelected: ko.observable(false)
    };
 
    tile.floorTextureUrl = ko.computed(this.computeTextureUrl(tile.floorTextureIndex));
    tile.ceilingTextureUrl = ko.computed(this.computeTextureUrl(tile.ceilingTextureIndex));
+   tile.wallTextureUrl = ko.computed(this.computeTextureUrl(tile.wallTextureIndex));
 
    tile.hasWallSouthWestToNorthEast = ko.computed(function() {
       var tileType = tile.tileType();
