@@ -40,6 +40,21 @@ function MapAdapter() {
    this.sys = null;
 }
 
+function bytesToString(arr) {
+   var result = arr.map(function(entry) {
+      return entry.toString(16);
+   }).map(function(entry) {
+      var temp = "0" + entry;
+      return temp.substr(temp.length - 2);
+   }).join(", 0x");
+
+   if (result.length > 0) {
+      result = "0x" + result;
+   }
+
+   return "[" + result + "]";
+}
+
 MapAdapter.prototype.postConstruct = function() {
    var rest = this.rest;
    var vmMap = {
@@ -178,7 +193,10 @@ MapAdapter.prototype.postConstruct = function() {
             vmMap.levelObjects.removeAll();
             levelObjects.table.forEach(function(raw) {
                var entry = {
-                  raw: raw
+                  raw: raw,
+                  hacking: {
+                     classDataString: bytesToString(raw.Hacking.ClassData)
+                  }
                };
                vmMap.levelObjects.push(entry);
             });
