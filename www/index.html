@@ -77,6 +77,7 @@
                 <td>Idx</td>
                 <td>ID</td>
                 <td>Pos</td>
+                <td>Name</td>
                 <td>Class Data</td>
               </tr>
             </thead>
@@ -85,6 +86,7 @@
                 <td><span data-bind="text: object.raw.id"></span></td>
                 <td><span data-bind="text: object.raw.class + '/' + object.raw.subclass + '/' + object.raw.type"></span></td>
                 <td><span data-bind="text: object.raw.properties.tileX + '-' + object.raw.properties.tileY"></span></td>
+                <td><span data-bind="text: object.name"></span></td>
                 <td><span data-bind="text: object.hacking.classDataString"></span></td>
               </tr>
             </tbody>

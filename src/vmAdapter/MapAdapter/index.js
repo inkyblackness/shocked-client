@@ -196,8 +196,12 @@ MapAdapter.prototype.postConstruct = function() {
                   raw: raw,
                   hacking: {
                      classDataString: bytesToString(raw.Hacking.ClassData)
-                  }
+                  },
+                  name: ko.observable("???")
                };
+               rest.getResource(raw.links[0].href, function(gameObject) {
+                  entry.name(gameObject.properties.longName[0]);
+               });
                vmMap.levelObjects.push(entry);
             });
          }, function() {});
