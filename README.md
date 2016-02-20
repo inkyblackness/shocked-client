@@ -1,6 +1,6 @@
 # InkyBlackness Shocked-Client
 
-This is a client application as part of the [InkyBlackness](https://inkyblackness.github.io) project, written in [Go](http://golang.org/). This application is cross-compiled to JavaScript using [GopherJS](https://github.com/gopherjs/gopherjs) and represents the browser-client part of Shocked.
+This is a client application as part of the [InkyBlackness](https://inkyblackness.github.io) project, written in [Go](http://golang.org/). This application represents the browser-client part of Shocked.
 
 **Note:** This client is very simplistic and more of a proof-of-concept of the Shocked-Server in its current state.
 
