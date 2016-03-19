@@ -161,6 +161,7 @@ MapAdapter.prototype.postConstruct = function() {
 
    var self = this;
 
+
    vmMap.sizeX.subscribe(function(newWidth) {
       vmMap.tileRows().forEach(function(tileRow) {
          self.resizeColumns(tileRow, newWidth);
@@ -168,12 +169,17 @@ MapAdapter.prototype.postConstruct = function() {
    });
 
    vmMap.sizeY.subscribe(function(newHeight) {
-      while (vmMap.tileRows().length > newHeight) {
-         vmMap.tileRows.pop();
+      var raw = vmMap.tileRows();
+
+      if (raw.length > newHeight) {
+         raw = raw.slice(0, newHeight);
+      } else {
+         raw = raw.slice(0, raw.length);
       }
-      while (vmMap.tileRows().length < newHeight) {
-         vmMap.tileRows.push(self.createTileRow(newHeight - vmMap.tileRows().length - 1));
+      while (raw.length < newHeight) {
+         raw.push(self.createTileRow(newHeight - raw.length - 1));
       }
+      vmMap.tileRows(raw);
    });
 
    var vmProjects = this.vm.projects;
@@ -199,6 +205,7 @@ MapAdapter.prototype.postConstruct = function() {
                   },
                   name: ko.observable("???")
                };
+               // TODO: Get game object info just once (central proxy); Also: query links["static"]
                rest.getResource(raw.links[0].href, function(gameObject) {
                   entry.name(gameObject.properties.longName[0]);
                });
@@ -349,13 +356,17 @@ MapAdapter.prototype.createTile = function(x, y) {
 
 MapAdapter.prototype.resizeColumns = function(tileRow, newWidth) {
    var list = tileRow.tileColumns;
+   var raw = list();
 
-   while (list().length > newWidth) {
-      list.pop();
+   if (raw.length > newWidth) {
+      raw = raw.slice(0, newWidth);
+   } else {
+      raw = raw.slice(0, raw.length);
    }
-   while (list().length < newWidth) {
-      list().push(this.createTile(list().length, tileRow.y));
+   while (raw.length < newWidth) {
+      raw.push(this.createTile(raw.length, tileRow.y));
    }
+   list(raw);
 };
 
 MapAdapter.prototype.createTileRow = function(y) {
