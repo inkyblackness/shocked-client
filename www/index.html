@@ -100,17 +100,19 @@
         <div style="width: 2048px; height: 2048px;" data-bind="foreach: { data: map.tileRows, as: 'tileRow' }">
           <div style="position: relative; left: 0px; width: 2048px; height: 32px;" data-bind="foreach: { data: tileRow.tileColumns, as: 'tile' }">
             <div style="position: absolute; overflow: hidden; top: 0px; width: 32px; height: 32px;" data-bind="click: $root.map.onTileClicked, style: { left: tile.x*32 + 'px' }">
+              <div class="tile" data-bind="if: tile.tileType() !== 'solid'">
+                <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowFloorTexture, style: { backgroundImage: 'url('+tile.floorTextureUrl()+')' }, css: 'rotations'+tile.floorTextureRotations()"></div>
+                <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowCeilingTexture, style: { backgroundImage: 'url('+tile.ceilingTextureUrl()+')' }, css: 'rotations'+tile.ceilingTextureRotations()"></div>
 
-               <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowFloorTexture, style: { backgroundImage: 'url('+tile.floorTextureUrl()+')' }, css: 'rotations'+tile.floorTextureRotations()"></div>
-               <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowCeilingTexture, style: { backgroundImage: 'url('+tile.ceilingTextureUrl()+')' }, css: 'rotations'+tile.ceilingTextureRotations()"></div>
+                <div class="tile" data-bind="css: 'tileType-'+tile.tileType()"></div>
+                <div class="tile" data-bind="css: { 'wall-southEastToNorthWest': tile.hasWallSouthEastToNorthWest(), 'wall-southWestToNorthEast': tile.hasWallSouthWestToNorthEast() }"></div>
 
-               <div class="tile" data-bind="css: 'tileType-'+tile.tileType()"></div>
-               <div class="tile" data-bind="css: { 'wall-southEastToNorthWest': tile.hasWallSouthEastToNorthWest(), 'wall-southWestToNorthEast': tile.hasWallSouthWestToNorthEast() }"></div>
-               <div class="tile" data-bind="css: { 'wall-north': tile.hasWallNorth(), 'wall-south': tile.hasWallSouth(), 'wall-east': tile.hasWallEast(), 'wall-west': tile.hasWallWest() }"></div>
+                <div class="tile" data-bind="style: { 'border-top': '1px solid rgba(0,255,0,' + tile.northWallHeight() + ')', 'border-bottom': '1px solid rgba(0,255,0,' + tile.southWallHeight() + ')', 'border-right': '1px solid rgba(0,255,0,' + tile.eastWallHeight() + ')', 'border-left': '1px solid rgba(0,255,0,' + tile.westWallHeight() + ')' }"></div>
+              </div>
 
-               <div class="tile tileSelected" data-bind="visible: tile.isSelected"></div>
-             </div>
-           </div>
+              <div class="tile tileSelected" data-bind="visible: tile.isSelected"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

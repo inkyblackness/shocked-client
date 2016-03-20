@@ -9,27 +9,16 @@ var updateTileProperties = function(tile, tileData) {
    tile.ceilingHeight(tileData.properties.ceilingHeight);
    tile.slopeHeight(tileData.properties.slopeHeight);
 
+   tile.northWallHeight(tileData.properties.calculatedWallHeights.north);
+   tile.eastWallHeight(tileData.properties.calculatedWallHeights.east);
+   tile.southWallHeight(tileData.properties.calculatedWallHeights.south);
+   tile.westWallHeight(tileData.properties.calculatedWallHeights.west);
+
    tile.floorTextureIndex(tileData.properties.realWorld.floorTexture);
    tile.floorTextureRotations(tileData.properties.realWorld.floorTextureRotations);
    tile.ceilingTextureIndex(tileData.properties.realWorld.ceilingTexture);
    tile.ceilingTextureRotations(tileData.properties.realWorld.ceilingTextureRotations);
    tile.wallTextureIndex(tileData.properties.realWorld.wallTexture);
-};
-
-var isTileOpenSouth = function(tileType) {
-   return tileType !== "solid" && tileType !== "diagonalOpenNorthEast" && tileType !== "diagonalOpenNorthWest";
-};
-
-var isTileOpenNorth = function(tileType) {
-   return tileType !== "solid" && tileType !== "diagonalOpenSouthEast" && tileType !== "diagonalOpenSouthWest";
-};
-
-var isTileOpenEast = function(tileType) {
-   return tileType !== "solid" && tileType !== "diagonalOpenSouthWest" && tileType !== "diagonalOpenNorthWest";
-};
-
-var isTileOpenWest = function(tileType) {
-   return tileType !== "solid" && tileType !== "diagonalOpenSouthEast" && tileType !== "diagonalOpenNorthEast";
 };
 
 function MapAdapter() {
@@ -273,38 +262,8 @@ MapAdapter.prototype.getTileClickedHandler = function() {
    };
 };
 
-MapAdapter.prototype.getTile = function(x, y) {
-   var tileRows = this.vm.map.tileRows();
-   var rowIndex = 64 - 1 - y;
-   var tileColumns;
-   var tile = null;
-
-   if ((rowIndex >= 0) && (rowIndex < tileRows.length)) {
-      tileColumns = tileRows[rowIndex].tileColumns();
-      if ((x >= 0) && (x < tileColumns.length)) {
-         tile = tileColumns[x];
-      }
-   }
-
-   return tile;
-};
-
-MapAdapter.prototype.getTileType = function(x, y) {
-   var tileType = "solid";
-   var tile = this.getTile(x, y);
-
-   if (tile !== null) {
-      tileType = tile.tileType();
-   }
-
-   return tileType;
-};
-
 MapAdapter.prototype.createTile = function(x, y) {
    var self = this;
-   var getTileType = function(x, y) {
-      return self.getTileType(x, y);
-   };
    var tile = {
       x: x,
       y: y,
@@ -312,6 +271,11 @@ MapAdapter.prototype.createTile = function(x, y) {
       floorHeight: ko.observable(0),
       ceilingHeight: ko.observable(0),
       slopeHeight: ko.observable(0),
+
+      northWallHeight: ko.observable(0.0),
+      eastWallHeight: ko.observable(0.0),
+      southWallHeight: ko.observable(0.0),
+      westWallHeight: ko.observable(0.0),
 
       floorTextureIndex: ko.observable(-1),
       floorTextureRotations: ko.observable(0),
@@ -337,18 +301,6 @@ MapAdapter.prototype.createTile = function(x, y) {
       var tileType = tile.tileType();
 
       return tileType === "diagonalOpenNorthEast" || tileType === "diagonalOpenSouthWest";
-   });
-   tile.hasWallNorth = ko.computed(function() {
-      return isTileOpenNorth(tile.tileType()) && !isTileOpenSouth(getTileType(x, y + 1));
-   });
-   tile.hasWallSouth = ko.computed(function() {
-      return isTileOpenSouth(tile.tileType()) && !isTileOpenNorth(getTileType(x, y - 1));
-   });
-   tile.hasWallEast = ko.computed(function() {
-      return isTileOpenEast(tile.tileType()) && !isTileOpenWest(getTileType(x + 1, y));
-   });
-   tile.hasWallWest = ko.computed(function() {
-      return isTileOpenWest(tile.tileType()) && !isTileOpenEast(getTileType(x - 1, y));
    });
 
    return tile;
