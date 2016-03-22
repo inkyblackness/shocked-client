@@ -801,12 +801,12 @@ MapAdapter.prototype.onMapLoaded = function(tileMap) {
    tileMap.Table.reverse();
    tileMap.Table.forEach(function(row, y) {
       var tileRow = {
-         y: y,
+         y: 63 - y,
          tileColumns: []
       };
 
       row.forEach(function(tileData, x) {
-         var tile = self.createTile(x, y, tileData);
+         var tile = self.createTile(x, 63 - y, tileData);
 
          tileRow.tileColumns.push(tile);
       });
