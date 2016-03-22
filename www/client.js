@@ -621,8 +621,6 @@ MapAdapter.prototype.postConstruct = function() {
 
       levelObjects: ko.observableArray(),
 
-      sizeX: ko.observable(0),
-      sizeY: ko.observable(0),
       tileRows: ko.observableArray(),
 
       textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
@@ -710,38 +708,10 @@ MapAdapter.prototype.postConstruct = function() {
 
    var self = this;
 
-
-   vmMap.sizeX.subscribe(function(newWidth) {
-      vmMap.tileRows().forEach(function(tileRow) {
-         self.resizeColumns(tileRow, newWidth);
-      });
-   });
-
-   vmMap.sizeY.subscribe(function(newHeight) {
-      var raw = vmMap.tileRows();
-
-      if (raw.length > newHeight) {
-         raw = raw.slice(0, newHeight);
-      } else {
-         raw = raw.slice(0, raw.length);
-      }
-      while (raw.length < newHeight) {
-         raw.push(self.createTileRow(newHeight - raw.length - 1));
-      }
-      vmMap.tileRows(raw);
-   });
-
-   var vmProjects = this.vm.projects;
-
    vmMap.selectedLevel.subscribe(function(level) {
       if (level) {
          rest.getResource(level.href + "/textures", function(levelTextures) {
-            vmMap.levelTextures.removeAll();
-            vmMap.levelTextureUrls.removeAll();
-            levelTextures.ids.forEach(function(id) {
-               vmMap.levelTextureUrls.push(vmProjects.selected().href + "/textures/" + id + "/large/png");
-               vmMap.levelTextures.push(id);
-            });
+            self.onTexturesLoaded(levelTextures);
          }, function() {});
 
          rest.getResource(level.href + "/objects", function(levelObjects) {
@@ -763,18 +733,8 @@ MapAdapter.prototype.postConstruct = function() {
          }, function() {});
 
          rest.getResource(level.href + "/tiles", function(tileMap) {
-            tileMap.Table.forEach(function(row, y) {
-               row.forEach(function(tileData, x) {
-                  var rowIndex = 64 - 1 - y;
-                  var tile = vmMap.tileRows()[rowIndex].tileColumns()[x];
-
-                  updateTileProperties(tile, tileData);
-               });
-            });
+            self.onMapLoaded(tileMap);
          }, function() {});
-
-         vmMap.sizeX(64);
-         vmMap.sizeY(64);
       }
    });
 
@@ -820,28 +780,63 @@ MapAdapter.prototype.getTileClickedHandler = function() {
    };
 };
 
-MapAdapter.prototype.createTile = function(x, y) {
+MapAdapter.prototype.onTexturesLoaded = function(levelTextures) {
+   var newUrls = [];
+   var newIds = [];
+   var vmMap = this.vm.map;
+   var vmProjects = this.vm.projects;
+
+   levelTextures.ids.forEach(function(id) {
+      newUrls.push(vmProjects.selected().href + "/textures/" + id + "/large/png");
+      newIds.push(id);
+   });
+   vmMap.levelTextures(newIds);
+   vmMap.levelTextureUrls(newUrls);
+};
+
+MapAdapter.prototype.onMapLoaded = function(tileMap) {
+   var self = this;
+   var rows = [];
+
+   tileMap.Table.reverse();
+   tileMap.Table.forEach(function(row, y) {
+      var tileRow = {
+         y: y,
+         tileColumns: []
+      };
+
+      row.forEach(function(tileData, x) {
+         var tile = self.createTile(x, y, tileData);
+
+         tileRow.tileColumns.push(tile);
+      });
+      rows.push(tileRow);
+   });
+   this.vm.map.tileRows(rows);
+};
+
+MapAdapter.prototype.createTile = function(x, y, tileData) {
    var self = this;
    var tile = {
       x: x,
       y: y,
-      tileType: ko.observable("solid"),
-      floorHeight: ko.observable(0),
-      ceilingHeight: ko.observable(0),
-      slopeHeight: ko.observable(0),
+      tileType: ko.observable(tileData.properties.type),
+      floorHeight: ko.observable(tileData.properties.floorHeight),
+      ceilingHeight: ko.observable(tileData.properties.ceilingHeight),
+      slopeHeight: ko.observable(tileData.properties.slopeHeight),
 
-      northWallHeight: ko.observable(0.0),
-      eastWallHeight: ko.observable(0.0),
-      southWallHeight: ko.observable(0.0),
-      westWallHeight: ko.observable(0.0),
+      northWallHeight: ko.observable(tileData.properties.calculatedWallHeights.north),
+      eastWallHeight: ko.observable(tileData.properties.calculatedWallHeights.east),
+      southWallHeight: ko.observable(tileData.properties.calculatedWallHeights.south),
+      westWallHeight: ko.observable(tileData.properties.calculatedWallHeights.west),
 
-      floorTextureIndex: ko.observable(-1),
-      floorTextureRotations: ko.observable(0),
+      floorTextureIndex: ko.observable(tileData.properties.realWorld.floorTexture),
+      floorTextureRotations: ko.observable(tileData.properties.realWorld.floorTextureRotations),
 
-      ceilingTextureIndex: ko.observable(-1),
-      ceilingTextureRotations: ko.observable(0),
+      ceilingTextureIndex: ko.observable(tileData.properties.realWorld.ceilingTexture),
+      ceilingTextureRotations: ko.observable(tileData.properties.realWorld.ceilingTextureRotations),
 
-      wallTextureIndex: ko.observable(-1),
+      wallTextureIndex: ko.observable(tileData.properties.realWorld.wallTexture),
 
       isSelected: ko.observable(false)
    };
@@ -862,32 +857,6 @@ MapAdapter.prototype.createTile = function(x, y) {
    });
 
    return tile;
-};
-
-MapAdapter.prototype.resizeColumns = function(tileRow, newWidth) {
-   var list = tileRow.tileColumns;
-   var raw = list();
-
-   if (raw.length > newWidth) {
-      raw = raw.slice(0, newWidth);
-   } else {
-      raw = raw.slice(0, raw.length);
-   }
-   while (raw.length < newWidth) {
-      raw.push(this.createTile(raw.length, tileRow.y));
-   }
-   list(raw);
-};
-
-MapAdapter.prototype.createTileRow = function(y) {
-   var tileRow = {
-      y: y,
-      tileColumns: ko.observableArray()
-   };
-
-   this.resizeColumns(tileRow, this.vm.map.sizeX());
-
-   return tileRow;
 };
 
 module.exports = MapAdapter;
