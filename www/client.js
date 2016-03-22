@@ -765,12 +765,10 @@ MapAdapter.prototype.postConstruct = function() {
          rest.getResource(level.href + "/tiles", function(tileMap) {
             tileMap.Table.forEach(function(row, y) {
                row.forEach(function(tileData, x) {
-                  self.sys.defer(function() {
-                     var rowIndex = 64 - 1 - y;
-                     var tile = vmMap.tileRows()[rowIndex].tileColumns()[x];
+                  var rowIndex = 64 - 1 - y;
+                  var tile = vmMap.tileRows()[rowIndex].tileColumns()[x];
 
-                     updateTileProperties(tile, tileData);
-                  });
+                  updateTileProperties(tile, tileData);
                });
             });
          }, function() {});
