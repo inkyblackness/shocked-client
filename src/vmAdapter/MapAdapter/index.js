@@ -54,6 +54,9 @@ MapAdapter.prototype.postConstruct = function() {
          "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"
       ],
 
+      mapSection: ko.observableArray(["control", "tiles", "objects"]),
+      selectedMapSection: ko.observable("control"),
+
       selectedLevel: ko.observable(),
 
       levelTextures: ko.observableArray(),
