@@ -2,6 +2,13 @@ html, body, .rootContainer, .mapControls, .tileMap {
     height: 100%;
 }
 
+.menuContainer {
+    max-height: 100px;
+    min-height: 50px;
+    background: #AAA;
+    border-bottom: 1px solid black;
+}
+
 .rootContainer:before {
     content: '';
     height: 100%;
@@ -31,4 +38,8 @@ html, body, .rootContainer, .mapControls, .tileMap {
 }
 .mapControls, .tileMap {
     overflow: auto;
+}
+
+.tileMap {
+    background: black;
 }
