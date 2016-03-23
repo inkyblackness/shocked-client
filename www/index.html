@@ -27,6 +27,11 @@
       <p>
       Active: <select data-bind="options: projects.available, optionsText: 'id', optionsCaption: '', value: projects.selected"></select>
       </p>
+      <p>
+      Create:
+      <input type="text" placeholder="new project name" data-bind="textInput: projects.newProjectId">
+      <button data-bind="enable: projects.canCreateNewProject(), click: projects.createProject">Create</button>
+      </p>
     </div>
 
     <div class="levelMap" data-bind="visible: selectedMainSection() === 'map'">

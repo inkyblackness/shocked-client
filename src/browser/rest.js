@@ -32,4 +32,20 @@ rest.putResource = function(url, data, onSuccess, onFailure) {
    $.ajax(options);
 };
 
+rest.postResource = function(url, data, onSuccess, onFailure) {
+   var options = {
+      method: "POST",
+      url: url,
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify(data),
+      jsonp: false,
+      processData: false,
+      success: onSuccess,
+      error: onFailure
+   };
+
+   $.ajax(options);
+};
+
 module.exports = rest;
