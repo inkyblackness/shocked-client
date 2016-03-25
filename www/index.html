@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Shocked - Client</title>
   <link rel="stylesheet" type="text/css" href="reset.css" />
-  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/uikit/2.23.0/css/uikit.gradient.min.css" />
   <link rel="stylesheet" type="text/css" href="rootLayout.css" />
   <link rel="stylesheet" type="text/css" href="client.css" />
 </head>
@@ -31,6 +30,13 @@
       Create:
       <input type="text" placeholder="new project name" data-bind="textInput: projects.newProjectId">
       <button data-bind="enable: projects.canCreateNewProject(), click: projects.createProject">Create</button>
+      </p>
+      <p>
+      Stats:
+        <table>
+          <tr><td>Levels:</td><td data-bind="text: $root.levels.available().length"></td></tr>
+          <tr><td>Textures:</td><td data-bind="text: $root.textures.all().length"></td></tr>
+        </table>
       </p>
     </div>
 
@@ -180,6 +186,72 @@
         </div>
       </div>
     </div>
+
+    <div data-bind="visible: selectedMainSection() === 'textures'">
+
+      <p>
+        <table>
+          <tbody>
+          <tr><td>
+          <div style="position: relative; background: black;" data-bind="foreach: { data: textures.page, as: 'texture' }, style: { width: (2 + ($root.textures.pageSideWidth() * 130)) + 'px', height: (2 + ($root.textures.pageSideWidth() * 130)) + 'px' }">
+            <div style="position: absolute; width: 130px; height: 130px; " data-bind="click: $root.textures.selectTexture, style: { left: (2 + (($index() % $root.textures.pageSideWidth()) * 130)) + 'px', top: (2 + (Math.floor($index() / $root.textures.pageSideWidth()) * 130)) + 'px' }">
+
+              <img class="checkerboard" data-bind="attr: { src: texture.largeTextureUrl }" width="128px" height="128px">
+            </div>
+          </div>
+          <button data-bind="enable: textures.pageIndex() > 0, click: textures.previousPage">prev</button>
+          <span>Page <span data-bind="text: textures.pageIndex() + 1"></span></span>
+          <button data-bind="enable: textures.canShowNextPage, click: textures.nextPage">next</button>
+          <span>(Click texture to select)</span>
+          </td>
+          <td>
+
+          <div data-bind="if: textures.selectedTexture">
+            <span>ID: <span data-bind="text: textures.selectedTexture().id"></span></span>
+            <table style="border: 1px solid black;">
+              <thead>
+                <tr style="width: 100%;">
+                  <td>Large</td>
+                  <td>Medium</td>
+                  <td>Small</td>
+                  <td>Icon</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="checkerboard" style="width: 100%;">
+                  <td><img data-bind="attr: { src: textures.selectedTexture().largeTextureUrl}"></td>
+                  <td><img data-bind="attr: { src: textures.selectedTexture().mediumTextureUrl}"></td>
+                  <td><img data-bind="attr: { src: textures.selectedTexture().smallTextureUrl}"></td>
+                  <td><img data-bind="attr: { src: textures.selectedTexture().iconTextureUrl}"></td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <table>
+              <thead>
+                <tr style="width: 100%;">
+                  <td>Lang</td>
+                  <td>Names</td>
+                  <td>Can't be used</td>
+                </tr>
+              </thead>
+              <tbody data-bind="foreach: { data: textures.selectedTexture().texts, as: 'text' }">
+                <tr style="width: 100%;">
+                  <td data-bind="text: $root.languages[$index()]"></td>
+                  <td><input type="text" data-bind="textInput: text.name"></td>
+                  <td><input type="text" data-bind="textInput: text.cantBeUsed"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          </td></tr>
+          </tbody>
+        </table>
+
+      </p>
+    </div>
+
   </div>
 </div>
 </body>

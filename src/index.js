@@ -13,12 +13,14 @@ injector.mapClass("vm", require("./ViewModel.js"), true);
 injector.mapClass("projectsAdapter", require("./vmAdapter/ProjectsAdapter"), true);
 injector.mapClass("levelsAdapter", require("./vmAdapter/LevelsAdapter"), true);
 injector.mapClass("mapAdapter", require("./vmAdapter/MapAdapter"), true);
+injector.mapClass("texturesAdapter", require("./vmAdapter/TexturesAdapter"), true);
 
 function Application() {
    this.vm = null;
    this.projectsAdapter = null;
    this.levelsAdapter = null;
    this.mapAdapter = null;
+   this.texturesAdapter = null;
 }
 
 Application.prototype.postConstruct = function() {
