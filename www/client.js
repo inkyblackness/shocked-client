@@ -492,9 +492,9 @@ injector.mapValue("sys", {
 
 injector.mapClass("vm", require("./ViewModel.js"), true);
 injector.mapClass("projectsAdapter", require("./vmAdapter/ProjectsAdapter"), true);
+injector.mapClass("texturesAdapter", require("./vmAdapter/TexturesAdapter"), true);
 injector.mapClass("levelsAdapter", require("./vmAdapter/LevelsAdapter"), true);
 injector.mapClass("mapAdapter", require("./vmAdapter/MapAdapter"), true);
-injector.mapClass("texturesAdapter", require("./vmAdapter/TexturesAdapter"), true);
 
 function Application() {
    this.vm = null;
@@ -603,6 +603,7 @@ var updateTileProperties = function(tile, tileData) {
 
 function MapAdapter() {
    this.projectsAdapter = null;
+   this.texturesAdapter = null;
 
    this.vm = null;
    this.rest = null;
@@ -640,7 +641,6 @@ MapAdapter.prototype.postConstruct = function() {
       selectedLevel: ko.observable(),
 
       levelTextures: ko.observableArray(),
-      levelTextureUrls: ko.observableArray(),
 
       levelObjects: ko.observableArray(),
 
@@ -659,6 +659,15 @@ MapAdapter.prototype.postConstruct = function() {
 
    this.vm.map = vmMap;
    vmMap.onTileClicked = this.getTileClickedHandler();
+
+   var vmTextures = this.vm.textures;
+   vmMap.levelTextureUrls = ko.computed(function() {
+      var textureIds = vmMap.levelTextures();
+
+      return textureIds.map(function(id) {
+         return vmTextures.getTexture(id).largeTextureUrl();
+      });
+   });
    vmMap.shouldShowFloorTexture = ko.computed(function() {
       return vmMap.selectedTextureDisplay() === "Floor";
    });
@@ -804,17 +813,7 @@ MapAdapter.prototype.getTileClickedHandler = function() {
 };
 
 MapAdapter.prototype.onTexturesLoaded = function(levelTextures) {
-   var newUrls = [];
-   var newIds = [];
-   var vmMap = this.vm.map;
-   var vmProjects = this.vm.projects;
-
-   levelTextures.ids.forEach(function(id) {
-      newUrls.push(vmProjects.selected().href + "/textures/" + id + "/large/png");
-      newIds.push(id);
-   });
-   vmMap.levelTextures(newIds);
-   vmMap.levelTextureUrls(newUrls);
+   this.vm.map.levelTextures(levelTextures.ids);
 };
 
 MapAdapter.prototype.onMapLoaded = function(tileMap) {
@@ -1015,7 +1014,7 @@ TexturesAdapter.prototype.postConstruct = function() {
 };
 
 TexturesAdapter.prototype.getTexture = function(id) {
-   var entry = this.vm.textures.all.find(function(entry) {
+   var entry = this.vm.textures.all().find(function(entry) {
       return entry.id === id;
    });
 

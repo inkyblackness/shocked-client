@@ -72,7 +72,7 @@ TexturesAdapter.prototype.postConstruct = function() {
 };
 
 TexturesAdapter.prototype.getTexture = function(id) {
-   var entry = this.vm.textures.all.find(function(entry) {
+   var entry = this.vm.textures.all().find(function(entry) {
       return entry.id === id;
    });
 
