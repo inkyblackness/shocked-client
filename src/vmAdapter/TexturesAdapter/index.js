@@ -134,6 +134,18 @@ TexturesAdapter.prototype.createTextureEntry = function(id) {
       iconTextureUrl: ko.observable(""),
       texts: ko.observableArray()
    };
+   entry.title = ko.computed(function() {
+      var texts = entry.texts();
+      var result = entry.id + ": ";
+
+      if (texts.length > 0) {
+         result += "\"" + texts[0].name() + "\"";
+      } else {
+         result += "???";
+      }
+
+      return result;
+   });
 
    return entry;
 };

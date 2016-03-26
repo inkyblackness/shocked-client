@@ -61,6 +61,8 @@ MapAdapter.prototype.postConstruct = function() {
       selectedLevel: ko.observable(),
 
       levelTextures: ko.observableArray(),
+      selectedLevelTextureIndex: ko.observable(-1),
+      selectedLevelTexture: ko.observable(),
 
       levelObjects: ko.observableArray(),
 
@@ -79,15 +81,9 @@ MapAdapter.prototype.postConstruct = function() {
 
    this.vm.map = vmMap;
    vmMap.onTileClicked = this.getTileClickedHandler();
+   vmMap.changeLevelTexture = this.changeLevelTexture.bind(this);
 
    var vmTextures = this.vm.textures;
-   vmMap.levelTextureUrls = ko.computed(function() {
-      var textureIds = vmMap.levelTextures();
-
-      return textureIds.map(function(id) {
-         return vmTextures.getTexture(id).largeTextureUrl();
-      });
-   });
    vmMap.shouldShowFloorTexture = ko.computed(function() {
       return vmMap.selectedTextureDisplay() === "Floor";
    });
@@ -97,6 +93,24 @@ MapAdapter.prototype.postConstruct = function() {
    vmMap.selectedTileFloorTextureUrl = ko.computed(this.computeTextureUrl(vmMap.selectedTileFloorTextureIndex));
    vmMap.selectedTileCeilingTextureUrl = ko.computed(this.computeTextureUrl(vmMap.selectedTileCeilingTextureIndex));
    vmMap.selectedTileWallTextureUrl = ko.computed(this.computeTextureUrl(vmMap.selectedTileWallTextureIndex));
+
+   var updateSelectedLevelTexture = function() {
+      var textures = vmMap.levelTextures();
+      var index = vmMap.selectedLevelTextureIndex();
+
+      if ((index >= 0) && (index < textures.length)) {
+         vmMap.selectedLevelTexture(textures[index]);
+      } else {
+         vmMap.selectedLevelTexture(null);
+      }
+   };
+
+   vmMap.levelTextures.subscribe(function(newTextures) {
+      updateSelectedLevelTexture();
+   });
+   vmMap.selectedLevelTextureIndex.subscribe(function(newIndex) {
+      updateSelectedLevelTexture();
+   });
 
    vmMap.selectedTiles.subscribe(function(newList) {
       var tileTypeUnifier = unifier.withResetValue("");
@@ -163,7 +177,7 @@ MapAdapter.prototype.postConstruct = function() {
    vmMap.selectedLevel.subscribe(function(level) {
       if (level) {
          rest.getResource(level.href + "/textures", function(levelTextures) {
-            self.onTexturesLoaded(levelTextures);
+            self.onLevelTexturesLoaded(levelTextures);
          }, function() {});
 
          rest.getResource(level.href + "/objects", function(levelObjects) {
@@ -193,15 +207,15 @@ MapAdapter.prototype.postConstruct = function() {
 };
 
 MapAdapter.prototype.computeTextureUrl = function(indexObservable) {
-   var levelTextureUrls = this.vm.map.levelTextureUrls;
+   var levelTextures = this.vm.map.levelTextures;
 
    return function() {
       var textureIndex = indexObservable();
-      var urls = levelTextureUrls();
+      var textures = levelTextures();
       var url = "";
 
-      if ((textureIndex >= 0) && (textureIndex < urls.length)) {
-         url = urls[textureIndex];
+      if ((textureIndex >= 0) && (textureIndex < textures.length)) {
+         url = textures[textureIndex].largeTextureUrl();
       }
 
       return url;
@@ -232,8 +246,29 @@ MapAdapter.prototype.getTileClickedHandler = function() {
    };
 };
 
-MapAdapter.prototype.onTexturesLoaded = function(levelTextures) {
-   this.vm.map.levelTextures(levelTextures.ids);
+MapAdapter.prototype.changeLevelTexture = function() {
+   var selectedIndex = this.vm.map.selectedLevelTextureIndex();
+   var selectedTexture = this.vm.map.selectedLevelTexture();
+   var textureIds = this.vm.map.levelTextures().map(function(texture) {
+      return texture.id;
+   });
+   var level = this.vm.map.selectedLevel();
+   var self = this;
+
+   if (selectedTexture && (selectedIndex >= 0) && (selectedIndex < textureIds.length)) {
+      textureIds[selectedIndex] = selectedTexture.id;
+      this.rest.putResource(level.href + "/textures", textureIds, function(levelTextures) {
+         self.onLevelTexturesLoaded(levelTextures);
+      }, function() {});
+   }
+};
+
+MapAdapter.prototype.onLevelTexturesLoaded = function(levelTextures) {
+   var vmTextures = this.vm.textures;
+   var textures = levelTextures.ids.map(function(id) {
+      return vmTextures.getTexture(id);
+   });
+   this.vm.map.levelTextures(textures);
 };
 
 MapAdapter.prototype.onMapLoaded = function(tileMap) {
