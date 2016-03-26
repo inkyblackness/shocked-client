@@ -187,23 +187,23 @@ MapAdapter.prototype.postConstruct = function() {
       vmMap.selectedUseAdjacentWallTexture(useAdjacentWallTextureUnifier.get());
    });
 
-   var changeBaseProperty = function(dataPropertyName, anyValue, tilePropertyName) {
+   var changeBaseProperty = function(dataPropertyName, anyValue, tilePropertyName, updateAdjacent) {
       return function(newValue) {
          var properties = {};
          properties[dataPropertyName] = newValue;
 
          if (newValue !== anyValue) {
-            self.changeSelectedTileProperties(properties, false, function(tile) {
+            self.changeSelectedTileProperties(properties, updateAdjacent, function(tile) {
                return tile[tilePropertyName]() !== newValue;
             });
          }
       };
    };
 
-   vmMap.selectedTileType.subscribe(changeBaseProperty("type", "", "tileType"));
-   vmMap.selectedSlopeControl.subscribe(changeBaseProperty("slopeControl", "", "slopeControl"));
-   vmMap.selectedSlopeHeight.subscribe(changeBaseProperty("slopeHeight", "*", "slopeHeight"));
-   vmMap.selectedFloorHeight.subscribe(changeBaseProperty("floorHeight", "*", "floorHeight"));
+   vmMap.selectedTileType.subscribe(changeBaseProperty("type", "", "tileType", true));
+   vmMap.selectedSlopeControl.subscribe(changeBaseProperty("slopeControl", "", "slopeControl", true));
+   vmMap.selectedSlopeHeight.subscribe(changeBaseProperty("slopeHeight", "*", "slopeHeight", true));
+   vmMap.selectedFloorHeight.subscribe(changeBaseProperty("floorHeight", "*", "floorHeight", true));
    vmMap.selectedCeilingHeight.subscribe(function(newValue) {
       var properties = {
          ceilingHeight: 32 - newValue
