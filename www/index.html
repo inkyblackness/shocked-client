@@ -197,6 +197,9 @@
             <div style="position: absolute; width: 130px; height: 130px; " data-bind="click: $root.textures.selectTexture, style: { left: (2 + (($index() % $root.textures.pageSideWidth()) * 130)) + 'px', top: (2 + (Math.floor($index() / $root.textures.pageSideWidth()) * 130)) + 'px' }">
 
               <img class="checkerboard" data-bind="attr: { src: texture.largeTextureUrl }" width="128px" height="128px">
+              <div style="position: absolute; top: 4px; left: 2px;">
+                <span style="background: rgba(255,255,255,0.7);" data-bind="text: texture.id" />
+              </div>
             </div>
           </div>
           <button data-bind="enable: textures.pageIndex() > 0, click: textures.previousPage">prev</button>
