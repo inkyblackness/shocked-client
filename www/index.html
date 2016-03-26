@@ -85,25 +85,40 @@
                 </td>
                 <td style="position: relative;">
                   <div style="width: 64px; height: 64px; border: solid 1px black;">
-                    <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: $root.map.selectedTileFloorTextureUrl }" width="64px" height="64px">
-                    <div style="position: absolute; top: 4px; left: 2px;">
-                      <span style="background: rgba(255,255,255,0.7);" data-bind="text: $root.map.selectedTileFloorTextureIndex" />
+                    <div data-bind="if: $root.map.selectedTileFloorTextureIndex() >= 0">
+                      <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: $root.map.selectedTileFloorTextureUrl }" width="64px" height="64px">
+                      <div style="position: absolute; top: 4px; left: 2px;">
+                        <span style="background: rgba(255,255,255,0.7);" data-bind="text: $root.map.selectedTileFloorTextureIndex" />
+                      </div>
+                    </div>
+                    <div data-bind="if: ($root.map.selectedTileFloorTextureIndex() < 0) && ($root.map.selectedTiles().length > 1)">
+                      <span>many</span>
                     </div>
                   </div>
                 </td>
                 <td style="position: relative;">
                   <div style="width: 64px; height: 64px; border: solid 1px black;">
-                    <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: $root.map.selectedTileWallTextureUrl }" width="64px" height="64px">
-                    <div style="position: absolute; top: 4px; left: 2px;">
-                      <span style="background: rgba(255,255,255,0.7);" data-bind="text: $root.map.selectedTileWallTextureIndex" />
+                    <div data-bind="if: $root.map.selectedTileWallTextureIndex() >= 0">
+                      <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: $root.map.selectedTileWallTextureUrl }" width="64px" height="64px">
+                      <div style="position: absolute; top: 4px; left: 2px;">
+                        <span style="background: rgba(255,255,255,0.7);" data-bind="text: $root.map.selectedTileWallTextureIndex" />
+                      </div>
+                    </div>
+                    <div data-bind="if: ($root.map.selectedTileWallTextureIndex() < 0) && ($root.map.selectedTiles().length > 1)">
+                      <span>many</span>
                     </div>
                   </div>
                 </td>
                 <td style="position: relative;">
                   <div style="width: 64px; height: 64px; border: solid 1px black;">
-                    <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: $root.map.selectedTileCeilingTextureUrl }" width="64px" height="64px">
-                    <div style="position: absolute; top: 4px; left: 2px;">
-                      <span style="background: rgba(255,255,255,0.7);" data-bind="text: $root.map.selectedTileCeilingTextureIndex" />
+                    <div data-bind="if: $root.map.selectedTileCeilingTextureIndex() >= 0">
+                      <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: $root.map.selectedTileCeilingTextureUrl }" width="64px" height="64px">
+                      <div style="position: absolute; top: 4px; left: 2px;">
+                        <span style="background: rgba(255,255,255,0.7);" data-bind="text: $root.map.selectedTileCeilingTextureIndex" />
+                      </div>
+                    </div>
+                    <div data-bind="if: ($root.map.selectedTileCeilingTextureIndex() < 0) && ($root.map.selectedTiles().length > 1)">
+                      <span>many</span>
                     </div>
                   </div>
                 </td>
