@@ -595,7 +595,7 @@ var updateTileProperties = function(tile, tileData) {
    tile.southWallHeight(tileData.properties.calculatedWallHeights.south);
    tile.westWallHeight(tileData.properties.calculatedWallHeights.west);
 
-   if (tileData.realWorld) {
+   if (tileData.properties.realWorld) {
       tile.floorTextureIndex(tileData.properties.realWorld.floorTexture);
       tile.floorTextureRotations(tileData.properties.realWorld.floorTextureRotations);
       tile.ceilingTextureIndex(tileData.properties.realWorld.ceilingTexture);
@@ -648,6 +648,7 @@ MapAdapter.prototype.postConstruct = function() {
          16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32
       ],
       maybeValues: ["*", "no", "yes"],
+      rotations: ["*", 0, 1, 2, 3],
 
       mapSection: ko.observableArray(["control", "tiles", "objects"]),
       selectedMapSection: ko.observable("control"),
@@ -673,7 +674,9 @@ MapAdapter.prototype.postConstruct = function() {
       selectedCeilingHeight: ko.observable("*"),
       selectedSlopeHeight: ko.observable("*"),
       selectedTileFloorTextureIndex: ko.observable(-1),
+      selectedTileFloorTextureRotations: ko.observable("*"),
       selectedTileCeilingTextureIndex: ko.observable(-1),
+      selectedTileCeilingTextureRotations: ko.observable("*"),
       selectedTileWallTextureIndex: ko.observable(-1),
       selectedWallTextureOffset: ko.observable("*"),
       selectedUseAdjacentWallTexture: ko.observable("*")
@@ -725,7 +728,9 @@ MapAdapter.prototype.postConstruct = function() {
       var floorHeightUnifier = unifier.withResetValue("*");
       var ceilingHeightUnifier = unifier.withResetValue("*");
       var floorTextureIndexUnifier = unifier.withResetValue(-1);
+      var floorTextureRotationsUnifier = unifier.withResetValue("*");
       var ceilingTextureIndexUnifier = unifier.withResetValue(-1);
+      var ceilingTextureRotationsUnifier = unifier.withResetValue("*");
       var wallTextureIndexUnifier = unifier.withResetValue(-1);
       var wallTextureOffsetUnifier = unifier.withResetValue("*");
       var useAdjacentWallTextureUnifier = unifier.withResetValue("*");
@@ -740,7 +745,9 @@ MapAdapter.prototype.postConstruct = function() {
       if (!vmMap.isCyberspace()) {
          newList.forEach(function(tile) {
             floorTextureIndexUnifier.add(tile.floorTextureIndex());
+            floorTextureRotationsUnifier.add(tile.floorTextureRotations());
             ceilingTextureIndexUnifier.add(tile.ceilingTextureIndex());
+            ceilingTextureRotationsUnifier.add(tile.ceilingTextureRotations());
             wallTextureIndexUnifier.add(tile.wallTextureIndex());
             wallTextureOffsetUnifier.add(tile.wallTextureOffset());
             useAdjacentWallTextureUnifier.add(tile.useAdjacentWallTexture() ? "yes" : "no");
@@ -752,28 +759,65 @@ MapAdapter.prototype.postConstruct = function() {
       vmMap.selectedFloorHeight(floorHeightUnifier.get());
       vmMap.selectedCeilingHeight(ceilingHeightUnifier.get());
       vmMap.selectedTileFloorTextureIndex(floorTextureIndexUnifier.get());
+      vmMap.selectedTileFloorTextureRotations(floorTextureRotationsUnifier.get());
       vmMap.selectedTileCeilingTextureIndex(ceilingTextureIndexUnifier.get());
+      vmMap.selectedTileCeilingTextureRotations(ceilingTextureRotationsUnifier.get());
       vmMap.selectedTileWallTextureIndex(wallTextureIndexUnifier.get());
       vmMap.selectedWallTextureOffset(wallTextureOffsetUnifier.get());
       vmMap.selectedUseAdjacentWallTexture(useAdjacentWallTextureUnifier.get());
    });
 
-   vmMap.selectedTileType.subscribe(function(newType) {
-      if (newType !== "") {
-         vmMap.selectedTiles().forEach(function(tile) {
-            var properties = {
-               type: newType,
-            };
+   var changeBaseProperty = function(dataPropertyName, anyValue, tilePropertyName) {
+      return function(newValue) {
+         var properties = {};
+         properties[dataPropertyName] = newValue;
 
-            var tileUrl = vmMap.selectedLevel().href + "/tiles/" + tile.y + "/" + tile.x;
-            if (tile.tileType() !== newType) {
-               rest.putResource(tileUrl, properties, function(tileData) {
-                  updateTileProperties(tile, tileData);
-               }, function() {});
-            }
+         if (newValue !== anyValue) {
+            self.changeSelectedTileProperties(properties, false, function(tile) {
+               return tile[tilePropertyName]() !== newValue;
+            });
+         }
+      };
+   };
+
+   vmMap.selectedTileType.subscribe(changeBaseProperty("type", "", "tileType"));
+   vmMap.selectedSlopeControl.subscribe(changeBaseProperty("slopeControl", "", "slopeControl"));
+   vmMap.selectedSlopeHeight.subscribe(changeBaseProperty("slopeHeight", "*", "slopeHeight"));
+   vmMap.selectedFloorHeight.subscribe(changeBaseProperty("floorHeight", "*", "floorHeight"));
+   vmMap.selectedCeilingHeight.subscribe(function(newValue) {
+      var properties = {
+         ceilingHeight: 32 - newValue
+      };
+
+      if (newValue !== "*") {
+         self.changeSelectedTileProperties(properties, true, function(tile) {
+            return tile.ceilingHeight() !== properties.ceilingHeight;
          });
       }
    });
+
+   var changeRealWorldProperty = function(dataPropertyName, anyValue, tilePropertyName) {
+      return function(newValue) {
+         var properties = {
+            realWorld: {}
+         };
+         properties.realWorld[dataPropertyName] = newValue;
+
+         if (newValue !== anyValue) {
+            self.changeSelectedTileProperties(properties, false, function(tile) {
+               return tile[tilePropertyName]() !== newValue;
+            });
+         }
+      };
+   };
+
+   vmMap.selectedTileFloorTextureIndex.subscribe(changeRealWorldProperty("floorTexture", -1, "floorTextureIndex"));
+   vmMap.selectedTileFloorTextureRotations.subscribe(changeRealWorldProperty("floorTextureRotations", "*", "floorTextureRotations"));
+   vmMap.selectedTileWallTextureIndex.subscribe(changeRealWorldProperty("wallTexture", -1, "wallTextureIndex"));
+   vmMap.selectedTileCeilingTextureIndex.subscribe(changeRealWorldProperty("ceilingTexture", -1, "ceilingTextureIndex"));
+   vmMap.selectedTileCeilingTextureRotations.subscribe(changeRealWorldProperty("ceilingTextureRotations", "*", "ceilingTextureRotations"));
+   vmMap.selectedWallTextureOffset.subscribe(changeRealWorldProperty("wallTextureOffset", "*", "wallTextureOffset"));
+   vmMap.selectedUseAdjacentWallTexture.subscribe(changeRealWorldProperty("useAdjacentWallTexture", "", "useAdjacentWallTexture"));
 
    vmMap.filteredLevelObjects = ko.computed(function() {
       var allObjects = vmMap.levelObjects();
@@ -870,6 +914,51 @@ MapAdapter.prototype.getTileClickedHandler = function() {
          }
       }
    };
+};
+
+MapAdapter.prototype.changeSelectedTileProperties = function(properties, updateAdjacent, predicate) {
+   var vmMap = this.vm.map;
+   var level = vmMap.selectedLevel();
+   var rest = this.rest;
+   var self = this;
+
+   vmMap.selectedTiles().forEach(function(tile) {
+      var tileUrl = level.href + "/tiles/" + tile.y + "/" + tile.x;
+
+      if (predicate(tile)) {
+         rest.putResource(tileUrl, properties, function(tileData) {
+            updateTileProperties(tile, tileData);
+            if (updateAdjacent) {
+               self.requestAdjacentTileProperties(tile.x, tile.y);
+            }
+         }, function() {});
+      }
+   });
+};
+
+MapAdapter.prototype.requestAdjacentTileProperties = function(x, y) {
+   this.requestTilePropertiesAt(x - 1, y);
+   this.requestTilePropertiesAt(x + 1, y);
+   this.requestTilePropertiesAt(x, y - 1);
+   this.requestTilePropertiesAt(x, y + 1);
+};
+
+MapAdapter.prototype.requestTilePropertiesAt = function(x, y) {
+   var vmMap = this.vm.map;
+   var level = vmMap.selectedLevel();
+   var tileUrl = level.href + "/tiles/" + y + "/" + x;
+   var rest = this.rest;
+   var self = this;
+
+   if ((x >= 0) && (x < 64) && (y >= 0) && (y < 64)) {
+      rest.getResource(tileUrl, function(tileData) {
+         var tileRows = vmMap.tileRows();
+         var tileRow = tileRows[63 - y];
+         var tile = tileRow.tileColumns[x];
+
+         updateTileProperties(tile, tileData);
+      }, function() {});
+   }
 };
 
 MapAdapter.prototype.changeLevelTexture = function() {
