@@ -83,6 +83,10 @@ MapAdapter.prototype.postConstruct = function() {
 
       tileRows: ko.observableArray(),
 
+      enableFloorTextureUpdate: ko.observable(false),
+      enableWallTextureUpdate: ko.observable(false),
+      enableCeilingTextureUpdate: ko.observable(false),
+
       textureDisplay: ko.observableArray(["Floor", "Ceiling"]),
       selectedTextureDisplay: ko.observable("Floor"),
 
@@ -238,6 +242,22 @@ MapAdapter.prototype.postConstruct = function() {
    vmMap.selectedTileCeilingTextureRotations.subscribe(changeRealWorldProperty("ceilingTextureRotations", "*", "ceilingTextureRotations"));
    vmMap.selectedWallTextureOffset.subscribe(changeRealWorldProperty("wallTextureOffset", "*", "wallTextureOffset"));
    vmMap.selectedUseAdjacentWallTexture.subscribe(changeRealWorldProperty("useAdjacentWallTexture", "", "useAdjacentWallTexture"));
+
+   vmMap.getTextureIndexSetter = function(index) {
+      return function() {
+         if (vmMap.enableWallTextureUpdate()) {
+            vmMap.selectedTileWallTextureIndex(index);
+         }
+         if (index < 32) {
+            if (vmMap.enableFloorTextureUpdate()) {
+               vmMap.selectedTileFloorTextureIndex(index);
+            }
+            if (vmMap.enableCeilingTextureUpdate()) {
+               vmMap.selectedTileCeilingTextureIndex(index);
+            }
+         }
+      };
+   };
 
    vmMap.filteredLevelObjects = ko.computed(function() {
       var allObjects = vmMap.levelObjects();
