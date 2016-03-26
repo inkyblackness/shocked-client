@@ -18,7 +18,7 @@ LevelsAdapter.prototype.postConstruct = function() {
    this.vm.projects.selected.subscribe(function(project) {
       if (project) {
          rest.getResource(project.href + "/archive/levels", function(levels) {
-            vmLevels.available(levels.items);
+            vmLevels.available(levels.list);
          }, function() {});
       } else {
          vmLevels.available([]);

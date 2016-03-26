@@ -56,6 +56,8 @@
           Active Map: <select data-bind="options: levels.available, optionsText: 'id', optionsCaption: '', value: map.selectedLevel"></select>
           </p>
 
+        <div style="width: 100%;" data-bind="ifnot: map.isCyberspace">
+
         <h3>Level Texture Palette (<span data-bind="text: $root.map.levelTextures().length"></span>)</h3>
         <div style="width: 100%; overflow: auto;">
           <table>
@@ -92,20 +94,45 @@
           </p>
         </div>
 
+        </div> <!-- !isCyberspace -->
+
         </div>
 
 
         <div data-bind="visible: map.selectedMapSection() === 'tiles'">
-        <p>
-          Map Texture Display: 
-          <select data-bind="options: map.textureDisplay, value: map.selectedTextureDisplay"></select>
-        </p>
 
         <h3>Tile Selection (<span data-bind="text: $root.map.selectedTiles().length"></span>)</h3>
         <p>
           Tile Type:
           <select data-bind="options: map.tileTypes, value: map.selectedTileType"></select>
         </p>
+        <p>
+          Slope Control:
+          <select data-bind="options: map.slopeControls, value: map.selectedSlopeControl"></select>
+        </p>
+        <p>
+
+        <div style="width: 100%;">
+          <table>
+            <tbody>
+              <tr>
+                <th>&nbsp;</th>
+                <th>Floor</th>
+                <th>Slope</th>
+                <th>Ceiling</th>
+              </tr>
+              <tr>
+                <td>Heights</td>
+                <td><select data-bind="options: map.heightValues, value: map.selectedFloorHeight"></select></td>
+                <td><select data-bind="options: map.heightValues, value: map.selectedSlopeHeight"></select></td>
+                <td><select data-bind="options: map.depthValues, value: map.selectedCeilingHeight"></select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        </p>
+
+        <div style="width: 100%;" data-bind="ifnot: map.isCyberspace">
 
         <div style="width: 100%;">
           <table style="right: 0px;">
@@ -164,6 +191,15 @@
           </table>
         </div>
 
+        <p>
+        Wall texture offset:
+        <td><select data-bind="options: map.heightValues, value: map.selectedWallTextureOffset"></select></td>
+        </p>
+        <p>
+        Use adjacent wall texture:
+        <td><select data-bind="options: map.maybeValues, value: map.selectedUseAdjacentWallTexture"></select></td>
+        </p>
+
         <h3>Level Textures (<span data-bind="text: $root.map.levelTextures().length"></span>)</h3>
         <div style="width: 100%; overflow: auto;">
           <table>
@@ -185,6 +221,12 @@
           </table>
         </div>
 
+        <p>
+          Map Texture Display: 
+          <select data-bind="options: map.textureDisplay, value: map.selectedTextureDisplay"></select>
+        </p>
+
+        </div> <!-- !isCyberspace -->
 
         </div>
 
