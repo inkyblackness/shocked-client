@@ -2345,9 +2345,12 @@ $packages["runtime"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
-	var $pkg = {}, $init, OpenGl;
+	var $pkg = {}, $init, OpenGl, sliceType, arrayType, ptrType;
 	OpenGl = $pkg.OpenGl = $newType(8, $kindInterface, "opengl.OpenGl", "OpenGl", "github.com/inkyblackness/shocked-client/opengl", null);
-	OpenGl.init([{prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}]);
+	sliceType = $sliceType($Uint32);
+	arrayType = $arrayType($Float32, 16);
+	ptrType = $ptrType(arrayType);
+	OpenGl.init([{prop: "AttachShader", name: "AttachShader", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindAttribLocation", name: "BindAttribLocation", pkg: "", typ: $funcType([$Uint32, $Uint32, $String], [], false)}, {prop: "BindBuffer", name: "BindBuffer", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BufferData", name: "BufferData", pkg: "", typ: $funcType([$Uint32, $Int, $emptyInterface, $Uint32], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "CompileShader", name: "CompileShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "CreateProgram", name: "CreateProgram", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "CreateShader", name: "CreateShader", pkg: "", typ: $funcType([$Uint32], [$Uint32], false)}, {prop: "DeleteBuffers", name: "DeleteBuffers", pkg: "", typ: $funcType([sliceType], [], false)}, {prop: "DeleteProgram", name: "DeleteProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteShader", name: "DeleteShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DrawArrays", name: "DrawArrays", pkg: "", typ: $funcType([$Uint32, $Int32, $Int32], [], false)}, {prop: "Enable", name: "Enable", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "EnableVertexAttribArray", name: "EnableVertexAttribArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "GenBuffers", name: "GenBuffers", pkg: "", typ: $funcType([$Int32], [sliceType], false)}, {prop: "GetAttribLocation", name: "GetAttribLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "GetProgramParameter", name: "GetProgramParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetShaderInfoLog", name: "GetShaderInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetShaderParameter", name: "GetShaderParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetUniformLocation", name: "GetUniformLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "LinkProgram", name: "LinkProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ReadPixels", name: "ReadPixels", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32, $Uint32, $Uint32, $emptyInterface], [], false)}, {prop: "ShaderSource", name: "ShaderSource", pkg: "", typ: $funcType([$Uint32, $String], [], false)}, {prop: "UniformMatrix4fv", name: "UniformMatrix4fv", pkg: "", typ: $funcType([$Int32, $Bool, ptrType], [], false)}, {prop: "UseProgram", name: "UseProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "VertexAttribOffset", name: "VertexAttribOffset", pkg: "", typ: $funcType([$Uint32, $Int32, $Uint32, $Bool, $Int32, $Int], [], false)}, {prop: "Viewport", name: "Viewport", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32], [], false)}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -22499,7 +22502,7 @@ $packages["github.com/gopherjs/webgl"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
-	var $pkg = {}, $init, bytes, json, fmt, JSON, ko, js, jquery, webgl, env, opengl, ObjectMapper, objectMap, ViewModel, WebGl, WebGlWindow, indirecterType, sliceType, ptrType, ptrType$1, sliceType$1, ptrType$2, sliceType$2, ptrType$3, ptrType$4, ptrType$5, funcType$1, ptrType$6, mapType, sliceType$3, mapType$1, ptrType$7, NewObjectMapper, NewViewModel, Run, NewWebGl, NewWebGlWindow;
+	var $pkg = {}, $init, bytes, json, fmt, JSON, ko, js, jquery, webgl, env, opengl, ObjectMapper, objectMap, ViewModel, WebGl, WebGlWindow, indirecterType, sliceType, ptrType, ptrType$1, sliceType$1, ptrType$2, sliceType$2, ptrType$3, sliceType$3, sliceType$4, ptrType$4, ptrType$5, funcType$1, ptrType$6, ptrType$7, mapType, arrayType, ptrType$8, mapType$1, NewObjectMapper, NewViewModel, Run, NewWebGl, paramToInt, NewWebGlWindow;
 	bytes = $packages["bytes"];
 	json = $packages["encoding/json"];
 	fmt = $packages["fmt"];
@@ -22578,20 +22581,69 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 	ptrType$2 = $ptrType($packages["github.com/Archs/js/dom"].Element);
 	sliceType$2 = $sliceType(ptrType$2);
 	ptrType$3 = $ptrType(webgl.Context);
+	sliceType$3 = $sliceType($Uint32);
+	sliceType$4 = $sliceType($Float32);
 	ptrType$4 = $ptrType(WebGlWindow);
 	ptrType$5 = $ptrType(WebGl);
 	funcType$1 = $funcType([], [], false);
-	ptrType$6 = $ptrType(objectMap);
-	mapType = $mapType($Uint32, js.Object);
-	sliceType$3 = $sliceType($Uint);
-	mapType$1 = $mapType($Uint, sliceType$3);
-	ptrType$7 = $ptrType(js.Object);
+	ptrType$6 = $ptrType(js.Object);
+	ptrType$7 = $ptrType(objectMap);
+	mapType = $mapType($Uint32, ptrType$6);
+	arrayType = $arrayType($Float32, 16);
+	ptrType$8 = $ptrType(arrayType);
+	mapType$1 = $mapType($Uint32, sliceType$3);
 	NewObjectMapper = function() {
 		var $ptr, result;
 		result = new objectMap.ptr({}, 0);
 		return result;
 	};
 	$pkg.NewObjectMapper = NewObjectMapper;
+	objectMap.ptr.prototype.put = function(value) {
+		var $ptr, _entry, _key, _tuple, exists, key, omap, value;
+		omap = this;
+		key = 0;
+		while (true) {
+			if (!(key === 0)) { break; }
+			_tuple = (_entry = omap.objects[$Uint32.keyFor(omap.counter)], _entry !== undefined ? [_entry.v, true] : [null, false]);
+			exists = _tuple[1];
+			if (((omap.counter === 0)) || exists) {
+				omap.counter = omap.counter + (1) >>> 0;
+			} else {
+				key = omap.counter;
+			}
+		}
+		_key = key; (omap.objects || $throwRuntimeError("assignment to entry in nil map"))[$Uint32.keyFor(_key)] = { k: _key, v: value };
+		return key;
+	};
+	objectMap.prototype.put = function(value) { return this.$val.put(value); };
+	objectMap.ptr.prototype.get = function(key) {
+		var $ptr, _entry, _r, _tuple, key, ok, omap, value, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; key = $f.key; ok = $f.ok; omap = $f.omap; value = $f.value; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		omap = this;
+		_tuple = (_entry = omap.objects[$Uint32.keyFor(key)], _entry !== undefined ? [_entry.v, true] : [null, false]);
+		value = _tuple[0];
+		ok = _tuple[1];
+		/* */ if (!ok) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!ok) { */ case 1:
+			_r = fmt.Sprintf("Object with ID %u not known", new sliceType([new $Uint32(key)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$panic(new $String(_r));
+		/* } */ case 2:
+		return value;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: objectMap.ptr.prototype.get }; } $f.$ptr = $ptr; $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f.key = key; $f.ok = ok; $f.omap = omap; $f.value = value; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	objectMap.prototype.get = function(key) { return this.$val.get(key); };
+	objectMap.ptr.prototype.del = function(key) {
+		var $ptr, _arg, _arg$1, _r, key, omap, $s, $deferred, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; key = $f.key; omap = $f.omap; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+		omap = this;
+		$deferred.push([function(_arg, _arg$1) { delete _arg[$Uint32.keyFor(_arg$1)]; }, [omap.objects, key]]);
+		_r = omap.get(key); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		/* */ $s = 2; case 2:
+		return _r;
+		/* */ } return; } } catch(err) { $err = err; $s = -1; return null; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: objectMap.ptr.prototype.del }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f.key = key; $f.omap = omap; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+	};
+	objectMap.prototype.del = function(key) { return this.$val.del(key); };
 	NewViewModel = function() {
 		var $ptr, viewModel;
 		viewModel = new ViewModel.ptr(ptrType.nil, ptrType$1.nil, ptrType$1.nil);
@@ -22620,12 +22672,44 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 		return result;
 	};
 	$pkg.NewWebGl = NewWebGl;
-	WebGl.ptr.prototype.GetError = function() {
-		var $ptr, web;
+	WebGl.ptr.prototype.AttachShader = function(program, shader) {
+		var $ptr, _r, _r$1, objProgram, objShader, program, shader, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; objProgram = $f.objProgram; objShader = $f.objShader; program = $f.program; shader = $f.shader; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		web = this;
-		return (web.gl.GetError() >>> 0);
+		_r = web.shaders.get(shader); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		objShader = _r;
+		_r$1 = web.programs.get(program); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		objProgram = _r$1;
+		web.gl.AttachShader(objProgram, objShader);
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.AttachShader }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.objProgram = objProgram; $f.objShader = objShader; $f.program = program; $f.shader = shader; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	WebGl.prototype.GetError = function() { return this.$val.GetError(); };
+	WebGl.prototype.AttachShader = function(program, shader) { return this.$val.AttachShader(program, shader); };
+	WebGl.ptr.prototype.BindAttribLocation = function(program, index, name) {
+		var $ptr, _r, index, name, program, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; index = $f.index; name = $f.name; program = $f.program; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.programs.get(program); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$r = web.gl.BindAttribLocation(_r, (index >> 0), name); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.BindAttribLocation }; } $f.$ptr = $ptr; $f._r = _r; $f.index = index; $f.name = name; $f.program = program; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.BindAttribLocation = function(program, index, name) { return this.$val.BindAttribLocation(program, index, name); };
+	WebGl.ptr.prototype.BindBuffer = function(target, buffer) {
+		var $ptr, _arg, _arg$1, _r, buffer, target, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; buffer = $f.buffer; target = $f.target; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_arg = (target >> 0);
+		_r = web.buffers.get(buffer); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg$1 = _r;
+		$r = web.gl.BindBuffer(_arg, _arg$1); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.BindBuffer }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f.buffer = buffer; $f.target = target; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.BindBuffer = function(target, buffer) { return this.$val.BindBuffer(target, buffer); };
+	WebGl.ptr.prototype.BufferData = function(target, size, data, usage) {
+		var $ptr, data, size, target, usage, web;
+		web = this;
+		web.gl.BufferData((target >> 0), data, (usage >> 0));
+	};
+	WebGl.prototype.BufferData = function(target, size, data, usage) { return this.$val.BufferData(target, size, data, usage); };
 	WebGl.ptr.prototype.Clear = function(mask) {
 		var $ptr, mask, web;
 		web = this;
@@ -22638,6 +22722,239 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 		web.gl.ClearColor(red, green, blue, alpha);
 	};
 	WebGl.prototype.ClearColor = function(red, green, blue, alpha) { return this.$val.ClearColor(red, green, blue, alpha); };
+	WebGl.ptr.prototype.CompileShader = function(shader) {
+		var $ptr, _r, shader, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; shader = $f.shader; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.shaders.get(shader); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$r = web.gl.CompileShader(_r); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.CompileShader }; } $f.$ptr = $ptr; $f._r = _r; $f.shader = shader; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.CompileShader = function(shader) { return this.$val.CompileShader(shader); };
+	WebGl.ptr.prototype.CreateProgram = function() {
+		var $ptr, _key, _r, key, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _key = $f._key; _r = $f._r; key = $f.key; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.programs.put(web.gl.CreateProgram()); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		key = _r;
+		_key = key; (web.uniformsByProgram || $throwRuntimeError("assignment to entry in nil map"))[$Uint32.keyFor(_key)] = { k: _key, v: $makeSlice(sliceType$3, 0) };
+		return key;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.CreateProgram }; } $f.$ptr = $ptr; $f._key = _key; $f._r = _r; $f.key = key; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.CreateProgram = function() { return this.$val.CreateProgram(); };
+	WebGl.ptr.prototype.CreateShader = function(shaderType) {
+		var $ptr, _r, shaderType, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; shaderType = $f.shaderType; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.shaders.put(web.gl.CreateShader((shaderType >> 0))); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		/* */ $s = 2; case 2:
+		return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.CreateShader }; } $f.$ptr = $ptr; $f._r = _r; $f.shaderType = shaderType; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.CreateShader = function(shaderType) { return this.$val.CreateShader(shaderType); };
+	WebGl.ptr.prototype.DeleteBuffers = function(buffers) {
+		var $ptr, _i, _r, _ref, buffer, buffers, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; buffer = $f.buffer; buffers = $f.buffers; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_ref = buffers;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			buffer = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+			_r = web.buffers.del(buffer); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$r = web.gl.DeleteBuffer(_r); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.DeleteBuffers }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.buffer = buffer; $f.buffers = buffers; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.DeleteBuffers = function(buffers) { return this.$val.DeleteBuffers(buffers); };
+	WebGl.ptr.prototype.DeleteProgram = function(program) {
+		var $ptr, _entry, _i, _r, _r$1, _ref, program, value, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; program = $f.program; value = $f.value; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.programs.del(program); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$r = web.gl.DeleteProgram(_r); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_ref = (_entry = web.uniformsByProgram[$Uint32.keyFor(program)], _entry !== undefined ? _entry.v : sliceType$3.nil);
+		_i = 0;
+		/* while (true) { */ case 3:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 4; continue; }
+			value = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+			_r$1 = web.uniforms.del(value); /* */ $s = 5; case 5: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			_i++;
+		/* } */ $s = 3; continue; case 4:
+		delete web.uniformsByProgram[$Uint32.keyFor(program)];
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.DeleteProgram }; } $f.$ptr = $ptr; $f._entry = _entry; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f.program = program; $f.value = value; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.DeleteProgram = function(program) { return this.$val.DeleteProgram(program); };
+	WebGl.ptr.prototype.DeleteShader = function(shader) {
+		var $ptr, _r, shader, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; shader = $f.shader; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.shaders.del(shader); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$r = web.gl.DeleteShader(_r); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.DeleteShader }; } $f.$ptr = $ptr; $f._r = _r; $f.shader = shader; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.DeleteShader = function(shader) { return this.$val.DeleteShader(shader); };
+	WebGl.ptr.prototype.DrawArrays = function(mode, first, count) {
+		var $ptr, count, first, mode, web;
+		web = this;
+		web.gl.DrawArrays((mode >> 0), (first >> 0), (count >> 0));
+	};
+	WebGl.prototype.DrawArrays = function(mode, first, count) { return this.$val.DrawArrays(mode, first, count); };
+	WebGl.ptr.prototype.Enable = function(cap) {
+		var $ptr, cap, web;
+		web = this;
+		web.gl.Enable((cap >> 0));
+	};
+	WebGl.prototype.Enable = function(cap) { return this.$val.Enable(cap); };
+	WebGl.ptr.prototype.EnableVertexAttribArray = function(index) {
+		var $ptr, index, web;
+		web = this;
+		web.gl.EnableVertexAttribArray((index >> 0));
+	};
+	WebGl.prototype.EnableVertexAttribArray = function(index) { return this.$val.EnableVertexAttribArray(index); };
+	WebGl.ptr.prototype.GenBuffers = function(n) {
+		var $ptr, _r, i, ids, n, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; i = $f.i; ids = $f.ids; n = $f.n; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		ids = $makeSlice(sliceType$3, n);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < n)) { break; } */ if(!(i < n)) { $s = 2; continue; }
+			_r = web.buffers.put(web.gl.CreateBuffer()); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			((i < 0 || i >= ids.$length) ? $throwRuntimeError("index out of range") : ids.$array[ids.$offset + i] = _r);
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		return ids;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.GenBuffers }; } $f.$ptr = $ptr; $f._r = _r; $f.i = i; $f.ids = ids; $f.n = n; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.GenBuffers = function(n) { return this.$val.GenBuffers(n); };
+	WebGl.ptr.prototype.GetAttribLocation = function(program, name) {
+		var $ptr, _r, _r$1, name, program, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; name = $f.name; program = $f.program; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.programs.get(program); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = web.gl.GetAttribLocation(_r, name); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		/* */ $s = 3; case 3:
+		return (_r$1 >> 0);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.GetAttribLocation }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.name = name; $f.program = program; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.GetAttribLocation = function(program, name) { return this.$val.GetAttribLocation(program, name); };
+	WebGl.ptr.prototype.GetError = function() {
+		var $ptr, web;
+		web = this;
+		return (web.gl.GetError() >>> 0);
+	};
+	WebGl.prototype.GetError = function() { return this.$val.GetError(); };
+	WebGl.ptr.prototype.GetShaderInfoLog = function(shader) {
+		var $ptr, _r, _r$1, shader, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; shader = $f.shader; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.shaders.get(shader); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = web.gl.GetShaderInfoLog(_r); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		/* */ $s = 3; case 3:
+		return _r$1;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.GetShaderInfoLog }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.shader = shader; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.GetShaderInfoLog = function(shader) { return this.$val.GetShaderInfoLog(shader); };
+	paramToInt = function(value) {
+		var $ptr, result, value;
+		result = (($parseInt(value) >> 0) >> 0);
+		if ($internalize(value, $String) === "true") {
+			result = 1;
+		}
+		return result;
+	};
+	WebGl.ptr.prototype.GetShaderParameter = function(shader, param) {
+		var $ptr, _r, _r$1, param, shader, value, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; param = $f.param; shader = $f.shader; value = $f.value; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.shaders.get(shader); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = web.gl.GetShaderParameter(_r, (param >> 0)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		value = _r$1;
+		return paramToInt(value);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.GetShaderParameter }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.param = param; $f.shader = shader; $f.value = value; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.GetShaderParameter = function(shader, param) { return this.$val.GetShaderParameter(shader, param); };
+	WebGl.ptr.prototype.GetProgramParameter = function(program, param) {
+		var $ptr, _r, _r$1, param, program, value, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; param = $f.param; program = $f.program; value = $f.value; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.programs.get(program); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = web.gl.GetProgramParameteri(_r, (param >> 0)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		value = _r$1;
+		return (value >> 0);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.GetProgramParameter }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.param = param; $f.program = program; $f.value = value; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.GetProgramParameter = function(program, param) { return this.$val.GetProgramParameter(program, param); };
+	WebGl.ptr.prototype.GetUniformLocation = function(program, name) {
+		var $ptr, _entry, _key, _r, _r$1, _r$2, key, name, program, uniform, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; key = $f.key; name = $f.name; program = $f.program; uniform = $f.uniform; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.programs.get(program); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = web.gl.GetUniformLocation(_r, name); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		uniform = _r$1;
+		_r$2 = web.uniforms.put(uniform); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		key = _r$2;
+		_key = program; (web.uniformsByProgram || $throwRuntimeError("assignment to entry in nil map"))[$Uint32.keyFor(_key)] = { k: _key, v: $append((_entry = web.uniformsByProgram[$Uint32.keyFor(program)], _entry !== undefined ? _entry.v : sliceType$3.nil), key) };
+		return (key >> 0);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.GetUniformLocation }; } $f.$ptr = $ptr; $f._entry = _entry; $f._key = _key; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.key = key; $f.name = name; $f.program = program; $f.uniform = uniform; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.GetUniformLocation = function(program, name) { return this.$val.GetUniformLocation(program, name); };
+	WebGl.ptr.prototype.LinkProgram = function(program) {
+		var $ptr, _r, program, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; program = $f.program; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.programs.get(program); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$r = web.gl.LinkProgram(_r); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.LinkProgram }; } $f.$ptr = $ptr; $f._r = _r; $f.program = program; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.LinkProgram = function(program) { return this.$val.LinkProgram(program); };
+	WebGl.ptr.prototype.ReadPixels = function(x, y, width, height, format, pixelType, pixels) {
+		var $ptr, format, height, pixelType, pixels, web, width, x, y;
+		web = this;
+	};
+	WebGl.prototype.ReadPixels = function(x, y, width, height, format, pixelType, pixels) { return this.$val.ReadPixels(x, y, width, height, format, pixelType, pixels); };
+	WebGl.ptr.prototype.ShaderSource = function(shader, source) {
+		var $ptr, _r, shader, source, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; shader = $f.shader; source = $f.source; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.shaders.get(shader); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$r = web.gl.ShaderSource(_r, source); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.ShaderSource }; } $f.$ptr = $ptr; $f._r = _r; $f.shader = shader; $f.source = source; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.ShaderSource = function(shader, source) { return this.$val.ShaderSource(shader, source); };
+	WebGl.ptr.prototype.UniformMatrix4fv = function(location, transpose, value) {
+		var $ptr, _r, location, transpose, value, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; location = $f.location; transpose = $f.transpose; value = $f.value; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.uniforms.get((location >>> 0)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$r = web.gl.UniformMatrix4fv(_r, transpose, new sliceType$4((value))); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.UniformMatrix4fv }; } $f.$ptr = $ptr; $f._r = _r; $f.location = location; $f.transpose = transpose; $f.value = value; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.UniformMatrix4fv = function(location, transpose, value) { return this.$val.UniformMatrix4fv(location, transpose, value); };
+	WebGl.ptr.prototype.UseProgram = function(program) {
+		var $ptr, _r, program, web, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; program = $f.program; web = $f.web; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		web = this;
+		_r = web.programs.get(program); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$r = web.gl.UseProgram(_r); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: WebGl.ptr.prototype.UseProgram }; } $f.$ptr = $ptr; $f._r = _r; $f.program = program; $f.web = web; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	WebGl.prototype.UseProgram = function(program) { return this.$val.UseProgram(program); };
+	WebGl.ptr.prototype.VertexAttribOffset = function(index, size, attribType, normalized, stride, offset) {
+		var $ptr, attribType, index, normalized, offset, size, stride, web;
+		web = this;
+		web.gl.VertexAttribPointer((index >> 0), (size >> 0), (attribType >> 0), normalized, (stride >> 0), offset);
+	};
+	WebGl.prototype.VertexAttribOffset = function(index, size, attribType, normalized, stride, offset) { return this.$val.VertexAttribOffset(index, size, attribType, normalized, stride, offset); };
+	WebGl.ptr.prototype.Viewport = function(x, y, width, height) {
+		var $ptr, height, web, width, x, y;
+		web = this;
+		web.gl.Viewport((x >> 0), (y >> 0), (width >> 0), (height >> 0));
+	};
+	WebGl.prototype.Viewport = function(x, y, width, height) { return this.$val.Viewport(x, y, width, height); };
 	NewWebGlWindow = function(canvas) {
 		var $ptr, _tuple, attrs, browserWindow, canvas, err, glContext, indirecter, window, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _tuple = $f._tuple; attrs = $f.attrs; browserWindow = $f.browserWindow; canvas = $f.canvas; err = $f.err; glContext = $f.glContext; indirecter = $f.indirecter; window = $f.window; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -22697,14 +23014,14 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 		window = this;
 	};
 	WebGlWindow.prototype.OnResize = function(callback) { return this.$val.OnResize(callback); };
-	ptrType$6.methods = [{prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([js.Object], [$Uint32], false)}, {prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [js.Object], false)}, {prop: "del", name: "del", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [js.Object], false)}];
-	ptrType$5.methods = [{prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}];
+	ptrType$7.methods = [{prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([ptrType$6], [$Uint32], false)}, {prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [ptrType$6], false)}, {prop: "del", name: "del", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [ptrType$6], false)}];
+	ptrType$5.methods = [{prop: "AttachShader", name: "AttachShader", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindAttribLocation", name: "BindAttribLocation", pkg: "", typ: $funcType([$Uint32, $Uint32, $String], [], false)}, {prop: "BindBuffer", name: "BindBuffer", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BufferData", name: "BufferData", pkg: "", typ: $funcType([$Uint32, $Int, $emptyInterface, $Uint32], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "CompileShader", name: "CompileShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "CreateProgram", name: "CreateProgram", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "CreateShader", name: "CreateShader", pkg: "", typ: $funcType([$Uint32], [$Uint32], false)}, {prop: "DeleteBuffers", name: "DeleteBuffers", pkg: "", typ: $funcType([sliceType$3], [], false)}, {prop: "DeleteProgram", name: "DeleteProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteShader", name: "DeleteShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DrawArrays", name: "DrawArrays", pkg: "", typ: $funcType([$Uint32, $Int32, $Int32], [], false)}, {prop: "Enable", name: "Enable", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "EnableVertexAttribArray", name: "EnableVertexAttribArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "GenBuffers", name: "GenBuffers", pkg: "", typ: $funcType([$Int32], [sliceType$3], false)}, {prop: "GetAttribLocation", name: "GetAttribLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "GetShaderInfoLog", name: "GetShaderInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetShaderParameter", name: "GetShaderParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetProgramParameter", name: "GetProgramParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetUniformLocation", name: "GetUniformLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "LinkProgram", name: "LinkProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ReadPixels", name: "ReadPixels", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32, $Uint32, $Uint32, $emptyInterface], [], false)}, {prop: "ShaderSource", name: "ShaderSource", pkg: "", typ: $funcType([$Uint32, $String], [], false)}, {prop: "UniformMatrix4fv", name: "UniformMatrix4fv", pkg: "", typ: $funcType([$Int32, $Bool, ptrType$8], [], false)}, {prop: "UseProgram", name: "UseProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "VertexAttribOffset", name: "VertexAttribOffset", pkg: "", typ: $funcType([$Uint32, $Int32, $Uint32, $Bool, $Int32, $Int], [], false)}, {prop: "Viewport", name: "Viewport", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32], [], false)}];
 	ptrType$4.methods = [{prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([funcType$1], [], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([funcType$1], [], false)}];
-	ObjectMapper.init([{prop: "del", name: "del", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [js.Object], false)}, {prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [js.Object], false)}, {prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([js.Object], [$Uint32], false)}]);
+	ObjectMapper.init([{prop: "del", name: "del", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [ptrType$6], false)}, {prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [ptrType$6], false)}, {prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([ptrType$6], [$Uint32], false)}]);
 	objectMap.init([{prop: "objects", name: "objects", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: mapType, tag: ""}, {prop: "counter", name: "counter", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $Uint32, tag: ""}]);
 	ViewModel.init([{prop: "BaseViewModel", name: "", pkg: "", typ: ptrType, tag: ""}, {prop: "MainSections", name: "MainSections", pkg: "", typ: ptrType$1, tag: "js:\"mainSections\""}, {prop: "SelectedMainSection", name: "SelectedMainSection", pkg: "", typ: ptrType$1, tag: "js:\"selectedMainSection\""}]);
 	WebGl.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ptrType$3, tag: ""}, {prop: "buffers", name: "buffers", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ObjectMapper, tag: ""}, {prop: "programs", name: "programs", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ObjectMapper, tag: ""}, {prop: "shaders", name: "shaders", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ObjectMapper, tag: ""}, {prop: "uniforms", name: "uniforms", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ObjectMapper, tag: ""}, {prop: "uniformsByProgram", name: "uniformsByProgram", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: mapType$1, tag: ""}]);
-	WebGlWindow.init([{prop: "canvas", name: "canvas", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ptrType$7, tag: ""}, {prop: "glWrapper", name: "glWrapper", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ptrType$5, tag: ""}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: funcType$1, tag: ""}]);
+	WebGlWindow.init([{prop: "canvas", name: "canvas", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ptrType$6, tag: ""}, {prop: "glWrapper", name: "glWrapper", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ptrType$5, tag: ""}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: funcType$1, tag: ""}]);
 	indirecterType.init([{prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: funcType$1, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};

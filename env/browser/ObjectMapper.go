@@ -8,26 +8,26 @@ import (
 
 // ObjectMapper is a map for handles.
 type ObjectMapper interface {
-	put(value js.Object) uint32
-	get(key uint32) js.Object
-	del(key uint32) js.Object
+	put(value *js.Object) uint32
+	get(key uint32) *js.Object
+	del(key uint32) *js.Object
 }
 
 type objectMap struct {
-	objects map[uint32]js.Object
+	objects map[uint32]*js.Object
 	counter uint32
 }
 
 // NewObjectMapper returns a new ObjectMapper instance
 func NewObjectMapper() ObjectMapper {
 	result := &objectMap{
-		objects: make(map[uint32]js.Object),
+		objects: make(map[uint32]*js.Object),
 		counter: 0}
 
 	return result
 }
 
-func (omap *objectMap) put(value js.Object) uint32 {
+func (omap *objectMap) put(value *js.Object) uint32 {
 	key := uint32(0)
 
 	for key == 0 {
@@ -44,7 +44,7 @@ func (omap *objectMap) put(value js.Object) uint32 {
 	return key
 }
 
-func (omap *objectMap) get(key uint32) js.Object {
+func (omap *objectMap) get(key uint32) *js.Object {
 	value, ok := omap.objects[key]
 
 	if !ok {
@@ -54,7 +54,7 @@ func (omap *objectMap) get(key uint32) js.Object {
 	return value
 }
 
-func (omap *objectMap) del(key uint32) js.Object {
+func (omap *objectMap) del(key uint32) *js.Object {
 	defer delete(omap.objects, key)
 
 	return omap.get(key)
