@@ -140,9 +140,9 @@ func (web *WebGl) GenBuffers(n int32) []uint32 {
 // GenVertexArrays implements the opengl.OpenGl interface.
 func (web *WebGl) GenVertexArrays(n int32) []uint32 {
 	// Not supported in WebGL, can be ignored; Creating dummy IDs
-	ids := make([]uint32, n, n)
+	ids := []uint32{}
 	for i := int32(0); i < n; i++ {
-		ids[n] = uint32(i + 1)
+		ids = append(ids, uint32(i+1))
 	}
 	return ids
 }

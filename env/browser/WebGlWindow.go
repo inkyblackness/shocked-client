@@ -56,9 +56,10 @@ func (window *WebGlWindow) OnRender(callback func()) {
 
 // Size implements the env.OpenGlWindow interface.
 func (window *WebGlWindow) Size() (width float32, height float32) {
-	return
+	return float32(window.canvas.Get("width").Float()), float32(window.canvas.Get("height").Float())
 }
 
+// OnResize implements the env.OpenGlWindow interface.
 func (window *WebGlWindow) OnResize(callback func()) {
 
 }

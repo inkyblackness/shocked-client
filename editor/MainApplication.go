@@ -153,14 +153,15 @@ func (app *MainApplication) initShaders() {
 	gl.EnableVertexAttribArray(uint32(app.vertexColor))
 
 	app.pMatrixUniform = gl.GetUniformLocation(program, "uPMatrix")
+	checkError(gl, "pMatrix uniform")
 	app.mvMatrixUniform = gl.GetUniformLocation(program, "uMVMatrix")
-	checkError(gl, "uniforms")
+	checkError(gl, "mvMatrix uniform")
 }
 
 func (app *MainApplication) initBuffers() {
 	gl := app.glWindow.OpenGl()
-	app.triangleVertexPositionBuffer = gl.GenBuffers(1)[0]
 
+	app.triangleVertexPositionBuffer = gl.GenBuffers(1)[0]
 	gl.BindBuffer(opengl.ARRAY_BUFFER, app.triangleVertexPositionBuffer)
 	var vertices = []float32{
 		0.0, 0.0, 0.0,

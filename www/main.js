@@ -21599,9 +21599,10 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = gl.EnableVertexAttribArray((app.vertexColor >>> 0)); /* */ $s = 22; case 22: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r$10 = gl.GetUniformLocation(program, "uPMatrix"); /* */ $s = 23; case 23: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
 		app.pMatrixUniform = _r$10;
-		_r$11 = gl.GetUniformLocation(program, "uMVMatrix"); /* */ $s = 24; case 24: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+		$r = checkError(gl, "pMatrix uniform"); /* */ $s = 24; case 24: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$11 = gl.GetUniformLocation(program, "uMVMatrix"); /* */ $s = 25; case 25: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
 		app.mvMatrixUniform = _r$11;
-		$r = checkError(gl, "uniforms"); /* */ $s = 25; case 25: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = checkError(gl, "mvMatrix uniform"); /* */ $s = 26; case 26: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initShaders }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.app = app; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.program = program; $f.vertexShader = vertexShader; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.initShaders = function() { return this.$val.initShaders(); };
@@ -26998,11 +26999,11 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 	WebGl.ptr.prototype.GenVertexArrays = function(n) {
 		var $ptr, i, ids, n, web;
 		web = this;
-		ids = $makeSlice(sliceType$3, n, n);
+		ids = new sliceType$3([]);
 		i = 0;
 		while (true) {
 			if (!(i < n)) { break; }
-			((n < 0 || n >= ids.$length) ? $throwRuntimeError("index out of range") : ids.$array[ids.$offset + n] = ((i + 1 >> 0) >>> 0));
+			ids = $append(ids, ((i + 1 >> 0) >>> 0));
 			i = i + (1) >> 0;
 		}
 		return ids;
@@ -27190,10 +27191,14 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 	};
 	WebGlWindow.prototype.OnRender = function(callback) { return this.$val.OnRender(callback); };
 	WebGlWindow.ptr.prototype.Size = function() {
-		var $ptr, height, width, window;
+		var $ptr, _tmp, _tmp$1, height, width, window;
 		width = 0;
 		height = 0;
 		window = this;
+		_tmp = $fround($parseFloat(window.canvas.width));
+		_tmp$1 = $fround($parseFloat(window.canvas.height));
+		width = _tmp;
+		height = _tmp$1;
 		return [width, height];
 	};
 	WebGlWindow.prototype.Size = function() { return this.$val.Size(); };
