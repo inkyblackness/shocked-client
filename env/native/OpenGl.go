@@ -36,6 +36,11 @@ func (native *OpenGl) BindBuffer(target uint32, buffer uint32) {
 	gl.BindBuffer(target, buffer)
 }
 
+// BindVertexArray implements the opengl.OpenGl interface.
+func (native *OpenGl) BindVertexArray(array uint32) {
+	gl.BindVertexArray(array)
+}
+
 // BufferData implements the opengl.OpenGl interface.
 func (native *OpenGl) BufferData(target uint32, size int, data interface{}, usage uint32) {
 	gl.BufferData(target, size, gl.Ptr(data), usage)
@@ -81,6 +86,11 @@ func (native *OpenGl) DeleteShader(shader uint32) {
 	gl.DeleteShader(shader)
 }
 
+// DeleteVertexArrays implements the opengl.OpenGl interface.
+func (native *OpenGl) DeleteVertexArrays(arrays []uint32) {
+	gl.DeleteVertexArrays(int32(len(arrays)), (*uint32)(&arrays[0]))
+}
+
 // DrawArrays implements the opengl.OpenGl interface.
 func (native *OpenGl) DrawArrays(mode uint32, first int32, count int32) {
 	gl.DrawArrays(mode, first, count)
@@ -103,6 +113,13 @@ func (native *OpenGl) GenBuffers(n int32) []uint32 {
 	return buffers
 }
 
+// GenVertexArrays implements the opengl.OpenGl interface.
+func (native *OpenGl) GenVertexArrays(n int32) []uint32 {
+	ids := make([]uint32, n, n)
+	gl.GenVertexArrays(n, &ids[0])
+	return ids
+}
+
 // GetAttribLocation implements the opengl.OpenGl interface.
 func (native *OpenGl) GetAttribLocation(program uint32, name string) int32 {
 	return gl.GetAttribLocation(program, gl.Str(name+"\x00"))
@@ -111,6 +128,14 @@ func (native *OpenGl) GetAttribLocation(program uint32, name string) int32 {
 // GetError implements the opengl.OpenGl interface.
 func (native *OpenGl) GetError() uint32 {
 	return gl.GetError()
+}
+
+// GetProgramInfoLog implements the opengl.OpenGl interface.
+func (native *OpenGl) GetProgramInfoLog(program uint32) string {
+	logLength := native.GetProgramParameter(program, gl.INFO_LOG_LENGTH)
+	log := strings.Repeat("\x00", int(logLength+1))
+	gl.GetProgramInfoLog(program, logLength, nil, gl.Str(log))
+	return log
 }
 
 // GetProgramParameter implements the opengl.OpenGl interface.

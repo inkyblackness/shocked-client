@@ -47,6 +47,11 @@ func (web *WebGl) BindBuffer(target uint32, buffer uint32) {
 	web.gl.BindBuffer(int(target), web.buffers.get(buffer))
 }
 
+// BindVertexArray implements the opengl.OpenGl interface.
+func (web *WebGl) BindVertexArray(array uint32) {
+	// not supported in WebGL, can be ignored
+}
+
 // BufferData implements the opengl.OpenGl interface.
 func (web *WebGl) BufferData(target uint32, size int, data interface{}, usage uint32) {
 	web.gl.BufferData(int(target), data, int(usage))
@@ -101,6 +106,11 @@ func (web *WebGl) DeleteShader(shader uint32) {
 	web.gl.DeleteShader(web.shaders.del(shader))
 }
 
+// DeleteVertexArrays implements the opengl.OpenGl interface.
+func (web *WebGl) DeleteVertexArrays(arrays []uint32) {
+	// Not supported in WebGL, can be ignored
+}
+
 // DrawArrays implements the opengl.OpenGl interface.
 func (web *WebGl) DrawArrays(mode uint32, first int32, count int32) {
 	web.gl.DrawArrays(int(mode), int(first), int(count))
@@ -124,6 +134,16 @@ func (web *WebGl) GenBuffers(n int32) []uint32 {
 		ids[i] = web.buffers.put(web.gl.CreateBuffer())
 	}
 
+	return ids
+}
+
+// GenVertexArrays implements the opengl.OpenGl interface.
+func (web *WebGl) GenVertexArrays(n int32) []uint32 {
+	// Not supported in WebGL, can be ignored; Creating dummy IDs
+	ids := make([]uint32, n, n)
+	for i := int32(0); i < n; i++ {
+		ids[n] = uint32(i + 1)
+	}
 	return ids
 }
 
@@ -159,12 +179,17 @@ func (web *WebGl) GetShaderParameter(shader uint32, param uint32) int32 {
 	return paramToInt(value)
 }
 
+// GetProgramInfoLog implements the opengl.OpenGl interface.
+func (web *WebGl) GetProgramInfoLog(program uint32) string {
+	return web.gl.GetProgramInfoLog(web.programs.get(program))
+}
+
 // GetProgramParameter implements the opengl.OpenGl interface.
 func (web *WebGl) GetProgramParameter(program uint32, param uint32) int32 {
-	value := web.gl.GetProgramParameteri(web.programs.get(program), int(param))
-	//value := web.gl.Call("getProgramParameter", web.programs.get(program), int(param))
+	// Call function directly since the wrapping function does not cover properly convert strings.
+	value := web.gl.Call("getProgramParameter", web.programs.get(program), int(param))
 
-	return int32(value)
+	return paramToInt(value)
 }
 
 // GetUniformLocation implements the opengl.OpenGl interface.
@@ -196,7 +221,7 @@ func (web *WebGl) ShaderSource(shader uint32, source string) {
 // UniformMatrix4fv implements the opengl.OpenGl interface.
 func (web *WebGl) UniformMatrix4fv(location int32, transpose bool, value *[16]float32) {
 	web.gl.UniformMatrix4fv(web.uniforms.get(uint32(location)), transpose, (*value)[:])
-	//web.gl.Call("uniformMatrix4fv", web.uniforms.get(uint32(location)), transpose, *value)
+	//web.gl.Call("uniformMatrix4fv", web.uniforms.get(uint32(location)), transpose, value)
 }
 
 // UseProgram implements the opengl.OpenGl interface.

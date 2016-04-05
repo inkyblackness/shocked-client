@@ -8,6 +8,7 @@ type OpenGl interface {
 
 	BindAttribLocation(program uint32, index uint32, name string)
 	BindBuffer(target uint32, buffer uint32)
+	BindVertexArray(array uint32)
 	BufferData(target uint32, size int, data interface{}, usage uint32)
 
 	Clear(mask uint32)
@@ -21,6 +22,7 @@ type OpenGl interface {
 	DeleteBuffers(buffers []uint32)
 	DeleteProgram(program uint32)
 	DeleteShader(shader uint32)
+	DeleteVertexArrays(arrays []uint32)
 
 	DrawArrays(mode uint32, first int32, count int32)
 
@@ -28,11 +30,13 @@ type OpenGl interface {
 	EnableVertexAttribArray(index uint32)
 
 	GenBuffers(n int32) []uint32
+	GenVertexArrays(n int32) []uint32
 
 	GetAttribLocation(program uint32, name string) int32
 	GetError() uint32
 	GetShaderInfoLog(shader uint32) string
 	GetShaderParameter(shader uint32, param uint32) int32
+	GetProgramInfoLog(program uint32) string
 	GetProgramParameter(program uint32, param uint32) int32
 	GetUniformLocation(program uint32, name string) int32
 
