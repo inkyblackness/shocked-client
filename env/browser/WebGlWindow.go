@@ -1,6 +1,8 @@
 package browser
 
 import (
+	"fmt"
+
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/gopherjs/webgl"
 
@@ -55,11 +57,21 @@ func (window *WebGlWindow) OnRender(callback func()) {
 }
 
 // Size implements the env.OpenGlWindow interface.
-func (window *WebGlWindow) Size() (width float32, height float32) {
-	return float32(window.canvas.Get("width").Float()), float32(window.canvas.Get("height").Float())
-}
+func (window *WebGlWindow) Size() (width int, height int) {
+	canvasWidth := window.canvas.Get("width").Int()
+	canvasHeight := window.canvas.Get("height").Int()
 
-// OnResize implements the env.OpenGlWindow interface.
-func (window *WebGlWindow) OnResize(callback func()) {
+	width = window.canvas.Get("clientWidth").Int()
+	height = window.canvas.Get("clientHeight").Int()
 
+	if canvasWidth != width {
+		fmt.Printf("Setting canvas width %d to reported width %d\n", canvasWidth, width)
+		window.canvas.Set("width", width)
+	}
+	if canvasHeight != height {
+		fmt.Printf("Setting canvas height %d to reported height %d\n", canvasHeight, height)
+		window.canvas.Set("height", height)
+	}
+
+	return
 }

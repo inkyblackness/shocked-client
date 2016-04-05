@@ -63,15 +63,6 @@ func (window *OpenGlWindow) OnRender(callback func()) {
 }
 
 // Size implements the env.OpenGlWindow interface.
-func (window *OpenGlWindow) Size() (width float32, height float32) {
-	intWidth, intHeight := window.glfwWindow.GetSize()
-
-	width = float32(intWidth)
-	height = float32(intHeight)
-
-	return
-}
-
-func (window *OpenGlWindow) OnResize(callback func()) {
-
+func (window *OpenGlWindow) Size() (width int, height int) {
+	return window.glfwWindow.GetSize()
 }

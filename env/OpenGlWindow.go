@@ -12,7 +12,5 @@ type OpenGlWindow interface {
 	OnRender(callback func())
 
 	// Size returns the dimensions of the window in pixel.
-	Size() (width float32, height float32)
-	// OnResize registers a callback function which shall be called when the window is resized.
-	OnResize(callback func())
+	Size() (width int, height int)
 }

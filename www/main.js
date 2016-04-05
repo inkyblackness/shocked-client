@@ -15217,7 +15217,7 @@ $packages["reflect"] = (function() {
 	return $pkg;
 })();
 $packages["fmt"] = (function() {
-	var $pkg = {}, $init, errors, io, math, os, reflect, strconv, sync, utf8, fmtFlags, fmt, State, Formatter, Stringer, GoStringer, buffer, pp, runeUnreader, scanError, ss, ssave, sliceType, sliceType$1, ptrType, arrayType, arrayType$1, ptrType$1, arrayType$2, sliceType$2, ptrType$2, ptrType$5, ptrType$25, funcType, padZeroBytes, padSpaceBytes, trueBytes, falseBytes, commaSpaceBytes, nilAngleBytes, nilParenBytes, nilBytes, mapBytes, percentBangBytes, missingBytes, badIndexBytes, panicBytes, extraBytes, irparenBytes, bytesBytes, badWidthBytes, badPrecBytes, noVerbBytes, ppFree, intBits, uintptrBits, byteType, space, ssFree, complexError, boolError, _r, _r$1, init, doPrec, newPrinter, Fprintf, Sprintf, Errorf, Fprint, Fprintln, getField, tooLarge, parsenum, intFromArg, parseArgNumber, isSpace, notSpace, indexRune;
+	var $pkg = {}, $init, errors, io, math, os, reflect, strconv, sync, utf8, fmtFlags, fmt, State, Formatter, Stringer, GoStringer, buffer, pp, runeUnreader, scanError, ss, ssave, sliceType, sliceType$1, ptrType, arrayType, arrayType$1, ptrType$1, arrayType$2, sliceType$2, ptrType$2, ptrType$5, ptrType$25, funcType, padZeroBytes, padSpaceBytes, trueBytes, falseBytes, commaSpaceBytes, nilAngleBytes, nilParenBytes, nilBytes, mapBytes, percentBangBytes, missingBytes, badIndexBytes, panicBytes, extraBytes, irparenBytes, bytesBytes, badWidthBytes, badPrecBytes, noVerbBytes, ppFree, intBits, uintptrBits, byteType, space, ssFree, complexError, boolError, _r, _r$1, init, doPrec, newPrinter, Fprintf, Printf, Sprintf, Errorf, Fprint, Fprintln, getField, tooLarge, parsenum, intFromArg, parseArgNumber, isSpace, notSpace, indexRune;
 	errors = $packages["errors"];
 	io = $packages["io"];
 	math = $packages["math"];
@@ -16043,6 +16043,20 @@ $packages["fmt"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Fprintf }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.a = a; $f.err = err; $f.format = format; $f.n = n; $f.p = p; $f.w = w; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Fprintf = Fprintf;
+	Printf = function(format, a) {
+		var $ptr, _r$2, _tuple, a, err, format, n, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; _tuple = $f._tuple; a = $f.a; err = $f.err; format = $f.format; n = $f.n; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		n = 0;
+		err = $ifaceNil;
+		_r$2 = Fprintf(os.Stdout, format, a); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple = _r$2;
+		n = _tuple[0];
+		err = _tuple[1];
+		/* */ $s = 2; case 2:
+		return [n, err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Printf }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f._tuple = _tuple; $f.a = a; $f.err = err; $f.format = format; $f.n = n; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Printf = Printf;
 	Sprintf = function(format, a) {
 		var $ptr, _r$2, a, format, p, s, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; a = $f.a; format = $f.format; p = $f.p; s = $f.s; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -21416,7 +21430,7 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
 	OpenGlWindow = $pkg.OpenGlWindow = $newType(8, $kindInterface, "env.OpenGlWindow", "OpenGlWindow", "github.com/inkyblackness/shocked-client/env", null);
 	funcType = $funcType([], [], false);
-	OpenGlWindow.init([{prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}]);
+	OpenGlWindow.init([{prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Int, $Int], false)}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -21433,12 +21447,10 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	env = $packages["github.com/inkyblackness/shocked-client/env"];
 	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
 	os = $packages["os"];
-	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(glWindow_, width_, height_, vertexArrayObject_, vertexPosition_, triangleVertexPositionBuffer_, vertexColor_, triangleVertexColorBuffer_, pMatrix_, pMatrixUniform_, mvMatrix_, mvMatrixUniform_) {
+	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(glWindow_, vertexArrayObject_, vertexPosition_, triangleVertexPositionBuffer_, vertexColor_, triangleVertexColorBuffer_, pMatrix_, pMatrixUniform_, mvMatrix_, mvMatrixUniform_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.glWindow = $ifaceNil;
-			this.width = 0;
-			this.height = 0;
 			this.vertexArrayObject = 0;
 			this.vertexPosition = 0;
 			this.triangleVertexPositionBuffer = 0;
@@ -21451,8 +21463,6 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			return;
 		}
 		this.glWindow = glWindow_;
-		this.width = width_;
-		this.height = height_;
 		this.vertexArrayObject = vertexArrayObject_;
 		this.vertexPosition = vertexPosition_;
 		this.triangleVertexPositionBuffer = triangleVertexPositionBuffer_;
@@ -21469,51 +21479,51 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	ptrType = $ptrType(MainApplication);
 	NewMainApplication = function() {
 		var $ptr;
-		return new MainApplication.ptr($ifaceNil, 0, 0, 0, 0, 0, 0, 0, arrayType.zero(), 0, arrayType.zero(), 0);
+		return new MainApplication.ptr($ifaceNil, 0, 0, 0, 0, 0, arrayType.zero(), 0, arrayType.zero(), 0);
 	};
 	$pkg.NewMainApplication = NewMainApplication;
 	MainApplication.ptr.prototype.Init = function(glWindow) {
-		var $ptr, _r, _r$1, _tuple, app, gl, glWindow, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; app = $f.app; gl = $f.gl; glWindow = $f.glWindow; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, app, gl, glWindow, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; gl = $f.gl; glWindow = $f.glWindow; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
 		app.glWindow = glWindow;
 		$r = glWindow.OnRender($methodVal(app, "render")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = app.glWindow.OpenGl(); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		gl = _r;
-		_r$1 = glWindow.Size(); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple = _r$1;
-		app.width = _tuple[0];
-		app.height = _tuple[1];
-		$r = app.initShaders(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = app.initBuffers(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.ClearColor(0, 0, 0, 1); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.app = app; $f.gl = gl; $f.glWindow = glWindow; $f.$s = $s; $f.$r = $r; return $f;
+		$r = app.initShaders(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = app.initBuffers(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.ClearColor(0, 0, 0, 1); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.gl = gl; $f.glWindow = glWindow; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.Init = function(glWindow) { return this.$val.Init(glWindow); };
 	MainApplication.ptr.prototype.render = function() {
-		var $ptr, _r, app, gl, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; gl = $f.gl; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, _tuple, app, gl, height, width, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; app = $f.app; gl = $f.gl; height = $f.height; width = $f.width; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
 		_r = app.glWindow.OpenGl(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		gl = _r;
-		$r = gl.Viewport(0, 0, (app.width >> 0), (app.height >> 0)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "viewport"); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.Clear(16640); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "clear"); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		mgl32.Mat4.copy(app.pMatrix, mgl32.Ortho2D(0, app.width, app.height, 0));
-		mgl32.Mat4.copy(app.mvMatrix, new mgl32.Mat4(mgl32.Ident4()).Add(mgl32.Translate3D($fround(app.width / 2), $fround(app.height / 2), 0)));
-		$r = app.setMatrixUniforms(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.BindBuffer(34962, app.triangleVertexPositionBuffer); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw bind 1"); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.VertexAttribOffset((app.vertexPosition >>> 0), 3, 5126, false, 0, 0); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw offset 1"); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.BindBuffer(34962, app.triangleVertexColorBuffer); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw bind 2"); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.VertexAttribOffset((app.vertexColor >>> 0), 4, 5126, false, 0, 0); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw offset 2"); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.DrawArrays(4, 0, 3); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw arrays"); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.gl = gl; $f.$s = $s; $f.$r = $r; return $f;
+		_r$1 = app.glWindow.Size(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple = _r$1;
+		width = _tuple[0];
+		height = _tuple[1];
+		$r = gl.Viewport(0, 0, (width >> 0), (height >> 0)); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = checkError(gl, "viewport"); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.Clear(16640); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = checkError(gl, "clear"); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		mgl32.Mat4.copy(app.pMatrix, mgl32.Ortho2D(0, width, height, 0));
+		mgl32.Mat4.copy(app.mvMatrix, new mgl32.Mat4(mgl32.Ident4()).Add(mgl32.Translate3D($fround(width / 2), $fround(height / 2), 0)));
+		$r = app.setMatrixUniforms(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BindBuffer(34962, app.triangleVertexPositionBuffer); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = checkError(gl, "draw bind 1"); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.VertexAttribOffset((app.vertexPosition >>> 0), 3, 5126, false, 0, 0); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = checkError(gl, "draw offset 1"); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BindBuffer(34962, app.triangleVertexColorBuffer); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = checkError(gl, "draw bind 2"); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.VertexAttribOffset((app.vertexColor >>> 0), 4, 5126, false, 0, 0); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = checkError(gl, "draw offset 2"); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.DrawArrays(4, 0, 3); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = checkError(gl, "draw arrays"); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.app = app; $f.gl = gl; $f.height = height; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.render = function() { return this.$val.render(); };
 	checkError = function(gl, stage) {
@@ -21645,7 +21655,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	MainApplication.prototype.setMatrixUniforms = function() { return this.$val.setMatrixUniforms(); };
 	ptrType.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "prepareShader", name: "prepareShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $String], [$Uint32], false)}, {prop: "initShaders", name: "initShaders", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initBuffers", name: "initBuffers", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "setMatrixUniforms", name: "setMatrixUniforms", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}];
-	MainApplication.init([{prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "width", name: "width", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "height", name: "height", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPosition", name: "vertexPosition", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexPositionBuffer", name: "triangleVertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexColor", name: "vertexColor", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexColorBuffer", name: "triangleVertexColorBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "pMatrix", name: "pMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "pMatrixUniform", name: "pMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "mvMatrix", name: "mvMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "mvMatrixUniform", name: "mvMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}]);
+	MainApplication.init([{prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPosition", name: "vertexPosition", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexPositionBuffer", name: "triangleVertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexColor", name: "vertexColor", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexColorBuffer", name: "triangleVertexColorBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "pMatrix", name: "pMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "pMatrixUniform", name: "pMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "mvMatrix", name: "mvMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "mvMatrixUniform", name: "mvMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -27191,25 +27201,36 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 	};
 	WebGlWindow.prototype.OnRender = function(callback) { return this.$val.OnRender(callback); };
 	WebGlWindow.ptr.prototype.Size = function() {
-		var $ptr, _tmp, _tmp$1, height, width, window;
+		var $ptr, _r, _r$1, canvasHeight, canvasWidth, height, width, window, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; canvasHeight = $f.canvasHeight; canvasWidth = $f.canvasWidth; height = $f.height; width = $f.width; window = $f.window; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		width = 0;
 		height = 0;
 		window = this;
-		_tmp = $fround($parseFloat(window.canvas.width));
-		_tmp$1 = $fround($parseFloat(window.canvas.height));
-		width = _tmp;
-		height = _tmp$1;
+		canvasWidth = $parseInt(window.canvas.width) >> 0;
+		canvasHeight = $parseInt(window.canvas.height) >> 0;
+		width = $parseInt(window.canvas.clientWidth) >> 0;
+		height = $parseInt(window.canvas.clientHeight) >> 0;
+		/* */ if (!((canvasWidth === width))) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!((canvasWidth === width))) { */ case 1:
+			_r = fmt.Printf("Setting canvas width %d to reported width %d\n", new sliceType([new $Int(canvasWidth), new $Int(width)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r;
+			window.canvas.width = width;
+		/* } */ case 2:
+		/* */ if (!((canvasHeight === height))) { $s = 4; continue; }
+		/* */ $s = 5; continue;
+		/* if (!((canvasHeight === height))) { */ case 4:
+			_r$1 = fmt.Printf("Setting canvas height %d to reported height %d\n", new sliceType([new $Int(canvasHeight), new $Int(height)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			window.canvas.height = height;
+		/* } */ case 5:
 		return [width, height];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: WebGlWindow.ptr.prototype.Size }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.canvasHeight = canvasHeight; $f.canvasWidth = canvasWidth; $f.height = height; $f.width = width; $f.window = window; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	WebGlWindow.prototype.Size = function() { return this.$val.Size(); };
-	WebGlWindow.ptr.prototype.OnResize = function(callback) {
-		var $ptr, callback, window;
-		window = this;
-	};
-	WebGlWindow.prototype.OnResize = function(callback) { return this.$val.OnResize(callback); };
 	ptrType$7.methods = [{prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([ptrType$6], [$Uint32], false)}, {prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [ptrType$6], false)}, {prop: "del", name: "del", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [ptrType$6], false)}];
 	ptrType$5.methods = [{prop: "AttachShader", name: "AttachShader", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindAttribLocation", name: "BindAttribLocation", pkg: "", typ: $funcType([$Uint32, $Uint32, $String], [], false)}, {prop: "BindBuffer", name: "BindBuffer", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindVertexArray", name: "BindVertexArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "BufferData", name: "BufferData", pkg: "", typ: $funcType([$Uint32, $Int, $emptyInterface, $Uint32], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "CompileShader", name: "CompileShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "CreateProgram", name: "CreateProgram", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "CreateShader", name: "CreateShader", pkg: "", typ: $funcType([$Uint32], [$Uint32], false)}, {prop: "DeleteBuffers", name: "DeleteBuffers", pkg: "", typ: $funcType([sliceType$3], [], false)}, {prop: "DeleteProgram", name: "DeleteProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteShader", name: "DeleteShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteVertexArrays", name: "DeleteVertexArrays", pkg: "", typ: $funcType([sliceType$3], [], false)}, {prop: "DrawArrays", name: "DrawArrays", pkg: "", typ: $funcType([$Uint32, $Int32, $Int32], [], false)}, {prop: "Enable", name: "Enable", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "EnableVertexAttribArray", name: "EnableVertexAttribArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "GenBuffers", name: "GenBuffers", pkg: "", typ: $funcType([$Int32], [sliceType$3], false)}, {prop: "GenVertexArrays", name: "GenVertexArrays", pkg: "", typ: $funcType([$Int32], [sliceType$3], false)}, {prop: "GetAttribLocation", name: "GetAttribLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "GetShaderInfoLog", name: "GetShaderInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetShaderParameter", name: "GetShaderParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetProgramInfoLog", name: "GetProgramInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetProgramParameter", name: "GetProgramParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetUniformLocation", name: "GetUniformLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "LinkProgram", name: "LinkProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ReadPixels", name: "ReadPixels", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32, $Uint32, $Uint32, $emptyInterface], [], false)}, {prop: "ShaderSource", name: "ShaderSource", pkg: "", typ: $funcType([$Uint32, $String], [], false)}, {prop: "UniformMatrix4fv", name: "UniformMatrix4fv", pkg: "", typ: $funcType([$Int32, $Bool, ptrType$8], [], false)}, {prop: "UseProgram", name: "UseProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "VertexAttribOffset", name: "VertexAttribOffset", pkg: "", typ: $funcType([$Uint32, $Int32, $Uint32, $Bool, $Int32, $Int], [], false)}, {prop: "Viewport", name: "Viewport", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32], [], false)}];
-	ptrType$4.methods = [{prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([funcType$1], [], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([funcType$1], [], false)}];
+	ptrType$4.methods = [{prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([funcType$1], [], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Int, $Int], false)}];
 	ObjectMapper.init([{prop: "del", name: "del", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [ptrType$6], false)}, {prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([$Uint32], [ptrType$6], false)}, {prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $funcType([ptrType$6], [$Uint32], false)}]);
 	objectMap.init([{prop: "objects", name: "objects", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: mapType, tag: ""}, {prop: "counter", name: "counter", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: $Uint32, tag: ""}]);
 	ViewModel.init([{prop: "BaseViewModel", name: "", pkg: "", typ: ptrType, tag: ""}, {prop: "MainSections", name: "MainSections", pkg: "", typ: ptrType$1, tag: "js:\"mainSections\""}, {prop: "SelectedMainSection", name: "SelectedMainSection", pkg: "", typ: ptrType$1, tag: "js:\"selectedMainSection\""}]);

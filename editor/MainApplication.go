@@ -36,9 +36,6 @@ var fragmentShaderSource = `
 type MainApplication struct {
 	glWindow env.OpenGlWindow
 
-	width  float32
-	height float32
-
 	vertexArrayObject            uint32
 	vertexPosition               int32
 	triangleVertexPositionBuffer uint32
@@ -63,8 +60,6 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	glWindow.OnRender(app.render)
 	gl := app.glWindow.OpenGl()
 
-	app.width, app.height = glWindow.Size()
-
 	app.initShaders()
 	app.initBuffers()
 
@@ -73,16 +68,19 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 
 func (app *MainApplication) render() {
 	gl := app.glWindow.OpenGl()
+	width, height := app.glWindow.Size()
 
-	gl.Viewport(0, 0, int32(app.width), int32(app.height))
+	//fmt.Fprintf(os.Stderr, "Size: %vx%v\n", width, height)
+
+	gl.Viewport(0, 0, int32(width), int32(height))
 	checkError(gl, "viewport")
 	gl.Clear(opengl.COLOR_BUFFER_BIT | opengl.DEPTH_BUFFER_BIT)
 	checkError(gl, "clear")
 
 	//app.pMatrix = mgl32.Perspective(mgl32.DegToRad(45.0), app.width/app.height, 0.1, 10.0)
-	app.pMatrix = mgl32.Ortho2D(0, app.width, app.height, 0)
+	app.pMatrix = mgl32.Ortho2D(0, float32(width), float32(height), 0)
 	//app.pMatrix = mgl32.Ident4()
-	app.mvMatrix = mgl32.Ident4().Add(mgl32.Translate3D(app.width/2, app.height/2, 0.0))
+	app.mvMatrix = mgl32.Ident4().Add(mgl32.Translate3D(float32(width)/2, float32(height)/2, 0.0))
 	//app.mvMatrix = mgl32.Ident4()
 	app.setMatrixUniforms()
 
@@ -98,8 +96,6 @@ func (app *MainApplication) render() {
 
 	gl.DrawArrays(opengl.TRIANGLES, 0, 3)
 	checkError(gl, "draw arrays")
-	/*
-	 */
 }
 
 func checkError(gl opengl.OpenGl, stage string) {
