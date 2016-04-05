@@ -77,11 +77,8 @@ func (app *MainApplication) render() {
 	gl.Clear(opengl.COLOR_BUFFER_BIT | opengl.DEPTH_BUFFER_BIT)
 	checkError(gl, "clear")
 
-	//app.pMatrix = mgl32.Perspective(mgl32.DegToRad(45.0), app.width/app.height, 0.1, 10.0)
 	app.pMatrix = mgl32.Ortho2D(0, float32(width), float32(height), 0)
-	//app.pMatrix = mgl32.Ident4()
-	app.mvMatrix = mgl32.Ident4().Add(mgl32.Translate3D(float32(width)/2, float32(height)/2, 0.0))
-	//app.mvMatrix = mgl32.Ident4()
+	app.mvMatrix = mgl32.Ident4().Mul4(mgl32.Translate3D(20, 20, 0.0))
 	app.setMatrixUniforms()
 
 	gl.BindBuffer(opengl.ARRAY_BUFFER, app.triangleVertexPositionBuffer)

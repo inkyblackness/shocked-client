@@ -21511,7 +21511,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = gl.Clear(16640); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = checkError(gl, "clear"); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		mgl32.Mat4.copy(app.pMatrix, mgl32.Ortho2D(0, width, height, 0));
-		mgl32.Mat4.copy(app.mvMatrix, new mgl32.Mat4(mgl32.Ident4()).Add(mgl32.Translate3D($fround(width / 2), $fround(height / 2), 0)));
+		mgl32.Mat4.copy(app.mvMatrix, new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Translate3D(20, 20, 0)));
 		$r = app.setMatrixUniforms(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = gl.BindBuffer(34962, app.triangleVertexPositionBuffer); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = checkError(gl, "draw bind 1"); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
