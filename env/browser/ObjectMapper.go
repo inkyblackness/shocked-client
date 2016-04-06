@@ -47,7 +47,7 @@ func (omap *objectMap) put(value *js.Object) uint32 {
 func (omap *objectMap) get(key uint32) *js.Object {
 	value, ok := omap.objects[key]
 
-	if !ok {
+	if !ok && (key != 0) {
 		panic(fmt.Sprintf("Object with ID %u not known", key))
 	}
 
