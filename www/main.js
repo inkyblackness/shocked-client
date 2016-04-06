@@ -21411,15 +21411,480 @@ $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
-	var $pkg = {}, $init, OpenGl, sliceType, arrayType, ptrType;
+	var $pkg = {}, $init, fmt, DebuggingEntryFunc, DebuggingExitFunc, DebuggingErrorFunc, DebugBuilder, debuggingOpenGl, OpenGl, sliceType, sliceType$1, arrayType, ptrType, ptrType$1, ptrType$2, NewDebugBuilder;
+	fmt = $packages["fmt"];
+	DebuggingEntryFunc = $pkg.DebuggingEntryFunc = $newType(4, $kindFunc, "opengl.DebuggingEntryFunc", "DebuggingEntryFunc", "github.com/inkyblackness/shocked-client/opengl", null);
+	DebuggingExitFunc = $pkg.DebuggingExitFunc = $newType(4, $kindFunc, "opengl.DebuggingExitFunc", "DebuggingExitFunc", "github.com/inkyblackness/shocked-client/opengl", null);
+	DebuggingErrorFunc = $pkg.DebuggingErrorFunc = $newType(4, $kindFunc, "opengl.DebuggingErrorFunc", "DebuggingErrorFunc", "github.com/inkyblackness/shocked-client/opengl", null);
+	DebugBuilder = $pkg.DebugBuilder = $newType(0, $kindStruct, "opengl.DebugBuilder", "DebugBuilder", "github.com/inkyblackness/shocked-client/opengl", function(wrapped_, onEntry_, onExit_, onError_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.wrapped = $ifaceNil;
+			this.onEntry = $throwNilPointerError;
+			this.onExit = $throwNilPointerError;
+			this.onError = $throwNilPointerError;
+			return;
+		}
+		this.wrapped = wrapped_;
+		this.onEntry = onEntry_;
+		this.onExit = onExit_;
+		this.onError = onError_;
+	});
+	debuggingOpenGl = $pkg.debuggingOpenGl = $newType(0, $kindStruct, "opengl.debuggingOpenGl", "debuggingOpenGl", "github.com/inkyblackness/shocked-client/opengl", function(gl_, onEntry_, onExit_, onError_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.gl = $ifaceNil;
+			this.onEntry = $throwNilPointerError;
+			this.onExit = $throwNilPointerError;
+			this.onError = $throwNilPointerError;
+			return;
+		}
+		this.gl = gl_;
+		this.onEntry = onEntry_;
+		this.onExit = onExit_;
+		this.onError = onError_;
+	});
 	OpenGl = $pkg.OpenGl = $newType(8, $kindInterface, "opengl.OpenGl", "OpenGl", "github.com/inkyblackness/shocked-client/opengl", null);
 	sliceType = $sliceType($Uint32);
+	sliceType$1 = $sliceType($emptyInterface);
 	arrayType = $arrayType($Float32, 16);
 	ptrType = $ptrType(arrayType);
+	ptrType$1 = $ptrType(DebugBuilder);
+	ptrType$2 = $ptrType(debuggingOpenGl);
+	NewDebugBuilder = function(wrapped) {
+		var $ptr, builder, wrapped;
+		builder = new DebugBuilder.ptr(wrapped, (function(param, param$1) {
+			var $ptr, param, param$1;
+		}), (function(param, param$1) {
+			var $ptr, param, param$1;
+		}), (function(param, param$1) {
+			var $ptr, param, param$1;
+		}));
+		return builder;
+	};
+	$pkg.NewDebugBuilder = NewDebugBuilder;
+	DebugBuilder.ptr.prototype.Build = function() {
+		var $ptr, builder, opengl;
+		builder = this;
+		opengl = new debuggingOpenGl.ptr(builder.wrapped, builder.onEntry, builder.onExit, builder.onError);
+		return opengl;
+	};
+	DebugBuilder.prototype.Build = function() { return this.$val.Build(); };
+	DebugBuilder.ptr.prototype.OnEntry = function(callback) {
+		var $ptr, builder, callback;
+		builder = this;
+		builder.onEntry = callback;
+		return builder;
+	};
+	DebugBuilder.prototype.OnEntry = function(callback) { return this.$val.OnEntry(callback); };
+	DebugBuilder.ptr.prototype.OnExit = function(callback) {
+		var $ptr, builder, callback;
+		builder = this;
+		builder.onExit = callback;
+		return builder;
+	};
+	DebugBuilder.prototype.OnExit = function(callback) { return this.$val.OnExit(callback); };
+	DebugBuilder.ptr.prototype.OnError = function(callback) {
+		var $ptr, builder, callback;
+		builder = this;
+		builder.onError = callback;
+		return builder;
+	};
+	DebugBuilder.prototype.OnError = function(callback) { return this.$val.OnError(callback); };
+	debuggingOpenGl.ptr.prototype.recordEntry = function(name, param) {
+		var $ptr, debugging, name, param, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; name = $f.name; param = $f.param; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.onEntry(name, param); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.recordEntry }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.name = name; $f.param = param; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.recordEntry = function(name, param) { return this.$val.recordEntry(name, param); };
+	debuggingOpenGl.ptr.prototype.recordExit = function(name, result) {
+		var $ptr, _r, _r$1, debugging, errorCode, errorCodes, name, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; debugging = $f.debugging; errorCode = $f.errorCode; errorCodes = $f.errorCodes; name = $f.name; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		errorCodes = sliceType.nil;
+		_r = debugging.gl.GetError(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		errorCode = _r;
+		/* while (true) { */ case 2:
+			/* if (!(!((errorCode === 0)))) { break; } */ if(!(!((errorCode === 0)))) { $s = 3; continue; }
+			errorCodes = $append(errorCodes, errorCode);
+			_r$1 = debugging.gl.GetError(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			errorCode = _r$1;
+		/* } */ $s = 2; continue; case 3:
+		$r = debugging.onExit(name, result); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ if (errorCodes.$length > 0) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (errorCodes.$length > 0) { */ case 6:
+			$r = debugging.onError(name, errorCodes); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 7:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.recordExit }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.debugging = debugging; $f.errorCode = errorCode; $f.errorCodes = errorCodes; $f.name = name; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.recordExit = function(name, result) { return this.$val.recordExit(name, result); };
+	debuggingOpenGl.ptr.prototype.AttachShader = function(program, shader) {
+		var $ptr, debugging, program, shader, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; program = $f.program; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("AttachShader", new sliceType$1([new $Uint32(program), new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.AttachShader(program, shader); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("AttachShader", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.AttachShader }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.program = program; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.AttachShader = function(program, shader) { return this.$val.AttachShader(program, shader); };
+	debuggingOpenGl.ptr.prototype.BindAttribLocation = function(program, index, name) {
+		var $ptr, debugging, index, name, program, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; index = $f.index; name = $f.name; program = $f.program; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("BindAttribLocation", new sliceType$1([new $Uint32(program), new $Uint32(index), new $String(name)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.BindAttribLocation(program, index, name); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("BindAttribLocation", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.BindAttribLocation }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.index = index; $f.name = name; $f.program = program; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.BindAttribLocation = function(program, index, name) { return this.$val.BindAttribLocation(program, index, name); };
+	debuggingOpenGl.ptr.prototype.BindBuffer = function(target, buffer) {
+		var $ptr, buffer, debugging, target, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; buffer = $f.buffer; debugging = $f.debugging; target = $f.target; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("BindBuffer", new sliceType$1([new $Uint32(target), new $Uint32(buffer)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.BindBuffer(target, buffer); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("BindBuffer", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.BindBuffer }; } $f.$ptr = $ptr; $f.buffer = buffer; $f.debugging = debugging; $f.target = target; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.BindBuffer = function(target, buffer) { return this.$val.BindBuffer(target, buffer); };
+	debuggingOpenGl.ptr.prototype.BindVertexArray = function(array) {
+		var $ptr, array, debugging, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; array = $f.array; debugging = $f.debugging; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("BindVertexArray", new sliceType$1([new $Uint32(array)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.BindVertexArray(array); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("BindVertexArray", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.BindVertexArray }; } $f.$ptr = $ptr; $f.array = array; $f.debugging = debugging; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.BindVertexArray = function(array) { return this.$val.BindVertexArray(array); };
+	debuggingOpenGl.ptr.prototype.BufferData = function(target, size, data, usage) {
+		var $ptr, data, debugging, size, target, usage, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; data = $f.data; debugging = $f.debugging; size = $f.size; target = $f.target; usage = $f.usage; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("BufferData", new sliceType$1([new $Uint32(target), new $Int(size), data, new $Uint32(usage)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.BufferData(target, size, data, usage); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("BufferData", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.BufferData }; } $f.$ptr = $ptr; $f.data = data; $f.debugging = debugging; $f.size = size; $f.target = target; $f.usage = usage; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.BufferData = function(target, size, data, usage) { return this.$val.BufferData(target, size, data, usage); };
+	debuggingOpenGl.ptr.prototype.Clear = function(mask) {
+		var $ptr, debugging, mask, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; mask = $f.mask; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("Clear", new sliceType$1([new $Uint32(mask)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.Clear(mask); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("Clear", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.Clear }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.mask = mask; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.Clear = function(mask) { return this.$val.Clear(mask); };
+	debuggingOpenGl.ptr.prototype.ClearColor = function(red, green, blue, alpha) {
+		var $ptr, alpha, blue, debugging, green, red, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; alpha = $f.alpha; blue = $f.blue; debugging = $f.debugging; green = $f.green; red = $f.red; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("ClearColor", new sliceType$1([new $Float32(red), new $Float32(green), new $Float32(blue), new $Float32(alpha)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.ClearColor(red, green, blue, alpha); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("ClearColor", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.ClearColor }; } $f.$ptr = $ptr; $f.alpha = alpha; $f.blue = blue; $f.debugging = debugging; $f.green = green; $f.red = red; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.ClearColor = function(red, green, blue, alpha) { return this.$val.ClearColor(red, green, blue, alpha); };
+	debuggingOpenGl.ptr.prototype.CompileShader = function(shader) {
+		var $ptr, debugging, shader, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("CompileShader", new sliceType$1([new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.CompileShader(shader); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("CompileShader", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.CompileShader }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.CompileShader = function(shader) { return this.$val.CompileShader(shader); };
+	debuggingOpenGl.ptr.prototype.CreateProgram = function() {
+		var $ptr, _r, debugging, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("CreateProgram", new sliceType$1([])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.CreateProgram(); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("CreateProgram", new sliceType$1([new $Uint32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.CreateProgram }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.CreateProgram = function() { return this.$val.CreateProgram(); };
+	debuggingOpenGl.ptr.prototype.CreateShader = function(shaderType) {
+		var $ptr, _r, debugging, result, shaderType, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; result = $f.result; shaderType = $f.shaderType; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("CreateShader", new sliceType$1([new $Uint32(shaderType)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.CreateShader(shaderType); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("CreateShader", new sliceType$1([new $Uint32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.CreateShader }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.result = result; $f.shaderType = shaderType; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.CreateShader = function(shaderType) { return this.$val.CreateShader(shaderType); };
+	debuggingOpenGl.ptr.prototype.DeleteBuffers = function(buffers) {
+		var $ptr, buffers, debugging, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; buffers = $f.buffers; debugging = $f.debugging; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("DeleteBuffers", new sliceType$1([buffers])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.DeleteBuffers(buffers); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DeleteBuffers", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DeleteBuffers }; } $f.$ptr = $ptr; $f.buffers = buffers; $f.debugging = debugging; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.DeleteBuffers = function(buffers) { return this.$val.DeleteBuffers(buffers); };
+	debuggingOpenGl.ptr.prototype.DeleteProgram = function(program) {
+		var $ptr, debugging, program, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; program = $f.program; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("DeleteProgram", new sliceType$1([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.DeleteProgram(program); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DeleteProgram", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DeleteProgram }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.program = program; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.DeleteProgram = function(program) { return this.$val.DeleteProgram(program); };
+	debuggingOpenGl.ptr.prototype.DeleteShader = function(shader) {
+		var $ptr, debugging, shader, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("DeleteShader", new sliceType$1([new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.DeleteShader(shader); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DeleteShader", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DeleteShader }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.DeleteShader = function(shader) { return this.$val.DeleteShader(shader); };
+	debuggingOpenGl.ptr.prototype.DeleteVertexArrays = function(arrays) {
+		var $ptr, arrays, debugging, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; arrays = $f.arrays; debugging = $f.debugging; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("DeleteVertexArrays", new sliceType$1([arrays])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.DeleteVertexArrays(arrays); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DeleteVertexArrays", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DeleteVertexArrays }; } $f.$ptr = $ptr; $f.arrays = arrays; $f.debugging = debugging; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.DeleteVertexArrays = function(arrays) { return this.$val.DeleteVertexArrays(arrays); };
+	debuggingOpenGl.ptr.prototype.DrawArrays = function(mode, first, count) {
+		var $ptr, count, debugging, first, mode, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; count = $f.count; debugging = $f.debugging; first = $f.first; mode = $f.mode; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("DrawArrays", new sliceType$1([new $Int32(first), new $Int32(count)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.DrawArrays(mode, first, count); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DrawArrays", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DrawArrays }; } $f.$ptr = $ptr; $f.count = count; $f.debugging = debugging; $f.first = first; $f.mode = mode; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.DrawArrays = function(mode, first, count) { return this.$val.DrawArrays(mode, first, count); };
+	debuggingOpenGl.ptr.prototype.Enable = function(cap) {
+		var $ptr, cap, debugging, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; cap = $f.cap; debugging = $f.debugging; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("Enable", new sliceType$1([new $Uint32(cap)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.Enable(cap); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("Enable", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.Enable }; } $f.$ptr = $ptr; $f.cap = cap; $f.debugging = debugging; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.Enable = function(cap) { return this.$val.Enable(cap); };
+	debuggingOpenGl.ptr.prototype.EnableVertexAttribArray = function(index) {
+		var $ptr, debugging, index, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; index = $f.index; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("EnableVertexAttribArray", new sliceType$1([new $Uint32(index)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.EnableVertexAttribArray(index); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("EnableVertexAttribArray", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.EnableVertexAttribArray }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.index = index; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.EnableVertexAttribArray = function(index) { return this.$val.EnableVertexAttribArray(index); };
+	debuggingOpenGl.ptr.prototype.GenBuffers = function(n) {
+		var $ptr, _r, debugging, n, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; n = $f.n; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("GenBuffers", new sliceType$1([new $Int32(n)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.GenBuffers(n); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("GenBuffers", new sliceType$1([result])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GenBuffers }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.n = n; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.GenBuffers = function(n) { return this.$val.GenBuffers(n); };
+	debuggingOpenGl.ptr.prototype.GenVertexArrays = function(n) {
+		var $ptr, _r, debugging, n, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; n = $f.n; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("GenVertexArrays", new sliceType$1([new $Int32(n)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.GenVertexArrays(n); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("GenVertexArrays", new sliceType$1([result])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GenVertexArrays }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.n = n; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.GenVertexArrays = function(n) { return this.$val.GenVertexArrays(n); };
+	debuggingOpenGl.ptr.prototype.GetAttribLocation = function(program, name) {
+		var $ptr, _r, debugging, name, program, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; name = $f.name; program = $f.program; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("GetAttribLocation", new sliceType$1([new $Uint32(program), new $String(name)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.GetAttribLocation(program, name); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("GetAttribLocation", new sliceType$1([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetAttribLocation }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.name = name; $f.program = program; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.GetAttribLocation = function(program, name) { return this.$val.GetAttribLocation(program, name); };
+	debuggingOpenGl.ptr.prototype.GetError = function() {
+		var $ptr, _r, debugging, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("GetError", new sliceType$1([])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.GetError(); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("GetError", new sliceType$1([new $Uint32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetError }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.GetError = function() { return this.$val.GetError(); };
+	debuggingOpenGl.ptr.prototype.GetProgramInfoLog = function(program) {
+		var $ptr, _r, debugging, program, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; program = $f.program; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("GetProgramInfoLog", new sliceType$1([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.GetProgramInfoLog(program); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("GetProgramInfoLog", new sliceType$1([new $String(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetProgramInfoLog }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.program = program; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.GetProgramInfoLog = function(program) { return this.$val.GetProgramInfoLog(program); };
+	debuggingOpenGl.ptr.prototype.GetProgramParameter = function(program, param) {
+		var $ptr, _r, debugging, param, program, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; param = $f.param; program = $f.program; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("GetProgramParameter", new sliceType$1([new $Uint32(program), new $Uint32(param)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.GetProgramParameter(program, param); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("GetProgramParameter", new sliceType$1([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetProgramParameter }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.param = param; $f.program = program; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.GetProgramParameter = function(program, param) { return this.$val.GetProgramParameter(program, param); };
+	debuggingOpenGl.ptr.prototype.GetShaderInfoLog = function(shader) {
+		var $ptr, _r, debugging, result, shader, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; result = $f.result; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("GetShaderInfoLog", new sliceType$1([new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.GetShaderInfoLog(shader); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("GetShaderInfoLog", new sliceType$1([new $String(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetShaderInfoLog }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.result = result; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.GetShaderInfoLog = function(shader) { return this.$val.GetShaderInfoLog(shader); };
+	debuggingOpenGl.ptr.prototype.GetShaderParameter = function(shader, param) {
+		var $ptr, _r, debugging, param, result, shader, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; param = $f.param; result = $f.result; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("GetShaderParameter", new sliceType$1([new $Uint32(shader), new $Uint32(param)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.GetShaderParameter(shader, param); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("GetShaderParameter", new sliceType$1([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetShaderParameter }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.param = param; $f.result = result; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.GetShaderParameter = function(shader, param) { return this.$val.GetShaderParameter(shader, param); };
+	debuggingOpenGl.ptr.prototype.GetUniformLocation = function(program, name) {
+		var $ptr, _r, debugging, name, program, result, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; name = $f.name; program = $f.program; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("GetUniformLocation", new sliceType$1([new $Uint32(program), new $String(name)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = debugging.gl.GetUniformLocation(program, name); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		result = _r;
+		$r = debugging.recordExit("GetUniformLocation", new sliceType$1([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetUniformLocation }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.name = name; $f.program = program; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.GetUniformLocation = function(program, name) { return this.$val.GetUniformLocation(program, name); };
+	debuggingOpenGl.ptr.prototype.LinkProgram = function(program) {
+		var $ptr, debugging, program, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; program = $f.program; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("LinkProgram", new sliceType$1([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.LinkProgram(program); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("LinkProgram", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.LinkProgram }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.program = program; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.LinkProgram = function(program) { return this.$val.LinkProgram(program); };
+	debuggingOpenGl.ptr.prototype.ReadPixels = function(x, y, width, height, format, pixelType, pixels) {
+		var $ptr, debugging, format, height, pixelType, pixels, width, x, y, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; format = $f.format; height = $f.height; pixelType = $f.pixelType; pixels = $f.pixels; width = $f.width; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("ReadPixels", new sliceType$1([new $Int32(x), new $Int32(y), new $Int32(width), new $Int32(height), new $Uint32(format), new $Uint32(pixelType), pixels])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.ReadPixels(x, y, width, height, format, pixelType, pixels); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("ReadPixels", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.ReadPixels }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.format = format; $f.height = height; $f.pixelType = pixelType; $f.pixels = pixels; $f.width = width; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.ReadPixels = function(x, y, width, height, format, pixelType, pixels) { return this.$val.ReadPixels(x, y, width, height, format, pixelType, pixels); };
+	debuggingOpenGl.ptr.prototype.ShaderSource = function(shader, source) {
+		var $ptr, debugging, shader, source, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; shader = $f.shader; source = $f.source; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("ShaderSource", new sliceType$1([new $Uint32(shader), new $String(source)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.ShaderSource(shader, source); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("ShaderSource", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.ShaderSource }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.shader = shader; $f.source = source; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.ShaderSource = function(shader, source) { return this.$val.ShaderSource(shader, source); };
+	debuggingOpenGl.ptr.prototype.UniformMatrix4fv = function(location, transpose, value) {
+		var $ptr, debugging, location, transpose, value, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; location = $f.location; transpose = $f.transpose; value = $f.value; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("UniformMatrix4fv", new sliceType$1([new $Int32(location), new $Bool(transpose), new ptrType(value)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.UniformMatrix4fv(location, transpose, value); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("UniformMatrix4fv", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.UniformMatrix4fv }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.location = location; $f.transpose = transpose; $f.value = value; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.UniformMatrix4fv = function(location, transpose, value) { return this.$val.UniformMatrix4fv(location, transpose, value); };
+	debuggingOpenGl.ptr.prototype.UseProgram = function(program) {
+		var $ptr, debugging, program, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; program = $f.program; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("UseProgram", new sliceType$1([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.UseProgram(program); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("UseProgram", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.UseProgram }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.program = program; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.UseProgram = function(program) { return this.$val.UseProgram(program); };
+	debuggingOpenGl.ptr.prototype.VertexAttribOffset = function(index, size, attribType, normalized, stride, offset) {
+		var $ptr, attribType, debugging, index, normalized, offset, size, stride, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; attribType = $f.attribType; debugging = $f.debugging; index = $f.index; normalized = $f.normalized; offset = $f.offset; size = $f.size; stride = $f.stride; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("VertexAttribOffset", new sliceType$1([new $Uint32(index), new $Int32(size), new $Uint32(attribType), new $Bool(normalized), new $Int32(stride), new $Int(offset)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.VertexAttribOffset(index, size, attribType, normalized, stride, offset); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("VertexAttribOffset", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.VertexAttribOffset }; } $f.$ptr = $ptr; $f.attribType = attribType; $f.debugging = debugging; $f.index = index; $f.normalized = normalized; $f.offset = offset; $f.size = size; $f.stride = stride; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.VertexAttribOffset = function(index, size, attribType, normalized, stride, offset) { return this.$val.VertexAttribOffset(index, size, attribType, normalized, stride, offset); };
+	debuggingOpenGl.ptr.prototype.Viewport = function(x, y, width, height) {
+		var $ptr, debugging, height, width, x, y, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; height = $f.height; width = $f.width; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		debugging = this;
+		$r = debugging.recordEntry("Viewport", new sliceType$1([new $Int32(x), new $Int32(y), new $Int32(width), new $Int32(height)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.gl.Viewport(x, y, width, height); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("Viewport", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.Viewport }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.height = height; $f.width = width; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	debuggingOpenGl.prototype.Viewport = function(x, y, width, height) { return this.$val.Viewport(x, y, width, height); };
+	ptrType$1.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [OpenGl], false)}, {prop: "OnEntry", name: "OnEntry", pkg: "", typ: $funcType([DebuggingEntryFunc], [ptrType$1], false)}, {prop: "OnExit", name: "OnExit", pkg: "", typ: $funcType([DebuggingExitFunc], [ptrType$1], false)}, {prop: "OnError", name: "OnError", pkg: "", typ: $funcType([DebuggingErrorFunc], [ptrType$1], false)}];
+	ptrType$2.methods = [{prop: "recordEntry", name: "recordEntry", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: $funcType([$String, sliceType$1], [], true)}, {prop: "recordExit", name: "recordExit", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: $funcType([$String, sliceType$1], [], true)}, {prop: "AttachShader", name: "AttachShader", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindAttribLocation", name: "BindAttribLocation", pkg: "", typ: $funcType([$Uint32, $Uint32, $String], [], false)}, {prop: "BindBuffer", name: "BindBuffer", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindVertexArray", name: "BindVertexArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "BufferData", name: "BufferData", pkg: "", typ: $funcType([$Uint32, $Int, $emptyInterface, $Uint32], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "CompileShader", name: "CompileShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "CreateProgram", name: "CreateProgram", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "CreateShader", name: "CreateShader", pkg: "", typ: $funcType([$Uint32], [$Uint32], false)}, {prop: "DeleteBuffers", name: "DeleteBuffers", pkg: "", typ: $funcType([sliceType], [], false)}, {prop: "DeleteProgram", name: "DeleteProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteShader", name: "DeleteShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteVertexArrays", name: "DeleteVertexArrays", pkg: "", typ: $funcType([sliceType], [], false)}, {prop: "DrawArrays", name: "DrawArrays", pkg: "", typ: $funcType([$Uint32, $Int32, $Int32], [], false)}, {prop: "Enable", name: "Enable", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "EnableVertexAttribArray", name: "EnableVertexAttribArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "GenBuffers", name: "GenBuffers", pkg: "", typ: $funcType([$Int32], [sliceType], false)}, {prop: "GenVertexArrays", name: "GenVertexArrays", pkg: "", typ: $funcType([$Int32], [sliceType], false)}, {prop: "GetAttribLocation", name: "GetAttribLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "GetProgramInfoLog", name: "GetProgramInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetProgramParameter", name: "GetProgramParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetShaderInfoLog", name: "GetShaderInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetShaderParameter", name: "GetShaderParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetUniformLocation", name: "GetUniformLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "LinkProgram", name: "LinkProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ReadPixels", name: "ReadPixels", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32, $Uint32, $Uint32, $emptyInterface], [], false)}, {prop: "ShaderSource", name: "ShaderSource", pkg: "", typ: $funcType([$Uint32, $String], [], false)}, {prop: "UniformMatrix4fv", name: "UniformMatrix4fv", pkg: "", typ: $funcType([$Int32, $Bool, ptrType], [], false)}, {prop: "UseProgram", name: "UseProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "VertexAttribOffset", name: "VertexAttribOffset", pkg: "", typ: $funcType([$Uint32, $Int32, $Uint32, $Bool, $Int32, $Int], [], false)}, {prop: "Viewport", name: "Viewport", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32], [], false)}];
+	DebuggingEntryFunc.init([$String, sliceType$1], [], true);
+	DebuggingExitFunc.init([$String, sliceType$1], [], true);
+	DebuggingErrorFunc.init([$String, sliceType], [], false);
+	DebugBuilder.init([{prop: "wrapped", name: "wrapped", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: OpenGl, tag: ""}, {prop: "onEntry", name: "onEntry", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingEntryFunc, tag: ""}, {prop: "onExit", name: "onExit", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingExitFunc, tag: ""}, {prop: "onError", name: "onError", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingErrorFunc, tag: ""}]);
+	debuggingOpenGl.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: OpenGl, tag: ""}, {prop: "onEntry", name: "onEntry", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingEntryFunc, tag: ""}, {prop: "onExit", name: "onExit", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingExitFunc, tag: ""}, {prop: "onError", name: "onError", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingErrorFunc, tag: ""}]);
 	OpenGl.init([{prop: "AttachShader", name: "AttachShader", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindAttribLocation", name: "BindAttribLocation", pkg: "", typ: $funcType([$Uint32, $Uint32, $String], [], false)}, {prop: "BindBuffer", name: "BindBuffer", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindVertexArray", name: "BindVertexArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "BufferData", name: "BufferData", pkg: "", typ: $funcType([$Uint32, $Int, $emptyInterface, $Uint32], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "CompileShader", name: "CompileShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "CreateProgram", name: "CreateProgram", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "CreateShader", name: "CreateShader", pkg: "", typ: $funcType([$Uint32], [$Uint32], false)}, {prop: "DeleteBuffers", name: "DeleteBuffers", pkg: "", typ: $funcType([sliceType], [], false)}, {prop: "DeleteProgram", name: "DeleteProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteShader", name: "DeleteShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteVertexArrays", name: "DeleteVertexArrays", pkg: "", typ: $funcType([sliceType], [], false)}, {prop: "DrawArrays", name: "DrawArrays", pkg: "", typ: $funcType([$Uint32, $Int32, $Int32], [], false)}, {prop: "Enable", name: "Enable", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "EnableVertexAttribArray", name: "EnableVertexAttribArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "GenBuffers", name: "GenBuffers", pkg: "", typ: $funcType([$Int32], [sliceType], false)}, {prop: "GenVertexArrays", name: "GenVertexArrays", pkg: "", typ: $funcType([$Int32], [sliceType], false)}, {prop: "GetAttribLocation", name: "GetAttribLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "GetProgramInfoLog", name: "GetProgramInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetProgramParameter", name: "GetProgramParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetShaderInfoLog", name: "GetShaderInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetShaderParameter", name: "GetShaderParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetUniformLocation", name: "GetUniformLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "LinkProgram", name: "LinkProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ReadPixels", name: "ReadPixels", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32, $Uint32, $Uint32, $emptyInterface], [], false)}, {prop: "ShaderSource", name: "ShaderSource", pkg: "", typ: $funcType([$Uint32, $String], [], false)}, {prop: "UniformMatrix4fv", name: "UniformMatrix4fv", pkg: "", typ: $funcType([$Int32, $Bool, ptrType], [], false)}, {prop: "UseProgram", name: "UseProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "VertexAttribOffset", name: "VertexAttribOffset", pkg: "", typ: $funcType([$Uint32, $Int32, $Uint32, $Bool, $Int32, $Int], [], false)}, {prop: "Viewport", name: "Viewport", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32], [], false)}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -21441,16 +21906,17 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
-	var $pkg = {}, $init, fmt, mgl32, env, opengl, os, MainApplication, arrayType, sliceType, sliceType$1, ptrType, vertexShaderSource, fragmentShaderSource, NewMainApplication, checkError;
+	var $pkg = {}, $init, fmt, mgl32, env, opengl, os, MainApplication, arrayType, sliceType, sliceType$1, ptrType, vertexShaderSource, fragmentShaderSource, NewMainApplication;
 	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
 	env = $packages["github.com/inkyblackness/shocked-client/env"];
 	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
 	os = $packages["os"];
-	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(glWindow_, vertexArrayObject_, vertexPosition_, triangleVertexPositionBuffer_, vertexColor_, triangleVertexColorBuffer_, pMatrix_, pMatrixUniform_, mvMatrix_, mvMatrixUniform_) {
+	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(glWindow_, gl_, vertexArrayObject_, vertexPosition_, triangleVertexPositionBuffer_, vertexColor_, triangleVertexColorBuffer_, pMatrix_, pMatrixUniform_, mvMatrix_, mvMatrixUniform_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.glWindow = $ifaceNil;
+			this.gl = $ifaceNil;
 			this.vertexArrayObject = 0;
 			this.vertexPosition = 0;
 			this.triangleVertexPositionBuffer = 0;
@@ -21463,6 +21929,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			return;
 		}
 		this.glWindow = glWindow_;
+		this.gl = gl_;
 		this.vertexArrayObject = vertexArrayObject_;
 		this.vertexPosition = vertexPosition_;
 		this.triangleVertexPositionBuffer = triangleVertexPositionBuffer_;
@@ -21479,183 +21946,155 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	ptrType = $ptrType(MainApplication);
 	NewMainApplication = function() {
 		var $ptr;
-		return new MainApplication.ptr($ifaceNil, 0, 0, 0, 0, 0, arrayType.zero(), 0, arrayType.zero(), 0);
+		return new MainApplication.ptr($ifaceNil, $ifaceNil, 0, 0, 0, 0, 0, arrayType.zero(), 0, arrayType.zero(), 0);
 	};
 	$pkg.NewMainApplication = NewMainApplication;
 	MainApplication.ptr.prototype.Init = function(glWindow) {
-		var $ptr, _r, app, gl, glWindow, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; gl = $f.gl; glWindow = $f.glWindow; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, app, builder, glWindow, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; app = $f.app; builder = $f.builder; glWindow = $f.glWindow; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
 		app.glWindow = glWindow;
 		$r = glWindow.OnRender($methodVal(app, "render")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = app.glWindow.OpenGl(); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		gl = _r;
-		$r = app.initShaders(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = app.initBuffers(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.ClearColor(0, 0, 0, 1); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.gl = gl; $f.glWindow = glWindow; $f.$s = $s; $f.$r = $r; return $f;
+		_r$1 = opengl.NewDebugBuilder(_r); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		builder = _r$1;
+		builder.OnError((function $b(name, errorCodes) {
+			var $ptr, _r$2, errorCodes, name, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; errorCodes = $f.errorCodes; name = $f.name; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_r$2 = fmt.Fprintf(os.Stderr, "!!: %v\n", new sliceType([errorCodes])); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f.errorCodes = errorCodes; $f.name = name; $f.$s = $s; $f.$r = $r; return $f;
+		}));
+		app.gl = builder.Build();
+		$r = app.initShaders(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = app.initBuffers(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = app.gl.ClearColor(0, 0, 0, 1); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.app = app; $f.builder = builder; $f.glWindow = glWindow; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.Init = function(glWindow) { return this.$val.Init(glWindow); };
 	MainApplication.ptr.prototype.render = function() {
-		var $ptr, _r, _r$1, _tuple, app, gl, height, width, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; app = $f.app; gl = $f.gl; height = $f.height; width = $f.width; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _tuple, app, gl, height, width, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; app = $f.app; gl = $f.gl; height = $f.height; width = $f.width; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
-		_r = app.glWindow.OpenGl(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		gl = _r;
-		_r$1 = app.glWindow.Size(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple = _r$1;
+		gl = app.gl;
+		_r = app.glWindow.Size(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
 		width = _tuple[0];
 		height = _tuple[1];
-		$r = gl.Viewport(0, 0, (width >> 0), (height >> 0)); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "viewport"); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.Clear(16640); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "clear"); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.Viewport(0, 0, (width >> 0), (height >> 0)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.Clear(16640); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		mgl32.Mat4.copy(app.pMatrix, mgl32.Ortho2D(0, width, height, 0));
 		mgl32.Mat4.copy(app.mvMatrix, new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Translate3D(20, 20, 0)));
-		$r = app.setMatrixUniforms(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.BindBuffer(34962, app.triangleVertexPositionBuffer); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw bind 1"); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.VertexAttribOffset((app.vertexPosition >>> 0), 3, 5126, false, 0, 0); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw offset 1"); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.BindBuffer(34962, app.triangleVertexColorBuffer); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw bind 2"); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.VertexAttribOffset((app.vertexColor >>> 0), 4, 5126, false, 0, 0); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw offset 2"); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.DrawArrays(4, 0, 3); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "draw arrays"); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.app = app; $f.gl = gl; $f.height = height; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
+		$r = app.setMatrixUniforms(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BindBuffer(34962, app.triangleVertexPositionBuffer); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.VertexAttribOffset((app.vertexPosition >>> 0), 3, 5126, false, 0, 0); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BindBuffer(34962, app.triangleVertexColorBuffer); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.VertexAttribOffset((app.vertexColor >>> 0), 4, 5126, false, 0, 0); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.DrawArrays(4, 0, 3); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.app = app; $f.gl = gl; $f.height = height; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.render = function() { return this.$val.render(); };
-	checkError = function(gl, stage) {
-		var $ptr, _arg, _arg$1, _r, _r$1, _r$2, gl, result, stage, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; gl = $f.gl; result = $f.result; stage = $f.stage; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = gl.GetError(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		result = _r;
-		/* */ if (!((result === 0))) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!((result === 0))) { */ case 2:
-			_arg = os.Stderr;
-			_r$1 = fmt.Sprintf("0x%04X", new sliceType([new $Uint32(result)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_arg$1 = "!!!!! ERROR " + _r$1 + " at " + stage + "\n";
-			_r$2 = fmt.Fprintf(_arg, _arg$1, new sliceType([])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$2;
-		/* } */ case 3:
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: checkError }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.gl = gl; $f.result = result; $f.stage = stage; $f.$s = $s; $f.$r = $r; return $f;
-	};
 	MainApplication.ptr.prototype.prepareShader = function(shaderType, source) {
-		var $ptr, _arg, _arg$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, app, compileStatus, gl, shader, shaderType, source, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; app = $f.app; compileStatus = $f.compileStatus; gl = $f.gl; shader = $f.shader; shaderType = $f.shaderType; source = $f.source; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _arg, _arg$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, app, compileStatus, gl, shader, shaderType, source, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; app = $f.app; compileStatus = $f.compileStatus; gl = $f.gl; shader = $f.shader; shaderType = $f.shaderType; source = $f.source; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
-		_r = app.glWindow.OpenGl(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		gl = _r;
-		_r$1 = gl.CreateShader(shaderType); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		shader = _r$1;
-		$r = gl.ShaderSource(shader, source); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.CompileShader(shader); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$2 = gl.GetShaderParameter(shader, 35713); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		compileStatus = _r$2;
-		/* */ if (compileStatus === 0) { $s = 6; continue; }
-		/* */ $s = 7; continue;
-		/* if (compileStatus === 0) { */ case 6:
+		gl = app.gl;
+		_r = gl.CreateShader(shaderType); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		shader = _r;
+		$r = gl.ShaderSource(shader, source); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.CompileShader(shader); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$1 = gl.GetShaderParameter(shader, 35713); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		compileStatus = _r$1;
+		/* */ if (compileStatus === 0) { $s = 5; continue; }
+		/* */ $s = 6; continue;
+		/* if (compileStatus === 0) { */ case 5:
 			_arg = os.Stderr;
-			_r$3 = fmt.Sprintf("0x%04X", new sliceType([new $Uint32(shaderType)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			_r$4 = fmt.Sprintf("%d", new sliceType([new $Int32(compileStatus)])); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			_r$5 = gl.GetShaderInfoLog(shader); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-			_arg$1 = "Error: compile of " + _r$3 + " failed: " + _r$4 + "  - " + _r$5 + "\n";
-			_r$6 = fmt.Fprintf(_arg, _arg$1, new sliceType([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-			_r$6;
-		/* } */ case 7:
+			_r$2 = fmt.Sprintf("0x%04X", new sliceType([new $Uint32(shaderType)])); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$3 = fmt.Sprintf("%d", new sliceType([new $Int32(compileStatus)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$4 = gl.GetShaderInfoLog(shader); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_arg$1 = "Error: compile of " + _r$2 + " failed: " + _r$3 + "  - " + _r$4 + "\n";
+			_r$5 = fmt.Fprintf(_arg, _arg$1, new sliceType([])); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_r$5;
+		/* } */ case 6:
 		return shader;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.prepareShader }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f.app = app; $f.compileStatus = compileStatus; $f.gl = gl; $f.shader = shader; $f.shaderType = shaderType; $f.source = source; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.prepareShader }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.app = app; $f.compileStatus = compileStatus; $f.gl = gl; $f.shader = shader; $f.shaderType = shaderType; $f.source = source; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.prepareShader = function(shaderType, source) { return this.$val.prepareShader(shaderType, source); };
 	MainApplication.ptr.prototype.initShaders = function() {
-		var $ptr, _arg, _arg$1, _r, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, app, fragmentShader, gl, program, vertexShader, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; app = $f.app; fragmentShader = $f.fragmentShader; gl = $f.gl; program = $f.program; vertexShader = $f.vertexShader; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _arg, _arg$1, _r, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, app, fragmentShader, gl, program, vertexShader, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; app = $f.app; fragmentShader = $f.fragmentShader; gl = $f.gl; program = $f.program; vertexShader = $f.vertexShader; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
-		_r = app.glWindow.OpenGl(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		gl = _r;
-		_r$1 = app.prepareShader(35632, fragmentShaderSource); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		fragmentShader = _r$1;
-		_r$2 = app.prepareShader(35633, vertexShaderSource); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		vertexShader = _r$2;
-		_r$3 = gl.CreateProgram(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		program = _r$3;
-		$r = gl.AttachShader(program, vertexShader); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.AttachShader(program, fragmentShader); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.LinkProgram(program); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$4 = gl.GetProgramParameter(program, 35714); /* */ $s = 10; case 10: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-		/* */ if (_r$4 === 0) { $s = 8; continue; }
-		/* */ $s = 9; continue;
-		/* if (_r$4 === 0) { */ case 8:
+		gl = app.gl;
+		_r = app.prepareShader(35632, fragmentShaderSource); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		fragmentShader = _r;
+		_r$1 = app.prepareShader(35633, vertexShaderSource); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		vertexShader = _r$1;
+		_r$2 = gl.CreateProgram(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		program = _r$2;
+		$r = gl.AttachShader(program, vertexShader); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.AttachShader(program, fragmentShader); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.LinkProgram(program); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$3 = gl.GetProgramParameter(program, 35714); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		/* */ if (_r$3 === 0) { $s = 7; continue; }
+		/* */ $s = 8; continue;
+		/* if (_r$3 === 0) { */ case 7:
 			_arg = os.Stderr;
-			_r$5 = gl.GetProgramInfoLog(program); /* */ $s = 11; case 11: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-			_arg$1 = "Error: link failed: " + _r$5 + "\n";
-			_r$6 = fmt.Fprintf(_arg, _arg$1, new sliceType([])); /* */ $s = 12; case 12: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-			_r$6;
-		/* } */ case 9:
-		$r = gl.UseProgram(program); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "using program"); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$7 = gl.GenVertexArrays(1); /* */ $s = 15; case 15: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-		app.vertexArrayObject = (x = _r$7, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0]));
-		$r = gl.BindVertexArray(app.vertexArrayObject); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$8 = gl.GetAttribLocation(program, "aVertexPosition"); /* */ $s = 17; case 17: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-		app.vertexPosition = _r$8;
-		$r = checkError(gl, "get attrib loc 1"); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.EnableVertexAttribArray((app.vertexPosition >>> 0)); /* */ $s = 19; case 19: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "enable attrib loc 1"); /* */ $s = 20; case 20: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$9 = gl.GetAttribLocation(program, "aVertexColor"); /* */ $s = 21; case 21: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-		app.vertexColor = _r$9;
-		$r = gl.EnableVertexAttribArray((app.vertexColor >>> 0)); /* */ $s = 22; case 22: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$10 = gl.GetUniformLocation(program, "uPMatrix"); /* */ $s = 23; case 23: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-		app.pMatrixUniform = _r$10;
-		$r = checkError(gl, "pMatrix uniform"); /* */ $s = 24; case 24: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$11 = gl.GetUniformLocation(program, "uMVMatrix"); /* */ $s = 25; case 25: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
-		app.mvMatrixUniform = _r$11;
-		$r = checkError(gl, "mvMatrix uniform"); /* */ $s = 26; case 26: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initShaders }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.app = app; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.program = program; $f.vertexShader = vertexShader; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+			_r$4 = gl.GetProgramInfoLog(program); /* */ $s = 10; case 10: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_arg$1 = "Error: link failed: " + _r$4 + "\n";
+			_r$5 = fmt.Fprintf(_arg, _arg$1, new sliceType([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_r$5;
+		/* } */ case 8:
+		$r = gl.UseProgram(program); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$6 = gl.GenVertexArrays(1); /* */ $s = 13; case 13: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		app.vertexArrayObject = (x = _r$6, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0]));
+		$r = gl.BindVertexArray(app.vertexArrayObject); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$7 = gl.GetAttribLocation(program, "aVertexPosition"); /* */ $s = 15; case 15: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		app.vertexPosition = _r$7;
+		$r = gl.EnableVertexAttribArray((app.vertexPosition >>> 0)); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$8 = gl.GetAttribLocation(program, "aVertexColor"); /* */ $s = 17; case 17: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		app.vertexColor = _r$8;
+		$r = gl.EnableVertexAttribArray((app.vertexColor >>> 0)); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$9 = gl.GetUniformLocation(program, "uPMatrix"); /* */ $s = 19; case 19: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		app.pMatrixUniform = _r$9;
+		_r$10 = gl.GetUniformLocation(program, "uMVMatrix"); /* */ $s = 20; case 20: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		app.mvMatrixUniform = _r$10;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initShaders }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.app = app; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.program = program; $f.vertexShader = vertexShader; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.initShaders = function() { return this.$val.initShaders(); };
 	MainApplication.ptr.prototype.initBuffers = function() {
-		var $ptr, _r, _r$1, _r$2, app, colors, gl, vertices, x, x$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; app = $f.app; colors = $f.colors; gl = $f.gl; vertices = $f.vertices; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, app, colors, gl, vertices, x, x$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; app = $f.app; colors = $f.colors; gl = $f.gl; vertices = $f.vertices; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
-		_r = app.glWindow.OpenGl(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		gl = _r;
-		_r$1 = gl.GenBuffers(1); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		app.triangleVertexPositionBuffer = (x = _r$1, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0]));
-		$r = gl.BindBuffer(34962, app.triangleVertexPositionBuffer); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		gl = app.gl;
+		_r = gl.GenBuffers(1); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		app.triangleVertexPositionBuffer = (x = _r, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0]));
+		$r = gl.BindBuffer(34962, app.triangleVertexPositionBuffer); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		vertices = new sliceType$1([0, 0, 0, -10, 10, 0, 10, 10, 0]);
-		$r = gl.BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "buffered data 1"); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$2 = gl.GenBuffers(1); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		app.triangleVertexColorBuffer = (x$1 = _r$2, (0 >= x$1.$length ? $throwRuntimeError("index out of range") : x$1.$array[x$1.$offset + 0]));
-		$r = gl.BindBuffer(34962, app.triangleVertexColorBuffer); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$1 = gl.GenBuffers(1); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		app.triangleVertexColorBuffer = (x$1 = _r$1, (0 >= x$1.$length ? $throwRuntimeError("index out of range") : x$1.$array[x$1.$offset + 0]));
+		$r = gl.BindBuffer(34962, app.triangleVertexColorBuffer); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		colors = new sliceType$1([1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1]);
-		$r = gl.BufferData(34962, $imul(colors.$length, 4), colors, 35044); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "buffered data 2"); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initBuffers }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.app = app; $f.colors = colors; $f.gl = gl; $f.vertices = vertices; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
+		$r = gl.BufferData(34962, $imul(colors.$length, 4), colors, 35044); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initBuffers }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.app = app; $f.colors = colors; $f.gl = gl; $f.vertices = vertices; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.initBuffers = function() { return this.$val.initBuffers(); };
 	MainApplication.ptr.prototype.setMatrixUniforms = function() {
-		var $ptr, _r, app, gl, mvMatrixArr, pMatrixArr, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; gl = $f.gl; mvMatrixArr = $f.mvMatrixArr; pMatrixArr = $f.pMatrixArr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, app, gl, mvMatrixArr, pMatrixArr, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; app = $f.app; gl = $f.gl; mvMatrixArr = $f.mvMatrixArr; pMatrixArr = $f.pMatrixArr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mvMatrixArr = [mvMatrixArr];
 		pMatrixArr = [pMatrixArr];
 		app = this;
-		_r = app.glWindow.OpenGl(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		gl = _r;
+		gl = app.gl;
 		pMatrixArr[0] = $clone($clone(app.pMatrix, arrayType), arrayType);
-		$r = gl.UniformMatrix4fv(app.pMatrixUniform, false, pMatrixArr[0]); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "set uniforms 1"); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.UniformMatrix4fv(app.pMatrixUniform, false, pMatrixArr[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		mvMatrixArr[0] = $clone($clone(app.mvMatrix, arrayType), arrayType);
-		$r = gl.UniformMatrix4fv(app.mvMatrixUniform, false, mvMatrixArr[0]); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = checkError(gl, "set uniforms 2"); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.setMatrixUniforms }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.gl = gl; $f.mvMatrixArr = mvMatrixArr; $f.pMatrixArr = pMatrixArr; $f.$s = $s; $f.$r = $r; return $f;
+		$r = gl.UniformMatrix4fv(app.mvMatrixUniform, false, mvMatrixArr[0]); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.setMatrixUniforms }; } $f.$ptr = $ptr; $f.app = app; $f.gl = gl; $f.mvMatrixArr = mvMatrixArr; $f.pMatrixArr = pMatrixArr; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.setMatrixUniforms = function() { return this.$val.setMatrixUniforms(); };
 	ptrType.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "prepareShader", name: "prepareShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $String], [$Uint32], false)}, {prop: "initShaders", name: "initShaders", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initBuffers", name: "initBuffers", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "setMatrixUniforms", name: "setMatrixUniforms", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}];
-	MainApplication.init([{prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPosition", name: "vertexPosition", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexPositionBuffer", name: "triangleVertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexColor", name: "vertexColor", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexColorBuffer", name: "triangleVertexColorBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "pMatrix", name: "pMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "pMatrixUniform", name: "pMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "mvMatrix", name: "mvMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "mvMatrixUniform", name: "mvMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}]);
+	MainApplication.init([{prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPosition", name: "vertexPosition", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexPositionBuffer", name: "triangleVertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexColor", name: "vertexColor", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexColorBuffer", name: "triangleVertexColorBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "pMatrix", name: "pMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "pMatrixUniform", name: "pMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "mvMatrix", name: "mvMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "mvMatrixUniform", name: "mvMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:

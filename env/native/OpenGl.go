@@ -47,12 +47,12 @@ func (native *OpenGl) BufferData(target uint32, size int, data interface{}, usag
 }
 
 // Clear implements the opengl.OpenGl interface.
-func (*OpenGl) Clear(mask uint32) {
+func (native *OpenGl) Clear(mask uint32) {
 	gl.Clear(mask)
 }
 
 // ClearColor implements the opengl.OpenGl interface.
-func (*OpenGl) ClearColor(red float32, green float32, blue float32, alpha float32) {
+func (native *OpenGl) ClearColor(red float32, green float32, blue float32, alpha float32) {
 	gl.ClearColor(red, green, blue, alpha)
 }
 

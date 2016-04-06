@@ -35,6 +35,7 @@ var fragmentShaderSource = `
 // MainApplication represents the core intelligence of the editor.
 type MainApplication struct {
 	glWindow env.OpenGlWindow
+	gl       opengl.OpenGl
 
 	vertexArrayObject            uint32
 	vertexPosition               int32
@@ -58,53 +59,53 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.glWindow = glWindow
 
 	glWindow.OnRender(app.render)
-	gl := app.glWindow.OpenGl()
+
+	builder := opengl.NewDebugBuilder(app.glWindow.OpenGl())
+
+	/*
+		builder.OnEntry(func(name string, param ...interface{}) {
+			fmt.Fprintf(os.Stderr, "GL: [%-20s] %v ", name, param)
+		})
+		builder.OnExit(func(name string, result ...interface{}) {
+			fmt.Fprintf(os.Stderr, "-> %v\n", result)
+		})
+	*/
+	builder.OnError(func(name string, errorCodes []uint32) {
+		fmt.Fprintf(os.Stderr, "!!: %v\n", errorCodes)
+	})
+
+	app.gl = builder.Build()
 
 	app.initShaders()
 	app.initBuffers()
 
-	gl.ClearColor(0.0, 0.0, 0.0, 1.0)
+	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
 }
 
 func (app *MainApplication) render() {
-	gl := app.glWindow.OpenGl()
+	gl := app.gl
 	width, height := app.glWindow.Size()
 
 	//fmt.Fprintf(os.Stderr, "Size: %vx%v\n", width, height)
 
 	gl.Viewport(0, 0, int32(width), int32(height))
-	checkError(gl, "viewport")
 	gl.Clear(opengl.COLOR_BUFFER_BIT | opengl.DEPTH_BUFFER_BIT)
-	checkError(gl, "clear")
 
 	app.pMatrix = mgl32.Ortho2D(0, float32(width), float32(height), 0)
 	app.mvMatrix = mgl32.Ident4().Mul4(mgl32.Translate3D(20, 20, 0.0))
 	app.setMatrixUniforms()
 
 	gl.BindBuffer(opengl.ARRAY_BUFFER, app.triangleVertexPositionBuffer)
-	checkError(gl, "draw bind 1")
 	gl.VertexAttribOffset(uint32(app.vertexPosition), 3, opengl.FLOAT, false, 0, 0)
-	checkError(gl, "draw offset 1")
 
 	gl.BindBuffer(opengl.ARRAY_BUFFER, app.triangleVertexColorBuffer)
-	checkError(gl, "draw bind 2")
 	gl.VertexAttribOffset(uint32(app.vertexColor), 4, opengl.FLOAT, false, 0, 0)
-	checkError(gl, "draw offset 2")
 
 	gl.DrawArrays(opengl.TRIANGLES, 0, 3)
-	checkError(gl, "draw arrays")
-}
-
-func checkError(gl opengl.OpenGl, stage string) {
-	result := gl.GetError()
-
-	if result != opengl.NO_ERROR {
-		fmt.Fprintf(os.Stderr, "!!!!! ERROR "+fmt.Sprintf("0x%04X", result)+" at "+stage+"\n")
-	}
 }
 
 func (app *MainApplication) prepareShader(shaderType uint32, source string) uint32 {
-	gl := app.glWindow.OpenGl()
+	gl := app.gl
 	shader := gl.CreateShader(shaderType)
 
 	gl.ShaderSource(shader, source)
@@ -120,7 +121,7 @@ func (app *MainApplication) prepareShader(shaderType uint32, source string) uint
 }
 
 func (app *MainApplication) initShaders() {
-	gl := app.glWindow.OpenGl()
+	gl := app.gl
 	fragmentShader := app.prepareShader(opengl.FRAGMENT_SHADER, fragmentShaderSource)
 	vertexShader := app.prepareShader(opengl.VERTEX_SHADER, vertexShaderSource)
 	program := gl.CreateProgram()
@@ -133,26 +134,21 @@ func (app *MainApplication) initShaders() {
 	}
 
 	gl.UseProgram(program)
-	checkError(gl, "using program")
 
 	app.vertexArrayObject = gl.GenVertexArrays(1)[0]
 	gl.BindVertexArray(app.vertexArrayObject)
 
 	app.vertexPosition = gl.GetAttribLocation(program, "aVertexPosition")
-	checkError(gl, "get attrib loc 1")
 	gl.EnableVertexAttribArray(uint32(app.vertexPosition))
-	checkError(gl, "enable attrib loc 1")
 	app.vertexColor = gl.GetAttribLocation(program, "aVertexColor")
 	gl.EnableVertexAttribArray(uint32(app.vertexColor))
 
 	app.pMatrixUniform = gl.GetUniformLocation(program, "uPMatrix")
-	checkError(gl, "pMatrix uniform")
 	app.mvMatrixUniform = gl.GetUniformLocation(program, "uMVMatrix")
-	checkError(gl, "mvMatrix uniform")
 }
 
 func (app *MainApplication) initBuffers() {
-	gl := app.glWindow.OpenGl()
+	gl := app.gl
 
 	app.triangleVertexPositionBuffer = gl.GenBuffers(1)[0]
 	gl.BindBuffer(opengl.ARRAY_BUFFER, app.triangleVertexPositionBuffer)
@@ -161,7 +157,6 @@ func (app *MainApplication) initBuffers() {
 		-10.0, 10.0, 0.0,
 		10.0, 10.0, 0.0}
 	gl.BufferData(opengl.ARRAY_BUFFER, len(vertices)*4, vertices, opengl.STATIC_DRAW)
-	checkError(gl, "buffered data 1")
 
 	app.triangleVertexColorBuffer = gl.GenBuffers(1)[0]
 	gl.BindBuffer(opengl.ARRAY_BUFFER, app.triangleVertexColorBuffer)
@@ -170,15 +165,12 @@ func (app *MainApplication) initBuffers() {
 		0.0, 1.0, 0.0, 1.0,
 		0.0, 0.0, 1.0, 1.0}
 	gl.BufferData(opengl.ARRAY_BUFFER, len(colors)*4, colors, opengl.STATIC_DRAW)
-	checkError(gl, "buffered data 2")
 }
 
 func (app *MainApplication) setMatrixUniforms() {
-	gl := app.glWindow.OpenGl()
+	gl := app.gl
 	pMatrixArr := ([16]float32)(app.pMatrix)
 	gl.UniformMatrix4fv(app.pMatrixUniform, false, &pMatrixArr)
-	checkError(gl, "set uniforms 1")
 	mvMatrixArr := ([16]float32)(app.mvMatrix)
 	gl.UniformMatrix4fv(app.mvMatrixUniform, false, &mvMatrixArr)
-	checkError(gl, "set uniforms 2")
 }
