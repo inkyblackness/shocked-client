@@ -71,7 +71,11 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 		})
 	*/
 	builder.OnError(func(name string, errorCodes []uint32) {
-		fmt.Fprintf(os.Stderr, "!!: %v\n", errorCodes)
+		errorStrings := make([]string, len(errorCodes))
+		for index, errorCode := range errorCodes {
+			errorStrings[index] = opengl.ErrorString(errorCode)
+		}
+		fmt.Fprintf(os.Stderr, "!!: [%-20s] %v -> %v\n", name, errorCodes, errorStrings)
 	})
 
 	app.gl = builder.Build()
