@@ -108,33 +108,20 @@ func (app *MainApplication) render() {
 	gl.DrawArrays(opengl.TRIANGLES, 0, 3)
 }
 
-func (app *MainApplication) prepareShader(shaderType uint32, source string) uint32 {
-	gl := app.gl
-	shader := gl.CreateShader(shaderType)
-
-	gl.ShaderSource(shader, source)
-	gl.CompileShader(shader)
-
-	compileStatus := gl.GetShaderParameter(shader, opengl.COMPILE_STATUS)
-	if compileStatus == 0 {
-		fmt.Fprintf(os.Stderr, "Error: compile of "+fmt.Sprintf("0x%04X", shaderType)+" failed: "+
-			fmt.Sprintf("%d", compileStatus)+"  - "+gl.GetShaderInfoLog(shader)+"\n")
-	}
-
-	return shader
-}
-
 func (app *MainApplication) initShaders() {
 	gl := app.gl
-	fragmentShader := app.prepareShader(opengl.FRAGMENT_SHADER, fragmentShaderSource)
-	vertexShader := app.prepareShader(opengl.VERTEX_SHADER, vertexShaderSource)
-	program := gl.CreateProgram()
-	gl.AttachShader(program, vertexShader)
-	gl.AttachShader(program, fragmentShader)
-	gl.LinkProgram(program)
+	fragmentShader, err1 := opengl.CompileNewShader(gl, opengl.FRAGMENT_SHADER, fragmentShaderSource)
+	vertexShader, err2 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, vertexShaderSource)
+	if err1 != nil {
+		fmt.Fprintf(os.Stderr, "Failed to compile shader 1!\n%v\n", err1)
+	}
+	if err2 != nil {
+		fmt.Fprintf(os.Stderr, "Failed to compile shader 2!\n%v\n", err2)
+	}
 
-	if gl.GetProgramParameter(program, opengl.LINK_STATUS) == 0 {
-		fmt.Fprintf(os.Stderr, "Error: link failed: "+gl.GetProgramInfoLog(program)+"\n")
+	program, err3 := opengl.LinkNewProgram(gl, fragmentShader, vertexShader)
+	if err3 != nil {
+		fmt.Fprintf(os.Stderr, "Failed to link program!\n%v\n", err3)
 	}
 
 	gl.UseProgram(program)

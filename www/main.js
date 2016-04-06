@@ -21411,7 +21411,7 @@ $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
-	var $pkg = {}, $init, fmt, DebuggingEntryFunc, DebuggingExitFunc, DebuggingErrorFunc, DebugBuilder, debuggingOpenGl, OpenGl, sliceType, sliceType$1, arrayType, ptrType, ptrType$1, ptrType$2, NewDebugBuilder;
+	var $pkg = {}, $init, fmt, DebuggingEntryFunc, DebuggingExitFunc, DebuggingErrorFunc, DebugBuilder, debuggingOpenGl, OpenGl, sliceType, sliceType$1, arrayType, ptrType, ptrType$1, ptrType$2, errorStrings, CompileNewShader, NewDebugBuilder, ErrorString, LinkNewProgram;
 	fmt = $packages["fmt"];
 	DebuggingEntryFunc = $pkg.DebuggingEntryFunc = $newType(4, $kindFunc, "opengl.DebuggingEntryFunc", "DebuggingEntryFunc", "github.com/inkyblackness/shocked-client/opengl", null);
 	DebuggingExitFunc = $pkg.DebuggingExitFunc = $newType(4, $kindFunc, "opengl.DebuggingExitFunc", "DebuggingExitFunc", "github.com/inkyblackness/shocked-client/opengl", null);
@@ -21445,12 +21445,37 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		this.onError = onError_;
 	});
 	OpenGl = $pkg.OpenGl = $newType(8, $kindInterface, "opengl.OpenGl", "OpenGl", "github.com/inkyblackness/shocked-client/opengl", null);
-	sliceType = $sliceType($Uint32);
-	sliceType$1 = $sliceType($emptyInterface);
+	sliceType = $sliceType($emptyInterface);
+	sliceType$1 = $sliceType($Uint32);
 	arrayType = $arrayType($Float32, 16);
 	ptrType = $ptrType(arrayType);
 	ptrType$1 = $ptrType(DebugBuilder);
 	ptrType$2 = $ptrType(debuggingOpenGl);
+	CompileNewShader = function(gl, shaderType, source) {
+		var $ptr, _arg, _r, _r$1, _r$2, _r$3, compileStatus, err, gl, shader, shaderType, source, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; compileStatus = $f.compileStatus; err = $f.err; gl = $f.gl; shader = $f.shader; shaderType = $f.shaderType; source = $f.source; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		shader = 0;
+		err = $ifaceNil;
+		_r = gl.CreateShader(shaderType); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		shader = _r;
+		$r = gl.ShaderSource(shader, source); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.CompileShader(shader); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$1 = gl.GetShaderParameter(shader, 35713); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		compileStatus = _r$1;
+		/* */ if (compileStatus === 0) { $s = 5; continue; }
+		/* */ $s = 6; continue;
+		/* if (compileStatus === 0) { */ case 5:
+			_r$2 = gl.GetShaderInfoLog(shader); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_arg = new $String(_r$2);
+			_r$3 = fmt.Errorf("%s", new sliceType([_arg])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			err = _r$3;
+			$r = gl.DeleteShader(shader); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			shader = 0;
+		/* } */ case 6:
+		return [shader, err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: CompileNewShader }; } $f.$ptr = $ptr; $f._arg = _arg; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.compileStatus = compileStatus; $f.err = err; $f.gl = gl; $f.shader = shader; $f.shaderType = shaderType; $f.source = source; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.CompileNewShader = CompileNewShader;
 	NewDebugBuilder = function(wrapped) {
 		var $ptr, builder, wrapped;
 		builder = new DebugBuilder.ptr(wrapped, (function(param, param$1) {
@@ -21503,7 +21528,7 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, _r$1, debugging, errorCode, errorCodes, name, result, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; debugging = $f.debugging; errorCode = $f.errorCode; errorCodes = $f.errorCodes; name = $f.name; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		errorCodes = sliceType.nil;
+		errorCodes = sliceType$1.nil;
 		_r = debugging.gl.GetError(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		errorCode = _r;
 		/* while (true) { */ case 2:
@@ -21525,9 +21550,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, program, shader, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; program = $f.program; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("AttachShader", new sliceType$1([new $Uint32(program), new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("AttachShader", new sliceType([new $Uint32(program), new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.AttachShader(program, shader); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("AttachShader", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("AttachShader", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.AttachShader }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.program = program; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.AttachShader = function(program, shader) { return this.$val.AttachShader(program, shader); };
@@ -21535,9 +21560,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, index, name, program, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; index = $f.index; name = $f.name; program = $f.program; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("BindAttribLocation", new sliceType$1([new $Uint32(program), new $Uint32(index), new $String(name)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("BindAttribLocation", new sliceType([new $Uint32(program), new $Uint32(index), new $String(name)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.BindAttribLocation(program, index, name); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("BindAttribLocation", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("BindAttribLocation", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.BindAttribLocation }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.index = index; $f.name = name; $f.program = program; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.BindAttribLocation = function(program, index, name) { return this.$val.BindAttribLocation(program, index, name); };
@@ -21545,9 +21570,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, buffer, debugging, target, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; buffer = $f.buffer; debugging = $f.debugging; target = $f.target; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("BindBuffer", new sliceType$1([new $Uint32(target), new $Uint32(buffer)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("BindBuffer", new sliceType([new $Uint32(target), new $Uint32(buffer)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.BindBuffer(target, buffer); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("BindBuffer", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("BindBuffer", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.BindBuffer }; } $f.$ptr = $ptr; $f.buffer = buffer; $f.debugging = debugging; $f.target = target; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.BindBuffer = function(target, buffer) { return this.$val.BindBuffer(target, buffer); };
@@ -21555,9 +21580,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, array, debugging, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; array = $f.array; debugging = $f.debugging; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("BindVertexArray", new sliceType$1([new $Uint32(array)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("BindVertexArray", new sliceType([new $Uint32(array)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.BindVertexArray(array); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("BindVertexArray", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("BindVertexArray", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.BindVertexArray }; } $f.$ptr = $ptr; $f.array = array; $f.debugging = debugging; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.BindVertexArray = function(array) { return this.$val.BindVertexArray(array); };
@@ -21565,9 +21590,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, data, debugging, size, target, usage, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; data = $f.data; debugging = $f.debugging; size = $f.size; target = $f.target; usage = $f.usage; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("BufferData", new sliceType$1([new $Uint32(target), new $Int(size), data, new $Uint32(usage)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("BufferData", new sliceType([new $Uint32(target), new $Int(size), data, new $Uint32(usage)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.BufferData(target, size, data, usage); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("BufferData", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("BufferData", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.BufferData }; } $f.$ptr = $ptr; $f.data = data; $f.debugging = debugging; $f.size = size; $f.target = target; $f.usage = usage; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.BufferData = function(target, size, data, usage) { return this.$val.BufferData(target, size, data, usage); };
@@ -21575,9 +21600,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, mask, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; mask = $f.mask; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("Clear", new sliceType$1([new $Uint32(mask)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("Clear", new sliceType([new $Uint32(mask)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.Clear(mask); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("Clear", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("Clear", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.Clear }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.mask = mask; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.Clear = function(mask) { return this.$val.Clear(mask); };
@@ -21585,9 +21610,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, alpha, blue, debugging, green, red, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; alpha = $f.alpha; blue = $f.blue; debugging = $f.debugging; green = $f.green; red = $f.red; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("ClearColor", new sliceType$1([new $Float32(red), new $Float32(green), new $Float32(blue), new $Float32(alpha)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("ClearColor", new sliceType([new $Float32(red), new $Float32(green), new $Float32(blue), new $Float32(alpha)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.ClearColor(red, green, blue, alpha); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("ClearColor", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("ClearColor", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.ClearColor }; } $f.$ptr = $ptr; $f.alpha = alpha; $f.blue = blue; $f.debugging = debugging; $f.green = green; $f.red = red; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.ClearColor = function(red, green, blue, alpha) { return this.$val.ClearColor(red, green, blue, alpha); };
@@ -21595,9 +21620,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, shader, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("CompileShader", new sliceType$1([new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("CompileShader", new sliceType([new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.CompileShader(shader); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("CompileShader", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("CompileShader", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.CompileShader }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.CompileShader = function(shader) { return this.$val.CompileShader(shader); };
@@ -21605,10 +21630,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, result, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("CreateProgram", new sliceType$1([])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("CreateProgram", new sliceType([])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.CreateProgram(); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("CreateProgram", new sliceType$1([new $Uint32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("CreateProgram", new sliceType([new $Uint32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.CreateProgram }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21617,10 +21642,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, result, shaderType, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; result = $f.result; shaderType = $f.shaderType; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("CreateShader", new sliceType$1([new $Uint32(shaderType)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("CreateShader", new sliceType([new $Uint32(shaderType)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.CreateShader(shaderType); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("CreateShader", new sliceType$1([new $Uint32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("CreateShader", new sliceType([new $Uint32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.CreateShader }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.result = result; $f.shaderType = shaderType; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21629,9 +21654,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, buffers, debugging, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; buffers = $f.buffers; debugging = $f.debugging; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("DeleteBuffers", new sliceType$1([buffers])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("DeleteBuffers", new sliceType([buffers])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.DeleteBuffers(buffers); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("DeleteBuffers", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DeleteBuffers", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DeleteBuffers }; } $f.$ptr = $ptr; $f.buffers = buffers; $f.debugging = debugging; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.DeleteBuffers = function(buffers) { return this.$val.DeleteBuffers(buffers); };
@@ -21639,9 +21664,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, program, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; program = $f.program; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("DeleteProgram", new sliceType$1([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("DeleteProgram", new sliceType([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.DeleteProgram(program); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("DeleteProgram", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DeleteProgram", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DeleteProgram }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.program = program; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.DeleteProgram = function(program) { return this.$val.DeleteProgram(program); };
@@ -21649,9 +21674,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, shader, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("DeleteShader", new sliceType$1([new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("DeleteShader", new sliceType([new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.DeleteShader(shader); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("DeleteShader", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DeleteShader", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DeleteShader }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.DeleteShader = function(shader) { return this.$val.DeleteShader(shader); };
@@ -21659,9 +21684,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, arrays, debugging, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; arrays = $f.arrays; debugging = $f.debugging; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("DeleteVertexArrays", new sliceType$1([arrays])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("DeleteVertexArrays", new sliceType([arrays])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.DeleteVertexArrays(arrays); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("DeleteVertexArrays", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DeleteVertexArrays", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DeleteVertexArrays }; } $f.$ptr = $ptr; $f.arrays = arrays; $f.debugging = debugging; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.DeleteVertexArrays = function(arrays) { return this.$val.DeleteVertexArrays(arrays); };
@@ -21669,9 +21694,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, count, debugging, first, mode, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; count = $f.count; debugging = $f.debugging; first = $f.first; mode = $f.mode; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("DrawArrays", new sliceType$1([new $Int32(first), new $Int32(count)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("DrawArrays", new sliceType([new $Int32(first), new $Int32(count)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.DrawArrays(mode, first, count); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("DrawArrays", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("DrawArrays", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.DrawArrays }; } $f.$ptr = $ptr; $f.count = count; $f.debugging = debugging; $f.first = first; $f.mode = mode; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.DrawArrays = function(mode, first, count) { return this.$val.DrawArrays(mode, first, count); };
@@ -21679,9 +21704,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, cap, debugging, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; cap = $f.cap; debugging = $f.debugging; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("Enable", new sliceType$1([new $Uint32(cap)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("Enable", new sliceType([new $Uint32(cap)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.Enable(cap); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("Enable", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("Enable", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.Enable }; } $f.$ptr = $ptr; $f.cap = cap; $f.debugging = debugging; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.Enable = function(cap) { return this.$val.Enable(cap); };
@@ -21689,9 +21714,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, index, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; index = $f.index; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("EnableVertexAttribArray", new sliceType$1([new $Uint32(index)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("EnableVertexAttribArray", new sliceType([new $Uint32(index)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.EnableVertexAttribArray(index); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("EnableVertexAttribArray", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("EnableVertexAttribArray", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.EnableVertexAttribArray }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.index = index; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.EnableVertexAttribArray = function(index) { return this.$val.EnableVertexAttribArray(index); };
@@ -21699,10 +21724,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, n, result, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; n = $f.n; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("GenBuffers", new sliceType$1([new $Int32(n)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("GenBuffers", new sliceType([new $Int32(n)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.GenBuffers(n); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("GenBuffers", new sliceType$1([result])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("GenBuffers", new sliceType([result])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GenBuffers }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.n = n; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21711,10 +21736,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, n, result, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; n = $f.n; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("GenVertexArrays", new sliceType$1([new $Int32(n)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("GenVertexArrays", new sliceType([new $Int32(n)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.GenVertexArrays(n); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("GenVertexArrays", new sliceType$1([result])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("GenVertexArrays", new sliceType([result])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GenVertexArrays }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.n = n; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21723,10 +21748,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, name, program, result, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; name = $f.name; program = $f.program; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("GetAttribLocation", new sliceType$1([new $Uint32(program), new $String(name)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("GetAttribLocation", new sliceType([new $Uint32(program), new $String(name)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.GetAttribLocation(program, name); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("GetAttribLocation", new sliceType$1([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("GetAttribLocation", new sliceType([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetAttribLocation }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.name = name; $f.program = program; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21735,10 +21760,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, result, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("GetError", new sliceType$1([])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("GetError", new sliceType([])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.GetError(); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("GetError", new sliceType$1([new $Uint32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("GetError", new sliceType([new $Uint32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetError }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21747,10 +21772,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, program, result, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; program = $f.program; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("GetProgramInfoLog", new sliceType$1([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("GetProgramInfoLog", new sliceType([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.GetProgramInfoLog(program); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("GetProgramInfoLog", new sliceType$1([new $String(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("GetProgramInfoLog", new sliceType([new $String(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetProgramInfoLog }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.program = program; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21759,10 +21784,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, param, program, result, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; param = $f.param; program = $f.program; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("GetProgramParameter", new sliceType$1([new $Uint32(program), new $Uint32(param)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("GetProgramParameter", new sliceType([new $Uint32(program), new $Uint32(param)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.GetProgramParameter(program, param); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("GetProgramParameter", new sliceType$1([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("GetProgramParameter", new sliceType([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetProgramParameter }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.param = param; $f.program = program; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21771,10 +21796,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, result, shader, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; result = $f.result; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("GetShaderInfoLog", new sliceType$1([new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("GetShaderInfoLog", new sliceType([new $Uint32(shader)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.GetShaderInfoLog(shader); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("GetShaderInfoLog", new sliceType$1([new $String(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("GetShaderInfoLog", new sliceType([new $String(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetShaderInfoLog }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.result = result; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21783,10 +21808,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, param, result, shader, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; param = $f.param; result = $f.result; shader = $f.shader; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("GetShaderParameter", new sliceType$1([new $Uint32(shader), new $Uint32(param)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("GetShaderParameter", new sliceType([new $Uint32(shader), new $Uint32(param)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.GetShaderParameter(shader, param); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("GetShaderParameter", new sliceType$1([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("GetShaderParameter", new sliceType([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetShaderParameter }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.param = param; $f.result = result; $f.shader = shader; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21795,10 +21820,10 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, _r, debugging, name, program, result, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; debugging = $f.debugging; name = $f.name; program = $f.program; result = $f.result; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("GetUniformLocation", new sliceType$1([new $Uint32(program), new $String(name)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("GetUniformLocation", new sliceType([new $Uint32(program), new $String(name)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = debugging.gl.GetUniformLocation(program, name); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		result = _r;
-		$r = debugging.recordExit("GetUniformLocation", new sliceType$1([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("GetUniformLocation", new sliceType([new $Int32(result)])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return result;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.GetUniformLocation }; } $f.$ptr = $ptr; $f._r = _r; $f.debugging = debugging; $f.name = name; $f.program = program; $f.result = result; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -21807,9 +21832,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, program, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; program = $f.program; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("LinkProgram", new sliceType$1([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("LinkProgram", new sliceType([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.LinkProgram(program); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("LinkProgram", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("LinkProgram", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.LinkProgram }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.program = program; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.LinkProgram = function(program) { return this.$val.LinkProgram(program); };
@@ -21817,9 +21842,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, format, height, pixelType, pixels, width, x, y, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; format = $f.format; height = $f.height; pixelType = $f.pixelType; pixels = $f.pixels; width = $f.width; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("ReadPixels", new sliceType$1([new $Int32(x), new $Int32(y), new $Int32(width), new $Int32(height), new $Uint32(format), new $Uint32(pixelType), pixels])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("ReadPixels", new sliceType([new $Int32(x), new $Int32(y), new $Int32(width), new $Int32(height), new $Uint32(format), new $Uint32(pixelType), pixels])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.ReadPixels(x, y, width, height, format, pixelType, pixels); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("ReadPixels", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("ReadPixels", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.ReadPixels }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.format = format; $f.height = height; $f.pixelType = pixelType; $f.pixels = pixels; $f.width = width; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.ReadPixels = function(x, y, width, height, format, pixelType, pixels) { return this.$val.ReadPixels(x, y, width, height, format, pixelType, pixels); };
@@ -21827,9 +21852,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, shader, source, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; shader = $f.shader; source = $f.source; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("ShaderSource", new sliceType$1([new $Uint32(shader), new $String(source)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("ShaderSource", new sliceType([new $Uint32(shader), new $String(source)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.ShaderSource(shader, source); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("ShaderSource", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("ShaderSource", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.ShaderSource }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.shader = shader; $f.source = source; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.ShaderSource = function(shader, source) { return this.$val.ShaderSource(shader, source); };
@@ -21837,9 +21862,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, location, transpose, value, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; location = $f.location; transpose = $f.transpose; value = $f.value; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("UniformMatrix4fv", new sliceType$1([new $Int32(location), new $Bool(transpose), new ptrType(value)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("UniformMatrix4fv", new sliceType([new $Int32(location), new $Bool(transpose), new ptrType(value)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.UniformMatrix4fv(location, transpose, value); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("UniformMatrix4fv", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("UniformMatrix4fv", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.UniformMatrix4fv }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.location = location; $f.transpose = transpose; $f.value = value; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.UniformMatrix4fv = function(location, transpose, value) { return this.$val.UniformMatrix4fv(location, transpose, value); };
@@ -21847,9 +21872,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, program, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; program = $f.program; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("UseProgram", new sliceType$1([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("UseProgram", new sliceType([new $Uint32(program)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.UseProgram(program); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("UseProgram", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("UseProgram", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.UseProgram }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.program = program; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.UseProgram = function(program) { return this.$val.UseProgram(program); };
@@ -21857,9 +21882,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, attribType, debugging, index, normalized, offset, size, stride, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; attribType = $f.attribType; debugging = $f.debugging; index = $f.index; normalized = $f.normalized; offset = $f.offset; size = $f.size; stride = $f.stride; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("VertexAttribOffset", new sliceType$1([new $Uint32(index), new $Int32(size), new $Uint32(attribType), new $Bool(normalized), new $Int32(stride), new $Int(offset)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("VertexAttribOffset", new sliceType([new $Uint32(index), new $Int32(size), new $Uint32(attribType), new $Bool(normalized), new $Int32(stride), new $Int(offset)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.VertexAttribOffset(index, size, attribType, normalized, stride, offset); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("VertexAttribOffset", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("VertexAttribOffset", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.VertexAttribOffset }; } $f.$ptr = $ptr; $f.attribType = attribType; $f.debugging = debugging; $f.index = index; $f.normalized = normalized; $f.offset = offset; $f.size = size; $f.stride = stride; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.VertexAttribOffset = function(index, size, attribType, normalized, stride, offset) { return this.$val.VertexAttribOffset(index, size, attribType, normalized, stride, offset); };
@@ -21867,24 +21892,72 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 		var $ptr, debugging, height, width, x, y, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; debugging = $f.debugging; height = $f.height; width = $f.width; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		debugging = this;
-		$r = debugging.recordEntry("Viewport", new sliceType$1([new $Int32(x), new $Int32(y), new $Int32(width), new $Int32(height)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordEntry("Viewport", new sliceType([new $Int32(x), new $Int32(y), new $Int32(width), new $Int32(height)])); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = debugging.gl.Viewport(x, y, width, height); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = debugging.recordExit("Viewport", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = debugging.recordExit("Viewport", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: debuggingOpenGl.ptr.prototype.Viewport }; } $f.$ptr = $ptr; $f.debugging = debugging; $f.height = height; $f.width = width; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	debuggingOpenGl.prototype.Viewport = function(x, y, width, height) { return this.$val.Viewport(x, y, width, height); };
+	ErrorString = function(errorCode) {
+		var $ptr, _entry, _r, _tuple, errorCode, exists, value, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; errorCode = $f.errorCode; exists = $f.exists; value = $f.value; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_tuple = (_entry = errorStrings[$Uint32.keyFor(errorCode)], _entry !== undefined ? [_entry.v, true] : ["", false]);
+		value = _tuple[0];
+		exists = _tuple[1];
+		/* */ if (!exists) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!exists) { */ case 1:
+			_r = fmt.Sprintf("0x%04X", new sliceType([new $Uint32(errorCode)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			value = _r;
+		/* } */ case 2:
+		return value;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ErrorString }; } $f.$ptr = $ptr; $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f.errorCode = errorCode; $f.exists = exists; $f.value = value; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ErrorString = ErrorString;
+	LinkNewProgram = function(gl, shaders) {
+		var $ptr, _arg, _i, _r, _r$1, _r$2, _r$3, _ref, err, gl, program, shader, shaders, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; err = $f.err; gl = $f.gl; program = $f.program; shader = $f.shader; shaders = $f.shaders; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		program = 0;
+		err = $ifaceNil;
+		_r = gl.CreateProgram(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		program = _r;
+		_ref = shaders;
+		_i = 0;
+		/* while (true) { */ case 2:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 3; continue; }
+			shader = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+			$r = gl.AttachShader(program, shader); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_i++;
+		/* } */ $s = 2; continue; case 3:
+		$r = gl.LinkProgram(program); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$1 = gl.GetProgramParameter(program, 35714); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		/* */ if (_r$1 === 0) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (_r$1 === 0) { */ case 6:
+			_r$2 = gl.GetProgramInfoLog(program); /* */ $s = 9; case 9: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_arg = new $String(_r$2);
+			_r$3 = fmt.Errorf("%v", new sliceType([_arg])); /* */ $s = 10; case 10: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			err = _r$3;
+			$r = gl.DeleteProgram(program); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			program = 0;
+		/* } */ case 7:
+		return [program, err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LinkNewProgram }; } $f.$ptr = $ptr; $f._arg = _arg; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f.err = err; $f.gl = gl; $f.program = program; $f.shader = shader; $f.shaders = shaders; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.LinkNewProgram = LinkNewProgram;
 	ptrType$1.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [OpenGl], false)}, {prop: "OnEntry", name: "OnEntry", pkg: "", typ: $funcType([DebuggingEntryFunc], [ptrType$1], false)}, {prop: "OnExit", name: "OnExit", pkg: "", typ: $funcType([DebuggingExitFunc], [ptrType$1], false)}, {prop: "OnError", name: "OnError", pkg: "", typ: $funcType([DebuggingErrorFunc], [ptrType$1], false)}];
-	ptrType$2.methods = [{prop: "recordEntry", name: "recordEntry", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: $funcType([$String, sliceType$1], [], true)}, {prop: "recordExit", name: "recordExit", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: $funcType([$String, sliceType$1], [], true)}, {prop: "AttachShader", name: "AttachShader", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindAttribLocation", name: "BindAttribLocation", pkg: "", typ: $funcType([$Uint32, $Uint32, $String], [], false)}, {prop: "BindBuffer", name: "BindBuffer", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindVertexArray", name: "BindVertexArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "BufferData", name: "BufferData", pkg: "", typ: $funcType([$Uint32, $Int, $emptyInterface, $Uint32], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "CompileShader", name: "CompileShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "CreateProgram", name: "CreateProgram", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "CreateShader", name: "CreateShader", pkg: "", typ: $funcType([$Uint32], [$Uint32], false)}, {prop: "DeleteBuffers", name: "DeleteBuffers", pkg: "", typ: $funcType([sliceType], [], false)}, {prop: "DeleteProgram", name: "DeleteProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteShader", name: "DeleteShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteVertexArrays", name: "DeleteVertexArrays", pkg: "", typ: $funcType([sliceType], [], false)}, {prop: "DrawArrays", name: "DrawArrays", pkg: "", typ: $funcType([$Uint32, $Int32, $Int32], [], false)}, {prop: "Enable", name: "Enable", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "EnableVertexAttribArray", name: "EnableVertexAttribArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "GenBuffers", name: "GenBuffers", pkg: "", typ: $funcType([$Int32], [sliceType], false)}, {prop: "GenVertexArrays", name: "GenVertexArrays", pkg: "", typ: $funcType([$Int32], [sliceType], false)}, {prop: "GetAttribLocation", name: "GetAttribLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "GetProgramInfoLog", name: "GetProgramInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetProgramParameter", name: "GetProgramParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetShaderInfoLog", name: "GetShaderInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetShaderParameter", name: "GetShaderParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetUniformLocation", name: "GetUniformLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "LinkProgram", name: "LinkProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ReadPixels", name: "ReadPixels", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32, $Uint32, $Uint32, $emptyInterface], [], false)}, {prop: "ShaderSource", name: "ShaderSource", pkg: "", typ: $funcType([$Uint32, $String], [], false)}, {prop: "UniformMatrix4fv", name: "UniformMatrix4fv", pkg: "", typ: $funcType([$Int32, $Bool, ptrType], [], false)}, {prop: "UseProgram", name: "UseProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "VertexAttribOffset", name: "VertexAttribOffset", pkg: "", typ: $funcType([$Uint32, $Int32, $Uint32, $Bool, $Int32, $Int], [], false)}, {prop: "Viewport", name: "Viewport", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32], [], false)}];
-	DebuggingEntryFunc.init([$String, sliceType$1], [], true);
-	DebuggingExitFunc.init([$String, sliceType$1], [], true);
-	DebuggingErrorFunc.init([$String, sliceType], [], false);
+	ptrType$2.methods = [{prop: "recordEntry", name: "recordEntry", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: $funcType([$String, sliceType], [], true)}, {prop: "recordExit", name: "recordExit", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: $funcType([$String, sliceType], [], true)}, {prop: "AttachShader", name: "AttachShader", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindAttribLocation", name: "BindAttribLocation", pkg: "", typ: $funcType([$Uint32, $Uint32, $String], [], false)}, {prop: "BindBuffer", name: "BindBuffer", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindVertexArray", name: "BindVertexArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "BufferData", name: "BufferData", pkg: "", typ: $funcType([$Uint32, $Int, $emptyInterface, $Uint32], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "CompileShader", name: "CompileShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "CreateProgram", name: "CreateProgram", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "CreateShader", name: "CreateShader", pkg: "", typ: $funcType([$Uint32], [$Uint32], false)}, {prop: "DeleteBuffers", name: "DeleteBuffers", pkg: "", typ: $funcType([sliceType$1], [], false)}, {prop: "DeleteProgram", name: "DeleteProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteShader", name: "DeleteShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteVertexArrays", name: "DeleteVertexArrays", pkg: "", typ: $funcType([sliceType$1], [], false)}, {prop: "DrawArrays", name: "DrawArrays", pkg: "", typ: $funcType([$Uint32, $Int32, $Int32], [], false)}, {prop: "Enable", name: "Enable", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "EnableVertexAttribArray", name: "EnableVertexAttribArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "GenBuffers", name: "GenBuffers", pkg: "", typ: $funcType([$Int32], [sliceType$1], false)}, {prop: "GenVertexArrays", name: "GenVertexArrays", pkg: "", typ: $funcType([$Int32], [sliceType$1], false)}, {prop: "GetAttribLocation", name: "GetAttribLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "GetProgramInfoLog", name: "GetProgramInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetProgramParameter", name: "GetProgramParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetShaderInfoLog", name: "GetShaderInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetShaderParameter", name: "GetShaderParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetUniformLocation", name: "GetUniformLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "LinkProgram", name: "LinkProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ReadPixels", name: "ReadPixels", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32, $Uint32, $Uint32, $emptyInterface], [], false)}, {prop: "ShaderSource", name: "ShaderSource", pkg: "", typ: $funcType([$Uint32, $String], [], false)}, {prop: "UniformMatrix4fv", name: "UniformMatrix4fv", pkg: "", typ: $funcType([$Int32, $Bool, ptrType], [], false)}, {prop: "UseProgram", name: "UseProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "VertexAttribOffset", name: "VertexAttribOffset", pkg: "", typ: $funcType([$Uint32, $Int32, $Uint32, $Bool, $Int32, $Int], [], false)}, {prop: "Viewport", name: "Viewport", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32], [], false)}];
+	DebuggingEntryFunc.init([$String, sliceType], [], true);
+	DebuggingExitFunc.init([$String, sliceType], [], true);
+	DebuggingErrorFunc.init([$String, sliceType$1], [], false);
 	DebugBuilder.init([{prop: "wrapped", name: "wrapped", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: OpenGl, tag: ""}, {prop: "onEntry", name: "onEntry", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingEntryFunc, tag: ""}, {prop: "onExit", name: "onExit", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingExitFunc, tag: ""}, {prop: "onError", name: "onError", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingErrorFunc, tag: ""}]);
 	debuggingOpenGl.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: OpenGl, tag: ""}, {prop: "onEntry", name: "onEntry", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingEntryFunc, tag: ""}, {prop: "onExit", name: "onExit", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingExitFunc, tag: ""}, {prop: "onError", name: "onError", pkg: "github.com/inkyblackness/shocked-client/opengl", typ: DebuggingErrorFunc, tag: ""}]);
-	OpenGl.init([{prop: "AttachShader", name: "AttachShader", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindAttribLocation", name: "BindAttribLocation", pkg: "", typ: $funcType([$Uint32, $Uint32, $String], [], false)}, {prop: "BindBuffer", name: "BindBuffer", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindVertexArray", name: "BindVertexArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "BufferData", name: "BufferData", pkg: "", typ: $funcType([$Uint32, $Int, $emptyInterface, $Uint32], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "CompileShader", name: "CompileShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "CreateProgram", name: "CreateProgram", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "CreateShader", name: "CreateShader", pkg: "", typ: $funcType([$Uint32], [$Uint32], false)}, {prop: "DeleteBuffers", name: "DeleteBuffers", pkg: "", typ: $funcType([sliceType], [], false)}, {prop: "DeleteProgram", name: "DeleteProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteShader", name: "DeleteShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteVertexArrays", name: "DeleteVertexArrays", pkg: "", typ: $funcType([sliceType], [], false)}, {prop: "DrawArrays", name: "DrawArrays", pkg: "", typ: $funcType([$Uint32, $Int32, $Int32], [], false)}, {prop: "Enable", name: "Enable", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "EnableVertexAttribArray", name: "EnableVertexAttribArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "GenBuffers", name: "GenBuffers", pkg: "", typ: $funcType([$Int32], [sliceType], false)}, {prop: "GenVertexArrays", name: "GenVertexArrays", pkg: "", typ: $funcType([$Int32], [sliceType], false)}, {prop: "GetAttribLocation", name: "GetAttribLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "GetProgramInfoLog", name: "GetProgramInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetProgramParameter", name: "GetProgramParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetShaderInfoLog", name: "GetShaderInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetShaderParameter", name: "GetShaderParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetUniformLocation", name: "GetUniformLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "LinkProgram", name: "LinkProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ReadPixels", name: "ReadPixels", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32, $Uint32, $Uint32, $emptyInterface], [], false)}, {prop: "ShaderSource", name: "ShaderSource", pkg: "", typ: $funcType([$Uint32, $String], [], false)}, {prop: "UniformMatrix4fv", name: "UniformMatrix4fv", pkg: "", typ: $funcType([$Int32, $Bool, ptrType], [], false)}, {prop: "UseProgram", name: "UseProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "VertexAttribOffset", name: "VertexAttribOffset", pkg: "", typ: $funcType([$Uint32, $Int32, $Uint32, $Bool, $Int32, $Int], [], false)}, {prop: "Viewport", name: "Viewport", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32], [], false)}]);
+	OpenGl.init([{prop: "AttachShader", name: "AttachShader", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindAttribLocation", name: "BindAttribLocation", pkg: "", typ: $funcType([$Uint32, $Uint32, $String], [], false)}, {prop: "BindBuffer", name: "BindBuffer", pkg: "", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "BindVertexArray", name: "BindVertexArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "BufferData", name: "BufferData", pkg: "", typ: $funcType([$Uint32, $Int, $emptyInterface, $Uint32], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ClearColor", name: "ClearColor", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32], [], false)}, {prop: "CompileShader", name: "CompileShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "CreateProgram", name: "CreateProgram", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "CreateShader", name: "CreateShader", pkg: "", typ: $funcType([$Uint32], [$Uint32], false)}, {prop: "DeleteBuffers", name: "DeleteBuffers", pkg: "", typ: $funcType([sliceType$1], [], false)}, {prop: "DeleteProgram", name: "DeleteProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteShader", name: "DeleteShader", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "DeleteVertexArrays", name: "DeleteVertexArrays", pkg: "", typ: $funcType([sliceType$1], [], false)}, {prop: "DrawArrays", name: "DrawArrays", pkg: "", typ: $funcType([$Uint32, $Int32, $Int32], [], false)}, {prop: "Enable", name: "Enable", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "EnableVertexAttribArray", name: "EnableVertexAttribArray", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "GenBuffers", name: "GenBuffers", pkg: "", typ: $funcType([$Int32], [sliceType$1], false)}, {prop: "GenVertexArrays", name: "GenVertexArrays", pkg: "", typ: $funcType([$Int32], [sliceType$1], false)}, {prop: "GetAttribLocation", name: "GetAttribLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "GetError", name: "GetError", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "GetProgramInfoLog", name: "GetProgramInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetProgramParameter", name: "GetProgramParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetShaderInfoLog", name: "GetShaderInfoLog", pkg: "", typ: $funcType([$Uint32], [$String], false)}, {prop: "GetShaderParameter", name: "GetShaderParameter", pkg: "", typ: $funcType([$Uint32, $Uint32], [$Int32], false)}, {prop: "GetUniformLocation", name: "GetUniformLocation", pkg: "", typ: $funcType([$Uint32, $String], [$Int32], false)}, {prop: "LinkProgram", name: "LinkProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "ReadPixels", name: "ReadPixels", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32, $Uint32, $Uint32, $emptyInterface], [], false)}, {prop: "ShaderSource", name: "ShaderSource", pkg: "", typ: $funcType([$Uint32, $String], [], false)}, {prop: "UniformMatrix4fv", name: "UniformMatrix4fv", pkg: "", typ: $funcType([$Int32, $Bool, ptrType], [], false)}, {prop: "UseProgram", name: "UseProgram", pkg: "", typ: $funcType([$Uint32], [], false)}, {prop: "VertexAttribOffset", name: "VertexAttribOffset", pkg: "", typ: $funcType([$Uint32, $Int32, $Uint32, $Bool, $Int32, $Int], [], false)}, {prop: "Viewport", name: "Viewport", pkg: "", typ: $funcType([$Int32, $Int32, $Int32, $Int32], [], false)}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		errorStrings = $makeMap($Uint32.keyFor, [{ k: 0, v: "NO_ERROR" }, { k: 1280, v: "INVALID_ENUM" }, { k: 1281, v: "INVALID_VALUE" }, { k: 1282, v: "INVALID_OPERATION" }, { k: 1283, v: "STACK_OVERFLOW" }, { k: 1284, v: "STACK_UNDERFLOW" }, { k: 1285, v: "OUT_OF_MEMORY" }, { k: 1286, v: "INVALID_FRAMEBUFFER_OPERATION" }]);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -21906,7 +21979,7 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
-	var $pkg = {}, $init, fmt, mgl32, env, opengl, os, MainApplication, arrayType, sliceType, sliceType$1, ptrType, vertexShaderSource, fragmentShaderSource, NewMainApplication;
+	var $pkg = {}, $init, fmt, mgl32, env, opengl, os, MainApplication, arrayType, sliceType, sliceType$1, sliceType$2, sliceType$3, ptrType, vertexShaderSource, fragmentShaderSource, NewMainApplication;
 	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
 	env = $packages["github.com/inkyblackness/shocked-client/env"];
@@ -21941,8 +22014,10 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.mvMatrixUniform = mvMatrixUniform_;
 	});
 	arrayType = $arrayType($Float32, 16);
-	sliceType = $sliceType($emptyInterface);
-	sliceType$1 = $sliceType($Float32);
+	sliceType = $sliceType($String);
+	sliceType$1 = $sliceType($emptyInterface);
+	sliceType$2 = $sliceType($Uint32);
+	sliceType$3 = $sliceType($Float32);
 	ptrType = $ptrType(MainApplication);
 	NewMainApplication = function() {
 		var $ptr;
@@ -21959,11 +22034,22 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		_r$1 = opengl.NewDebugBuilder(_r); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		builder = _r$1;
 		builder.OnError((function $b(name, errorCodes) {
-			var $ptr, _r$2, errorCodes, name, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$2 = $f._r$2; errorCodes = $f.errorCodes; name = $f.name; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			_r$2 = fmt.Fprintf(os.Stderr, "!!: %v\n", new sliceType([errorCodes])); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$2;
-			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$2 = _r$2; $f.errorCodes = errorCodes; $f.name = name; $f.$s = $s; $f.$r = $r; return $f;
+			var $ptr, _i, _r$2, _r$3, _ref, errorCode, errorCodes, errorStrings, index, name, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; errorCode = $f.errorCode; errorCodes = $f.errorCodes; errorStrings = $f.errorStrings; index = $f.index; name = $f.name; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			errorStrings = $makeSlice(sliceType, errorCodes.$length);
+			_ref = errorCodes;
+			_i = 0;
+			/* while (true) { */ case 1:
+				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+				index = _i;
+				errorCode = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+				_r$2 = opengl.ErrorString(errorCode); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				((index < 0 || index >= errorStrings.$length) ? $throwRuntimeError("index out of range") : errorStrings.$array[errorStrings.$offset + index] = _r$2);
+				_i++;
+			/* } */ $s = 1; continue; case 2:
+			_r$3 = fmt.Fprintf(os.Stderr, "!!: [%-20s] %v -> %v\n", new sliceType$1([new $String(name), errorCodes, errorStrings])); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._i = _i; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f.errorCode = errorCode; $f.errorCodes = errorCodes; $f.errorStrings = errorStrings; $f.index = index; $f.name = name; $f.$s = $s; $f.$r = $r; return $f;
 		}));
 		app.gl = builder.Build();
 		$r = app.initShaders(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -21994,71 +22080,56 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.app = app; $f.gl = gl; $f.height = height; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.render = function() { return this.$val.render(); };
-	MainApplication.ptr.prototype.prepareShader = function(shaderType, source) {
-		var $ptr, _arg, _arg$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, app, compileStatus, gl, shader, shaderType, source, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; app = $f.app; compileStatus = $f.compileStatus; gl = $f.gl; shader = $f.shader; shaderType = $f.shaderType; source = $f.source; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		app = this;
-		gl = app.gl;
-		_r = gl.CreateShader(shaderType); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		shader = _r;
-		$r = gl.ShaderSource(shader, source); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.CompileShader(shader); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$1 = gl.GetShaderParameter(shader, 35713); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		compileStatus = _r$1;
-		/* */ if (compileStatus === 0) { $s = 5; continue; }
-		/* */ $s = 6; continue;
-		/* if (compileStatus === 0) { */ case 5:
-			_arg = os.Stderr;
-			_r$2 = fmt.Sprintf("0x%04X", new sliceType([new $Uint32(shaderType)])); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$3 = fmt.Sprintf("%d", new sliceType([new $Int32(compileStatus)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			_r$4 = gl.GetShaderInfoLog(shader); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			_arg$1 = "Error: compile of " + _r$2 + " failed: " + _r$3 + "  - " + _r$4 + "\n";
-			_r$5 = fmt.Fprintf(_arg, _arg$1, new sliceType([])); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-			_r$5;
-		/* } */ case 6:
-		return shader;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.prepareShader }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.app = app; $f.compileStatus = compileStatus; $f.gl = gl; $f.shader = shader; $f.shaderType = shaderType; $f.source = source; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	MainApplication.prototype.prepareShader = function(shaderType, source) { return this.$val.prepareShader(shaderType, source); };
 	MainApplication.ptr.prototype.initShaders = function() {
-		var $ptr, _arg, _arg$1, _r, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, app, fragmentShader, gl, program, vertexShader, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; app = $f.app; fragmentShader = $f.fragmentShader; gl = $f.gl; program = $f.program; vertexShader = $f.vertexShader; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, app, err1, err2, err3, fragmentShader, gl, program, vertexShader, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; app = $f.app; err1 = $f.err1; err2 = $f.err2; err3 = $f.err3; fragmentShader = $f.fragmentShader; gl = $f.gl; program = $f.program; vertexShader = $f.vertexShader; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
 		gl = app.gl;
-		_r = app.prepareShader(35632, fragmentShaderSource); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		fragmentShader = _r;
-		_r$1 = app.prepareShader(35633, vertexShaderSource); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		vertexShader = _r$1;
-		_r$2 = gl.CreateProgram(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		program = _r$2;
-		$r = gl.AttachShader(program, vertexShader); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.AttachShader(program, fragmentShader); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.LinkProgram(program); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$3 = gl.GetProgramParameter(program, 35714); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		/* */ if (_r$3 === 0) { $s = 7; continue; }
-		/* */ $s = 8; continue;
-		/* if (_r$3 === 0) { */ case 7:
-			_arg = os.Stderr;
-			_r$4 = gl.GetProgramInfoLog(program); /* */ $s = 10; case 10: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			_arg$1 = "Error: link failed: " + _r$4 + "\n";
-			_r$5 = fmt.Fprintf(_arg, _arg$1, new sliceType([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_r = opengl.CompileNewShader(gl, 35632, fragmentShaderSource); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		fragmentShader = _tuple[0];
+		err1 = _tuple[1];
+		_r$1 = opengl.CompileNewShader(gl, 35633, vertexShaderSource); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		vertexShader = _tuple$1[0];
+		err2 = _tuple$1[1];
+		/* */ if (!($interfaceIsEqual(err1, $ifaceNil))) { $s = 3; continue; }
+		/* */ $s = 4; continue;
+		/* if (!($interfaceIsEqual(err1, $ifaceNil))) { */ case 3:
+			_r$2 = fmt.Fprintf(os.Stderr, "Failed to compile shader 1!\n%v\n", new sliceType$1([err1])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+		/* } */ case 4:
+		/* */ if (!($interfaceIsEqual(err2, $ifaceNil))) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (!($interfaceIsEqual(err2, $ifaceNil))) { */ case 6:
+			_r$3 = fmt.Fprintf(os.Stderr, "Failed to compile shader 2!\n%v\n", new sliceType$1([err2])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+		/* } */ case 7:
+		_r$4 = opengl.LinkNewProgram(gl, new sliceType$2([fragmentShader, vertexShader])); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_tuple$2 = _r$4;
+		program = _tuple$2[0];
+		err3 = _tuple$2[1];
+		/* */ if (!($interfaceIsEqual(err3, $ifaceNil))) { $s = 10; continue; }
+		/* */ $s = 11; continue;
+		/* if (!($interfaceIsEqual(err3, $ifaceNil))) { */ case 10:
+			_r$5 = fmt.Fprintf(os.Stderr, "Failed to link program!\n%v\n", new sliceType$1([err3])); /* */ $s = 12; case 12: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 			_r$5;
-		/* } */ case 8:
-		$r = gl.UseProgram(program); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$6 = gl.GenVertexArrays(1); /* */ $s = 13; case 13: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		/* } */ case 11:
+		$r = gl.UseProgram(program); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$6 = gl.GenVertexArrays(1); /* */ $s = 14; case 14: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 		app.vertexArrayObject = (x = _r$6, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0]));
-		$r = gl.BindVertexArray(app.vertexArrayObject); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$7 = gl.GetAttribLocation(program, "aVertexPosition"); /* */ $s = 15; case 15: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		$r = gl.BindVertexArray(app.vertexArrayObject); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$7 = gl.GetAttribLocation(program, "aVertexPosition"); /* */ $s = 16; case 16: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 		app.vertexPosition = _r$7;
-		$r = gl.EnableVertexAttribArray((app.vertexPosition >>> 0)); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$8 = gl.GetAttribLocation(program, "aVertexColor"); /* */ $s = 17; case 17: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		$r = gl.EnableVertexAttribArray((app.vertexPosition >>> 0)); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$8 = gl.GetAttribLocation(program, "aVertexColor"); /* */ $s = 18; case 18: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
 		app.vertexColor = _r$8;
-		$r = gl.EnableVertexAttribArray((app.vertexColor >>> 0)); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r$9 = gl.GetUniformLocation(program, "uPMatrix"); /* */ $s = 19; case 19: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		$r = gl.EnableVertexAttribArray((app.vertexColor >>> 0)); /* */ $s = 19; case 19: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$9 = gl.GetUniformLocation(program, "uPMatrix"); /* */ $s = 20; case 20: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
 		app.pMatrixUniform = _r$9;
-		_r$10 = gl.GetUniformLocation(program, "uMVMatrix"); /* */ $s = 20; case 20: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		_r$10 = gl.GetUniformLocation(program, "uMVMatrix"); /* */ $s = 21; case 21: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
 		app.mvMatrixUniform = _r$10;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initShaders }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.app = app; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.program = program; $f.vertexShader = vertexShader; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initShaders }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.app = app; $f.err1 = err1; $f.err2 = err2; $f.err3 = err3; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.program = program; $f.vertexShader = vertexShader; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.initShaders = function() { return this.$val.initShaders(); };
 	MainApplication.ptr.prototype.initBuffers = function() {
@@ -22069,12 +22140,12 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		_r = gl.GenBuffers(1); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		app.triangleVertexPositionBuffer = (x = _r, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0]));
 		$r = gl.BindBuffer(34962, app.triangleVertexPositionBuffer); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		vertices = new sliceType$1([0, 0, 0, -10, 10, 0, 10, 10, 0]);
+		vertices = new sliceType$3([0, 0, 0, -10, 10, 0, 10, 10, 0]);
 		$r = gl.BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r$1 = gl.GenBuffers(1); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		app.triangleVertexColorBuffer = (x$1 = _r$1, (0 >= x$1.$length ? $throwRuntimeError("index out of range") : x$1.$array[x$1.$offset + 0]));
 		$r = gl.BindBuffer(34962, app.triangleVertexColorBuffer); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		colors = new sliceType$1([1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1]);
+		colors = new sliceType$3([1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1]);
 		$r = gl.BufferData(34962, $imul(colors.$length, 4), colors, 35044); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initBuffers }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.app = app; $f.colors = colors; $f.gl = gl; $f.vertices = vertices; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -22093,7 +22164,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.setMatrixUniforms }; } $f.$ptr = $ptr; $f.app = app; $f.gl = gl; $f.mvMatrixArr = mvMatrixArr; $f.pMatrixArr = pMatrixArr; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.setMatrixUniforms = function() { return this.$val.setMatrixUniforms(); };
-	ptrType.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "prepareShader", name: "prepareShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $String], [$Uint32], false)}, {prop: "initShaders", name: "initShaders", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initBuffers", name: "initBuffers", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "setMatrixUniforms", name: "setMatrixUniforms", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}];
+	ptrType.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initShaders", name: "initShaders", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initBuffers", name: "initBuffers", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "setMatrixUniforms", name: "setMatrixUniforms", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}];
 	MainApplication.init([{prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPosition", name: "vertexPosition", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexPositionBuffer", name: "triangleVertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexColor", name: "vertexColor", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "triangleVertexColorBuffer", name: "triangleVertexColorBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "pMatrix", name: "pMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "pMatrixUniform", name: "pMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "mvMatrix", name: "mvMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "mvMatrixUniform", name: "mvMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
