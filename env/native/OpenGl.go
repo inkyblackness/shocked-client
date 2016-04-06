@@ -41,6 +41,11 @@ func (native *OpenGl) BindVertexArray(array uint32) {
 	gl.BindVertexArray(array)
 }
 
+// BlendFunc implements the OpenGl interface.
+func (native *OpenGl) BlendFunc(sfactor uint32, dfactor uint32) {
+	gl.BlendFunc(sfactor, dfactor)
+}
+
 // BufferData implements the opengl.OpenGl interface.
 func (native *OpenGl) BufferData(target uint32, size int, data interface{}, usage uint32) {
 	gl.BufferData(target, size, gl.Ptr(data), usage)

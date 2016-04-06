@@ -52,6 +52,13 @@ func (debugging *debuggingOpenGl) BindVertexArray(array uint32) {
 	debugging.recordExit("BindVertexArray")
 }
 
+// BlendFunc implements the OpenGl interface.
+func (debugging *debuggingOpenGl) BlendFunc(sfactor uint32, dfactor uint32) {
+	debugging.recordEntry("BlendFunc", sfactor, dfactor)
+	debugging.gl.BlendFunc(sfactor, dfactor)
+	debugging.recordExit("BlendFunc")
+}
+
 // BufferData implements the OpenGl interface.
 func (debugging *debuggingOpenGl) BufferData(target uint32, size int, data interface{}, usage uint32) {
 	debugging.recordEntry("BufferData", target, size, data, usage)

@@ -44,7 +44,15 @@ const (
 
 // Features
 const (
-	DEPTH_TEST uint32 = 0x0B71
+	BLEND      uint32 = 0x0BE2
+	DEPTH_TEST        = 0x0B71
+)
+
+// Alpha constants
+const (
+	SRC_ALPHA           uint32 = 0x0302
+	ONE_MINUS_SRC_ALPHA        = 0x0303
+	ONE_MINUS_SRC_COLOR        = 0x0301
 )
 
 // Data Types

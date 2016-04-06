@@ -9,6 +9,7 @@ type OpenGl interface {
 	BindAttribLocation(program uint32, index uint32, name string)
 	BindBuffer(target uint32, buffer uint32)
 	BindVertexArray(array uint32)
+	BlendFunc(sfactor uint32, dfactor uint32)
 	BufferData(target uint32, size int, data interface{}, usage uint32)
 
 	Clear(mask uint32)

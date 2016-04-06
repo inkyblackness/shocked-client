@@ -52,6 +52,11 @@ func (web *WebGl) BindVertexArray(array uint32) {
 	// not supported in WebGL, can be ignored
 }
 
+// BlendFunc implements the OpenGl interface.
+func (web *WebGl) BlendFunc(sfactor uint32, dfactor uint32) {
+	web.gl.BlendFunc(int(sfactor), int(dfactor))
+}
+
 // BufferData implements the opengl.OpenGl interface.
 func (web *WebGl) BufferData(target uint32, size int, data interface{}, usage uint32) {
 	web.gl.BufferData(int(target), data, int(usage))
