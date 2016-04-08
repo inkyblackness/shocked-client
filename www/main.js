@@ -27341,7 +27341,7 @@ $packages["github.com/gopherjs/webgl"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
-	var $pkg = {}, $init, bytes, json, fmt, JSON, ko, js, jquery, webgl, env, opengl, ObjectMapper, objectMap, ViewModel, WebGl, WebGlWindow, indirecterType, sliceType, ptrType, ptrType$1, sliceType$1, ptrType$2, sliceType$2, ptrType$3, sliceType$3, sliceType$4, ptrType$4, ptrType$5, ptrType$6, funcType$1, funcType$2, ptrType$7, mapType, arrayType, ptrType$8, mapType$1, buttonsByIndex, NewObjectMapper, NewViewModel, Run, NewWebGl, paramToInt, NewWebGlWindow;
+	var $pkg = {}, $init, bytes, json, fmt, JSON, ko, js, jquery, webgl, env, opengl, ObjectMapper, objectMap, ViewModel, WebGl, WebGlWindow, indirecterType, sliceType, ptrType, ptrType$1, sliceType$1, ptrType$2, sliceType$2, ptrType$3, sliceType$3, sliceType$4, ptrType$4, ptrType$5, ptrType$6, funcType$1, funcType$2, funcType$3, ptrType$7, mapType, arrayType, ptrType$8, mapType$1, buttonsByIndex, NewObjectMapper, NewViewModel, Run, NewWebGl, paramToInt, NewWebGlWindow;
 	bytes = $packages["bytes"];
 	json = $packages["encoding/json"];
 	fmt = $packages["fmt"];
@@ -27425,8 +27425,9 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 	ptrType$4 = $ptrType(WebGlWindow);
 	ptrType$5 = $ptrType(WebGl);
 	ptrType$6 = $ptrType(js.Object);
-	funcType$1 = $funcType([ptrType$6], [], false);
-	funcType$2 = $funcType([], [], false);
+	funcType$1 = $funcType([ptrType$6], [$Bool], false);
+	funcType$2 = $funcType([ptrType$6], [], false);
+	funcType$3 = $funcType([], [], false);
 	ptrType$7 = $ptrType(objectMap);
 	mapType = $mapType($Uint32, ptrType$6);
 	arrayType = $arrayType($Float32, 16);
@@ -27873,6 +27874,11 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 			}
 			return [x, y, inRect];
 		});
+		window.canvas.addEventListener($externalize("contextmenu", $String), $externalize((function(event) {
+			var $ptr, event;
+			event.preventDefault();
+			return false;
+		}), funcType$1));
 		browserWindow.addEventListener($externalize("mousemove", $String), $externalize((function $b(event) {
 			var $ptr, _r, _tuple, event, inRect, x, y, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; event = $f.event; inRect = $f.inRect; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -27887,7 +27893,7 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 				$r = window.AbstractOpenGlWindow.CallOnMouseMove($fround(x), $fround(y)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			/* } */ case 3:
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.event = event; $f.inRect = inRect; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
-		}), funcType$1));
+		}), funcType$2));
 		browserWindow.addEventListener($externalize("mousedown", $String), $externalize((function $b(event) {
 			var $ptr, _entry, _r, _tuple, _tuple$1, button, event, inRect, knownButton, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; button = $f.button; event = $f.event; inRect = $f.inRect; knownButton = $f.knownButton; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -27908,7 +27914,7 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 				/* } */ case 5:
 			/* } */ case 2:
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.button = button; $f.event = event; $f.inRect = inRect; $f.knownButton = knownButton; $f.$s = $s; $f.$r = $r; return $f;
-		}), funcType$1));
+		}), funcType$2));
 		browserWindow.addEventListener($externalize("mouseup", $String), $externalize((function $b(event) {
 			var $ptr, _entry, _tuple, button, event, knownButton, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _tuple = $f._tuple; button = $f.button; event = $f.event; knownButton = $f.knownButton; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -27926,7 +27932,7 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 				/* } */ case 4:
 			/* } */ case 2:
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._entry = _entry; $f._tuple = _tuple; $f.button = button; $f.event = event; $f.knownButton = knownButton; $f.$s = $s; $f.$r = $r; return $f;
-		}), funcType$1));
+		}), funcType$2));
 	};
 	WebGlWindow.prototype.registerMouseListener = function() { return this.$val.registerMouseListener(); };
 	WebGlWindow.ptr.prototype.startRenderLoop = function() {
@@ -27941,7 +27947,7 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 		indirecter[0].render = (function(browserWindow, indirecter, window) { return function $b() {
 			var $ptr, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			browserWindow[0].requestAnimationFrame($externalize(indirecter[0].render, funcType$2));
+			browserWindow[0].requestAnimationFrame($externalize(indirecter[0].render, funcType$3));
 			$r = window[0].AbstractOpenGlWindow.CallRender(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(browserWindow, indirecter, window);
@@ -27991,7 +27997,7 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 	ViewModel.init([{prop: "BaseViewModel", name: "", pkg: "", typ: ptrType, tag: ""}, {prop: "MainSections", name: "MainSections", pkg: "", typ: ptrType$1, tag: "js:\"mainSections\""}, {prop: "SelectedMainSection", name: "SelectedMainSection", pkg: "", typ: ptrType$1, tag: "js:\"selectedMainSection\""}]);
 	WebGl.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ptrType$3, tag: ""}, {prop: "buffers", name: "buffers", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ObjectMapper, tag: ""}, {prop: "programs", name: "programs", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ObjectMapper, tag: ""}, {prop: "shaders", name: "shaders", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ObjectMapper, tag: ""}, {prop: "uniforms", name: "uniforms", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ObjectMapper, tag: ""}, {prop: "uniformsByProgram", name: "uniformsByProgram", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: mapType$1, tag: ""}]);
 	WebGlWindow.init([{prop: "AbstractOpenGlWindow", name: "", pkg: "", typ: env.AbstractOpenGlWindow, tag: ""}, {prop: "canvas", name: "canvas", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ptrType$6, tag: ""}, {prop: "glWrapper", name: "glWrapper", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: ptrType$5, tag: ""}]);
-	indirecterType.init([{prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: funcType$2, tag: ""}]);
+	indirecterType.init([{prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/env/browser", typ: funcType$3, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:

@@ -63,6 +63,10 @@ func (window *WebGlWindow) registerMouseListener() {
 		return x, y, inRect
 	}
 
+	window.canvas.Call("addEventListener", "contextmenu", func(event *js.Object) bool {
+		event.Call("preventDefault")
+		return false
+	})
 	browserWindow.Call("addEventListener", "mousemove", func(event *js.Object) {
 		x, y, inRect := getEventPosition(event)
 
