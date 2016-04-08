@@ -3,15 +3,20 @@ package native
 import (
 	"github.com/go-gl/glfw/v3.1/glfw"
 
+	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
 
+var buttonsByIndex = map[glfw.MouseButton]uint32{
+	glfw.MouseButton1: env.MousePrimary,
+	glfw.MouseButton2: env.MouseSecondary}
+
 // OpenGlWindow represents a native OpenGL surface.
 type OpenGlWindow struct {
+	env.AbstractOpenGlWindow
+
 	glfwWindow *glfw.Window
 	glWrapper  *OpenGl
-
-	render func()
 }
 
 // NewOpenGlWindow tries to initialize the OpenGL environment and returns a
@@ -29,9 +34,12 @@ func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 			glfwWindow.MakeContextCurrent()
 
 			window = &OpenGlWindow{
-				glfwWindow: glfwWindow,
-				glWrapper:  NewOpenGl(),
-				render:     func() {}}
+				AbstractOpenGlWindow: env.InitAbstractOpenGlWindow(),
+				glfwWindow:           glfwWindow,
+				glWrapper:            NewOpenGl()}
+
+			glfwWindow.SetCursorPosCallback(window.onCursorPos)
+			glfwWindow.SetMouseButtonCallback(window.onMouseButton)
 		}
 	}
 	return
@@ -48,7 +56,7 @@ func (window *OpenGlWindow) Update() {
 	glfw.PollEvents()
 
 	window.glfwWindow.MakeContextCurrent()
-	window.render()
+	window.CallRender()
 	window.glfwWindow.SwapBuffers()
 }
 
@@ -57,12 +65,23 @@ func (window *OpenGlWindow) OpenGl() opengl.OpenGl {
 	return window.glWrapper
 }
 
-// OnRender implements the env.OpenGlWindow interface.
-func (window *OpenGlWindow) OnRender(callback func()) {
-	window.render = callback
-}
-
 // Size implements the env.OpenGlWindow interface.
 func (window *OpenGlWindow) Size() (width int, height int) {
-	return window.glfwWindow.GetSize()
+	return window.glfwWindow.GetFramebufferSize()
+}
+
+func (window *OpenGlWindow) onCursorPos(rawWindow *glfw.Window, x float64, y float64) {
+	window.CallOnMouseMove(float32(x), float32(y))
+}
+
+func (window *OpenGlWindow) onMouseButton(rawWindow *glfw.Window, rawButton glfw.MouseButton, action glfw.Action, mods glfw.ModifierKey) {
+	button, knownButton := buttonsByIndex[rawButton]
+
+	if knownButton {
+		if action == glfw.Press {
+			window.CallOnMouseButtonDown(button)
+		} else if action == glfw.Release {
+			window.CallOnMouseButtonUp(button)
+		}
+	}
 }

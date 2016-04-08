@@ -28,6 +28,9 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.glWindow = glWindow
 
 	glWindow.OnRender(app.render)
+	glWindow.OnMouseMove(app.onMouseMove)
+	glWindow.OnMouseButtonDown(app.onMouseButtonDown)
+	glWindow.OnMouseButtonUp(app.onMouseButtonUp)
 
 	builder := opengl.NewDebugBuilder(app.glWindow.OpenGl())
 
@@ -72,4 +75,16 @@ func (app *MainApplication) render() {
 		projectionMatrix: mgl32.Ortho2D(0, float32(width), float32(height), 0)}
 
 	app.gridRenderable.Render(&context)
+}
+
+func (app *MainApplication) onMouseMove(x float32, y float32) {
+	fmt.Fprintf(os.Stderr, "mouse: %v, %v\n", x, y)
+}
+
+func (app *MainApplication) onMouseButtonDown(mouseButton uint32) {
+	fmt.Fprintf(os.Stderr, "down: 0x%08X\n", mouseButton)
+}
+
+func (app *MainApplication) onMouseButtonUp(mouseButton uint32) {
+	fmt.Fprintf(os.Stderr, "up: 0x%08X\n", mouseButton)
 }
