@@ -2,6 +2,7 @@ package editor
 
 import (
 	"fmt"
+	"math"
 	"os"
 
 	"github.com/go-gl/mathgl/mgl32"
@@ -15,12 +16,15 @@ type MainApplication struct {
 	glWindow env.OpenGlWindow
 	gl       opengl.OpenGl
 
+	requestedZoomLevel float32
+
 	gridRenderable *GridRenderable
 }
 
 // NewMainApplication returns a new instance of MainApplication.
 func NewMainApplication() *MainApplication {
-	return &MainApplication{}
+	return &MainApplication{
+		requestedZoomLevel: 0}
 }
 
 // Init implements the env.Application interface.
@@ -63,6 +67,7 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 func (app *MainApplication) render() {
 	gl := app.gl
 	width, height := app.glWindow.Size()
+	scaleFactor := float32(math.Pow(2.0, float64(app.requestedZoomLevel)))
 
 	//fmt.Fprintf(os.Stderr, "Size: %vx%v\n", width, height)
 
@@ -72,7 +77,7 @@ func (app *MainApplication) render() {
 	context := RenderContext{
 		viewportWidth:    width,
 		viewportHeight:   height,
-		viewMatrix:       mgl32.Ident4().Mul4(mgl32.Scale3D(1.0, 1.0, 1.0)),
+		viewMatrix:       mgl32.Ident4().Mul4(mgl32.Scale3D(scaleFactor, scaleFactor, 1.0)),
 		projectionMatrix: mgl32.Ortho2D(0, float32(width), float32(height), 0)}
 
 	app.gridRenderable.Render(&context)
@@ -91,5 +96,22 @@ func (app *MainApplication) onMouseButtonUp(mouseButton uint32) {
 }
 
 func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
-	fmt.Fprintf(os.Stderr, "scroll: %v, %v\n", dx, dy)
+	if dy > 0 {
+		app.Zoom(-0.5)
+	}
+	if dy < 0 {
+		app.Zoom(0.5)
+	}
+}
+
+// Zoom adjusts the requested zoom level by given delta. Positive values zoom in.
+func (app *MainApplication) Zoom(levelDelta float32) {
+	newValue := app.requestedZoomLevel + levelDelta
+	if newValue < ZoomLevelMin {
+		newValue = ZoomLevelMin
+	}
+	if newValue > ZoomLevelMax {
+		newValue = ZoomLevelMax
+	}
+	app.requestedZoomLevel = newValue
 }

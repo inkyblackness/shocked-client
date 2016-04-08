@@ -2957,7 +2957,7 @@ $packages["io"] = (function() {
 	return $pkg;
 })();
 $packages["math"] = (function() {
-	var $pkg = {}, $init, js, arrayType, arrayType$1, arrayType$2, structType, arrayType$3, math, zero, posInf, negInf, nan, buf, pow10tab, Hypot, Inf, IsInf, IsNaN, NaN, Sqrt, init, Float32bits, Float32frombits, Float64bits, Float64frombits, hypot, init$1;
+	var $pkg = {}, $init, js, arrayType, arrayType$1, arrayType$2, structType, arrayType$3, math, zero, posInf, negInf, nan, buf, pow10tab, Hypot, Inf, IsInf, IsNaN, NaN, Pow, Sqrt, init, Float32bits, Float32frombits, Float64bits, Float64frombits, hypot, init$1;
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	arrayType = $arrayType($Uint32, 2);
 	arrayType$1 = $arrayType($Float32, 2);
@@ -3001,6 +3001,14 @@ $packages["math"] = (function() {
 		return nan;
 	};
 	$pkg.NaN = NaN;
+	Pow = function(x, y) {
+		var $ptr, x, y;
+		if ((x === 1) || ((x === -1) && ((y === posInf) || (y === negInf)))) {
+			return 1;
+		}
+		return $parseFloat(math.pow(x, y));
+	};
+	$pkg.Pow = Pow;
 	Sqrt = function(x) {
 		var $ptr, x;
 		return $parseFloat(math.sqrt(x));
@@ -22058,11 +22066,12 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
-	var $pkg = {}, $init, fmt, mgl32, env, opengl, os, GridRenderable, MainApplication, RenderContext, sliceType, sliceType$1, sliceType$2, ptrType, arrayType, sliceType$3, ptrType$1, funcType, ptrType$2, ptrType$3, gridVertexShaderSource, gridFragmentShaderSource, NewGridRenderable, NewMainApplication;
+	var $pkg = {}, $init, fmt, mgl32, env, opengl, math, os, GridRenderable, MainApplication, RenderContext, sliceType, sliceType$1, sliceType$2, ptrType, arrayType, sliceType$3, ptrType$1, funcType, ptrType$2, ptrType$3, gridVertexShaderSource, gridFragmentShaderSource, NewGridRenderable, NewMainApplication;
 	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
 	env = $packages["github.com/inkyblackness/shocked-client/env"];
 	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
+	math = $packages["math"];
 	os = $packages["os"];
 	GridRenderable = $pkg.GridRenderable = $newType(0, $kindStruct, "editor.GridRenderable", "GridRenderable", "github.com/inkyblackness/shocked-client/editor", function(gl_, program_, vertexArrayObject_, vertexPositionBuffer_, vertexPositionAttrib_, viewMatrixUniform_, projectionMatrixUniform_) {
 		this.$val = this;
@@ -22084,16 +22093,18 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.viewMatrixUniform = viewMatrixUniform_;
 		this.projectionMatrixUniform = projectionMatrixUniform_;
 	});
-	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(glWindow_, gl_, gridRenderable_) {
+	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(glWindow_, gl_, requestedZoomLevel_, gridRenderable_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.glWindow = $ifaceNil;
 			this.gl = $ifaceNil;
+			this.requestedZoomLevel = 0;
 			this.gridRenderable = ptrType.nil;
 			return;
 		}
 		this.glWindow = glWindow_;
 		this.gl = gl_;
+		this.requestedZoomLevel = requestedZoomLevel_;
 		this.gridRenderable = gridRenderable_;
 	});
 	RenderContext = $pkg.RenderContext = $newType(0, $kindStruct, "editor.RenderContext", "RenderContext", "github.com/inkyblackness/shocked-client/editor", function(viewportWidth_, viewportHeight_, viewMatrix_, projectionMatrix_) {
@@ -22223,7 +22234,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	GridRenderable.prototype.setMatrix = function(uniform, matrix) { return this.$val.setMatrix(uniform, matrix); };
 	NewMainApplication = function() {
 		var $ptr;
-		return new MainApplication.ptr($ifaceNil, $ifaceNil, ptrType.nil);
+		return new MainApplication.ptr($ifaceNil, $ifaceNil, 0, ptrType.nil);
 	};
 	$pkg.NewMainApplication = NewMainApplication;
 	MainApplication.ptr.prototype.Init = function(glWindow) {
@@ -22267,8 +22278,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	MainApplication.prototype.Init = function(glWindow) { return this.$val.Init(glWindow); };
 	MainApplication.ptr.prototype.render = function() {
-		var $ptr, _r, _tuple, app, context, gl, height, width, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; app = $f.app; context = $f.context; gl = $f.gl; height = $f.height; width = $f.width; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _tuple, app, context, gl, height, scaleFactor, width, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; app = $f.app; context = $f.context; gl = $f.gl; height = $f.height; scaleFactor = $f.scaleFactor; width = $f.width; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		context = [context];
 		app = this;
 		gl = app.gl;
@@ -22276,11 +22287,12 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		_tuple = _r;
 		width = _tuple[0];
 		height = _tuple[1];
+		scaleFactor = $fround(math.Pow(2, app.requestedZoomLevel));
 		$r = gl.Viewport(0, 0, (width >> 0), (height >> 0)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = gl.Clear(16640); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		context[0] = new RenderContext.ptr(width, height, $clone(new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Scale3D(1, 1, 1)), mgl32.Mat4), $clone(mgl32.Ortho2D(0, width, height, 0), mgl32.Mat4));
+		context[0] = new RenderContext.ptr(width, height, $clone(new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Scale3D(scaleFactor, scaleFactor, 1)), mgl32.Mat4), $clone(mgl32.Ortho2D(0, width, height, 0), mgl32.Mat4));
 		$r = app.gridRenderable.Render(context[0]); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.app = app; $f.context = context; $f.gl = gl; $f.height = height; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.app = app; $f.context = context; $f.gl = gl; $f.height = height; $f.scaleFactor = scaleFactor; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.render = function() { return this.$val.render(); };
 	MainApplication.ptr.prototype.onMouseMove = function(x, y) {
@@ -22311,14 +22323,29 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	MainApplication.prototype.onMouseButtonUp = function(mouseButton) { return this.$val.onMouseButtonUp(mouseButton); };
 	MainApplication.ptr.prototype.onMouseScroll = function(dx, dy) {
-		var $ptr, _r, app, dx, dy, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; dx = $f.dx; dy = $f.dy; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, app, dx, dy;
 		app = this;
-		_r = fmt.Fprintf(os.Stderr, "scroll: %v, %v\n", new sliceType$1([new $Float32(dx), new $Float32(dy)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseScroll }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.dx = dx; $f.dy = dy; $f.$s = $s; $f.$r = $r; return $f;
+		if (dy > 0) {
+			app.Zoom(-0.5);
+		}
+		if (dy < 0) {
+			app.Zoom(0.5);
+		}
 	};
 	MainApplication.prototype.onMouseScroll = function(dx, dy) { return this.$val.onMouseScroll(dx, dy); };
+	MainApplication.ptr.prototype.Zoom = function(levelDelta) {
+		var $ptr, app, levelDelta, newValue;
+		app = this;
+		newValue = $fround(app.requestedZoomLevel + levelDelta);
+		if (newValue < -2) {
+			newValue = -2;
+		}
+		if (newValue > 4) {
+			newValue = 4;
+		}
+		app.requestedZoomLevel = newValue;
+	};
+	MainApplication.prototype.Zoom = function(levelDelta) { return this.$val.Zoom(levelDelta); };
 	RenderContext.ptr.prototype.ViewportSize = function() {
 		var $ptr, _tmp, _tmp$1, context, height, width;
 		width = 0;
@@ -22344,10 +22371,10 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	RenderContext.prototype.ProjectionMatrix = function() { return this.$val.ProjectionMatrix(); };
 	ptrType.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([ptrType$1], [], false)}, {prop: "withShader", name: "withShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType], [], false)}, {prop: "setMatrix", name: "setMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32, ptrType$2], [], false)}];
-	ptrType$3.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}];
+	ptrType$3.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "Zoom", name: "Zoom", pkg: "", typ: $funcType([$Float32], [], false)}];
 	ptrType$1.methods = [{prop: "ViewportSize", name: "ViewportSize", pkg: "", typ: $funcType([], [$Int, $Int], false)}, {prop: "ViewMatrix", name: "ViewMatrix", pkg: "", typ: $funcType([], [ptrType$2], false)}, {prop: "ProjectionMatrix", name: "ProjectionMatrix", pkg: "", typ: $funcType([], [ptrType$2], false)}];
 	GridRenderable.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "program", name: "program", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}]);
-	MainApplication.init([{prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "gridRenderable", name: "gridRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType, tag: ""}]);
+	MainApplication.init([{prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "requestedZoomLevel", name: "requestedZoomLevel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "gridRenderable", name: "gridRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType, tag: ""}]);
 	RenderContext.init([{prop: "viewportWidth", name: "viewportWidth", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int, tag: ""}, {prop: "viewportHeight", name: "viewportHeight", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "projectionMatrix", name: "projectionMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
@@ -22356,7 +22383,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = mgl32.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = env.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = opengl.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = os.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = math.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = os.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		gridVertexShaderSource = "\n  attribute vec3 vertexPosition;\n\n  uniform mat4 viewMatrix;\n  uniform mat4 projectionMatrix;\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  void main(void) {\n    gl_Position = projectionMatrix * viewMatrix * vec4(vertexPosition, 1.0);\n\n    color = vec4(0.0, 0.1, 0.0, 0.6);\n    originalPosition = vertexPosition;\n  }\n";
 		gridFragmentShaderSource = "\n  #ifdef GL_ES\n    precision mediump float;\n  #endif\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  float modulo(float x, float y) {\n    return x - y * floor(x/y);\n  }\n\n  float nearGrid(float stepSize, float value) {\n    float remainder = modulo(value - (stepSize / 2.0), stepSize) * 2.0;\n\n    if (remainder >= stepSize) {\n      remainder = (stepSize * 2.0) - remainder;\n    }\n\n    return remainder / stepSize;\n  }\n\n  void main(void) {\n    float alpha = max(nearGrid(32.0, originalPosition.x), nearGrid(32.0, originalPosition.y));\n\n    alpha = pow(2.0, 10.0 * (alpha - 1.0));\n\n    gl_FragColor = vec4(color.rgb, color.a * alpha);\n  }\n";
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
