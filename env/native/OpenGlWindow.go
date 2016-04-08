@@ -40,6 +40,7 @@ func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 
 			glfwWindow.SetCursorPosCallback(window.onCursorPos)
 			glfwWindow.SetMouseButtonCallback(window.onMouseButton)
+			glfwWindow.SetScrollCallback(window.onMouseScroll)
 		}
 	}
 	return
@@ -84,4 +85,8 @@ func (window *OpenGlWindow) onMouseButton(rawWindow *glfw.Window, rawButton glfw
 			window.CallOnMouseButtonUp(button)
 		}
 	}
+}
+
+func (window *OpenGlWindow) onMouseScroll(rawWindow *glfw.Window, dx float64, dy float64) {
+	window.CallOnMouseScroll(float32(dx), float32(dy)*-1.0)
 }

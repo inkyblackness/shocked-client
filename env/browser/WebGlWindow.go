@@ -96,6 +96,17 @@ func (window *WebGlWindow) registerMouseListener() {
 			}
 		}
 	})
+	window.canvas.Call("addEventListener", "wheel", func(event *js.Object) {
+		_, _, inRect := getEventPosition(event)
+
+		if inRect || (notifiedMouseButtons != 0) {
+			dx := event.Get("deltaX").Float()
+			dy := event.Get("deltaY").Float()
+
+			event.Call("preventDefault")
+			window.CallOnMouseScroll(float32(dx), float32(dy))
+		}
+	})
 }
 
 func (window *WebGlWindow) startRenderLoop() {

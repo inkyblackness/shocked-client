@@ -19,6 +19,10 @@ type MouseMoveCallback func(x float32, y float32)
 // the client area.
 type MouseButtonCallback func(buttonMask uint32)
 
+// MouseScrollCallback is the function to receive scroll events.
+// Delta values are right-hand oriented: positive values go right/down/far.
+type MouseScrollCallback func(dx float32, dy float32)
+
 // OpenGlWindow represents an OpenGL render surface.
 type OpenGlWindow interface {
 	// OpenGl returns the OpenGL API wrapper for this window.
@@ -35,4 +39,6 @@ type OpenGlWindow interface {
 	OnMouseButtonDown(callback MouseButtonCallback)
 	// OnMouseButtonUp registers a callback function for mouse button up events.
 	OnMouseButtonUp(callback MouseButtonCallback)
+	// OnMouseScroll registers a callback function for mouse scroll events.
+	OnMouseScroll(callback MouseScrollCallback)
 }

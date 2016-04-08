@@ -31,6 +31,7 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	glWindow.OnMouseMove(app.onMouseMove)
 	glWindow.OnMouseButtonDown(app.onMouseButtonDown)
 	glWindow.OnMouseButtonUp(app.onMouseButtonUp)
+	glWindow.OnMouseScroll(app.onMouseScroll)
 
 	builder := opengl.NewDebugBuilder(app.glWindow.OpenGl())
 
@@ -87,4 +88,8 @@ func (app *MainApplication) onMouseButtonDown(mouseButton uint32) {
 
 func (app *MainApplication) onMouseButtonUp(mouseButton uint32) {
 	fmt.Fprintf(os.Stderr, "up: 0x%08X\n", mouseButton)
+}
+
+func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
+	fmt.Fprintf(os.Stderr, "scroll: %v, %v\n", dx, dy)
 }
