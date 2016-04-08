@@ -4,16 +4,22 @@ import (
 	"github.com/inkyblackness/shocked-client/opengl"
 )
 
-// RenderCallback is the function to receive render events.
+// RenderCallback is the function to receive render events. When the callback
+// returns, the window will swap the internal buffer.
 type RenderCallback func()
 
 // MouseMoveCallback is the function to receive the current mouse coordinate while moving.
+// Movement is reported while the cursor is within the client area of the window, and
+// beyond the window as long as at least one captured button is pressed.
+// Reported values are with sub-pixel precision, if possible.
 type MouseMoveCallback func(x float32, y float32)
 
 // MouseButtonCallback is the function to receive button up/down events.
+// An Up event is sent for every reported Down event, even if the mouse cursor is outside
+// the client area.
 type MouseButtonCallback func(buttonMask uint32)
 
-// OpenGlWindow represents an OpenGL render surface
+// OpenGlWindow represents an OpenGL render surface.
 type OpenGlWindow interface {
 	// OpenGl returns the OpenGL API wrapper for this window.
 	OpenGl() opengl.OpenGl
