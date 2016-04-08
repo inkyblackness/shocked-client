@@ -182,7 +182,7 @@ func (native *OpenGl) ReadPixels(x int32, y int32, width int32, height int32, fo
 
 // ShaderSource implements the opengl.OpenGl interface.
 func (native *OpenGl) ShaderSource(shader uint32, source string) {
-	csources, free := gl.Strs(source)
+	csources, free := gl.Strs(source + "\x00")
 	defer free()
 
 	gl.ShaderSource(shader, 1, csources, nil)

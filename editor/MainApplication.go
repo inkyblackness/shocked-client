@@ -69,8 +69,6 @@ func (app *MainApplication) render() {
 	width, height := app.glWindow.Size()
 	scaleFactor := float32(math.Pow(2.0, float64(app.requestedZoomLevel)))
 
-	//fmt.Fprintf(os.Stderr, "Size: %vx%v\n", width, height)
-
 	gl.Viewport(0, 0, int32(width), int32(height))
 	gl.Clear(opengl.COLOR_BUFFER_BIT | opengl.DEPTH_BUFFER_BIT)
 
