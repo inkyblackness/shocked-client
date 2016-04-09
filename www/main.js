@@ -18561,7 +18561,7 @@ $packages["text/tabwriter"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
-	var $pkg = {}, $init, bytes, errors, fmt, f32, math, sync, tabwriter, Mat2, Mat2x3, Mat2x4, Mat3x2, Mat3, Mat3x4, Mat4x2, Mat4x3, Mat4, Vec2, Vec3, Vec4, arrayType, arrayType$1, sliceType$2, arrayType$2, arrayType$3, sliceType$3, arrayType$4, arrayType$5, arrayType$6, funcType, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, Mat2FromCols, Mat3FromCols, Ident4, Mat4FromCols, Ortho, Ortho2D, Scale3D, Abs, FloatEqual, FloatEqualThreshold;
+	var $pkg = {}, $init, bytes, errors, fmt, f32, math, sync, tabwriter, Mat2, Mat2x3, Mat2x4, Mat3x2, Mat3, Mat3x4, Mat4x2, Mat4x3, Mat4, Vec2, Vec3, Vec4, arrayType, arrayType$1, sliceType$2, arrayType$2, arrayType$3, sliceType$3, arrayType$4, arrayType$5, arrayType$6, funcType, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, Mat2FromCols, Mat3FromCols, Ident4, Mat4FromCols, Ortho, Ortho2D, Translate3D, Scale3D, Abs, FloatEqual, FloatEqualThreshold;
 	bytes = $packages["bytes"];
 	errors = $packages["errors"];
 	fmt = $packages["fmt"];
@@ -20840,6 +20840,11 @@ $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
 		return Ortho(left, right, bottom, top, -1, 1);
 	};
 	$pkg.Ortho2D = Ortho2D;
+	Translate3D = function(Tx, Ty, Tz) {
+		var $ptr, Tx, Ty, Tz;
+		return $toNativeArray($kindFloat32, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, Tx, Ty, Tz, 1]);
+	};
+	$pkg.Translate3D = Translate3D;
 	Scale3D = function(scaleX, scaleY, scaleZ) {
 		var $ptr, scaleX, scaleY, scaleZ;
 		return $toNativeArray($kindFloat32, [scaleX, 0, 0, 0, 0, scaleY, 0, 0, 0, 0, scaleZ, 0, 0, 0, 0, 1]);
@@ -22093,18 +22098,34 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.viewMatrixUniform = viewMatrixUniform_;
 		this.projectionMatrixUniform = projectionMatrixUniform_;
 	});
-	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(glWindow_, gl_, requestedZoomLevel_, gridRenderable_) {
+	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(glWindow_, gl_, mouseX_, mouseY_, mouseMoveCapture_, focusX_, focusY_, requestedZoomLevel_, viewOffsetX_, viewOffsetY_, viewMatrix_, gridRenderable_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.glWindow = $ifaceNil;
 			this.gl = $ifaceNil;
+			this.mouseX = 0;
+			this.mouseY = 0;
+			this.mouseMoveCapture = $throwNilPointerError;
+			this.focusX = 0;
+			this.focusY = 0;
 			this.requestedZoomLevel = 0;
+			this.viewOffsetX = 0;
+			this.viewOffsetY = 0;
+			this.viewMatrix = arrayType.zero();
 			this.gridRenderable = ptrType.nil;
 			return;
 		}
 		this.glWindow = glWindow_;
 		this.gl = gl_;
+		this.mouseX = mouseX_;
+		this.mouseY = mouseY_;
+		this.mouseMoveCapture = mouseMoveCapture_;
+		this.focusX = focusX_;
+		this.focusY = focusY_;
 		this.requestedZoomLevel = requestedZoomLevel_;
+		this.viewOffsetX = viewOffsetX_;
+		this.viewOffsetY = viewOffsetY_;
+		this.viewMatrix = viewMatrix_;
 		this.gridRenderable = gridRenderable_;
 	});
 	RenderContext = $pkg.RenderContext = $newType(0, $kindStruct, "editor.RenderContext", "RenderContext", "github.com/inkyblackness/shocked-client/editor", function(viewportWidth_, viewportHeight_, viewMatrix_, projectionMatrix_) {
@@ -22234,7 +22255,9 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	GridRenderable.prototype.setMatrix = function(uniform, matrix) { return this.$val.setMatrix(uniform, matrix); };
 	NewMainApplication = function() {
 		var $ptr;
-		return new MainApplication.ptr($ifaceNil, $ifaceNil, 0, ptrType.nil);
+		return new MainApplication.ptr($ifaceNil, $ifaceNil, 0, 0, (function() {
+			var $ptr;
+		}), 0, 0, 0, 0, 0, $clone(mgl32.Ident4(), mgl32.Mat4), ptrType.nil);
 	};
 	$pkg.NewMainApplication = NewMainApplication;
 	MainApplication.ptr.prototype.Init = function(glWindow) {
@@ -22274,12 +22297,13 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = app.gl.ClearColor(0, 0, 0, 1); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r$2 = NewGridRenderable(app.gl); /* */ $s = 11; case 11: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		app.gridRenderable = _r$2;
+		app.updateViewMatrix();
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.app = app; $f.builder = builder; $f.glWindow = glWindow; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.Init = function(glWindow) { return this.$val.Init(glWindow); };
 	MainApplication.ptr.prototype.render = function() {
-		var $ptr, _r, _tuple, app, context, gl, height, scaleFactor, width, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; app = $f.app; context = $f.context; gl = $f.gl; height = $f.height; scaleFactor = $f.scaleFactor; width = $f.width; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _tuple, app, context, gl, height, width, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; app = $f.app; context = $f.context; gl = $f.gl; height = $f.height; width = $f.width; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		context = [context];
 		app = this;
 		gl = app.gl;
@@ -22287,54 +22311,145 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		_tuple = _r;
 		width = _tuple[0];
 		height = _tuple[1];
-		scaleFactor = $fround(math.Pow(2, app.requestedZoomLevel));
 		$r = gl.Viewport(0, 0, (width >> 0), (height >> 0)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = gl.Clear(16640); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		context[0] = new RenderContext.ptr(width, height, $clone(new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Scale3D(scaleFactor, scaleFactor, 1)), mgl32.Mat4), $clone(mgl32.Ortho2D(0, width, height, 0), mgl32.Mat4));
+		context[0] = new RenderContext.ptr(width, height, $clone(app.viewMatrix, mgl32.Mat4), $clone(mgl32.Ortho2D(0, width, height, 0), mgl32.Mat4));
 		$r = app.gridRenderable.Render(context[0]); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.app = app; $f.context = context; $f.gl = gl; $f.height = height; $f.scaleFactor = scaleFactor; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.app = app; $f.context = context; $f.gl = gl; $f.height = height; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.render = function() { return this.$val.render(); };
-	MainApplication.ptr.prototype.onMouseMove = function(x, y) {
-		var $ptr, _r, app, x, y, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+	MainApplication.ptr.prototype.unprojectPixel = function(pixelX, pixelY) {
+		var $ptr, _tmp, _tmp$1, app, invertedView, pixelVec, pixelX, pixelY, result, x, y;
+		x = 0;
+		y = 0;
 		app = this;
-		_r = fmt.Fprintf(os.Stderr, "mouse: %v, %v\n", new sliceType$1([new $Float32(x), new $Float32(y)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseMove }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+		pixelVec = $toNativeArray($kindFloat32, [pixelX, pixelY, 0, 1]);
+		invertedView = $clone(new mgl32.Mat4(app.viewMatrix).Inv(), mgl32.Mat4);
+		result = $clone(new mgl32.Mat4(invertedView).Mul4x1(pixelVec), mgl32.Vec4);
+		_tmp = result[0];
+		_tmp$1 = result[1];
+		x = _tmp;
+		y = _tmp$1;
+		return [x, y];
+	};
+	MainApplication.prototype.unprojectPixel = function(pixelX, pixelY) { return this.$val.unprojectPixel(pixelX, pixelY); };
+	MainApplication.ptr.prototype.onMouseMove = function(x, y) {
+		var $ptr, _tmp, _tmp$1, app, x, y, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; app = $f.app; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		app = this;
+		_tmp = x;
+		_tmp$1 = y;
+		app.mouseX = _tmp;
+		app.mouseY = _tmp$1;
+		$r = app.mouseMoveCapture(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseMove }; } $f.$ptr = $ptr; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f.app = app; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.onMouseMove = function(x, y) { return this.$val.onMouseMove(x, y); };
 	MainApplication.ptr.prototype.onMouseButtonDown = function(mouseButton) {
-		var $ptr, _r, app, mouseButton, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; mouseButton = $f.mouseButton; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _tmp, _tmp$1, app, lastMouseX, lastMouseY, mouseButton;
 		app = this;
-		_r = fmt.Fprintf(os.Stderr, "down: 0x%08X\n", new sliceType$1([new $Uint32(mouseButton)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseButtonDown }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.mouseButton = mouseButton; $f.$s = $s; $f.$r = $r; return $f;
+		if ((((mouseButton & 1) >>> 0)) === 1) {
+			_tmp = app.mouseX;
+			_tmp$1 = app.mouseY;
+			lastMouseX = _tmp;
+			lastMouseY = _tmp$1;
+			app.mouseMoveCapture = (function $b() {
+				var $ptr, _tmp$2, _tmp$3, _tuple, _tuple$1, lastWorldMouseX, lastWorldMouseY, worldMouseX, worldMouseY, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; lastWorldMouseX = $f.lastWorldMouseX; lastWorldMouseY = $f.lastWorldMouseY; worldMouseX = $f.worldMouseX; worldMouseY = $f.worldMouseY; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				_tuple = app.unprojectPixel(lastMouseX, lastMouseY);
+				lastWorldMouseX = _tuple[0];
+				lastWorldMouseY = _tuple[1];
+				_tuple$1 = app.unprojectPixel(app.mouseX, app.mouseY);
+				worldMouseX = _tuple$1[0];
+				worldMouseY = _tuple$1[1];
+				$r = app.ScrollBy($fround(worldMouseX - lastWorldMouseX), $fround(worldMouseY - lastWorldMouseY)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				_tmp$2 = app.mouseX;
+				_tmp$3 = app.mouseY;
+				lastMouseX = _tmp$2;
+				lastMouseY = _tmp$3;
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.lastWorldMouseX = lastWorldMouseX; $f.lastWorldMouseY = lastWorldMouseY; $f.worldMouseX = worldMouseX; $f.worldMouseY = worldMouseY; $f.$s = $s; $f.$r = $r; return $f;
+			});
+		}
 	};
 	MainApplication.prototype.onMouseButtonDown = function(mouseButton) { return this.$val.onMouseButtonDown(mouseButton); };
 	MainApplication.ptr.prototype.onMouseButtonUp = function(mouseButton) {
-		var $ptr, _r, app, mouseButton, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; mouseButton = $f.mouseButton; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, app, mouseButton;
 		app = this;
-		_r = fmt.Fprintf(os.Stderr, "up: 0x%08X\n", new sliceType$1([new $Uint32(mouseButton)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseButtonUp }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.mouseButton = mouseButton; $f.$s = $s; $f.$r = $r; return $f;
+		if ((((mouseButton & 1) >>> 0)) === 1) {
+			app.mouseMoveCapture = (function() {
+				var $ptr;
+			});
+		}
 	};
 	MainApplication.prototype.onMouseButtonUp = function(mouseButton) { return this.$val.onMouseButtonUp(mouseButton); };
 	MainApplication.ptr.prototype.onMouseScroll = function(dx, dy) {
-		var $ptr, app, dx, dy;
+		var $ptr, _tuple, app, dx, dy, worldMouseX, worldMouseY, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _tuple = $f._tuple; app = $f.app; dx = $f.dx; dy = $f.dy; worldMouseX = $f.worldMouseX; worldMouseY = $f.worldMouseY; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
-		if (dy > 0) {
-			app.Zoom(-0.5);
-		}
-		if (dy < 0) {
-			app.Zoom(0.5);
-		}
+		_tuple = app.unprojectPixel(app.mouseX, app.mouseY);
+		worldMouseX = _tuple[0];
+		worldMouseY = _tuple[1];
+		/* */ if (dy > 0) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (dy > 0) { */ case 1:
+			$r = app.ZoomAt(-0.5, worldMouseX, worldMouseY); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 2:
+		/* */ if (dy < 0) { $s = 4; continue; }
+		/* */ $s = 5; continue;
+		/* if (dy < 0) { */ case 4:
+			$r = app.ZoomAt(0.5, worldMouseX, worldMouseY); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 5:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseScroll }; } $f.$ptr = $ptr; $f._tuple = _tuple; $f.app = app; $f.dx = dx; $f.dy = dy; $f.worldMouseX = worldMouseX; $f.worldMouseY = worldMouseY; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.onMouseScroll = function(dx, dy) { return this.$val.onMouseScroll(dx, dy); };
+	MainApplication.ptr.prototype.ScrollBy = function(dx, dy) {
+		var $ptr, app, dx, dy, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; app = $f.app; dx = $f.dx; dy = $f.dy; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		app = this;
+		$r = app.ScrollTo($fround(app.viewOffsetX + dx), $fround(app.viewOffsetY + dy)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.ScrollBy }; } $f.$ptr = $ptr; $f.app = app; $f.dx = dx; $f.dy = dy; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MainApplication.prototype.ScrollBy = function(dx, dy) { return this.$val.ScrollBy(dx, dy); };
+	MainApplication.ptr.prototype.ScrollTo = function(worldX, worldY) {
+		var $ptr, _r, _r$1, app, limit, limitOffset, worldX, worldY, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; app = $f.app; limit = $f.limit; limitOffset = $f.limitOffset; worldX = $f.worldX; worldY = $f.worldY; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		limit = [limit];
+		app = this;
+		limit[0] = 2016;
+		limitOffset = (function(limit) { return function(offset) {
+			var $ptr, offset, result;
+			result = offset;
+			if (offset < -limit[0]) {
+				result = -limit[0];
+			}
+			if (offset > 0) {
+				result = 0;
+			}
+			return result;
+		}; })(limit);
+		_r = limitOffset(worldX); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		app.viewOffsetX = _r;
+		_r$1 = limitOffset(worldY); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		app.viewOffsetY = _r$1;
+		app.updateViewMatrix();
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.ScrollTo }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.app = app; $f.limit = limit; $f.limitOffset = limitOffset; $f.worldX = worldX; $f.worldY = worldY; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MainApplication.prototype.ScrollTo = function(worldX, worldY) { return this.$val.ScrollTo(worldX, worldY); };
+	MainApplication.ptr.prototype.ZoomAt = function(levelDelta, x, y) {
+		var $ptr, _tmp, _tmp$1, app, levelDelta, x, y, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; app = $f.app; levelDelta = $f.levelDelta; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		app = this;
+		_tmp = x;
+		_tmp$1 = y;
+		app.focusX = _tmp;
+		app.focusY = _tmp$1;
+		$r = app.Zoom(levelDelta); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.ZoomAt }; } $f.$ptr = $ptr; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f.app = app; $f.levelDelta = levelDelta; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MainApplication.prototype.ZoomAt = function(levelDelta, x, y) { return this.$val.ZoomAt(levelDelta, x, y); };
 	MainApplication.ptr.prototype.Zoom = function(levelDelta) {
-		var $ptr, app, levelDelta, newValue;
+		var $ptr, app, focusPoint, levelDelta, newPixel, newValue, oldPixel, scaleFactor, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; app = $f.app; focusPoint = $f.focusPoint; levelDelta = $f.levelDelta; newPixel = $f.newPixel; newValue = $f.newValue; oldPixel = $f.oldPixel; scaleFactor = $f.scaleFactor; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
 		newValue = $fround(app.requestedZoomLevel + levelDelta);
 		if (newValue < -2) {
@@ -22344,8 +22459,28 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			newValue = 4;
 		}
 		app.requestedZoomLevel = newValue;
+		focusPoint = $toNativeArray($kindFloat32, [app.focusX, app.focusY, 0, 1]);
+		oldPixel = $clone(new mgl32.Mat4(app.viewMatrix).Mul4x1(focusPoint), mgl32.Vec4);
+		app.updateViewMatrix();
+		newPixel = $clone(new mgl32.Mat4(app.viewMatrix).Mul4x1(focusPoint), mgl32.Vec4);
+		scaleFactor = app.scaleFactor();
+		$r = app.ScrollBy($fround(-($fround(newPixel[0] - oldPixel[0])) / scaleFactor), $fround(-($fround(newPixel[1] - oldPixel[1])) / scaleFactor)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.Zoom }; } $f.$ptr = $ptr; $f.app = app; $f.focusPoint = focusPoint; $f.levelDelta = levelDelta; $f.newPixel = newPixel; $f.newValue = newValue; $f.oldPixel = oldPixel; $f.scaleFactor = scaleFactor; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.Zoom = function(levelDelta) { return this.$val.Zoom(levelDelta); };
+	MainApplication.ptr.prototype.scaleFactor = function() {
+		var $ptr, app;
+		app = this;
+		return $fround(math.Pow(2, app.requestedZoomLevel));
+	};
+	MainApplication.prototype.scaleFactor = function() { return this.$val.scaleFactor(); };
+	MainApplication.ptr.prototype.updateViewMatrix = function() {
+		var $ptr, app, scaleFactor;
+		app = this;
+		scaleFactor = app.scaleFactor();
+		mgl32.Mat4.copy(app.viewMatrix, new mgl32.Mat4(new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Scale3D(scaleFactor, scaleFactor, 1))).Mul4(mgl32.Translate3D(app.viewOffsetX, app.viewOffsetY, 0)));
+	};
+	MainApplication.prototype.updateViewMatrix = function() { return this.$val.updateViewMatrix(); };
 	RenderContext.ptr.prototype.ViewportSize = function() {
 		var $ptr, _tmp, _tmp$1, context, height, width;
 		width = 0;
@@ -22371,10 +22506,10 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	RenderContext.prototype.ProjectionMatrix = function() { return this.$val.ProjectionMatrix(); };
 	ptrType.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([ptrType$1], [], false)}, {prop: "withShader", name: "withShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType], [], false)}, {prop: "setMatrix", name: "setMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32, ptrType$2], [], false)}];
-	ptrType$3.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "Zoom", name: "Zoom", pkg: "", typ: $funcType([$Float32], [], false)}];
+	ptrType$3.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "ScrollBy", name: "ScrollBy", pkg: "", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "ScrollTo", name: "ScrollTo", pkg: "", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "ZoomAt", name: "ZoomAt", pkg: "", typ: $funcType([$Float32, $Float32, $Float32], [], false)}, {prop: "Zoom", name: "Zoom", pkg: "", typ: $funcType([$Float32], [], false)}, {prop: "scaleFactor", name: "scaleFactor", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [$Float32], false)}, {prop: "updateViewMatrix", name: "updateViewMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}];
 	ptrType$1.methods = [{prop: "ViewportSize", name: "ViewportSize", pkg: "", typ: $funcType([], [$Int, $Int], false)}, {prop: "ViewMatrix", name: "ViewMatrix", pkg: "", typ: $funcType([], [ptrType$2], false)}, {prop: "ProjectionMatrix", name: "ProjectionMatrix", pkg: "", typ: $funcType([], [ptrType$2], false)}];
 	GridRenderable.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "program", name: "program", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}]);
-	MainApplication.init([{prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "requestedZoomLevel", name: "requestedZoomLevel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "gridRenderable", name: "gridRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType, tag: ""}]);
+	MainApplication.init([{prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "mouseX", name: "mouseX", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "mouseY", name: "mouseY", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "mouseMoveCapture", name: "mouseMoveCapture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: funcType, tag: ""}, {prop: "focusX", name: "focusX", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "focusY", name: "focusY", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "requestedZoomLevel", name: "requestedZoomLevel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "viewOffsetX", name: "viewOffsetX", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "viewOffsetY", name: "viewOffsetY", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "gridRenderable", name: "gridRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType, tag: ""}]);
 	RenderContext.init([{prop: "viewportWidth", name: "viewportWidth", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int, tag: ""}, {prop: "viewportHeight", name: "viewportHeight", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "projectionMatrix", name: "projectionMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
