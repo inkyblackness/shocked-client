@@ -57,15 +57,16 @@ type TextureRenderable struct {
 	viewMatrixUniform       int32
 	projectionMatrixUniform int32
 
-	paletteTexture uint32
 	paletteUniform int32
-	bitmapTexture  uint32
 	bitmapUniform  int32
+
+	paletteTexture GraphicsTexture
+	bitmapTexture  GraphicsTexture
 }
 
 // NewTextureRenderable returns a new instance of a texture renderable
-func NewTextureRenderable(gl opengl.OpenGl, width, height int, pixelData []byte,
-	colorProvider func(index int) (byte, byte, byte, byte)) *TextureRenderable {
+func NewTextureRenderable(gl opengl.OpenGl, positionX, positionY float32, displaySize float32,
+	paletteTexture GraphicsTexture, bitmapTexture GraphicsTexture) *TextureRenderable {
 	vertexShader, err1 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, textureVertexShaderSource)
 	defer gl.DeleteShader(vertexShader)
 	fragmentShader, err2 := opengl.CompileNewShader(gl, opengl.FRAGMENT_SHADER, textureFragmentShaderSource)
@@ -80,18 +81,21 @@ func NewTextureRenderable(gl opengl.OpenGl, width, height int, pixelData []byte,
 	}
 
 	renderable := &TextureRenderable{
-		gl:                      gl,
-		program:                 program,
-		modelMatrix:             mgl.Ident4().Mul4(mgl.Translate3D(64.0, 64.0, 0.0)).Mul4(mgl.Scale3D(128.0*5, 128.0*5, 1.0)),
+		gl:      gl,
+		program: program,
+		modelMatrix: mgl.Ident4().
+			Mul4(mgl.Translate3D(positionX, positionY, 0.0)).
+			Mul4(mgl.Scale3D(displaySize, displaySize, 1.0)),
+
 		vertexArrayObject:       gl.GenVertexArrays(1)[0],
 		vertexPositionBuffer:    gl.GenBuffers(1)[0],
 		vertexPositionAttrib:    gl.GetAttribLocation(program, "vertexPosition"),
 		modelMatrixUniform:      gl.GetUniformLocation(program, "modelMatrix"),
 		viewMatrixUniform:       gl.GetUniformLocation(program, "viewMatrix"),
 		projectionMatrixUniform: gl.GetUniformLocation(program, "projectionMatrix"),
-		paletteTexture:          gl.GenTextures(1)[0],
+		paletteTexture:          paletteTexture,
 		paletteUniform:          gl.GetUniformLocation(program, "palette"),
-		bitmapTexture:           gl.GenTextures(1)[0],
+		bitmapTexture:           bitmapTexture,
 		bitmapUniform:           gl.GetUniformLocation(program, "bitmap")}
 
 	renderable.withShader(func() {
@@ -106,32 +110,6 @@ func NewTextureRenderable(gl opengl.OpenGl, width, height int, pixelData []byte,
 			0.0, limit, 0.0,
 			0.0, 0.0, 0.0}
 		gl.BufferData(opengl.ARRAY_BUFFER, len(vertices)*4, vertices, opengl.STATIC_DRAW)
-
-		gl.ActiveTexture(opengl.TEXTURE0 + 0)
-		gl.BindTexture(opengl.TEXTURE_2D, renderable.paletteTexture)
-		var palette [256 * 4]byte
-
-		for i := 0; i < 256; i++ {
-			r, g, b, a := colorProvider(i)
-			palette[i*4+0] = r
-			palette[i*4+1] = g
-			palette[i*4+2] = b
-			palette[i*4+3] = a
-		}
-
-		gl.TexImage2D(opengl.TEXTURE_2D, 0, opengl.RGBA, 256, 1, 0, opengl.RGBA, opengl.UNSIGNED_BYTE, palette)
-		gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MAG_FILTER, opengl.NEAREST)
-		gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MIN_FILTER, opengl.NEAREST)
-		gl.GenerateMipmap(opengl.TEXTURE_2D)
-		gl.BindTexture(opengl.TEXTURE_2D, 0)
-
-		gl.ActiveTexture(opengl.TEXTURE0 + 1)
-		gl.BindTexture(opengl.TEXTURE_2D, renderable.bitmapTexture)
-		gl.TexImage2D(opengl.TEXTURE_2D, 0, opengl.ALPHA, int32(width), int32(height), 0, opengl.ALPHA, opengl.UNSIGNED_BYTE, pixelData)
-		gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MAG_FILTER, opengl.NEAREST)
-		gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MIN_FILTER, opengl.NEAREST)
-		gl.GenerateMipmap(opengl.TEXTURE_2D)
-		gl.BindTexture(opengl.TEXTURE_2D, 0)
 	})
 
 	return renderable
@@ -151,12 +129,12 @@ func (renderable *TextureRenderable) Render(context *RenderContext) {
 
 		textureUnit := int32(0)
 		gl.ActiveTexture(opengl.TEXTURE0 + uint32(textureUnit))
-		gl.BindTexture(opengl.TEXTURE_2D, renderable.paletteTexture)
+		gl.BindTexture(opengl.TEXTURE_2D, renderable.paletteTexture.Handle())
 		gl.Uniform1i(renderable.paletteUniform, textureUnit)
 
 		textureUnit = 1
 		gl.ActiveTexture(opengl.TEXTURE0 + uint32(textureUnit))
-		gl.BindTexture(opengl.TEXTURE_2D, renderable.bitmapTexture)
+		gl.BindTexture(opengl.TEXTURE_2D, renderable.bitmapTexture.Handle())
 		gl.Uniform1i(renderable.bitmapUniform, textureUnit)
 
 		gl.DrawArrays(opengl.TRIANGLES, 0, 6)
