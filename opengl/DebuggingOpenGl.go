@@ -24,6 +24,13 @@ func (debugging *debuggingOpenGl) recordExit(name string, result ...interface{})
 	}
 }
 
+// ActiveTexture implements the opengl.OpenGl interface.
+func (debugging *debuggingOpenGl) ActiveTexture(texture uint32) {
+	debugging.recordEntry("ActiveTexture", texture)
+	debugging.gl.ActiveTexture(texture)
+	debugging.recordExit("ActiveTexture")
+}
+
 // AttachShader implements the OpenGl interface.
 func (debugging *debuggingOpenGl) AttachShader(program uint32, shader uint32) {
 	debugging.recordEntry("AttachShader", program, shader)
@@ -43,6 +50,13 @@ func (debugging *debuggingOpenGl) BindBuffer(target uint32, buffer uint32) {
 	debugging.recordEntry("BindBuffer", target, buffer)
 	debugging.gl.BindBuffer(target, buffer)
 	debugging.recordExit("BindBuffer")
+}
+
+// BindTexture implements the opengl.OpenGl interface.
+func (debugging *debuggingOpenGl) BindTexture(target uint32, texture uint32) {
+	debugging.recordEntry("BindTexture", target, texture)
+	debugging.gl.BindTexture(target, texture)
+	debugging.recordExit("BindTexture")
 }
 
 // BindVertexArray implements the OpenGl interface.
@@ -124,6 +138,13 @@ func (debugging *debuggingOpenGl) DeleteShader(shader uint32) {
 	debugging.recordExit("DeleteShader")
 }
 
+// DeleteTextures implements the OpenGl interface.
+func (debugging *debuggingOpenGl) DeleteTextures(textures []uint32) {
+	debugging.recordEntry("DeleteTextures", textures)
+	debugging.gl.DeleteTextures(textures)
+	debugging.recordExit("DeleteTextures")
+}
+
 // DeleteVertexArrays implements the OpenGl interface.
 func (debugging *debuggingOpenGl) DeleteVertexArrays(arrays []uint32) {
 	debugging.recordEntry("DeleteVertexArrays", arrays)
@@ -152,11 +173,26 @@ func (debugging *debuggingOpenGl) EnableVertexAttribArray(index uint32) {
 	debugging.recordExit("EnableVertexAttribArray")
 }
 
+// GenerateMipmap implements the opengl.OpenGl interface.
+func (debugging *debuggingOpenGl) GenerateMipmap(target uint32) {
+	debugging.recordEntry("GenerateMipmap", target)
+	debugging.gl.GenerateMipmap(target)
+	debugging.recordExit("GenerateMipmap")
+}
+
 // GenBuffers implements the OpenGl interface.
 func (debugging *debuggingOpenGl) GenBuffers(n int32) []uint32 {
 	debugging.recordEntry("GenBuffers", n)
 	result := debugging.gl.GenBuffers(n)
 	debugging.recordExit("GenBuffers", result)
+	return result
+}
+
+// GenTextures implements the opengl.OpenGl interface.
+func (debugging *debuggingOpenGl) GenTextures(n int32) []uint32 {
+	debugging.recordEntry("GenTextures", n)
+	result := debugging.gl.GenTextures(n)
+	debugging.recordExit("GenTextures", result)
 	return result
 }
 
@@ -243,6 +279,28 @@ func (debugging *debuggingOpenGl) ShaderSource(shader uint32, source string) {
 	debugging.recordEntry("ShaderSource", shader, source)
 	debugging.gl.ShaderSource(shader, source)
 	debugging.recordExit("ShaderSource")
+}
+
+// TexImage2D implements the opengl.OpenGl interface.
+func (debugging *debuggingOpenGl) TexImage2D(target uint32, level int32, internalFormat uint32, width int32, height int32,
+	border int32, format uint32, xtype uint32, pixels interface{}) {
+	debugging.recordEntry("TexImage2D", target, level, internalFormat, width, height, border, format, xtype, pixels)
+	debugging.gl.TexImage2D(target, level, internalFormat, width, height, border, format, xtype, pixels)
+	debugging.recordExit("TexImage2D")
+}
+
+// TexParameteri implements the opengl.OpenGl interface.
+func (debugging *debuggingOpenGl) TexParameteri(target uint32, pname uint32, param int32) {
+	debugging.recordEntry("TexParameteri", target, pname, param)
+	debugging.gl.TexParameteri(target, pname, param)
+	debugging.recordExit("TexParameteri")
+}
+
+// Uniform1i implements the opengl.OpenGl interface.
+func (debugging *debuggingOpenGl) Uniform1i(location int32, value int32) {
+	debugging.recordEntry("Uniform1i", location, value)
+	debugging.gl.Uniform1i(location, value)
+	debugging.recordExit("Uniform1i")
 }
 
 // UniformMatrix4fv implements the OpenGl interface.

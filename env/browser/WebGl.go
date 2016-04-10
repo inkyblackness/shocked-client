@@ -12,6 +12,7 @@ type WebGl struct {
 	buffers           ObjectMapper
 	programs          ObjectMapper
 	shaders           ObjectMapper
+	textures          ObjectMapper
 	uniforms          ObjectMapper
 	uniformsByProgram map[uint32][]uint32
 }
@@ -23,10 +24,16 @@ func NewWebGl(gl *webgl.Context) *WebGl {
 		buffers:           NewObjectMapper(),
 		programs:          NewObjectMapper(),
 		shaders:           NewObjectMapper(),
+		textures:          NewObjectMapper(),
 		uniforms:          NewObjectMapper(),
 		uniformsByProgram: make(map[uint32][]uint32)}
 
 	return result
+}
+
+// ActiveTexture implements the opengl.OpenGl interface.
+func (web *WebGl) ActiveTexture(texture uint32) {
+	web.gl.ActiveTexture(int(texture))
 }
 
 // AttachShader implements the opengl.OpenGl interface.
@@ -45,6 +52,11 @@ func (web *WebGl) BindAttribLocation(program uint32, index uint32, name string) 
 // BindBuffer implements the opengl.OpenGl interface.
 func (web *WebGl) BindBuffer(target uint32, buffer uint32) {
 	web.gl.BindBuffer(int(target), web.buffers.get(buffer))
+}
+
+// BindTexture implements the opengl.OpenGl interface.
+func (web *WebGl) BindTexture(target uint32, texture uint32) {
+	web.gl.BindTexture(int(target), web.textures.get(texture))
 }
 
 // BindVertexArray implements the opengl.OpenGl interface.
@@ -111,6 +123,13 @@ func (web *WebGl) DeleteShader(shader uint32) {
 	web.gl.DeleteShader(web.shaders.del(shader))
 }
 
+// DeleteTextures implements the opengl.OpenGl interface.
+func (web *WebGl) DeleteTextures(textures []uint32) {
+	for _, texture := range textures {
+		web.gl.DeleteTexture(web.textures.del(texture))
+	}
+}
+
 // DeleteVertexArrays implements the opengl.OpenGl interface.
 func (web *WebGl) DeleteVertexArrays(arrays []uint32) {
 	// Not supported in WebGL, can be ignored
@@ -131,12 +150,28 @@ func (web *WebGl) EnableVertexAttribArray(index uint32) {
 	web.gl.EnableVertexAttribArray(int(index))
 }
 
+// GenerateMipmap implements the opengl.OpenGl interface.
+func (web *WebGl) GenerateMipmap(target uint32) {
+	web.gl.GenerateMipmap(int(target))
+}
+
 // GenBuffers implements the opengl.OpenGl interface.
 func (web *WebGl) GenBuffers(n int32) []uint32 {
 	ids := make([]uint32, n)
 
 	for i := int32(0); i < n; i++ {
 		ids[i] = web.buffers.put(web.gl.CreateBuffer())
+	}
+
+	return ids
+}
+
+// GenTextures implements the opengl.OpenGl interface.
+func (web *WebGl) GenTextures(n int32) []uint32 {
+	ids := make([]uint32, n)
+
+	for i := int32(0); i < n; i++ {
+		ids[i] = web.textures.put(web.gl.CreateTexture())
 	}
 
 	return ids
@@ -221,6 +256,23 @@ func (web *WebGl) ReadPixels(x int32, y int32, width int32, height int32, format
 // ShaderSource implements the opengl.OpenGl interface.
 func (web *WebGl) ShaderSource(shader uint32, source string) {
 	web.gl.ShaderSource(web.shaders.get(shader), source)
+}
+
+// TexImage2D implements the opengl.OpenGl interface.
+func (web *WebGl) TexImage2D(target uint32, level int32, internalFormat uint32, width int32, height int32,
+	border int32, format uint32, xtype uint32, pixels interface{}) {
+	web.gl.Call("texImage2D", int(target), int(level), int(internalFormat), int(width), int(height),
+		int(border), int(format), int(xtype), pixels)
+}
+
+// TexParameteri implements the opengl.OpenGl interface.
+func (web *WebGl) TexParameteri(target uint32, pname uint32, param int32) {
+	web.gl.TexParameteri(int(target), int(pname), int(param))
+}
+
+// Uniform1i implements the opengl.OpenGl interface.
+func (web *WebGl) Uniform1i(location int32, value int32) {
+	web.gl.Uniform1i(web.uniforms.get(uint32(location)), int(value))
 }
 
 // UniformMatrix4fv implements the opengl.OpenGl interface.

@@ -21,6 +21,11 @@ func NewOpenGl() *OpenGl {
 	return opengl
 }
 
+// ActiveTexture implements the opengl.OpenGl interface.
+func (native *OpenGl) ActiveTexture(texture uint32) {
+	gl.ActiveTexture(texture)
+}
+
 // AttachShader implements the opengl.OpenGl interface.
 func (native *OpenGl) AttachShader(program uint32, shader uint32) {
 	gl.AttachShader(program, shader)
@@ -34,6 +39,11 @@ func (native *OpenGl) BindAttribLocation(program uint32, index uint32, name stri
 // BindBuffer implements the opengl.OpenGl interface.
 func (native *OpenGl) BindBuffer(target uint32, buffer uint32) {
 	gl.BindBuffer(target, buffer)
+}
+
+// BindTexture implements the opengl.OpenGl interface.
+func (native *OpenGl) BindTexture(target uint32, texture uint32) {
+	gl.BindTexture(target, texture)
 }
 
 // BindVertexArray implements the opengl.OpenGl interface.
@@ -91,6 +101,11 @@ func (native *OpenGl) DeleteShader(shader uint32) {
 	gl.DeleteShader(shader)
 }
 
+// DeleteTextures implements the opengl.OpenGl interface.
+func (native *OpenGl) DeleteTextures(textures []uint32) {
+	gl.DeleteTextures(int32(len(textures)), (*uint32)(&textures[0]))
+}
+
 // DeleteVertexArrays implements the opengl.OpenGl interface.
 func (native *OpenGl) DeleteVertexArrays(arrays []uint32) {
 	gl.DeleteVertexArrays(int32(len(arrays)), (*uint32)(&arrays[0]))
@@ -111,11 +126,23 @@ func (native *OpenGl) EnableVertexAttribArray(index uint32) {
 	gl.EnableVertexAttribArray(index)
 }
 
+// GenerateMipmap implements the opengl.OpenGl interface.
+func (native *OpenGl) GenerateMipmap(target uint32) {
+	gl.GenerateMipmap(target)
+}
+
 // GenBuffers implements the opengl.OpenGl interface.
 func (native *OpenGl) GenBuffers(n int32) []uint32 {
 	buffers := make([]uint32, n, n)
 	gl.GenBuffers(n, &buffers[0])
 	return buffers
+}
+
+// GenTextures implements the opengl.OpenGl interface.
+func (native *OpenGl) GenTextures(n int32) []uint32 {
+	ids := make([]uint32, n, n)
+	gl.GenTextures(n, &ids[0])
+	return ids
 }
 
 // GenVertexArrays implements the opengl.OpenGl interface.
@@ -186,6 +213,22 @@ func (native *OpenGl) ShaderSource(shader uint32, source string) {
 	defer free()
 
 	gl.ShaderSource(shader, 1, csources, nil)
+}
+
+// TexImage2D implements the opengl.OpenGl interface.
+func (native *OpenGl) TexImage2D(target uint32, level int32, internalFormat uint32, width int32, height int32,
+	border int32, format uint32, xtype uint32, pixels interface{}) {
+	gl.TexImage2D(target, level, int32(internalFormat), width, height, border, format, xtype, gl.Ptr(pixels))
+}
+
+// TexParameteri implements the opengl.OpenGl interface.
+func (native *OpenGl) TexParameteri(target uint32, pname uint32, param int32) {
+	gl.TexParameteri(target, pname, param)
+}
+
+// Uniform1i implements the opengl.OpenGl interface.
+func (native *OpenGl) Uniform1i(location int32, value int32) {
+	gl.Uniform1i(location, value)
 }
 
 // UniformMatrix4fv implements the opengl.OpenGl interface.

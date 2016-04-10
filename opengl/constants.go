@@ -66,6 +66,17 @@ const (
 	FLOAT                 = 0x1406
 )
 
+// Texture Constants
+const (
+	TEXTURE_2D uint32 = 0x0DE1
+
+	TEXTURE0 = 0x84C0
+
+	NEAREST            = 0x2600
+	TEXTURE_MAG_FILTER = 0x2800
+	TEXTURE_MIN_FILTER = 0x2801
+)
+
 // Errors
 const (
 	NO_ERROR                      uint32 = 0
@@ -80,5 +91,8 @@ const (
 
 // Color Types
 const (
-	RGBA uint32 = 0x1908
+	ALPHA uint32 = 0x1906
+	RGBA         = 0x1908
+	RED          = 0x1903
+	R8           = 0x8229
 )
