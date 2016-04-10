@@ -6,7 +6,9 @@ import (
 )
 
 func main() {
-	app := editor.NewMainApplication()
+	transport := browser.NewRestTransport()
+	store := editor.NewRestDataStore(transport)
+	app := editor.NewMainApplication(store)
 
 	browser.Run(app)
 }

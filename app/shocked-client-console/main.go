@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	app := editor.NewMainApplication()
+	app := editor.NewMainApplication(nil)
 
 	console.Run(app)
 }

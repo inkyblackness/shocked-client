@@ -9,10 +9,13 @@ import (
 	"github.com/inkyblackness/shocked-client/editor/camera"
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/opengl"
+	//"github.com/inkyblackness/shocked-model"
 )
 
 // MainApplication represents the core intelligence of the editor.
 type MainApplication struct {
+	store DataStore
+
 	glWindow env.OpenGlWindow
 	gl       opengl.OpenGl
 
@@ -25,10 +28,11 @@ type MainApplication struct {
 }
 
 // NewMainApplication returns a new instance of MainApplication.
-func NewMainApplication() *MainApplication {
+func NewMainApplication(store DataStore) *MainApplication {
 	camLimit := (TilesPerMapSide - 1) * TileBaseLength
 
 	return &MainApplication{
+		store:            store,
 		mouseMoveCapture: func() {},
 		view:             camera.NewLimited(ZoomLevelMin, ZoomLevelMax, 0, camLimit)}
 }
@@ -68,6 +72,28 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
 
 	app.gridRenderable = NewGridRenderable(app.gl)
+
+	/*
+		if app.store != nil {
+			app.store.Palette("test1", "game", func(colors [256]model.Color) {
+				fmt.Fprintf(os.Stderr, "!!!!! palette: %v\n", colors)
+			}, app.simpleStoreFailure("Palette"))
+			app.store.LevelTextures("test1", "archive", 1, func(textureIDs []int) {
+				fmt.Fprintf(os.Stderr, "!!!!! Level Textures: %v\n", textureIDs)
+				for _, id := range textureIDs {
+					app.store.TextureBitmap("test1", id, "icon", func(bmp *model.RawBitmap) {
+						fmt.Fprintf(os.Stderr, "!!!!! bitmap: %v\n", bmp)
+					}, app.simpleStoreFailure("TextureBitmap"))
+				}
+			}, app.simpleStoreFailure("LevelTextures"))
+		}
+	*/
+}
+
+func (app *MainApplication) simpleStoreFailure(info string) func() {
+	return func() {
+		fmt.Fprintf(os.Stderr, "Failed to process store query <%s>\n", info)
+	}
 }
 
 func (app *MainApplication) render() {
