@@ -29,7 +29,7 @@ func NewLimited(minZoom, maxZoom float32, minPos, maxPos float32) *LimitedCamera
 	return cam
 }
 
-// ViewMatrix is the Viewer implementation
+// ViewMatrix implements the Viewer interface.
 func (cam *LimitedCamera) ViewMatrix() mgl.Mat4 {
 	return cam.viewMatrix
 }
