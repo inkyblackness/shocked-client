@@ -26286,6 +26286,2863 @@ $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
+$packages["golang.org/x/image/math/f64"] = (function() {
+	var $pkg = {}, $init;
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["github.com/go-gl/mathgl/mgl64"] = (function() {
+	var $pkg = {}, $init, bytes, errors, fmt, f64, math, sync, tabwriter, Mat2, Mat2x3, Mat2x4, Mat3x2, Mat3, Mat3x4, Mat4x2, Mat4x3, Mat4, Vec2, Vec3, Vec4, arrayType, arrayType$1, sliceType$2, arrayType$2, arrayType$3, sliceType$3, arrayType$4, arrayType$5, arrayType$6, funcType, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, Mat2FromCols, Mat3FromCols, Ident4, Mat4FromCols, Translate3D, Scale3D, Abs, FloatEqual, FloatEqualThreshold;
+	bytes = $packages["bytes"];
+	errors = $packages["errors"];
+	fmt = $packages["fmt"];
+	f64 = $packages["golang.org/x/image/math/f64"];
+	math = $packages["math"];
+	sync = $packages["sync"];
+	tabwriter = $packages["text/tabwriter"];
+	Mat2 = $pkg.Mat2 = $newType(32, $kindArray, "mgl64.Mat2", "Mat2", "github.com/go-gl/mathgl/mgl64", null);
+	Mat2x3 = $pkg.Mat2x3 = $newType(48, $kindArray, "mgl64.Mat2x3", "Mat2x3", "github.com/go-gl/mathgl/mgl64", null);
+	Mat2x4 = $pkg.Mat2x4 = $newType(64, $kindArray, "mgl64.Mat2x4", "Mat2x4", "github.com/go-gl/mathgl/mgl64", null);
+	Mat3x2 = $pkg.Mat3x2 = $newType(48, $kindArray, "mgl64.Mat3x2", "Mat3x2", "github.com/go-gl/mathgl/mgl64", null);
+	Mat3 = $pkg.Mat3 = $newType(72, $kindArray, "mgl64.Mat3", "Mat3", "github.com/go-gl/mathgl/mgl64", null);
+	Mat3x4 = $pkg.Mat3x4 = $newType(96, $kindArray, "mgl64.Mat3x4", "Mat3x4", "github.com/go-gl/mathgl/mgl64", null);
+	Mat4x2 = $pkg.Mat4x2 = $newType(64, $kindArray, "mgl64.Mat4x2", "Mat4x2", "github.com/go-gl/mathgl/mgl64", null);
+	Mat4x3 = $pkg.Mat4x3 = $newType(96, $kindArray, "mgl64.Mat4x3", "Mat4x3", "github.com/go-gl/mathgl/mgl64", null);
+	Mat4 = $pkg.Mat4 = $newType(128, $kindArray, "mgl64.Mat4", "Mat4", "github.com/go-gl/mathgl/mgl64", null);
+	Vec2 = $pkg.Vec2 = $newType(16, $kindArray, "mgl64.Vec2", "Vec2", "github.com/go-gl/mathgl/mgl64", null);
+	Vec3 = $pkg.Vec3 = $newType(24, $kindArray, "mgl64.Vec3", "Vec3", "github.com/go-gl/mathgl/mgl64", null);
+	Vec4 = $pkg.Vec4 = $newType(32, $kindArray, "mgl64.Vec4", "Vec4", "github.com/go-gl/mathgl/mgl64", null);
+	arrayType = $arrayType($Float64, 4);
+	arrayType$1 = $arrayType($Float64, 2);
+	sliceType$2 = $sliceType($Uint8);
+	arrayType$2 = $arrayType($Uint8, 4);
+	arrayType$3 = $arrayType($Uint8, 64);
+	sliceType$3 = $sliceType($emptyInterface);
+	arrayType$4 = $arrayType($Float64, 3);
+	arrayType$5 = $arrayType($Float64, 9);
+	arrayType$6 = $arrayType($Float64, 16);
+	funcType = $funcType([$Float64, $Float64], [$Bool], false);
+	ptrType$3 = $ptrType(Mat2);
+	ptrType$4 = $ptrType(Mat2x3);
+	ptrType$5 = $ptrType(Mat2x4);
+	ptrType$6 = $ptrType(Mat3x2);
+	ptrType$7 = $ptrType(Mat3);
+	ptrType$8 = $ptrType(Mat3x4);
+	ptrType$9 = $ptrType(Mat4x2);
+	ptrType$10 = $ptrType(Mat4x3);
+	ptrType$11 = $ptrType(Mat4);
+	Mat2.prototype.Mat3 = function() {
+		var $ptr, _tuple, col0, col1, m;
+		m = $clone(this.$val, Mat2);
+		_tuple = new Mat2(m).Cols();
+		col0 = $clone(_tuple[0], Vec2);
+		col1 = $clone(_tuple[1], Vec2);
+		return Mat3FromCols(new Vec2(col0).Vec3(0), new Vec2(col1).Vec3(0), $toNativeArray($kindFloat64, [0, 0, 1]));
+	};
+	$ptrType(Mat2).prototype.Mat3 = function() { return new Mat2(this.$get()).Mat3(); };
+	Mat2.prototype.Mat4 = function() {
+		var $ptr, _tuple, col0, col1, m;
+		m = $clone(this.$val, Mat2);
+		_tuple = new Mat2(m).Cols();
+		col0 = $clone(_tuple[0], Vec2);
+		col1 = $clone(_tuple[1], Vec2);
+		return Mat4FromCols(new Vec2(col0).Vec4(0, 0), new Vec2(col1).Vec4(0, 0), $toNativeArray($kindFloat64, [0, 0, 1, 0]), $toNativeArray($kindFloat64, [0, 0, 0, 1]));
+	};
+	$ptrType(Mat2).prototype.Mat4 = function() { return new Mat2(this.$get()).Mat4(); };
+	Mat3.prototype.Mat2 = function() {
+		var $ptr, _tuple, col0, col1, m;
+		m = $clone(this.$val, Mat3);
+		_tuple = new Mat3(m).Cols();
+		col0 = $clone(_tuple[0], Vec3);
+		col1 = $clone(_tuple[1], Vec3);
+		return Mat2FromCols(new Vec3(col0).Vec2(), new Vec3(col1).Vec2());
+	};
+	$ptrType(Mat3).prototype.Mat2 = function() { return new Mat3(this.$get()).Mat2(); };
+	Mat3.prototype.Mat4 = function() {
+		var $ptr, _tuple, col0, col1, col2, m;
+		m = $clone(this.$val, Mat3);
+		_tuple = new Mat3(m).Cols();
+		col0 = $clone(_tuple[0], Vec3);
+		col1 = $clone(_tuple[1], Vec3);
+		col2 = $clone(_tuple[2], Vec3);
+		return Mat4FromCols(new Vec3(col0).Vec4(0), new Vec3(col1).Vec4(0), new Vec3(col2).Vec4(0), $toNativeArray($kindFloat64, [0, 0, 0, 1]));
+	};
+	$ptrType(Mat3).prototype.Mat4 = function() { return new Mat3(this.$get()).Mat4(); };
+	Mat4.prototype.Mat2 = function() {
+		var $ptr, _tuple, col0, col1, m;
+		m = $clone(this.$val, Mat4);
+		_tuple = new Mat4(m).Cols();
+		col0 = $clone(_tuple[0], Vec4);
+		col1 = $clone(_tuple[1], Vec4);
+		return Mat2FromCols(new Vec4(col0).Vec2(), new Vec4(col1).Vec2());
+	};
+	$ptrType(Mat4).prototype.Mat2 = function() { return new Mat4(this.$get()).Mat2(); };
+	Mat4.prototype.Mat3 = function() {
+		var $ptr, _tuple, col0, col1, col2, m;
+		m = $clone(this.$val, Mat4);
+		_tuple = new Mat4(m).Cols();
+		col0 = $clone(_tuple[0], Vec4);
+		col1 = $clone(_tuple[1], Vec4);
+		col2 = $clone(_tuple[2], Vec4);
+		return Mat3FromCols(new Vec4(col0).Vec3(), new Vec4(col1).Vec3(), new Vec4(col2).Vec3());
+	};
+	$ptrType(Mat4).prototype.Mat3 = function() { return new Mat4(this.$get()).Mat3(); };
+	Mat2.prototype.SetCol = function(col, v) {
+		var $ptr, _tmp, _tmp$1, col, m, v, x, x$1;
+		v = $clone(v, Vec2);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		(x = ($imul(col, 2)) + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = ($imul(col, 2)) + 1 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+	};
+	$ptrType(Mat2).prototype.SetCol = function(col, v) { return (new Mat2(this.$get())).SetCol(col, v); };
+	Mat2.prototype.SetRow = function(row, v) {
+		var $ptr, _tmp, _tmp$1, m, row, v, x, x$1;
+		v = $clone(v, Vec2);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		(x = row + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = row + 2 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+	};
+	$ptrType(Mat2).prototype.SetRow = function(row, v) { return (new Mat2(this.$get())).SetRow(row, v); };
+	Mat2.prototype.Diag = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [m[0], m[3]]);
+	};
+	$ptrType(Mat2).prototype.Diag = function() { return new Mat2(this.$get()).Diag(); };
+	Mat2FromCols = function(col0, col1) {
+		var $ptr, col0, col1;
+		col1 = $clone(col1, Vec2);
+		col0 = $clone(col0, Vec2);
+		return $toNativeArray($kindFloat64, [col0[0], col0[1], col1[0], col1[1]]);
+	};
+	$pkg.Mat2FromCols = Mat2FromCols;
+	Mat2.prototype.Add = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2);
+		m1 = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3]]);
+	};
+	$ptrType(Mat2).prototype.Add = function(m2) { return new Mat2(this.$get()).Add(m2); };
+	Mat2.prototype.Sub = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2);
+		m1 = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3]]);
+	};
+	$ptrType(Mat2).prototype.Sub = function(m2) { return new Mat2(this.$get()).Sub(m2); };
+	Mat2.prototype.Mul = function(c) {
+		var $ptr, c, m1;
+		m1 = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [m1[0] * c, m1[1] * c, m1[2] * c, m1[3] * c]);
+	};
+	$ptrType(Mat2).prototype.Mul = function(c) { return new Mat2(this.$get()).Mul(c); };
+	Mat2.prototype.Mul2x1 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Vec2);
+		m1 = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1], m1[1] * m2[0] + m1[3] * m2[1]]);
+	};
+	$ptrType(Mat2).prototype.Mul2x1 = function(m2) { return new Mat2(this.$get()).Mul2x1(m2); };
+	Mat2.prototype.Mul2 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2);
+		m1 = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1], m1[1] * m2[0] + m1[3] * m2[1], m1[0] * m2[2] + m1[2] * m2[3], m1[1] * m2[2] + m1[3] * m2[3]]);
+	};
+	$ptrType(Mat2).prototype.Mul2 = function(m2) { return new Mat2(this.$get()).Mul2(m2); };
+	Mat2.prototype.Mul2x3 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x3);
+		m1 = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1], m1[1] * m2[0] + m1[3] * m2[1], m1[0] * m2[2] + m1[2] * m2[3], m1[1] * m2[2] + m1[3] * m2[3], m1[0] * m2[4] + m1[2] * m2[5], m1[1] * m2[4] + m1[3] * m2[5]]);
+	};
+	$ptrType(Mat2).prototype.Mul2x3 = function(m2) { return new Mat2(this.$get()).Mul2x3(m2); };
+	Mat2.prototype.Mul2x4 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x4);
+		m1 = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1], m1[1] * m2[0] + m1[3] * m2[1], m1[0] * m2[2] + m1[2] * m2[3], m1[1] * m2[2] + m1[3] * m2[3], m1[0] * m2[4] + m1[2] * m2[5], m1[1] * m2[4] + m1[3] * m2[5], m1[0] * m2[6] + m1[2] * m2[7], m1[1] * m2[6] + m1[3] * m2[7]]);
+	};
+	$ptrType(Mat2).prototype.Mul2x4 = function(m2) { return new Mat2(this.$get()).Mul2x4(m2); };
+	Mat2.prototype.Transpose = function() {
+		var $ptr, m1;
+		m1 = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [m1[0], m1[2], m1[1], m1[3]]);
+	};
+	$ptrType(Mat2).prototype.Transpose = function() { return new Mat2(this.$get()).Transpose(); };
+	Mat2.prototype.Det = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat2);
+		return m[0] * m[2] - m[1] * m[3];
+	};
+	$ptrType(Mat2).prototype.Det = function() { return new Mat2(this.$get()).Det(); };
+	Mat2.prototype.Inv = function() {
+		var $ptr, det, m, retMat;
+		m = $clone(this.$val, Mat2);
+		det = new Mat2(m).Det();
+		if (FloatEqual(det, 0)) {
+			return arrayType.zero();
+		}
+		retMat = $toNativeArray($kindFloat64, [m[3], -m[1], -m[2], m[0]]);
+		return new Mat2(retMat).Mul(1 / det);
+	};
+	$ptrType(Mat2).prototype.Inv = function() { return new Mat2(this.$get()).Inv(); };
+	Mat2.prototype.ApproxEqual = function(m2) {
+		var $ptr, _i, _ref, i, m1, m2;
+		m2 = $clone(m2, Mat2);
+		m1 = $clone(this.$val, Mat2);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 4)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat2).prototype.ApproxEqual = function(m2) { return new Mat2(this.$get()).ApproxEqual(m2); };
+	Mat2.prototype.ApproxEqualThreshold = function(m2, threshold) {
+		var $ptr, _i, _ref, i, m1, m2, threshold;
+		m2 = $clone(m2, Mat2);
+		m1 = $clone(this.$val, Mat2);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 4)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat2).prototype.ApproxEqualThreshold = function(m2, threshold) { return new Mat2(this.$get()).ApproxEqualThreshold(m2, threshold); };
+	Mat2.prototype.ApproxFuncEqual = function(m2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, m1, m2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; m1 = $f.m1; m2 = $f.m2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m2 = $clone(m2, Mat2);
+		m1 = $clone(this.$val, Mat2);
+		_ref = m1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 4)) { break; } */ if(!(_i < 4)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat2.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.m1 = m1; $f.m2 = m2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat2).prototype.ApproxFuncEqual = function(m2, eq) { return new Mat2(this.$get()).ApproxFuncEqual(m2, eq); };
+	Mat2.prototype.At = function(row, col) {
+		var $ptr, col, m, row, x;
+		m = $clone(this.$val, Mat2);
+		return (x = ($imul(col, 2)) + row >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x]));
+	};
+	$ptrType(Mat2).prototype.At = function(row, col) { return new Mat2(this.$get()).At(row, col); };
+	Mat2.prototype.Set = function(row, col, value) {
+		var $ptr, col, m, row, value, x;
+		m = this.$val;
+		(x = ($imul(col, 2)) + row >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = value));
+	};
+	$ptrType(Mat2).prototype.Set = function(row, col, value) { return (new Mat2(this.$get())).Set(row, col, value); };
+	Mat2.prototype.Index = function(row, col) {
+		var $ptr, col, m, row;
+		m = $clone(this.$val, Mat2);
+		return ($imul(col, 2)) + row >> 0;
+	};
+	$ptrType(Mat2).prototype.Index = function(row, col) { return new Mat2(this.$get()).Index(row, col); };
+	Mat2.prototype.Row = function(row) {
+		var $ptr, m, row, x, x$1;
+		m = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [(x = row + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = row + 2 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1]))]);
+	};
+	$ptrType(Mat2).prototype.Row = function(row) { return new Mat2(this.$get()).Row(row); };
+	Mat2.prototype.Rows = function() {
+		var $ptr, _tmp, _tmp$1, m, row0, row1;
+		row0 = arrayType$1.zero();
+		row1 = arrayType$1.zero();
+		m = $clone(this.$val, Mat2);
+		_tmp = $clone(new Mat2(m).Row(0), Vec2);
+		_tmp$1 = $clone(new Mat2(m).Row(1), Vec2);
+		Vec2.copy(row0, _tmp);
+		Vec2.copy(row1, _tmp$1);
+		return [row0, row1];
+	};
+	$ptrType(Mat2).prototype.Rows = function() { return new Mat2(this.$get()).Rows(); };
+	Mat2.prototype.Col = function(col) {
+		var $ptr, col, m, x, x$1;
+		m = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [(x = ($imul(col, 2)) + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = ($imul(col, 2)) + 1 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1]))]);
+	};
+	$ptrType(Mat2).prototype.Col = function(col) { return new Mat2(this.$get()).Col(col); };
+	Mat2.prototype.Cols = function() {
+		var $ptr, _tmp, _tmp$1, col0, col1, m;
+		col0 = arrayType$1.zero();
+		col1 = arrayType$1.zero();
+		m = $clone(this.$val, Mat2);
+		_tmp = $clone(new Mat2(m).Col(0), Vec2);
+		_tmp$1 = $clone(new Mat2(m).Col(1), Vec2);
+		Vec2.copy(col0, _tmp);
+		Vec2.copy(col1, _tmp$1);
+		return [col0, col1];
+	};
+	$ptrType(Mat2).prototype.Cols = function() { return new Mat2(this.$get()).Cols(); };
+	Mat2.prototype.Trace = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat2);
+		return m[0] + m[3];
+	};
+	$ptrType(Mat2).prototype.Trace = function() { return new Mat2(this.$get()).Trace(); };
+	Mat2.prototype.Abs = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat2);
+		return $toNativeArray($kindFloat64, [Abs(m[0]), Abs(m[1]), Abs(m[2]), Abs(m[3])]);
+	};
+	$ptrType(Mat2).prototype.Abs = function() { return new Mat2(this.$get()).Abs(); };
+	Mat2.prototype.String = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, buf, col, i, m, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; buf = $f.buf; col = $f.col; i = $f.i; m = $f.m; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = $clone(this.$val, Mat2);
+		buf = new bytes.Buffer.ptr(sliceType$2.nil, 0, arrayType$2.zero(), arrayType$3.zero(), 0);
+		w = tabwriter.NewWriter(buf, 4, 4, 1, 32, 4);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 2)) { break; } */ if(!(i < 2)) { $s = 2; continue; }
+			_ref = new Mat2(m).Row(i);
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < 2)) { break; } */ if(!(_i < 2)) { $s = 4; continue; }
+				col = ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]);
+				_r = fmt.Fprintf(w, "%f\t", new sliceType$3([new $Float64(col)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			_r$1 = fmt.Fprintln(w, new sliceType$3([new $String("")])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = w.Flush(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		return buf.String();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat2.prototype.String }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.buf = buf; $f.col = col; $f.i = i; $f.m = m; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat2).prototype.String = function() { return new Mat2(this.$get()).String(); };
+	Mat2x3.prototype.SetCol = function(col, v) {
+		var $ptr, _tmp, _tmp$1, col, m, v, x, x$1;
+		v = $clone(v, Vec2);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		(x = ($imul(col, 2)) + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = ($imul(col, 2)) + 1 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+	};
+	$ptrType(Mat2x3).prototype.SetCol = function(col, v) { return (new Mat2x3(this.$get())).SetCol(col, v); };
+	Mat2x3.prototype.SetRow = function(row, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, m, row, v, x, x$1, x$2;
+		v = $clone(v, Vec3);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		(x = row + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = row + 2 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = row + 4 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+	};
+	$ptrType(Mat2x3).prototype.SetRow = function(row, v) { return (new Mat2x3(this.$get())).SetRow(row, v); };
+	Mat2x3.prototype.Add = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x3);
+		m1 = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3], m1[4] + m2[4], m1[5] + m2[5]]);
+	};
+	$ptrType(Mat2x3).prototype.Add = function(m2) { return new Mat2x3(this.$get()).Add(m2); };
+	Mat2x3.prototype.Sub = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x3);
+		m1 = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3], m1[4] - m2[4], m1[5] - m2[5]]);
+	};
+	$ptrType(Mat2x3).prototype.Sub = function(m2) { return new Mat2x3(this.$get()).Sub(m2); };
+	Mat2x3.prototype.Mul = function(c) {
+		var $ptr, c, m1;
+		m1 = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [m1[0] * c, m1[1] * c, m1[2] * c, m1[3] * c, m1[4] * c, m1[5] * c]);
+	};
+	$ptrType(Mat2x3).prototype.Mul = function(c) { return new Mat2x3(this.$get()).Mul(c); };
+	Mat2x3.prototype.Mul3x1 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Vec3);
+		m1 = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1] + m1[4] * m2[2], m1[1] * m2[0] + m1[3] * m2[1] + m1[5] * m2[2]]);
+	};
+	$ptrType(Mat2x3).prototype.Mul3x1 = function(m2) { return new Mat2x3(this.$get()).Mul3x1(m2); };
+	Mat2x3.prototype.Mul3x2 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x2);
+		m1 = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1] + m1[4] * m2[2], m1[1] * m2[0] + m1[3] * m2[1] + m1[5] * m2[2], m1[0] * m2[3] + m1[2] * m2[4] + m1[4] * m2[5], m1[1] * m2[3] + m1[3] * m2[4] + m1[5] * m2[5]]);
+	};
+	$ptrType(Mat2x3).prototype.Mul3x2 = function(m2) { return new Mat2x3(this.$get()).Mul3x2(m2); };
+	Mat2x3.prototype.Mul3 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3);
+		m1 = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1] + m1[4] * m2[2], m1[1] * m2[0] + m1[3] * m2[1] + m1[5] * m2[2], m1[0] * m2[3] + m1[2] * m2[4] + m1[4] * m2[5], m1[1] * m2[3] + m1[3] * m2[4] + m1[5] * m2[5], m1[0] * m2[6] + m1[2] * m2[7] + m1[4] * m2[8], m1[1] * m2[6] + m1[3] * m2[7] + m1[5] * m2[8]]);
+	};
+	$ptrType(Mat2x3).prototype.Mul3 = function(m2) { return new Mat2x3(this.$get()).Mul3(m2); };
+	Mat2x3.prototype.Mul3x4 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x4);
+		m1 = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1] + m1[4] * m2[2], m1[1] * m2[0] + m1[3] * m2[1] + m1[5] * m2[2], m1[0] * m2[3] + m1[2] * m2[4] + m1[4] * m2[5], m1[1] * m2[3] + m1[3] * m2[4] + m1[5] * m2[5], m1[0] * m2[6] + m1[2] * m2[7] + m1[4] * m2[8], m1[1] * m2[6] + m1[3] * m2[7] + m1[5] * m2[8], m1[0] * m2[9] + m1[2] * m2[10] + m1[4] * m2[11], m1[1] * m2[9] + m1[3] * m2[10] + m1[5] * m2[11]]);
+	};
+	$ptrType(Mat2x3).prototype.Mul3x4 = function(m2) { return new Mat2x3(this.$get()).Mul3x4(m2); };
+	Mat2x3.prototype.Transpose = function() {
+		var $ptr, m1;
+		m1 = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [m1[0], m1[2], m1[4], m1[1], m1[3], m1[5]]);
+	};
+	$ptrType(Mat2x3).prototype.Transpose = function() { return new Mat2x3(this.$get()).Transpose(); };
+	Mat2x3.prototype.ApproxEqual = function(m2) {
+		var $ptr, _i, _ref, i, m1, m2;
+		m2 = $clone(m2, Mat2x3);
+		m1 = $clone(this.$val, Mat2x3);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 6)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat2x3).prototype.ApproxEqual = function(m2) { return new Mat2x3(this.$get()).ApproxEqual(m2); };
+	Mat2x3.prototype.ApproxEqualThreshold = function(m2, threshold) {
+		var $ptr, _i, _ref, i, m1, m2, threshold;
+		m2 = $clone(m2, Mat2x3);
+		m1 = $clone(this.$val, Mat2x3);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 6)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat2x3).prototype.ApproxEqualThreshold = function(m2, threshold) { return new Mat2x3(this.$get()).ApproxEqualThreshold(m2, threshold); };
+	Mat2x3.prototype.ApproxFuncEqual = function(m2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, m1, m2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; m1 = $f.m1; m2 = $f.m2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m2 = $clone(m2, Mat2x3);
+		m1 = $clone(this.$val, Mat2x3);
+		_ref = m1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 6)) { break; } */ if(!(_i < 6)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat2x3.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.m1 = m1; $f.m2 = m2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat2x3).prototype.ApproxFuncEqual = function(m2, eq) { return new Mat2x3(this.$get()).ApproxFuncEqual(m2, eq); };
+	Mat2x3.prototype.At = function(row, col) {
+		var $ptr, col, m, row, x;
+		m = $clone(this.$val, Mat2x3);
+		return (x = ($imul(col, 2)) + row >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x]));
+	};
+	$ptrType(Mat2x3).prototype.At = function(row, col) { return new Mat2x3(this.$get()).At(row, col); };
+	Mat2x3.prototype.Set = function(row, col, value) {
+		var $ptr, col, m, row, value, x;
+		m = this.$val;
+		(x = ($imul(col, 2)) + row >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = value));
+	};
+	$ptrType(Mat2x3).prototype.Set = function(row, col, value) { return (new Mat2x3(this.$get())).Set(row, col, value); };
+	Mat2x3.prototype.Index = function(row, col) {
+		var $ptr, col, m, row;
+		m = $clone(this.$val, Mat2x3);
+		return ($imul(col, 2)) + row >> 0;
+	};
+	$ptrType(Mat2x3).prototype.Index = function(row, col) { return new Mat2x3(this.$get()).Index(row, col); };
+	Mat2x3.prototype.Row = function(row) {
+		var $ptr, m, row, x, x$1, x$2;
+		m = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [(x = row + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = row + 2 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = row + 4 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2]))]);
+	};
+	$ptrType(Mat2x3).prototype.Row = function(row) { return new Mat2x3(this.$get()).Row(row); };
+	Mat2x3.prototype.Rows = function() {
+		var $ptr, _tmp, _tmp$1, m, row0, row1;
+		row0 = arrayType$4.zero();
+		row1 = arrayType$4.zero();
+		m = $clone(this.$val, Mat2x3);
+		_tmp = $clone(new Mat2x3(m).Row(0), Vec3);
+		_tmp$1 = $clone(new Mat2x3(m).Row(1), Vec3);
+		Vec3.copy(row0, _tmp);
+		Vec3.copy(row1, _tmp$1);
+		return [row0, row1];
+	};
+	$ptrType(Mat2x3).prototype.Rows = function() { return new Mat2x3(this.$get()).Rows(); };
+	Mat2x3.prototype.Col = function(col) {
+		var $ptr, col, m, x, x$1;
+		m = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [(x = ($imul(col, 2)) + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = ($imul(col, 2)) + 1 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1]))]);
+	};
+	$ptrType(Mat2x3).prototype.Col = function(col) { return new Mat2x3(this.$get()).Col(col); };
+	Mat2x3.prototype.Cols = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, col0, col1, col2, m;
+		col0 = arrayType$1.zero();
+		col1 = arrayType$1.zero();
+		col2 = arrayType$1.zero();
+		m = $clone(this.$val, Mat2x3);
+		_tmp = $clone(new Mat2x3(m).Col(0), Vec2);
+		_tmp$1 = $clone(new Mat2x3(m).Col(1), Vec2);
+		_tmp$2 = $clone(new Mat2x3(m).Col(2), Vec2);
+		Vec2.copy(col0, _tmp);
+		Vec2.copy(col1, _tmp$1);
+		Vec2.copy(col2, _tmp$2);
+		return [col0, col1, col2];
+	};
+	$ptrType(Mat2x3).prototype.Cols = function() { return new Mat2x3(this.$get()).Cols(); };
+	Mat2x3.prototype.Abs = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat2x3);
+		return $toNativeArray($kindFloat64, [Abs(m[0]), Abs(m[1]), Abs(m[2]), Abs(m[3]), Abs(m[4]), Abs(m[5])]);
+	};
+	$ptrType(Mat2x3).prototype.Abs = function() { return new Mat2x3(this.$get()).Abs(); };
+	Mat2x3.prototype.String = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, buf, col, i, m, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; buf = $f.buf; col = $f.col; i = $f.i; m = $f.m; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = $clone(this.$val, Mat2x3);
+		buf = new bytes.Buffer.ptr(sliceType$2.nil, 0, arrayType$2.zero(), arrayType$3.zero(), 0);
+		w = tabwriter.NewWriter(buf, 4, 4, 1, 32, 4);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 2)) { break; } */ if(!(i < 2)) { $s = 2; continue; }
+			_ref = new Mat2x3(m).Row(i);
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < 3)) { break; } */ if(!(_i < 3)) { $s = 4; continue; }
+				col = ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]);
+				_r = fmt.Fprintf(w, "%f\t", new sliceType$3([new $Float64(col)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			_r$1 = fmt.Fprintln(w, new sliceType$3([new $String("")])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = w.Flush(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		return buf.String();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat2x3.prototype.String }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.buf = buf; $f.col = col; $f.i = i; $f.m = m; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat2x3).prototype.String = function() { return new Mat2x3(this.$get()).String(); };
+	Mat2x4.prototype.SetCol = function(col, v) {
+		var $ptr, _tmp, _tmp$1, col, m, v, x, x$1;
+		v = $clone(v, Vec2);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		(x = ($imul(col, 2)) + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = ($imul(col, 2)) + 1 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+	};
+	$ptrType(Mat2x4).prototype.SetCol = function(col, v) { return (new Mat2x4(this.$get())).SetCol(col, v); };
+	Mat2x4.prototype.SetRow = function(row, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, m, row, v, x, x$1, x$2, x$3;
+		v = $clone(v, Vec4);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		_tmp$3 = v[3];
+		(x = row + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = row + 2 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = row + 4 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+		(x$3 = row + 6 >> 0, m.nilCheck, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3] = _tmp$3));
+	};
+	$ptrType(Mat2x4).prototype.SetRow = function(row, v) { return (new Mat2x4(this.$get())).SetRow(row, v); };
+	Mat2x4.prototype.Add = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x4);
+		m1 = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3], m1[4] + m2[4], m1[5] + m2[5], m1[6] + m2[6], m1[7] + m2[7]]);
+	};
+	$ptrType(Mat2x4).prototype.Add = function(m2) { return new Mat2x4(this.$get()).Add(m2); };
+	Mat2x4.prototype.Sub = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x4);
+		m1 = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3], m1[4] - m2[4], m1[5] - m2[5], m1[6] - m2[6], m1[7] - m2[7]]);
+	};
+	$ptrType(Mat2x4).prototype.Sub = function(m2) { return new Mat2x4(this.$get()).Sub(m2); };
+	Mat2x4.prototype.Mul = function(c) {
+		var $ptr, c, m1;
+		m1 = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [m1[0] * c, m1[1] * c, m1[2] * c, m1[3] * c, m1[4] * c, m1[5] * c, m1[6] * c, m1[7] * c]);
+	};
+	$ptrType(Mat2x4).prototype.Mul = function(c) { return new Mat2x4(this.$get()).Mul(c); };
+	Mat2x4.prototype.Mul4x1 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Vec4);
+		m1 = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1] + m1[4] * m2[2] + m1[6] * m2[3], m1[1] * m2[0] + m1[3] * m2[1] + m1[5] * m2[2] + m1[7] * m2[3]]);
+	};
+	$ptrType(Mat2x4).prototype.Mul4x1 = function(m2) { return new Mat2x4(this.$get()).Mul4x1(m2); };
+	Mat2x4.prototype.Mul4x2 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x2);
+		m1 = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1] + m1[4] * m2[2] + m1[6] * m2[3], m1[1] * m2[0] + m1[3] * m2[1] + m1[5] * m2[2] + m1[7] * m2[3], m1[0] * m2[4] + m1[2] * m2[5] + m1[4] * m2[6] + m1[6] * m2[7], m1[1] * m2[4] + m1[3] * m2[5] + m1[5] * m2[6] + m1[7] * m2[7]]);
+	};
+	$ptrType(Mat2x4).prototype.Mul4x2 = function(m2) { return new Mat2x4(this.$get()).Mul4x2(m2); };
+	Mat2x4.prototype.Mul4x3 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x3);
+		m1 = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1] + m1[4] * m2[2] + m1[6] * m2[3], m1[1] * m2[0] + m1[3] * m2[1] + m1[5] * m2[2] + m1[7] * m2[3], m1[0] * m2[4] + m1[2] * m2[5] + m1[4] * m2[6] + m1[6] * m2[7], m1[1] * m2[4] + m1[3] * m2[5] + m1[5] * m2[6] + m1[7] * m2[7], m1[0] * m2[8] + m1[2] * m2[9] + m1[4] * m2[10] + m1[6] * m2[11], m1[1] * m2[8] + m1[3] * m2[9] + m1[5] * m2[10] + m1[7] * m2[11]]);
+	};
+	$ptrType(Mat2x4).prototype.Mul4x3 = function(m2) { return new Mat2x4(this.$get()).Mul4x3(m2); };
+	Mat2x4.prototype.Mul4 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4);
+		m1 = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[2] * m2[1] + m1[4] * m2[2] + m1[6] * m2[3], m1[1] * m2[0] + m1[3] * m2[1] + m1[5] * m2[2] + m1[7] * m2[3], m1[0] * m2[4] + m1[2] * m2[5] + m1[4] * m2[6] + m1[6] * m2[7], m1[1] * m2[4] + m1[3] * m2[5] + m1[5] * m2[6] + m1[7] * m2[7], m1[0] * m2[8] + m1[2] * m2[9] + m1[4] * m2[10] + m1[6] * m2[11], m1[1] * m2[8] + m1[3] * m2[9] + m1[5] * m2[10] + m1[7] * m2[11], m1[0] * m2[12] + m1[2] * m2[13] + m1[4] * m2[14] + m1[6] * m2[15], m1[1] * m2[12] + m1[3] * m2[13] + m1[5] * m2[14] + m1[7] * m2[15]]);
+	};
+	$ptrType(Mat2x4).prototype.Mul4 = function(m2) { return new Mat2x4(this.$get()).Mul4(m2); };
+	Mat2x4.prototype.Transpose = function() {
+		var $ptr, m1;
+		m1 = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [m1[0], m1[2], m1[4], m1[6], m1[1], m1[3], m1[5], m1[7]]);
+	};
+	$ptrType(Mat2x4).prototype.Transpose = function() { return new Mat2x4(this.$get()).Transpose(); };
+	Mat2x4.prototype.ApproxEqual = function(m2) {
+		var $ptr, _i, _ref, i, m1, m2;
+		m2 = $clone(m2, Mat2x4);
+		m1 = $clone(this.$val, Mat2x4);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 8)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat2x4).prototype.ApproxEqual = function(m2) { return new Mat2x4(this.$get()).ApproxEqual(m2); };
+	Mat2x4.prototype.ApproxEqualThreshold = function(m2, threshold) {
+		var $ptr, _i, _ref, i, m1, m2, threshold;
+		m2 = $clone(m2, Mat2x4);
+		m1 = $clone(this.$val, Mat2x4);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 8)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat2x4).prototype.ApproxEqualThreshold = function(m2, threshold) { return new Mat2x4(this.$get()).ApproxEqualThreshold(m2, threshold); };
+	Mat2x4.prototype.ApproxFuncEqual = function(m2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, m1, m2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; m1 = $f.m1; m2 = $f.m2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m2 = $clone(m2, Mat2x4);
+		m1 = $clone(this.$val, Mat2x4);
+		_ref = m1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 8)) { break; } */ if(!(_i < 8)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat2x4.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.m1 = m1; $f.m2 = m2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat2x4).prototype.ApproxFuncEqual = function(m2, eq) { return new Mat2x4(this.$get()).ApproxFuncEqual(m2, eq); };
+	Mat2x4.prototype.At = function(row, col) {
+		var $ptr, col, m, row, x;
+		m = $clone(this.$val, Mat2x4);
+		return (x = ($imul(col, 2)) + row >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x]));
+	};
+	$ptrType(Mat2x4).prototype.At = function(row, col) { return new Mat2x4(this.$get()).At(row, col); };
+	Mat2x4.prototype.Set = function(row, col, value) {
+		var $ptr, col, m, row, value, x;
+		m = this.$val;
+		(x = ($imul(col, 2)) + row >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = value));
+	};
+	$ptrType(Mat2x4).prototype.Set = function(row, col, value) { return (new Mat2x4(this.$get())).Set(row, col, value); };
+	Mat2x4.prototype.Index = function(row, col) {
+		var $ptr, col, m, row;
+		m = $clone(this.$val, Mat2x4);
+		return ($imul(col, 2)) + row >> 0;
+	};
+	$ptrType(Mat2x4).prototype.Index = function(row, col) { return new Mat2x4(this.$get()).Index(row, col); };
+	Mat2x4.prototype.Row = function(row) {
+		var $ptr, m, row, x, x$1, x$2, x$3;
+		m = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [(x = row + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = row + 2 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = row + 4 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2])), (x$3 = row + 6 >> 0, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3]))]);
+	};
+	$ptrType(Mat2x4).prototype.Row = function(row) { return new Mat2x4(this.$get()).Row(row); };
+	Mat2x4.prototype.Rows = function() {
+		var $ptr, _tmp, _tmp$1, m, row0, row1;
+		row0 = arrayType.zero();
+		row1 = arrayType.zero();
+		m = $clone(this.$val, Mat2x4);
+		_tmp = $clone(new Mat2x4(m).Row(0), Vec4);
+		_tmp$1 = $clone(new Mat2x4(m).Row(1), Vec4);
+		Vec4.copy(row0, _tmp);
+		Vec4.copy(row1, _tmp$1);
+		return [row0, row1];
+	};
+	$ptrType(Mat2x4).prototype.Rows = function() { return new Mat2x4(this.$get()).Rows(); };
+	Mat2x4.prototype.Col = function(col) {
+		var $ptr, col, m, x, x$1;
+		m = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [(x = ($imul(col, 2)) + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = ($imul(col, 2)) + 1 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1]))]);
+	};
+	$ptrType(Mat2x4).prototype.Col = function(col) { return new Mat2x4(this.$get()).Col(col); };
+	Mat2x4.prototype.Cols = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, col0, col1, col2, col3, m;
+		col0 = arrayType$1.zero();
+		col1 = arrayType$1.zero();
+		col2 = arrayType$1.zero();
+		col3 = arrayType$1.zero();
+		m = $clone(this.$val, Mat2x4);
+		_tmp = $clone(new Mat2x4(m).Col(0), Vec2);
+		_tmp$1 = $clone(new Mat2x4(m).Col(1), Vec2);
+		_tmp$2 = $clone(new Mat2x4(m).Col(2), Vec2);
+		_tmp$3 = $clone(new Mat2x4(m).Col(3), Vec2);
+		Vec2.copy(col0, _tmp);
+		Vec2.copy(col1, _tmp$1);
+		Vec2.copy(col2, _tmp$2);
+		Vec2.copy(col3, _tmp$3);
+		return [col0, col1, col2, col3];
+	};
+	$ptrType(Mat2x4).prototype.Cols = function() { return new Mat2x4(this.$get()).Cols(); };
+	Mat2x4.prototype.Abs = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat2x4);
+		return $toNativeArray($kindFloat64, [Abs(m[0]), Abs(m[1]), Abs(m[2]), Abs(m[3]), Abs(m[4]), Abs(m[5]), Abs(m[6]), Abs(m[7])]);
+	};
+	$ptrType(Mat2x4).prototype.Abs = function() { return new Mat2x4(this.$get()).Abs(); };
+	Mat2x4.prototype.String = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, buf, col, i, m, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; buf = $f.buf; col = $f.col; i = $f.i; m = $f.m; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = $clone(this.$val, Mat2x4);
+		buf = new bytes.Buffer.ptr(sliceType$2.nil, 0, arrayType$2.zero(), arrayType$3.zero(), 0);
+		w = tabwriter.NewWriter(buf, 4, 4, 1, 32, 4);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 2)) { break; } */ if(!(i < 2)) { $s = 2; continue; }
+			_ref = new Mat2x4(m).Row(i);
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < 4)) { break; } */ if(!(_i < 4)) { $s = 4; continue; }
+				col = ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]);
+				_r = fmt.Fprintf(w, "%f\t", new sliceType$3([new $Float64(col)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			_r$1 = fmt.Fprintln(w, new sliceType$3([new $String("")])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = w.Flush(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		return buf.String();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat2x4.prototype.String }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.buf = buf; $f.col = col; $f.i = i; $f.m = m; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat2x4).prototype.String = function() { return new Mat2x4(this.$get()).String(); };
+	Mat3x2.prototype.SetCol = function(col, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, col, m, v, x, x$1, x$2;
+		v = $clone(v, Vec3);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		(x = ($imul(col, 3)) + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = ($imul(col, 3)) + 1 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = ($imul(col, 3)) + 2 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+	};
+	$ptrType(Mat3x2).prototype.SetCol = function(col, v) { return (new Mat3x2(this.$get())).SetCol(col, v); };
+	Mat3x2.prototype.SetRow = function(row, v) {
+		var $ptr, _tmp, _tmp$1, m, row, v, x, x$1;
+		v = $clone(v, Vec2);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		(x = row + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = row + 3 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+	};
+	$ptrType(Mat3x2).prototype.SetRow = function(row, v) { return (new Mat3x2(this.$get())).SetRow(row, v); };
+	Mat3x2.prototype.Add = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x2);
+		m1 = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3], m1[4] + m2[4], m1[5] + m2[5]]);
+	};
+	$ptrType(Mat3x2).prototype.Add = function(m2) { return new Mat3x2(this.$get()).Add(m2); };
+	Mat3x2.prototype.Sub = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x2);
+		m1 = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3], m1[4] - m2[4], m1[5] - m2[5]]);
+	};
+	$ptrType(Mat3x2).prototype.Sub = function(m2) { return new Mat3x2(this.$get()).Sub(m2); };
+	Mat3x2.prototype.Mul = function(c) {
+		var $ptr, c, m1;
+		m1 = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [m1[0] * c, m1[1] * c, m1[2] * c, m1[3] * c, m1[4] * c, m1[5] * c]);
+	};
+	$ptrType(Mat3x2).prototype.Mul = function(c) { return new Mat3x2(this.$get()).Mul(c); };
+	Mat3x2.prototype.Mul2x1 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Vec2);
+		m1 = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1], m1[1] * m2[0] + m1[4] * m2[1], m1[2] * m2[0] + m1[5] * m2[1]]);
+	};
+	$ptrType(Mat3x2).prototype.Mul2x1 = function(m2) { return new Mat3x2(this.$get()).Mul2x1(m2); };
+	Mat3x2.prototype.Mul2 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2);
+		m1 = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1], m1[1] * m2[0] + m1[4] * m2[1], m1[2] * m2[0] + m1[5] * m2[1], m1[0] * m2[2] + m1[3] * m2[3], m1[1] * m2[2] + m1[4] * m2[3], m1[2] * m2[2] + m1[5] * m2[3]]);
+	};
+	$ptrType(Mat3x2).prototype.Mul2 = function(m2) { return new Mat3x2(this.$get()).Mul2(m2); };
+	Mat3x2.prototype.Mul2x3 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x3);
+		m1 = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1], m1[1] * m2[0] + m1[4] * m2[1], m1[2] * m2[0] + m1[5] * m2[1], m1[0] * m2[2] + m1[3] * m2[3], m1[1] * m2[2] + m1[4] * m2[3], m1[2] * m2[2] + m1[5] * m2[3], m1[0] * m2[4] + m1[3] * m2[5], m1[1] * m2[4] + m1[4] * m2[5], m1[2] * m2[4] + m1[5] * m2[5]]);
+	};
+	$ptrType(Mat3x2).prototype.Mul2x3 = function(m2) { return new Mat3x2(this.$get()).Mul2x3(m2); };
+	Mat3x2.prototype.Mul2x4 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x4);
+		m1 = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1], m1[1] * m2[0] + m1[4] * m2[1], m1[2] * m2[0] + m1[5] * m2[1], m1[0] * m2[2] + m1[3] * m2[3], m1[1] * m2[2] + m1[4] * m2[3], m1[2] * m2[2] + m1[5] * m2[3], m1[0] * m2[4] + m1[3] * m2[5], m1[1] * m2[4] + m1[4] * m2[5], m1[2] * m2[4] + m1[5] * m2[5], m1[0] * m2[6] + m1[3] * m2[7], m1[1] * m2[6] + m1[4] * m2[7], m1[2] * m2[6] + m1[5] * m2[7]]);
+	};
+	$ptrType(Mat3x2).prototype.Mul2x4 = function(m2) { return new Mat3x2(this.$get()).Mul2x4(m2); };
+	Mat3x2.prototype.Transpose = function() {
+		var $ptr, m1;
+		m1 = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [m1[0], m1[3], m1[1], m1[4], m1[2], m1[5]]);
+	};
+	$ptrType(Mat3x2).prototype.Transpose = function() { return new Mat3x2(this.$get()).Transpose(); };
+	Mat3x2.prototype.ApproxEqual = function(m2) {
+		var $ptr, _i, _ref, i, m1, m2;
+		m2 = $clone(m2, Mat3x2);
+		m1 = $clone(this.$val, Mat3x2);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 6)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat3x2).prototype.ApproxEqual = function(m2) { return new Mat3x2(this.$get()).ApproxEqual(m2); };
+	Mat3x2.prototype.ApproxEqualThreshold = function(m2, threshold) {
+		var $ptr, _i, _ref, i, m1, m2, threshold;
+		m2 = $clone(m2, Mat3x2);
+		m1 = $clone(this.$val, Mat3x2);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 6)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat3x2).prototype.ApproxEqualThreshold = function(m2, threshold) { return new Mat3x2(this.$get()).ApproxEqualThreshold(m2, threshold); };
+	Mat3x2.prototype.ApproxFuncEqual = function(m2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, m1, m2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; m1 = $f.m1; m2 = $f.m2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m2 = $clone(m2, Mat3x2);
+		m1 = $clone(this.$val, Mat3x2);
+		_ref = m1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 6)) { break; } */ if(!(_i < 6)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat3x2.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.m1 = m1; $f.m2 = m2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat3x2).prototype.ApproxFuncEqual = function(m2, eq) { return new Mat3x2(this.$get()).ApproxFuncEqual(m2, eq); };
+	Mat3x2.prototype.At = function(row, col) {
+		var $ptr, col, m, row, x;
+		m = $clone(this.$val, Mat3x2);
+		return (x = ($imul(col, 3)) + row >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x]));
+	};
+	$ptrType(Mat3x2).prototype.At = function(row, col) { return new Mat3x2(this.$get()).At(row, col); };
+	Mat3x2.prototype.Set = function(row, col, value) {
+		var $ptr, col, m, row, value, x;
+		m = this.$val;
+		(x = ($imul(col, 3)) + row >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = value));
+	};
+	$ptrType(Mat3x2).prototype.Set = function(row, col, value) { return (new Mat3x2(this.$get())).Set(row, col, value); };
+	Mat3x2.prototype.Index = function(row, col) {
+		var $ptr, col, m, row;
+		m = $clone(this.$val, Mat3x2);
+		return ($imul(col, 3)) + row >> 0;
+	};
+	$ptrType(Mat3x2).prototype.Index = function(row, col) { return new Mat3x2(this.$get()).Index(row, col); };
+	Mat3x2.prototype.Row = function(row) {
+		var $ptr, m, row, x, x$1;
+		m = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [(x = row + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = row + 3 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1]))]);
+	};
+	$ptrType(Mat3x2).prototype.Row = function(row) { return new Mat3x2(this.$get()).Row(row); };
+	Mat3x2.prototype.Rows = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, m, row0, row1, row2;
+		row0 = arrayType$1.zero();
+		row1 = arrayType$1.zero();
+		row2 = arrayType$1.zero();
+		m = $clone(this.$val, Mat3x2);
+		_tmp = $clone(new Mat3x2(m).Row(0), Vec2);
+		_tmp$1 = $clone(new Mat3x2(m).Row(1), Vec2);
+		_tmp$2 = $clone(new Mat3x2(m).Row(2), Vec2);
+		Vec2.copy(row0, _tmp);
+		Vec2.copy(row1, _tmp$1);
+		Vec2.copy(row2, _tmp$2);
+		return [row0, row1, row2];
+	};
+	$ptrType(Mat3x2).prototype.Rows = function() { return new Mat3x2(this.$get()).Rows(); };
+	Mat3x2.prototype.Col = function(col) {
+		var $ptr, col, m, x, x$1, x$2;
+		m = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [(x = ($imul(col, 3)) + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = ($imul(col, 3)) + 1 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = ($imul(col, 3)) + 2 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2]))]);
+	};
+	$ptrType(Mat3x2).prototype.Col = function(col) { return new Mat3x2(this.$get()).Col(col); };
+	Mat3x2.prototype.Cols = function() {
+		var $ptr, _tmp, _tmp$1, col0, col1, m;
+		col0 = arrayType$4.zero();
+		col1 = arrayType$4.zero();
+		m = $clone(this.$val, Mat3x2);
+		_tmp = $clone(new Mat3x2(m).Col(0), Vec3);
+		_tmp$1 = $clone(new Mat3x2(m).Col(1), Vec3);
+		Vec3.copy(col0, _tmp);
+		Vec3.copy(col1, _tmp$1);
+		return [col0, col1];
+	};
+	$ptrType(Mat3x2).prototype.Cols = function() { return new Mat3x2(this.$get()).Cols(); };
+	Mat3x2.prototype.Abs = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat3x2);
+		return $toNativeArray($kindFloat64, [Abs(m[0]), Abs(m[1]), Abs(m[2]), Abs(m[3]), Abs(m[4]), Abs(m[5])]);
+	};
+	$ptrType(Mat3x2).prototype.Abs = function() { return new Mat3x2(this.$get()).Abs(); };
+	Mat3x2.prototype.String = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, buf, col, i, m, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; buf = $f.buf; col = $f.col; i = $f.i; m = $f.m; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = $clone(this.$val, Mat3x2);
+		buf = new bytes.Buffer.ptr(sliceType$2.nil, 0, arrayType$2.zero(), arrayType$3.zero(), 0);
+		w = tabwriter.NewWriter(buf, 4, 4, 1, 32, 4);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 3)) { break; } */ if(!(i < 3)) { $s = 2; continue; }
+			_ref = new Mat3x2(m).Row(i);
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < 2)) { break; } */ if(!(_i < 2)) { $s = 4; continue; }
+				col = ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]);
+				_r = fmt.Fprintf(w, "%f\t", new sliceType$3([new $Float64(col)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			_r$1 = fmt.Fprintln(w, new sliceType$3([new $String("")])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = w.Flush(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		return buf.String();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat3x2.prototype.String }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.buf = buf; $f.col = col; $f.i = i; $f.m = m; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat3x2).prototype.String = function() { return new Mat3x2(this.$get()).String(); };
+	Mat3.prototype.SetCol = function(col, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, col, m, v, x, x$1, x$2;
+		v = $clone(v, Vec3);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		(x = ($imul(col, 3)) + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = ($imul(col, 3)) + 1 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = ($imul(col, 3)) + 2 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+	};
+	$ptrType(Mat3).prototype.SetCol = function(col, v) { return (new Mat3(this.$get())).SetCol(col, v); };
+	Mat3.prototype.SetRow = function(row, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, m, row, v, x, x$1, x$2;
+		v = $clone(v, Vec3);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		(x = row + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = row + 3 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = row + 6 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+	};
+	$ptrType(Mat3).prototype.SetRow = function(row, v) { return (new Mat3(this.$get())).SetRow(row, v); };
+	Mat3.prototype.Diag = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [m[0], m[4], m[8]]);
+	};
+	$ptrType(Mat3).prototype.Diag = function() { return new Mat3(this.$get()).Diag(); };
+	Mat3FromCols = function(col0, col1, col2) {
+		var $ptr, col0, col1, col2;
+		col2 = $clone(col2, Vec3);
+		col1 = $clone(col1, Vec3);
+		col0 = $clone(col0, Vec3);
+		return $toNativeArray($kindFloat64, [col0[0], col0[1], col0[2], col1[0], col1[1], col1[2], col2[0], col2[1], col2[2]]);
+	};
+	$pkg.Mat3FromCols = Mat3FromCols;
+	Mat3.prototype.Add = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3);
+		m1 = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3], m1[4] + m2[4], m1[5] + m2[5], m1[6] + m2[6], m1[7] + m2[7], m1[8] + m2[8]]);
+	};
+	$ptrType(Mat3).prototype.Add = function(m2) { return new Mat3(this.$get()).Add(m2); };
+	Mat3.prototype.Sub = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3);
+		m1 = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3], m1[4] - m2[4], m1[5] - m2[5], m1[6] - m2[6], m1[7] - m2[7], m1[8] - m2[8]]);
+	};
+	$ptrType(Mat3).prototype.Sub = function(m2) { return new Mat3(this.$get()).Sub(m2); };
+	Mat3.prototype.Mul = function(c) {
+		var $ptr, c, m1;
+		m1 = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [m1[0] * c, m1[1] * c, m1[2] * c, m1[3] * c, m1[4] * c, m1[5] * c, m1[6] * c, m1[7] * c, m1[8] * c]);
+	};
+	$ptrType(Mat3).prototype.Mul = function(c) { return new Mat3(this.$get()).Mul(c); };
+	Mat3.prototype.Mul3x1 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Vec3);
+		m1 = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2]]);
+	};
+	$ptrType(Mat3).prototype.Mul3x1 = function(m2) { return new Mat3(this.$get()).Mul3x1(m2); };
+	Mat3.prototype.Mul3x2 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x2);
+		m1 = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2], m1[0] * m2[3] + m1[3] * m2[4] + m1[6] * m2[5], m1[1] * m2[3] + m1[4] * m2[4] + m1[7] * m2[5], m1[2] * m2[3] + m1[5] * m2[4] + m1[8] * m2[5]]);
+	};
+	$ptrType(Mat3).prototype.Mul3x2 = function(m2) { return new Mat3(this.$get()).Mul3x2(m2); };
+	Mat3.prototype.Mul3 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3);
+		m1 = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2], m1[0] * m2[3] + m1[3] * m2[4] + m1[6] * m2[5], m1[1] * m2[3] + m1[4] * m2[4] + m1[7] * m2[5], m1[2] * m2[3] + m1[5] * m2[4] + m1[8] * m2[5], m1[0] * m2[6] + m1[3] * m2[7] + m1[6] * m2[8], m1[1] * m2[6] + m1[4] * m2[7] + m1[7] * m2[8], m1[2] * m2[6] + m1[5] * m2[7] + m1[8] * m2[8]]);
+	};
+	$ptrType(Mat3).prototype.Mul3 = function(m2) { return new Mat3(this.$get()).Mul3(m2); };
+	Mat3.prototype.Mul3x4 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x4);
+		m1 = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2], m1[0] * m2[3] + m1[3] * m2[4] + m1[6] * m2[5], m1[1] * m2[3] + m1[4] * m2[4] + m1[7] * m2[5], m1[2] * m2[3] + m1[5] * m2[4] + m1[8] * m2[5], m1[0] * m2[6] + m1[3] * m2[7] + m1[6] * m2[8], m1[1] * m2[6] + m1[4] * m2[7] + m1[7] * m2[8], m1[2] * m2[6] + m1[5] * m2[7] + m1[8] * m2[8], m1[0] * m2[9] + m1[3] * m2[10] + m1[6] * m2[11], m1[1] * m2[9] + m1[4] * m2[10] + m1[7] * m2[11], m1[2] * m2[9] + m1[5] * m2[10] + m1[8] * m2[11]]);
+	};
+	$ptrType(Mat3).prototype.Mul3x4 = function(m2) { return new Mat3(this.$get()).Mul3x4(m2); };
+	Mat3.prototype.Transpose = function() {
+		var $ptr, m1;
+		m1 = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [m1[0], m1[3], m1[6], m1[1], m1[4], m1[7], m1[2], m1[5], m1[8]]);
+	};
+	$ptrType(Mat3).prototype.Transpose = function() { return new Mat3(this.$get()).Transpose(); };
+	Mat3.prototype.Det = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat3);
+		return m[0] * m[4] * m[8] + m[3] * m[7] * m[2] + m[6] * m[1] * m[5] - m[6] * m[4] * m[2] - m[3] * m[1] * m[8] - m[0] * m[7] * m[5];
+	};
+	$ptrType(Mat3).prototype.Det = function() { return new Mat3(this.$get()).Det(); };
+	Mat3.prototype.Inv = function() {
+		var $ptr, det, m, retMat;
+		m = $clone(this.$val, Mat3);
+		det = new Mat3(m).Det();
+		if (FloatEqual(det, 0)) {
+			return arrayType$5.zero();
+		}
+		retMat = $toNativeArray($kindFloat64, [m[4] * m[8] - m[5] * m[7], m[2] * m[7] - m[1] * m[8], m[1] * m[5] - m[2] * m[4], m[5] * m[6] - m[3] * m[8], m[0] * m[8] - m[2] * m[6], m[2] * m[3] - m[0] * m[5], m[3] * m[7] - m[4] * m[6], m[1] * m[6] - m[0] * m[7], m[0] * m[4] - m[1] * m[3]]);
+		return new Mat3(retMat).Mul(1 / det);
+	};
+	$ptrType(Mat3).prototype.Inv = function() { return new Mat3(this.$get()).Inv(); };
+	Mat3.prototype.ApproxEqual = function(m2) {
+		var $ptr, _i, _ref, i, m1, m2;
+		m2 = $clone(m2, Mat3);
+		m1 = $clone(this.$val, Mat3);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 9)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat3).prototype.ApproxEqual = function(m2) { return new Mat3(this.$get()).ApproxEqual(m2); };
+	Mat3.prototype.ApproxEqualThreshold = function(m2, threshold) {
+		var $ptr, _i, _ref, i, m1, m2, threshold;
+		m2 = $clone(m2, Mat3);
+		m1 = $clone(this.$val, Mat3);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 9)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat3).prototype.ApproxEqualThreshold = function(m2, threshold) { return new Mat3(this.$get()).ApproxEqualThreshold(m2, threshold); };
+	Mat3.prototype.ApproxFuncEqual = function(m2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, m1, m2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; m1 = $f.m1; m2 = $f.m2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m2 = $clone(m2, Mat3);
+		m1 = $clone(this.$val, Mat3);
+		_ref = m1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 9)) { break; } */ if(!(_i < 9)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat3.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.m1 = m1; $f.m2 = m2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat3).prototype.ApproxFuncEqual = function(m2, eq) { return new Mat3(this.$get()).ApproxFuncEqual(m2, eq); };
+	Mat3.prototype.At = function(row, col) {
+		var $ptr, col, m, row, x;
+		m = $clone(this.$val, Mat3);
+		return (x = ($imul(col, 3)) + row >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x]));
+	};
+	$ptrType(Mat3).prototype.At = function(row, col) { return new Mat3(this.$get()).At(row, col); };
+	Mat3.prototype.Set = function(row, col, value) {
+		var $ptr, col, m, row, value, x;
+		m = this.$val;
+		(x = ($imul(col, 3)) + row >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = value));
+	};
+	$ptrType(Mat3).prototype.Set = function(row, col, value) { return (new Mat3(this.$get())).Set(row, col, value); };
+	Mat3.prototype.Index = function(row, col) {
+		var $ptr, col, m, row;
+		m = $clone(this.$val, Mat3);
+		return ($imul(col, 3)) + row >> 0;
+	};
+	$ptrType(Mat3).prototype.Index = function(row, col) { return new Mat3(this.$get()).Index(row, col); };
+	Mat3.prototype.Row = function(row) {
+		var $ptr, m, row, x, x$1, x$2;
+		m = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [(x = row + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = row + 3 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = row + 6 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2]))]);
+	};
+	$ptrType(Mat3).prototype.Row = function(row) { return new Mat3(this.$get()).Row(row); };
+	Mat3.prototype.Rows = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, m, row0, row1, row2;
+		row0 = arrayType$4.zero();
+		row1 = arrayType$4.zero();
+		row2 = arrayType$4.zero();
+		m = $clone(this.$val, Mat3);
+		_tmp = $clone(new Mat3(m).Row(0), Vec3);
+		_tmp$1 = $clone(new Mat3(m).Row(1), Vec3);
+		_tmp$2 = $clone(new Mat3(m).Row(2), Vec3);
+		Vec3.copy(row0, _tmp);
+		Vec3.copy(row1, _tmp$1);
+		Vec3.copy(row2, _tmp$2);
+		return [row0, row1, row2];
+	};
+	$ptrType(Mat3).prototype.Rows = function() { return new Mat3(this.$get()).Rows(); };
+	Mat3.prototype.Col = function(col) {
+		var $ptr, col, m, x, x$1, x$2;
+		m = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [(x = ($imul(col, 3)) + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = ($imul(col, 3)) + 1 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = ($imul(col, 3)) + 2 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2]))]);
+	};
+	$ptrType(Mat3).prototype.Col = function(col) { return new Mat3(this.$get()).Col(col); };
+	Mat3.prototype.Cols = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, col0, col1, col2, m;
+		col0 = arrayType$4.zero();
+		col1 = arrayType$4.zero();
+		col2 = arrayType$4.zero();
+		m = $clone(this.$val, Mat3);
+		_tmp = $clone(new Mat3(m).Col(0), Vec3);
+		_tmp$1 = $clone(new Mat3(m).Col(1), Vec3);
+		_tmp$2 = $clone(new Mat3(m).Col(2), Vec3);
+		Vec3.copy(col0, _tmp);
+		Vec3.copy(col1, _tmp$1);
+		Vec3.copy(col2, _tmp$2);
+		return [col0, col1, col2];
+	};
+	$ptrType(Mat3).prototype.Cols = function() { return new Mat3(this.$get()).Cols(); };
+	Mat3.prototype.Trace = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat3);
+		return m[0] + m[4] + m[8];
+	};
+	$ptrType(Mat3).prototype.Trace = function() { return new Mat3(this.$get()).Trace(); };
+	Mat3.prototype.Abs = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat3);
+		return $toNativeArray($kindFloat64, [Abs(m[0]), Abs(m[1]), Abs(m[2]), Abs(m[3]), Abs(m[4]), Abs(m[5]), Abs(m[6]), Abs(m[7]), Abs(m[8])]);
+	};
+	$ptrType(Mat3).prototype.Abs = function() { return new Mat3(this.$get()).Abs(); };
+	Mat3.prototype.String = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, buf, col, i, m, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; buf = $f.buf; col = $f.col; i = $f.i; m = $f.m; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = $clone(this.$val, Mat3);
+		buf = new bytes.Buffer.ptr(sliceType$2.nil, 0, arrayType$2.zero(), arrayType$3.zero(), 0);
+		w = tabwriter.NewWriter(buf, 4, 4, 1, 32, 4);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 3)) { break; } */ if(!(i < 3)) { $s = 2; continue; }
+			_ref = new Mat3(m).Row(i);
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < 3)) { break; } */ if(!(_i < 3)) { $s = 4; continue; }
+				col = ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]);
+				_r = fmt.Fprintf(w, "%f\t", new sliceType$3([new $Float64(col)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			_r$1 = fmt.Fprintln(w, new sliceType$3([new $String("")])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = w.Flush(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		return buf.String();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat3.prototype.String }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.buf = buf; $f.col = col; $f.i = i; $f.m = m; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat3).prototype.String = function() { return new Mat3(this.$get()).String(); };
+	Mat3x4.prototype.SetCol = function(col, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, col, m, v, x, x$1, x$2;
+		v = $clone(v, Vec3);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		(x = ($imul(col, 3)) + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = ($imul(col, 3)) + 1 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = ($imul(col, 3)) + 2 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+	};
+	$ptrType(Mat3x4).prototype.SetCol = function(col, v) { return (new Mat3x4(this.$get())).SetCol(col, v); };
+	Mat3x4.prototype.SetRow = function(row, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, m, row, v, x, x$1, x$2, x$3;
+		v = $clone(v, Vec4);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		_tmp$3 = v[3];
+		(x = row + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = row + 3 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = row + 6 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+		(x$3 = row + 9 >> 0, m.nilCheck, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3] = _tmp$3));
+	};
+	$ptrType(Mat3x4).prototype.SetRow = function(row, v) { return (new Mat3x4(this.$get())).SetRow(row, v); };
+	Mat3x4.prototype.Add = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x4);
+		m1 = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3], m1[4] + m2[4], m1[5] + m2[5], m1[6] + m2[6], m1[7] + m2[7], m1[8] + m2[8], m1[9] + m2[9], m1[10] + m2[10], m1[11] + m2[11]]);
+	};
+	$ptrType(Mat3x4).prototype.Add = function(m2) { return new Mat3x4(this.$get()).Add(m2); };
+	Mat3x4.prototype.Sub = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x4);
+		m1 = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3], m1[4] - m2[4], m1[5] - m2[5], m1[6] - m2[6], m1[7] - m2[7], m1[8] - m2[8], m1[9] - m2[9], m1[10] - m2[10], m1[11] - m2[11]]);
+	};
+	$ptrType(Mat3x4).prototype.Sub = function(m2) { return new Mat3x4(this.$get()).Sub(m2); };
+	Mat3x4.prototype.Mul = function(c) {
+		var $ptr, c, m1;
+		m1 = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [m1[0] * c, m1[1] * c, m1[2] * c, m1[3] * c, m1[4] * c, m1[5] * c, m1[6] * c, m1[7] * c, m1[8] * c, m1[9] * c, m1[10] * c, m1[11] * c]);
+	};
+	$ptrType(Mat3x4).prototype.Mul = function(c) { return new Mat3x4(this.$get()).Mul(c); };
+	Mat3x4.prototype.Mul4x1 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Vec4);
+		m1 = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2] + m1[9] * m2[3], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2] + m1[10] * m2[3], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2] + m1[11] * m2[3]]);
+	};
+	$ptrType(Mat3x4).prototype.Mul4x1 = function(m2) { return new Mat3x4(this.$get()).Mul4x1(m2); };
+	Mat3x4.prototype.Mul4x2 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x2);
+		m1 = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2] + m1[9] * m2[3], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2] + m1[10] * m2[3], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2] + m1[11] * m2[3], m1[0] * m2[4] + m1[3] * m2[5] + m1[6] * m2[6] + m1[9] * m2[7], m1[1] * m2[4] + m1[4] * m2[5] + m1[7] * m2[6] + m1[10] * m2[7], m1[2] * m2[4] + m1[5] * m2[5] + m1[8] * m2[6] + m1[11] * m2[7]]);
+	};
+	$ptrType(Mat3x4).prototype.Mul4x2 = function(m2) { return new Mat3x4(this.$get()).Mul4x2(m2); };
+	Mat3x4.prototype.Mul4x3 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x3);
+		m1 = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2] + m1[9] * m2[3], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2] + m1[10] * m2[3], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2] + m1[11] * m2[3], m1[0] * m2[4] + m1[3] * m2[5] + m1[6] * m2[6] + m1[9] * m2[7], m1[1] * m2[4] + m1[4] * m2[5] + m1[7] * m2[6] + m1[10] * m2[7], m1[2] * m2[4] + m1[5] * m2[5] + m1[8] * m2[6] + m1[11] * m2[7], m1[0] * m2[8] + m1[3] * m2[9] + m1[6] * m2[10] + m1[9] * m2[11], m1[1] * m2[8] + m1[4] * m2[9] + m1[7] * m2[10] + m1[10] * m2[11], m1[2] * m2[8] + m1[5] * m2[9] + m1[8] * m2[10] + m1[11] * m2[11]]);
+	};
+	$ptrType(Mat3x4).prototype.Mul4x3 = function(m2) { return new Mat3x4(this.$get()).Mul4x3(m2); };
+	Mat3x4.prototype.Mul4 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4);
+		m1 = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[3] * m2[1] + m1[6] * m2[2] + m1[9] * m2[3], m1[1] * m2[0] + m1[4] * m2[1] + m1[7] * m2[2] + m1[10] * m2[3], m1[2] * m2[0] + m1[5] * m2[1] + m1[8] * m2[2] + m1[11] * m2[3], m1[0] * m2[4] + m1[3] * m2[5] + m1[6] * m2[6] + m1[9] * m2[7], m1[1] * m2[4] + m1[4] * m2[5] + m1[7] * m2[6] + m1[10] * m2[7], m1[2] * m2[4] + m1[5] * m2[5] + m1[8] * m2[6] + m1[11] * m2[7], m1[0] * m2[8] + m1[3] * m2[9] + m1[6] * m2[10] + m1[9] * m2[11], m1[1] * m2[8] + m1[4] * m2[9] + m1[7] * m2[10] + m1[10] * m2[11], m1[2] * m2[8] + m1[5] * m2[9] + m1[8] * m2[10] + m1[11] * m2[11], m1[0] * m2[12] + m1[3] * m2[13] + m1[6] * m2[14] + m1[9] * m2[15], m1[1] * m2[12] + m1[4] * m2[13] + m1[7] * m2[14] + m1[10] * m2[15], m1[2] * m2[12] + m1[5] * m2[13] + m1[8] * m2[14] + m1[11] * m2[15]]);
+	};
+	$ptrType(Mat3x4).prototype.Mul4 = function(m2) { return new Mat3x4(this.$get()).Mul4(m2); };
+	Mat3x4.prototype.Transpose = function() {
+		var $ptr, m1;
+		m1 = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [m1[0], m1[3], m1[6], m1[9], m1[1], m1[4], m1[7], m1[10], m1[2], m1[5], m1[8], m1[11]]);
+	};
+	$ptrType(Mat3x4).prototype.Transpose = function() { return new Mat3x4(this.$get()).Transpose(); };
+	Mat3x4.prototype.ApproxEqual = function(m2) {
+		var $ptr, _i, _ref, i, m1, m2;
+		m2 = $clone(m2, Mat3x4);
+		m1 = $clone(this.$val, Mat3x4);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 12)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat3x4).prototype.ApproxEqual = function(m2) { return new Mat3x4(this.$get()).ApproxEqual(m2); };
+	Mat3x4.prototype.ApproxEqualThreshold = function(m2, threshold) {
+		var $ptr, _i, _ref, i, m1, m2, threshold;
+		m2 = $clone(m2, Mat3x4);
+		m1 = $clone(this.$val, Mat3x4);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 12)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat3x4).prototype.ApproxEqualThreshold = function(m2, threshold) { return new Mat3x4(this.$get()).ApproxEqualThreshold(m2, threshold); };
+	Mat3x4.prototype.ApproxFuncEqual = function(m2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, m1, m2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; m1 = $f.m1; m2 = $f.m2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m2 = $clone(m2, Mat3x4);
+		m1 = $clone(this.$val, Mat3x4);
+		_ref = m1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 12)) { break; } */ if(!(_i < 12)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat3x4.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.m1 = m1; $f.m2 = m2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat3x4).prototype.ApproxFuncEqual = function(m2, eq) { return new Mat3x4(this.$get()).ApproxFuncEqual(m2, eq); };
+	Mat3x4.prototype.At = function(row, col) {
+		var $ptr, col, m, row, x;
+		m = $clone(this.$val, Mat3x4);
+		return (x = ($imul(col, 3)) + row >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x]));
+	};
+	$ptrType(Mat3x4).prototype.At = function(row, col) { return new Mat3x4(this.$get()).At(row, col); };
+	Mat3x4.prototype.Set = function(row, col, value) {
+		var $ptr, col, m, row, value, x;
+		m = this.$val;
+		(x = ($imul(col, 3)) + row >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = value));
+	};
+	$ptrType(Mat3x4).prototype.Set = function(row, col, value) { return (new Mat3x4(this.$get())).Set(row, col, value); };
+	Mat3x4.prototype.Index = function(row, col) {
+		var $ptr, col, m, row;
+		m = $clone(this.$val, Mat3x4);
+		return ($imul(col, 3)) + row >> 0;
+	};
+	$ptrType(Mat3x4).prototype.Index = function(row, col) { return new Mat3x4(this.$get()).Index(row, col); };
+	Mat3x4.prototype.Row = function(row) {
+		var $ptr, m, row, x, x$1, x$2, x$3;
+		m = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [(x = row + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = row + 3 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = row + 6 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2])), (x$3 = row + 9 >> 0, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3]))]);
+	};
+	$ptrType(Mat3x4).prototype.Row = function(row) { return new Mat3x4(this.$get()).Row(row); };
+	Mat3x4.prototype.Rows = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, m, row0, row1, row2;
+		row0 = arrayType.zero();
+		row1 = arrayType.zero();
+		row2 = arrayType.zero();
+		m = $clone(this.$val, Mat3x4);
+		_tmp = $clone(new Mat3x4(m).Row(0), Vec4);
+		_tmp$1 = $clone(new Mat3x4(m).Row(1), Vec4);
+		_tmp$2 = $clone(new Mat3x4(m).Row(2), Vec4);
+		Vec4.copy(row0, _tmp);
+		Vec4.copy(row1, _tmp$1);
+		Vec4.copy(row2, _tmp$2);
+		return [row0, row1, row2];
+	};
+	$ptrType(Mat3x4).prototype.Rows = function() { return new Mat3x4(this.$get()).Rows(); };
+	Mat3x4.prototype.Col = function(col) {
+		var $ptr, col, m, x, x$1, x$2;
+		m = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [(x = ($imul(col, 3)) + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = ($imul(col, 3)) + 1 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = ($imul(col, 3)) + 2 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2]))]);
+	};
+	$ptrType(Mat3x4).prototype.Col = function(col) { return new Mat3x4(this.$get()).Col(col); };
+	Mat3x4.prototype.Cols = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, col0, col1, col2, col3, m;
+		col0 = arrayType$4.zero();
+		col1 = arrayType$4.zero();
+		col2 = arrayType$4.zero();
+		col3 = arrayType$4.zero();
+		m = $clone(this.$val, Mat3x4);
+		_tmp = $clone(new Mat3x4(m).Col(0), Vec3);
+		_tmp$1 = $clone(new Mat3x4(m).Col(1), Vec3);
+		_tmp$2 = $clone(new Mat3x4(m).Col(2), Vec3);
+		_tmp$3 = $clone(new Mat3x4(m).Col(3), Vec3);
+		Vec3.copy(col0, _tmp);
+		Vec3.copy(col1, _tmp$1);
+		Vec3.copy(col2, _tmp$2);
+		Vec3.copy(col3, _tmp$3);
+		return [col0, col1, col2, col3];
+	};
+	$ptrType(Mat3x4).prototype.Cols = function() { return new Mat3x4(this.$get()).Cols(); };
+	Mat3x4.prototype.Abs = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat3x4);
+		return $toNativeArray($kindFloat64, [Abs(m[0]), Abs(m[1]), Abs(m[2]), Abs(m[3]), Abs(m[4]), Abs(m[5]), Abs(m[6]), Abs(m[7]), Abs(m[8]), Abs(m[9]), Abs(m[10]), Abs(m[11])]);
+	};
+	$ptrType(Mat3x4).prototype.Abs = function() { return new Mat3x4(this.$get()).Abs(); };
+	Mat3x4.prototype.String = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, buf, col, i, m, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; buf = $f.buf; col = $f.col; i = $f.i; m = $f.m; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = $clone(this.$val, Mat3x4);
+		buf = new bytes.Buffer.ptr(sliceType$2.nil, 0, arrayType$2.zero(), arrayType$3.zero(), 0);
+		w = tabwriter.NewWriter(buf, 4, 4, 1, 32, 4);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 3)) { break; } */ if(!(i < 3)) { $s = 2; continue; }
+			_ref = new Mat3x4(m).Row(i);
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < 4)) { break; } */ if(!(_i < 4)) { $s = 4; continue; }
+				col = ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]);
+				_r = fmt.Fprintf(w, "%f\t", new sliceType$3([new $Float64(col)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			_r$1 = fmt.Fprintln(w, new sliceType$3([new $String("")])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = w.Flush(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		return buf.String();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat3x4.prototype.String }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.buf = buf; $f.col = col; $f.i = i; $f.m = m; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat3x4).prototype.String = function() { return new Mat3x4(this.$get()).String(); };
+	Mat4x2.prototype.SetCol = function(col, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, col, m, v, x, x$1, x$2, x$3;
+		v = $clone(v, Vec4);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		_tmp$3 = v[3];
+		(x = ($imul(col, 4)) + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = ($imul(col, 4)) + 1 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = ($imul(col, 4)) + 2 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+		(x$3 = ($imul(col, 4)) + 3 >> 0, m.nilCheck, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3] = _tmp$3));
+	};
+	$ptrType(Mat4x2).prototype.SetCol = function(col, v) { return (new Mat4x2(this.$get())).SetCol(col, v); };
+	Mat4x2.prototype.SetRow = function(row, v) {
+		var $ptr, _tmp, _tmp$1, m, row, v, x, x$1;
+		v = $clone(v, Vec2);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		(x = row + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = row + 4 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+	};
+	$ptrType(Mat4x2).prototype.SetRow = function(row, v) { return (new Mat4x2(this.$get())).SetRow(row, v); };
+	Mat4x2.prototype.Add = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x2);
+		m1 = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3], m1[4] + m2[4], m1[5] + m2[5], m1[6] + m2[6], m1[7] + m2[7]]);
+	};
+	$ptrType(Mat4x2).prototype.Add = function(m2) { return new Mat4x2(this.$get()).Add(m2); };
+	Mat4x2.prototype.Sub = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x2);
+		m1 = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3], m1[4] - m2[4], m1[5] - m2[5], m1[6] - m2[6], m1[7] - m2[7]]);
+	};
+	$ptrType(Mat4x2).prototype.Sub = function(m2) { return new Mat4x2(this.$get()).Sub(m2); };
+	Mat4x2.prototype.Mul = function(c) {
+		var $ptr, c, m1;
+		m1 = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [m1[0] * c, m1[1] * c, m1[2] * c, m1[3] * c, m1[4] * c, m1[5] * c, m1[6] * c, m1[7] * c]);
+	};
+	$ptrType(Mat4x2).prototype.Mul = function(c) { return new Mat4x2(this.$get()).Mul(c); };
+	Mat4x2.prototype.Mul2x1 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Vec2);
+		m1 = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1], m1[1] * m2[0] + m1[5] * m2[1], m1[2] * m2[0] + m1[6] * m2[1], m1[3] * m2[0] + m1[7] * m2[1]]);
+	};
+	$ptrType(Mat4x2).prototype.Mul2x1 = function(m2) { return new Mat4x2(this.$get()).Mul2x1(m2); };
+	Mat4x2.prototype.Mul2 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2);
+		m1 = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1], m1[1] * m2[0] + m1[5] * m2[1], m1[2] * m2[0] + m1[6] * m2[1], m1[3] * m2[0] + m1[7] * m2[1], m1[0] * m2[2] + m1[4] * m2[3], m1[1] * m2[2] + m1[5] * m2[3], m1[2] * m2[2] + m1[6] * m2[3], m1[3] * m2[2] + m1[7] * m2[3]]);
+	};
+	$ptrType(Mat4x2).prototype.Mul2 = function(m2) { return new Mat4x2(this.$get()).Mul2(m2); };
+	Mat4x2.prototype.Mul2x3 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x3);
+		m1 = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1], m1[1] * m2[0] + m1[5] * m2[1], m1[2] * m2[0] + m1[6] * m2[1], m1[3] * m2[0] + m1[7] * m2[1], m1[0] * m2[2] + m1[4] * m2[3], m1[1] * m2[2] + m1[5] * m2[3], m1[2] * m2[2] + m1[6] * m2[3], m1[3] * m2[2] + m1[7] * m2[3], m1[0] * m2[4] + m1[4] * m2[5], m1[1] * m2[4] + m1[5] * m2[5], m1[2] * m2[4] + m1[6] * m2[5], m1[3] * m2[4] + m1[7] * m2[5]]);
+	};
+	$ptrType(Mat4x2).prototype.Mul2x3 = function(m2) { return new Mat4x2(this.$get()).Mul2x3(m2); };
+	Mat4x2.prototype.Mul2x4 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat2x4);
+		m1 = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1], m1[1] * m2[0] + m1[5] * m2[1], m1[2] * m2[0] + m1[6] * m2[1], m1[3] * m2[0] + m1[7] * m2[1], m1[0] * m2[2] + m1[4] * m2[3], m1[1] * m2[2] + m1[5] * m2[3], m1[2] * m2[2] + m1[6] * m2[3], m1[3] * m2[2] + m1[7] * m2[3], m1[0] * m2[4] + m1[4] * m2[5], m1[1] * m2[4] + m1[5] * m2[5], m1[2] * m2[4] + m1[6] * m2[5], m1[3] * m2[4] + m1[7] * m2[5], m1[0] * m2[6] + m1[4] * m2[7], m1[1] * m2[6] + m1[5] * m2[7], m1[2] * m2[6] + m1[6] * m2[7], m1[3] * m2[6] + m1[7] * m2[7]]);
+	};
+	$ptrType(Mat4x2).prototype.Mul2x4 = function(m2) { return new Mat4x2(this.$get()).Mul2x4(m2); };
+	Mat4x2.prototype.Transpose = function() {
+		var $ptr, m1;
+		m1 = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [m1[0], m1[4], m1[1], m1[5], m1[2], m1[6], m1[3], m1[7]]);
+	};
+	$ptrType(Mat4x2).prototype.Transpose = function() { return new Mat4x2(this.$get()).Transpose(); };
+	Mat4x2.prototype.ApproxEqual = function(m2) {
+		var $ptr, _i, _ref, i, m1, m2;
+		m2 = $clone(m2, Mat4x2);
+		m1 = $clone(this.$val, Mat4x2);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 8)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat4x2).prototype.ApproxEqual = function(m2) { return new Mat4x2(this.$get()).ApproxEqual(m2); };
+	Mat4x2.prototype.ApproxEqualThreshold = function(m2, threshold) {
+		var $ptr, _i, _ref, i, m1, m2, threshold;
+		m2 = $clone(m2, Mat4x2);
+		m1 = $clone(this.$val, Mat4x2);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 8)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat4x2).prototype.ApproxEqualThreshold = function(m2, threshold) { return new Mat4x2(this.$get()).ApproxEqualThreshold(m2, threshold); };
+	Mat4x2.prototype.ApproxFuncEqual = function(m2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, m1, m2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; m1 = $f.m1; m2 = $f.m2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m2 = $clone(m2, Mat4x2);
+		m1 = $clone(this.$val, Mat4x2);
+		_ref = m1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 8)) { break; } */ if(!(_i < 8)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat4x2.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.m1 = m1; $f.m2 = m2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat4x2).prototype.ApproxFuncEqual = function(m2, eq) { return new Mat4x2(this.$get()).ApproxFuncEqual(m2, eq); };
+	Mat4x2.prototype.At = function(row, col) {
+		var $ptr, col, m, row, x;
+		m = $clone(this.$val, Mat4x2);
+		return (x = ($imul(col, 4)) + row >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x]));
+	};
+	$ptrType(Mat4x2).prototype.At = function(row, col) { return new Mat4x2(this.$get()).At(row, col); };
+	Mat4x2.prototype.Set = function(row, col, value) {
+		var $ptr, col, m, row, value, x;
+		m = this.$val;
+		(x = ($imul(col, 4)) + row >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = value));
+	};
+	$ptrType(Mat4x2).prototype.Set = function(row, col, value) { return (new Mat4x2(this.$get())).Set(row, col, value); };
+	Mat4x2.prototype.Index = function(row, col) {
+		var $ptr, col, m, row;
+		m = $clone(this.$val, Mat4x2);
+		return ($imul(col, 4)) + row >> 0;
+	};
+	$ptrType(Mat4x2).prototype.Index = function(row, col) { return new Mat4x2(this.$get()).Index(row, col); };
+	Mat4x2.prototype.Row = function(row) {
+		var $ptr, m, row, x, x$1;
+		m = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [(x = row + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = row + 4 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1]))]);
+	};
+	$ptrType(Mat4x2).prototype.Row = function(row) { return new Mat4x2(this.$get()).Row(row); };
+	Mat4x2.prototype.Rows = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, m, row0, row1, row2, row3;
+		row0 = arrayType$1.zero();
+		row1 = arrayType$1.zero();
+		row2 = arrayType$1.zero();
+		row3 = arrayType$1.zero();
+		m = $clone(this.$val, Mat4x2);
+		_tmp = $clone(new Mat4x2(m).Row(0), Vec2);
+		_tmp$1 = $clone(new Mat4x2(m).Row(1), Vec2);
+		_tmp$2 = $clone(new Mat4x2(m).Row(2), Vec2);
+		_tmp$3 = $clone(new Mat4x2(m).Row(3), Vec2);
+		Vec2.copy(row0, _tmp);
+		Vec2.copy(row1, _tmp$1);
+		Vec2.copy(row2, _tmp$2);
+		Vec2.copy(row3, _tmp$3);
+		return [row0, row1, row2, row3];
+	};
+	$ptrType(Mat4x2).prototype.Rows = function() { return new Mat4x2(this.$get()).Rows(); };
+	Mat4x2.prototype.Col = function(col) {
+		var $ptr, col, m, x, x$1, x$2, x$3;
+		m = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [(x = ($imul(col, 4)) + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = ($imul(col, 4)) + 1 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = ($imul(col, 4)) + 2 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2])), (x$3 = ($imul(col, 4)) + 3 >> 0, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3]))]);
+	};
+	$ptrType(Mat4x2).prototype.Col = function(col) { return new Mat4x2(this.$get()).Col(col); };
+	Mat4x2.prototype.Cols = function() {
+		var $ptr, _tmp, _tmp$1, col0, col1, m;
+		col0 = arrayType.zero();
+		col1 = arrayType.zero();
+		m = $clone(this.$val, Mat4x2);
+		_tmp = $clone(new Mat4x2(m).Col(0), Vec4);
+		_tmp$1 = $clone(new Mat4x2(m).Col(1), Vec4);
+		Vec4.copy(col0, _tmp);
+		Vec4.copy(col1, _tmp$1);
+		return [col0, col1];
+	};
+	$ptrType(Mat4x2).prototype.Cols = function() { return new Mat4x2(this.$get()).Cols(); };
+	Mat4x2.prototype.Abs = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat4x2);
+		return $toNativeArray($kindFloat64, [Abs(m[0]), Abs(m[1]), Abs(m[2]), Abs(m[3]), Abs(m[4]), Abs(m[5]), Abs(m[6]), Abs(m[7])]);
+	};
+	$ptrType(Mat4x2).prototype.Abs = function() { return new Mat4x2(this.$get()).Abs(); };
+	Mat4x2.prototype.String = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, buf, col, i, m, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; buf = $f.buf; col = $f.col; i = $f.i; m = $f.m; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = $clone(this.$val, Mat4x2);
+		buf = new bytes.Buffer.ptr(sliceType$2.nil, 0, arrayType$2.zero(), arrayType$3.zero(), 0);
+		w = tabwriter.NewWriter(buf, 4, 4, 1, 32, 4);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 4)) { break; } */ if(!(i < 4)) { $s = 2; continue; }
+			_ref = new Mat4x2(m).Row(i);
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < 2)) { break; } */ if(!(_i < 2)) { $s = 4; continue; }
+				col = ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]);
+				_r = fmt.Fprintf(w, "%f\t", new sliceType$3([new $Float64(col)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			_r$1 = fmt.Fprintln(w, new sliceType$3([new $String("")])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = w.Flush(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		return buf.String();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat4x2.prototype.String }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.buf = buf; $f.col = col; $f.i = i; $f.m = m; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat4x2).prototype.String = function() { return new Mat4x2(this.$get()).String(); };
+	Mat4x3.prototype.SetCol = function(col, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, col, m, v, x, x$1, x$2, x$3;
+		v = $clone(v, Vec4);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		_tmp$3 = v[3];
+		(x = ($imul(col, 4)) + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = ($imul(col, 4)) + 1 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = ($imul(col, 4)) + 2 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+		(x$3 = ($imul(col, 4)) + 3 >> 0, m.nilCheck, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3] = _tmp$3));
+	};
+	$ptrType(Mat4x3).prototype.SetCol = function(col, v) { return (new Mat4x3(this.$get())).SetCol(col, v); };
+	Mat4x3.prototype.SetRow = function(row, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, m, row, v, x, x$1, x$2;
+		v = $clone(v, Vec3);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		(x = row + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = row + 4 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = row + 8 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+	};
+	$ptrType(Mat4x3).prototype.SetRow = function(row, v) { return (new Mat4x3(this.$get())).SetRow(row, v); };
+	Mat4x3.prototype.Add = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x3);
+		m1 = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3], m1[4] + m2[4], m1[5] + m2[5], m1[6] + m2[6], m1[7] + m2[7], m1[8] + m2[8], m1[9] + m2[9], m1[10] + m2[10], m1[11] + m2[11]]);
+	};
+	$ptrType(Mat4x3).prototype.Add = function(m2) { return new Mat4x3(this.$get()).Add(m2); };
+	Mat4x3.prototype.Sub = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x3);
+		m1 = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3], m1[4] - m2[4], m1[5] - m2[5], m1[6] - m2[6], m1[7] - m2[7], m1[8] - m2[8], m1[9] - m2[9], m1[10] - m2[10], m1[11] - m2[11]]);
+	};
+	$ptrType(Mat4x3).prototype.Sub = function(m2) { return new Mat4x3(this.$get()).Sub(m2); };
+	Mat4x3.prototype.Mul = function(c) {
+		var $ptr, c, m1;
+		m1 = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [m1[0] * c, m1[1] * c, m1[2] * c, m1[3] * c, m1[4] * c, m1[5] * c, m1[6] * c, m1[7] * c, m1[8] * c, m1[9] * c, m1[10] * c, m1[11] * c]);
+	};
+	$ptrType(Mat4x3).prototype.Mul = function(c) { return new Mat4x3(this.$get()).Mul(c); };
+	Mat4x3.prototype.Mul3x1 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Vec3);
+		m1 = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2], m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2]]);
+	};
+	$ptrType(Mat4x3).prototype.Mul3x1 = function(m2) { return new Mat4x3(this.$get()).Mul3x1(m2); };
+	Mat4x3.prototype.Mul3x2 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x2);
+		m1 = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2], m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2], m1[0] * m2[3] + m1[4] * m2[4] + m1[8] * m2[5], m1[1] * m2[3] + m1[5] * m2[4] + m1[9] * m2[5], m1[2] * m2[3] + m1[6] * m2[4] + m1[10] * m2[5], m1[3] * m2[3] + m1[7] * m2[4] + m1[11] * m2[5]]);
+	};
+	$ptrType(Mat4x3).prototype.Mul3x2 = function(m2) { return new Mat4x3(this.$get()).Mul3x2(m2); };
+	Mat4x3.prototype.Mul3 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3);
+		m1 = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2], m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2], m1[0] * m2[3] + m1[4] * m2[4] + m1[8] * m2[5], m1[1] * m2[3] + m1[5] * m2[4] + m1[9] * m2[5], m1[2] * m2[3] + m1[6] * m2[4] + m1[10] * m2[5], m1[3] * m2[3] + m1[7] * m2[4] + m1[11] * m2[5], m1[0] * m2[6] + m1[4] * m2[7] + m1[8] * m2[8], m1[1] * m2[6] + m1[5] * m2[7] + m1[9] * m2[8], m1[2] * m2[6] + m1[6] * m2[7] + m1[10] * m2[8], m1[3] * m2[6] + m1[7] * m2[7] + m1[11] * m2[8]]);
+	};
+	$ptrType(Mat4x3).prototype.Mul3 = function(m2) { return new Mat4x3(this.$get()).Mul3(m2); };
+	Mat4x3.prototype.Mul3x4 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat3x4);
+		m1 = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2], m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2], m1[0] * m2[3] + m1[4] * m2[4] + m1[8] * m2[5], m1[1] * m2[3] + m1[5] * m2[4] + m1[9] * m2[5], m1[2] * m2[3] + m1[6] * m2[4] + m1[10] * m2[5], m1[3] * m2[3] + m1[7] * m2[4] + m1[11] * m2[5], m1[0] * m2[6] + m1[4] * m2[7] + m1[8] * m2[8], m1[1] * m2[6] + m1[5] * m2[7] + m1[9] * m2[8], m1[2] * m2[6] + m1[6] * m2[7] + m1[10] * m2[8], m1[3] * m2[6] + m1[7] * m2[7] + m1[11] * m2[8], m1[0] * m2[9] + m1[4] * m2[10] + m1[8] * m2[11], m1[1] * m2[9] + m1[5] * m2[10] + m1[9] * m2[11], m1[2] * m2[9] + m1[6] * m2[10] + m1[10] * m2[11], m1[3] * m2[9] + m1[7] * m2[10] + m1[11] * m2[11]]);
+	};
+	$ptrType(Mat4x3).prototype.Mul3x4 = function(m2) { return new Mat4x3(this.$get()).Mul3x4(m2); };
+	Mat4x3.prototype.Transpose = function() {
+		var $ptr, m1;
+		m1 = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [m1[0], m1[4], m1[8], m1[1], m1[5], m1[9], m1[2], m1[6], m1[10], m1[3], m1[7], m1[11]]);
+	};
+	$ptrType(Mat4x3).prototype.Transpose = function() { return new Mat4x3(this.$get()).Transpose(); };
+	Mat4x3.prototype.ApproxEqual = function(m2) {
+		var $ptr, _i, _ref, i, m1, m2;
+		m2 = $clone(m2, Mat4x3);
+		m1 = $clone(this.$val, Mat4x3);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 12)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat4x3).prototype.ApproxEqual = function(m2) { return new Mat4x3(this.$get()).ApproxEqual(m2); };
+	Mat4x3.prototype.ApproxEqualThreshold = function(m2, threshold) {
+		var $ptr, _i, _ref, i, m1, m2, threshold;
+		m2 = $clone(m2, Mat4x3);
+		m1 = $clone(this.$val, Mat4x3);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 12)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat4x3).prototype.ApproxEqualThreshold = function(m2, threshold) { return new Mat4x3(this.$get()).ApproxEqualThreshold(m2, threshold); };
+	Mat4x3.prototype.ApproxFuncEqual = function(m2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, m1, m2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; m1 = $f.m1; m2 = $f.m2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m2 = $clone(m2, Mat4x3);
+		m1 = $clone(this.$val, Mat4x3);
+		_ref = m1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 12)) { break; } */ if(!(_i < 12)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat4x3.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.m1 = m1; $f.m2 = m2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat4x3).prototype.ApproxFuncEqual = function(m2, eq) { return new Mat4x3(this.$get()).ApproxFuncEqual(m2, eq); };
+	Mat4x3.prototype.At = function(row, col) {
+		var $ptr, col, m, row, x;
+		m = $clone(this.$val, Mat4x3);
+		return (x = ($imul(col, 4)) + row >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x]));
+	};
+	$ptrType(Mat4x3).prototype.At = function(row, col) { return new Mat4x3(this.$get()).At(row, col); };
+	Mat4x3.prototype.Set = function(row, col, value) {
+		var $ptr, col, m, row, value, x;
+		m = this.$val;
+		(x = ($imul(col, 4)) + row >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = value));
+	};
+	$ptrType(Mat4x3).prototype.Set = function(row, col, value) { return (new Mat4x3(this.$get())).Set(row, col, value); };
+	Mat4x3.prototype.Index = function(row, col) {
+		var $ptr, col, m, row;
+		m = $clone(this.$val, Mat4x3);
+		return ($imul(col, 4)) + row >> 0;
+	};
+	$ptrType(Mat4x3).prototype.Index = function(row, col) { return new Mat4x3(this.$get()).Index(row, col); };
+	Mat4x3.prototype.Row = function(row) {
+		var $ptr, m, row, x, x$1, x$2;
+		m = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [(x = row + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = row + 4 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = row + 8 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2]))]);
+	};
+	$ptrType(Mat4x3).prototype.Row = function(row) { return new Mat4x3(this.$get()).Row(row); };
+	Mat4x3.prototype.Rows = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, m, row0, row1, row2, row3;
+		row0 = arrayType$4.zero();
+		row1 = arrayType$4.zero();
+		row2 = arrayType$4.zero();
+		row3 = arrayType$4.zero();
+		m = $clone(this.$val, Mat4x3);
+		_tmp = $clone(new Mat4x3(m).Row(0), Vec3);
+		_tmp$1 = $clone(new Mat4x3(m).Row(1), Vec3);
+		_tmp$2 = $clone(new Mat4x3(m).Row(2), Vec3);
+		_tmp$3 = $clone(new Mat4x3(m).Row(3), Vec3);
+		Vec3.copy(row0, _tmp);
+		Vec3.copy(row1, _tmp$1);
+		Vec3.copy(row2, _tmp$2);
+		Vec3.copy(row3, _tmp$3);
+		return [row0, row1, row2, row3];
+	};
+	$ptrType(Mat4x3).prototype.Rows = function() { return new Mat4x3(this.$get()).Rows(); };
+	Mat4x3.prototype.Col = function(col) {
+		var $ptr, col, m, x, x$1, x$2, x$3;
+		m = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [(x = ($imul(col, 4)) + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = ($imul(col, 4)) + 1 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = ($imul(col, 4)) + 2 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2])), (x$3 = ($imul(col, 4)) + 3 >> 0, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3]))]);
+	};
+	$ptrType(Mat4x3).prototype.Col = function(col) { return new Mat4x3(this.$get()).Col(col); };
+	Mat4x3.prototype.Cols = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, col0, col1, col2, m;
+		col0 = arrayType.zero();
+		col1 = arrayType.zero();
+		col2 = arrayType.zero();
+		m = $clone(this.$val, Mat4x3);
+		_tmp = $clone(new Mat4x3(m).Col(0), Vec4);
+		_tmp$1 = $clone(new Mat4x3(m).Col(1), Vec4);
+		_tmp$2 = $clone(new Mat4x3(m).Col(2), Vec4);
+		Vec4.copy(col0, _tmp);
+		Vec4.copy(col1, _tmp$1);
+		Vec4.copy(col2, _tmp$2);
+		return [col0, col1, col2];
+	};
+	$ptrType(Mat4x3).prototype.Cols = function() { return new Mat4x3(this.$get()).Cols(); };
+	Mat4x3.prototype.Abs = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat4x3);
+		return $toNativeArray($kindFloat64, [Abs(m[0]), Abs(m[1]), Abs(m[2]), Abs(m[3]), Abs(m[4]), Abs(m[5]), Abs(m[6]), Abs(m[7]), Abs(m[8]), Abs(m[9]), Abs(m[10]), Abs(m[11])]);
+	};
+	$ptrType(Mat4x3).prototype.Abs = function() { return new Mat4x3(this.$get()).Abs(); };
+	Mat4x3.prototype.String = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, buf, col, i, m, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; buf = $f.buf; col = $f.col; i = $f.i; m = $f.m; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = $clone(this.$val, Mat4x3);
+		buf = new bytes.Buffer.ptr(sliceType$2.nil, 0, arrayType$2.zero(), arrayType$3.zero(), 0);
+		w = tabwriter.NewWriter(buf, 4, 4, 1, 32, 4);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 4)) { break; } */ if(!(i < 4)) { $s = 2; continue; }
+			_ref = new Mat4x3(m).Row(i);
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < 3)) { break; } */ if(!(_i < 3)) { $s = 4; continue; }
+				col = ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]);
+				_r = fmt.Fprintf(w, "%f\t", new sliceType$3([new $Float64(col)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			_r$1 = fmt.Fprintln(w, new sliceType$3([new $String("")])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = w.Flush(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		return buf.String();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat4x3.prototype.String }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.buf = buf; $f.col = col; $f.i = i; $f.m = m; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat4x3).prototype.String = function() { return new Mat4x3(this.$get()).String(); };
+	Mat4.prototype.SetCol = function(col, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, col, m, v, x, x$1, x$2, x$3;
+		v = $clone(v, Vec4);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		_tmp$3 = v[3];
+		(x = ($imul(col, 4)) + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = ($imul(col, 4)) + 1 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = ($imul(col, 4)) + 2 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+		(x$3 = ($imul(col, 4)) + 3 >> 0, m.nilCheck, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3] = _tmp$3));
+	};
+	$ptrType(Mat4).prototype.SetCol = function(col, v) { return (new Mat4(this.$get())).SetCol(col, v); };
+	Mat4.prototype.SetRow = function(row, v) {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, m, row, v, x, x$1, x$2, x$3;
+		v = $clone(v, Vec4);
+		m = this.$val;
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		_tmp$3 = v[3];
+		(x = row + 0 >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = _tmp));
+		(x$1 = row + 4 >> 0, m.nilCheck, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1] = _tmp$1));
+		(x$2 = row + 8 >> 0, m.nilCheck, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2] = _tmp$2));
+		(x$3 = row + 12 >> 0, m.nilCheck, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3] = _tmp$3));
+	};
+	$ptrType(Mat4).prototype.SetRow = function(row, v) { return (new Mat4(this.$get())).SetRow(row, v); };
+	Mat4.prototype.Diag = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [m[0], m[5], m[10], m[15]]);
+	};
+	$ptrType(Mat4).prototype.Diag = function() { return new Mat4(this.$get()).Diag(); };
+	Ident4 = function() {
+		var $ptr;
+		return $toNativeArray($kindFloat64, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+	};
+	$pkg.Ident4 = Ident4;
+	Mat4FromCols = function(col0, col1, col2, col3) {
+		var $ptr, col0, col1, col2, col3;
+		col3 = $clone(col3, Vec4);
+		col2 = $clone(col2, Vec4);
+		col1 = $clone(col1, Vec4);
+		col0 = $clone(col0, Vec4);
+		return $toNativeArray($kindFloat64, [col0[0], col0[1], col0[2], col0[3], col1[0], col1[1], col1[2], col1[3], col2[0], col2[1], col2[2], col2[3], col3[0], col3[1], col3[2], col3[3]]);
+	};
+	$pkg.Mat4FromCols = Mat4FromCols;
+	Mat4.prototype.Add = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4);
+		m1 = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [m1[0] + m2[0], m1[1] + m2[1], m1[2] + m2[2], m1[3] + m2[3], m1[4] + m2[4], m1[5] + m2[5], m1[6] + m2[6], m1[7] + m2[7], m1[8] + m2[8], m1[9] + m2[9], m1[10] + m2[10], m1[11] + m2[11], m1[12] + m2[12], m1[13] + m2[13], m1[14] + m2[14], m1[15] + m2[15]]);
+	};
+	$ptrType(Mat4).prototype.Add = function(m2) { return new Mat4(this.$get()).Add(m2); };
+	Mat4.prototype.Sub = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4);
+		m1 = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [m1[0] - m2[0], m1[1] - m2[1], m1[2] - m2[2], m1[3] - m2[3], m1[4] - m2[4], m1[5] - m2[5], m1[6] - m2[6], m1[7] - m2[7], m1[8] - m2[8], m1[9] - m2[9], m1[10] - m2[10], m1[11] - m2[11], m1[12] - m2[12], m1[13] - m2[13], m1[14] - m2[14], m1[15] - m2[15]]);
+	};
+	$ptrType(Mat4).prototype.Sub = function(m2) { return new Mat4(this.$get()).Sub(m2); };
+	Mat4.prototype.Mul = function(c) {
+		var $ptr, c, m1;
+		m1 = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [m1[0] * c, m1[1] * c, m1[2] * c, m1[3] * c, m1[4] * c, m1[5] * c, m1[6] * c, m1[7] * c, m1[8] * c, m1[9] * c, m1[10] * c, m1[11] * c, m1[12] * c, m1[13] * c, m1[14] * c, m1[15] * c]);
+	};
+	$ptrType(Mat4).prototype.Mul = function(c) { return new Mat4(this.$get()).Mul(c); };
+	Mat4.prototype.Mul4x1 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Vec4);
+		m1 = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2] + m1[12] * m2[3], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2] + m1[13] * m2[3], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2] + m1[14] * m2[3], m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2] + m1[15] * m2[3]]);
+	};
+	$ptrType(Mat4).prototype.Mul4x1 = function(m2) { return new Mat4(this.$get()).Mul4x1(m2); };
+	Mat4.prototype.Mul4x2 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x2);
+		m1 = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2] + m1[12] * m2[3], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2] + m1[13] * m2[3], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2] + m1[14] * m2[3], m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2] + m1[15] * m2[3], m1[0] * m2[4] + m1[4] * m2[5] + m1[8] * m2[6] + m1[12] * m2[7], m1[1] * m2[4] + m1[5] * m2[5] + m1[9] * m2[6] + m1[13] * m2[7], m1[2] * m2[4] + m1[6] * m2[5] + m1[10] * m2[6] + m1[14] * m2[7], m1[3] * m2[4] + m1[7] * m2[5] + m1[11] * m2[6] + m1[15] * m2[7]]);
+	};
+	$ptrType(Mat4).prototype.Mul4x2 = function(m2) { return new Mat4(this.$get()).Mul4x2(m2); };
+	Mat4.prototype.Mul4x3 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4x3);
+		m1 = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2] + m1[12] * m2[3], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2] + m1[13] * m2[3], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2] + m1[14] * m2[3], m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2] + m1[15] * m2[3], m1[0] * m2[4] + m1[4] * m2[5] + m1[8] * m2[6] + m1[12] * m2[7], m1[1] * m2[4] + m1[5] * m2[5] + m1[9] * m2[6] + m1[13] * m2[7], m1[2] * m2[4] + m1[6] * m2[5] + m1[10] * m2[6] + m1[14] * m2[7], m1[3] * m2[4] + m1[7] * m2[5] + m1[11] * m2[6] + m1[15] * m2[7], m1[0] * m2[8] + m1[4] * m2[9] + m1[8] * m2[10] + m1[12] * m2[11], m1[1] * m2[8] + m1[5] * m2[9] + m1[9] * m2[10] + m1[13] * m2[11], m1[2] * m2[8] + m1[6] * m2[9] + m1[10] * m2[10] + m1[14] * m2[11], m1[3] * m2[8] + m1[7] * m2[9] + m1[11] * m2[10] + m1[15] * m2[11]]);
+	};
+	$ptrType(Mat4).prototype.Mul4x3 = function(m2) { return new Mat4(this.$get()).Mul4x3(m2); };
+	Mat4.prototype.Mul4 = function(m2) {
+		var $ptr, m1, m2;
+		m2 = $clone(m2, Mat4);
+		m1 = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [m1[0] * m2[0] + m1[4] * m2[1] + m1[8] * m2[2] + m1[12] * m2[3], m1[1] * m2[0] + m1[5] * m2[1] + m1[9] * m2[2] + m1[13] * m2[3], m1[2] * m2[0] + m1[6] * m2[1] + m1[10] * m2[2] + m1[14] * m2[3], m1[3] * m2[0] + m1[7] * m2[1] + m1[11] * m2[2] + m1[15] * m2[3], m1[0] * m2[4] + m1[4] * m2[5] + m1[8] * m2[6] + m1[12] * m2[7], m1[1] * m2[4] + m1[5] * m2[5] + m1[9] * m2[6] + m1[13] * m2[7], m1[2] * m2[4] + m1[6] * m2[5] + m1[10] * m2[6] + m1[14] * m2[7], m1[3] * m2[4] + m1[7] * m2[5] + m1[11] * m2[6] + m1[15] * m2[7], m1[0] * m2[8] + m1[4] * m2[9] + m1[8] * m2[10] + m1[12] * m2[11], m1[1] * m2[8] + m1[5] * m2[9] + m1[9] * m2[10] + m1[13] * m2[11], m1[2] * m2[8] + m1[6] * m2[9] + m1[10] * m2[10] + m1[14] * m2[11], m1[3] * m2[8] + m1[7] * m2[9] + m1[11] * m2[10] + m1[15] * m2[11], m1[0] * m2[12] + m1[4] * m2[13] + m1[8] * m2[14] + m1[12] * m2[15], m1[1] * m2[12] + m1[5] * m2[13] + m1[9] * m2[14] + m1[13] * m2[15], m1[2] * m2[12] + m1[6] * m2[13] + m1[10] * m2[14] + m1[14] * m2[15], m1[3] * m2[12] + m1[7] * m2[13] + m1[11] * m2[14] + m1[15] * m2[15]]);
+	};
+	$ptrType(Mat4).prototype.Mul4 = function(m2) { return new Mat4(this.$get()).Mul4(m2); };
+	Mat4.prototype.Transpose = function() {
+		var $ptr, m1;
+		m1 = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [m1[0], m1[4], m1[8], m1[12], m1[1], m1[5], m1[9], m1[13], m1[2], m1[6], m1[10], m1[14], m1[3], m1[7], m1[11], m1[15]]);
+	};
+	$ptrType(Mat4).prototype.Transpose = function() { return new Mat4(this.$get()).Transpose(); };
+	Mat4.prototype.Det = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat4);
+		return m[0] * m[5] * m[10] * m[15] - m[0] * m[5] * m[11] * m[14] - m[0] * m[6] * m[9] * m[15] + m[0] * m[6] * m[11] * m[13] + m[0] * m[7] * m[9] * m[14] - m[0] * m[7] * m[10] * m[13] - m[1] * m[4] * m[10] * m[15] + m[1] * m[4] * m[11] * m[14] + m[1] * m[6] * m[8] * m[15] - m[1] * m[6] * m[11] * m[12] - m[1] * m[7] * m[8] * m[14] + m[1] * m[7] * m[10] * m[12] + m[2] * m[4] * m[9] * m[15] - m[2] * m[4] * m[11] * m[13] - m[2] * m[5] * m[8] * m[15] + m[2] * m[5] * m[11] * m[12] + m[2] * m[7] * m[8] * m[13] - m[2] * m[7] * m[9] * m[12] - m[3] * m[4] * m[9] * m[14] + m[3] * m[4] * m[10] * m[13] + m[3] * m[5] * m[8] * m[14] - m[3] * m[5] * m[10] * m[12] - m[3] * m[6] * m[8] * m[13] + m[3] * m[6] * m[9] * m[12];
+	};
+	$ptrType(Mat4).prototype.Det = function() { return new Mat4(this.$get()).Det(); };
+	Mat4.prototype.Inv = function() {
+		var $ptr, det, m, retMat;
+		m = $clone(this.$val, Mat4);
+		det = new Mat4(m).Det();
+		if (FloatEqual(det, 0)) {
+			return arrayType$6.zero();
+		}
+		retMat = $toNativeArray($kindFloat64, [-m[7] * m[10] * m[13] + m[6] * m[11] * m[13] + m[7] * m[9] * m[14] - m[5] * m[11] * m[14] - m[6] * m[9] * m[15] + m[5] * m[10] * m[15], m[3] * m[10] * m[13] - m[2] * m[11] * m[13] - m[3] * m[9] * m[14] + m[1] * m[11] * m[14] + m[2] * m[9] * m[15] - m[1] * m[10] * m[15], -m[3] * m[6] * m[13] + m[2] * m[7] * m[13] + m[3] * m[5] * m[14] - m[1] * m[7] * m[14] - m[2] * m[5] * m[15] + m[1] * m[6] * m[15], m[3] * m[6] * m[9] - m[2] * m[7] * m[9] - m[3] * m[5] * m[10] + m[1] * m[7] * m[10] + m[2] * m[5] * m[11] - m[1] * m[6] * m[11], m[7] * m[10] * m[12] - m[6] * m[11] * m[12] - m[7] * m[8] * m[14] + m[4] * m[11] * m[14] + m[6] * m[8] * m[15] - m[4] * m[10] * m[15], -m[3] * m[10] * m[12] + m[2] * m[11] * m[12] + m[3] * m[8] * m[14] - m[0] * m[11] * m[14] - m[2] * m[8] * m[15] + m[0] * m[10] * m[15], m[3] * m[6] * m[12] - m[2] * m[7] * m[12] - m[3] * m[4] * m[14] + m[0] * m[7] * m[14] + m[2] * m[4] * m[15] - m[0] * m[6] * m[15], -m[3] * m[6] * m[8] + m[2] * m[7] * m[8] + m[3] * m[4] * m[10] - m[0] * m[7] * m[10] - m[2] * m[4] * m[11] + m[0] * m[6] * m[11], -m[7] * m[9] * m[12] + m[5] * m[11] * m[12] + m[7] * m[8] * m[13] - m[4] * m[11] * m[13] - m[5] * m[8] * m[15] + m[4] * m[9] * m[15], m[3] * m[9] * m[12] - m[1] * m[11] * m[12] - m[3] * m[8] * m[13] + m[0] * m[11] * m[13] + m[1] * m[8] * m[15] - m[0] * m[9] * m[15], -m[3] * m[5] * m[12] + m[1] * m[7] * m[12] + m[3] * m[4] * m[13] - m[0] * m[7] * m[13] - m[1] * m[4] * m[15] + m[0] * m[5] * m[15], m[3] * m[5] * m[8] - m[1] * m[7] * m[8] - m[3] * m[4] * m[9] + m[0] * m[7] * m[9] + m[1] * m[4] * m[11] - m[0] * m[5] * m[11], m[6] * m[9] * m[12] - m[5] * m[10] * m[12] - m[6] * m[8] * m[13] + m[4] * m[10] * m[13] + m[5] * m[8] * m[14] - m[4] * m[9] * m[14], -m[2] * m[9] * m[12] + m[1] * m[10] * m[12] + m[2] * m[8] * m[13] - m[0] * m[10] * m[13] - m[1] * m[8] * m[14] + m[0] * m[9] * m[14], m[2] * m[5] * m[12] - m[1] * m[6] * m[12] - m[2] * m[4] * m[13] + m[0] * m[6] * m[13] + m[1] * m[4] * m[14] - m[0] * m[5] * m[14], -m[2] * m[5] * m[8] + m[1] * m[6] * m[8] + m[2] * m[4] * m[9] - m[0] * m[6] * m[9] - m[1] * m[4] * m[10] + m[0] * m[5] * m[10]]);
+		return new Mat4(retMat).Mul(1 / det);
+	};
+	$ptrType(Mat4).prototype.Inv = function() { return new Mat4(this.$get()).Inv(); };
+	Mat4.prototype.ApproxEqual = function(m2) {
+		var $ptr, _i, _ref, i, m1, m2;
+		m2 = $clone(m2, Mat4);
+		m1 = $clone(this.$val, Mat4);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 16)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat4).prototype.ApproxEqual = function(m2) { return new Mat4(this.$get()).ApproxEqual(m2); };
+	Mat4.prototype.ApproxEqualThreshold = function(m2, threshold) {
+		var $ptr, _i, _ref, i, m1, m2, threshold;
+		m2 = $clone(m2, Mat4);
+		m1 = $clone(this.$val, Mat4);
+		_ref = m1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 16)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Mat4).prototype.ApproxEqualThreshold = function(m2, threshold) { return new Mat4(this.$get()).ApproxEqualThreshold(m2, threshold); };
+	Mat4.prototype.ApproxFuncEqual = function(m2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, m1, m2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; m1 = $f.m1; m2 = $f.m2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m2 = $clone(m2, Mat4);
+		m1 = $clone(this.$val, Mat4);
+		_ref = m1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 16)) { break; } */ if(!(_i < 16)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= m1.length) ? $throwRuntimeError("index out of range") : m1[i]), ((i < 0 || i >= m2.length) ? $throwRuntimeError("index out of range") : m2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat4.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.m1 = m1; $f.m2 = m2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat4).prototype.ApproxFuncEqual = function(m2, eq) { return new Mat4(this.$get()).ApproxFuncEqual(m2, eq); };
+	Mat4.prototype.At = function(row, col) {
+		var $ptr, col, m, row, x;
+		m = $clone(this.$val, Mat4);
+		return (x = ($imul(col, 4)) + row >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x]));
+	};
+	$ptrType(Mat4).prototype.At = function(row, col) { return new Mat4(this.$get()).At(row, col); };
+	Mat4.prototype.Set = function(row, col, value) {
+		var $ptr, col, m, row, value, x;
+		m = this.$val;
+		(x = ($imul(col, 4)) + row >> 0, m.nilCheck, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x] = value));
+	};
+	$ptrType(Mat4).prototype.Set = function(row, col, value) { return (new Mat4(this.$get())).Set(row, col, value); };
+	Mat4.prototype.Index = function(row, col) {
+		var $ptr, col, m, row;
+		m = $clone(this.$val, Mat4);
+		return ($imul(col, 4)) + row >> 0;
+	};
+	$ptrType(Mat4).prototype.Index = function(row, col) { return new Mat4(this.$get()).Index(row, col); };
+	Mat4.prototype.Row = function(row) {
+		var $ptr, m, row, x, x$1, x$2, x$3;
+		m = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [(x = row + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = row + 4 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = row + 8 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2])), (x$3 = row + 12 >> 0, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3]))]);
+	};
+	$ptrType(Mat4).prototype.Row = function(row) { return new Mat4(this.$get()).Row(row); };
+	Mat4.prototype.Rows = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, m, row0, row1, row2, row3;
+		row0 = arrayType.zero();
+		row1 = arrayType.zero();
+		row2 = arrayType.zero();
+		row3 = arrayType.zero();
+		m = $clone(this.$val, Mat4);
+		_tmp = $clone(new Mat4(m).Row(0), Vec4);
+		_tmp$1 = $clone(new Mat4(m).Row(1), Vec4);
+		_tmp$2 = $clone(new Mat4(m).Row(2), Vec4);
+		_tmp$3 = $clone(new Mat4(m).Row(3), Vec4);
+		Vec4.copy(row0, _tmp);
+		Vec4.copy(row1, _tmp$1);
+		Vec4.copy(row2, _tmp$2);
+		Vec4.copy(row3, _tmp$3);
+		return [row0, row1, row2, row3];
+	};
+	$ptrType(Mat4).prototype.Rows = function() { return new Mat4(this.$get()).Rows(); };
+	Mat4.prototype.Col = function(col) {
+		var $ptr, col, m, x, x$1, x$2, x$3;
+		m = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [(x = ($imul(col, 4)) + 0 >> 0, ((x < 0 || x >= m.length) ? $throwRuntimeError("index out of range") : m[x])), (x$1 = ($imul(col, 4)) + 1 >> 0, ((x$1 < 0 || x$1 >= m.length) ? $throwRuntimeError("index out of range") : m[x$1])), (x$2 = ($imul(col, 4)) + 2 >> 0, ((x$2 < 0 || x$2 >= m.length) ? $throwRuntimeError("index out of range") : m[x$2])), (x$3 = ($imul(col, 4)) + 3 >> 0, ((x$3 < 0 || x$3 >= m.length) ? $throwRuntimeError("index out of range") : m[x$3]))]);
+	};
+	$ptrType(Mat4).prototype.Col = function(col) { return new Mat4(this.$get()).Col(col); };
+	Mat4.prototype.Cols = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, col0, col1, col2, col3, m;
+		col0 = arrayType.zero();
+		col1 = arrayType.zero();
+		col2 = arrayType.zero();
+		col3 = arrayType.zero();
+		m = $clone(this.$val, Mat4);
+		_tmp = $clone(new Mat4(m).Col(0), Vec4);
+		_tmp$1 = $clone(new Mat4(m).Col(1), Vec4);
+		_tmp$2 = $clone(new Mat4(m).Col(2), Vec4);
+		_tmp$3 = $clone(new Mat4(m).Col(3), Vec4);
+		Vec4.copy(col0, _tmp);
+		Vec4.copy(col1, _tmp$1);
+		Vec4.copy(col2, _tmp$2);
+		Vec4.copy(col3, _tmp$3);
+		return [col0, col1, col2, col3];
+	};
+	$ptrType(Mat4).prototype.Cols = function() { return new Mat4(this.$get()).Cols(); };
+	Mat4.prototype.Trace = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat4);
+		return m[0] + m[5] + m[10] + m[15];
+	};
+	$ptrType(Mat4).prototype.Trace = function() { return new Mat4(this.$get()).Trace(); };
+	Mat4.prototype.Abs = function() {
+		var $ptr, m;
+		m = $clone(this.$val, Mat4);
+		return $toNativeArray($kindFloat64, [Abs(m[0]), Abs(m[1]), Abs(m[2]), Abs(m[3]), Abs(m[4]), Abs(m[5]), Abs(m[6]), Abs(m[7]), Abs(m[8]), Abs(m[9]), Abs(m[10]), Abs(m[11]), Abs(m[12]), Abs(m[13]), Abs(m[14]), Abs(m[15])]);
+	};
+	$ptrType(Mat4).prototype.Abs = function() { return new Mat4(this.$get()).Abs(); };
+	Mat4.prototype.String = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, buf, col, i, m, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; buf = $f.buf; col = $f.col; i = $f.i; m = $f.m; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = $clone(this.$val, Mat4);
+		buf = new bytes.Buffer.ptr(sliceType$2.nil, 0, arrayType$2.zero(), arrayType$3.zero(), 0);
+		w = tabwriter.NewWriter(buf, 4, 4, 1, 32, 4);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 4)) { break; } */ if(!(i < 4)) { $s = 2; continue; }
+			_ref = new Mat4(m).Row(i);
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < 4)) { break; } */ if(!(_i < 4)) { $s = 4; continue; }
+				col = ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]);
+				_r = fmt.Fprintf(w, "%f\t", new sliceType$3([new $Float64(col)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r;
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			_r$1 = fmt.Fprintln(w, new sliceType$3([new $String("")])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1;
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = w.Flush(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		return buf.String();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Mat4.prototype.String }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.buf = buf; $f.col = col; $f.i = i; $f.m = m; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Mat4).prototype.String = function() { return new Mat4(this.$get()).String(); };
+	Translate3D = function(Tx, Ty, Tz) {
+		var $ptr, Tx, Ty, Tz;
+		return $toNativeArray($kindFloat64, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, Tx, Ty, Tz, 1]);
+	};
+	$pkg.Translate3D = Translate3D;
+	Scale3D = function(scaleX, scaleY, scaleZ) {
+		var $ptr, scaleX, scaleY, scaleZ;
+		return $toNativeArray($kindFloat64, [scaleX, 0, 0, 0, 0, scaleY, 0, 0, 0, 0, scaleZ, 0, 0, 0, 0, 1]);
+	};
+	$pkg.Scale3D = Scale3D;
+	Abs = function(a) {
+		var $ptr, a;
+		if (a < 0) {
+			return -a;
+		} else if (a === 0) {
+			return 0;
+		}
+		return a;
+	};
+	$pkg.Abs = Abs;
+	FloatEqual = function(a, b) {
+		var $ptr, a, b;
+		return FloatEqualThreshold(a, b, $pkg.Epsilon);
+	};
+	$pkg.FloatEqual = FloatEqual;
+	FloatEqualThreshold = function(a, b, epsilon) {
+		var $ptr, a, b, diff, epsilon;
+		if (a === b) {
+			return true;
+		}
+		diff = Abs(a - b);
+		if ((a * b === 0) || diff < $pkg.MinNormal) {
+			return diff < epsilon * epsilon;
+		}
+		return diff / (Abs(a) + Abs(b)) < epsilon;
+	};
+	$pkg.FloatEqualThreshold = FloatEqualThreshold;
+	Vec2.prototype.Vec3 = function(z) {
+		var $ptr, v, z;
+		v = $clone(this.$val, Vec2);
+		return $toNativeArray($kindFloat64, [v[0], v[1], z]);
+	};
+	$ptrType(Vec2).prototype.Vec3 = function(z) { return new Vec2(this.$get()).Vec3(z); };
+	Vec2.prototype.Vec4 = function(z, w) {
+		var $ptr, v, w, z;
+		v = $clone(this.$val, Vec2);
+		return $toNativeArray($kindFloat64, [v[0], v[1], z, w]);
+	};
+	$ptrType(Vec2).prototype.Vec4 = function(z, w) { return new Vec2(this.$get()).Vec4(z, w); };
+	Vec3.prototype.Vec2 = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec3);
+		return $toNativeArray($kindFloat64, [v[0], v[1]]);
+	};
+	$ptrType(Vec3).prototype.Vec2 = function() { return new Vec3(this.$get()).Vec2(); };
+	Vec3.prototype.Vec4 = function(w) {
+		var $ptr, v, w;
+		v = $clone(this.$val, Vec3);
+		return $toNativeArray($kindFloat64, [v[0], v[1], v[2], w]);
+	};
+	$ptrType(Vec3).prototype.Vec4 = function(w) { return new Vec3(this.$get()).Vec4(w); };
+	Vec4.prototype.Vec2 = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec4);
+		return $toNativeArray($kindFloat64, [v[0], v[1]]);
+	};
+	$ptrType(Vec4).prototype.Vec2 = function() { return new Vec4(this.$get()).Vec2(); };
+	Vec4.prototype.Vec3 = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec4);
+		return $toNativeArray($kindFloat64, [v[0], v[1], v[2]]);
+	};
+	$ptrType(Vec4).prototype.Vec3 = function() { return new Vec4(this.$get()).Vec3(); };
+	Vec2.prototype.Elem = function() {
+		var $ptr, _tmp, _tmp$1, v, x, y;
+		x = 0;
+		y = 0;
+		v = $clone(this.$val, Vec2);
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		x = _tmp;
+		y = _tmp$1;
+		return [x, y];
+	};
+	$ptrType(Vec2).prototype.Elem = function() { return new Vec2(this.$get()).Elem(); };
+	Vec3.prototype.Elem = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, v, x, y, z;
+		x = 0;
+		y = 0;
+		z = 0;
+		v = $clone(this.$val, Vec3);
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		x = _tmp;
+		y = _tmp$1;
+		z = _tmp$2;
+		return [x, y, z];
+	};
+	$ptrType(Vec3).prototype.Elem = function() { return new Vec3(this.$get()).Elem(); };
+	Vec4.prototype.Elem = function() {
+		var $ptr, _tmp, _tmp$1, _tmp$2, _tmp$3, v, w, x, y, z;
+		x = 0;
+		y = 0;
+		z = 0;
+		w = 0;
+		v = $clone(this.$val, Vec4);
+		_tmp = v[0];
+		_tmp$1 = v[1];
+		_tmp$2 = v[2];
+		_tmp$3 = v[3];
+		x = _tmp;
+		y = _tmp$1;
+		z = _tmp$2;
+		w = _tmp$3;
+		return [x, y, z, w];
+	};
+	$ptrType(Vec4).prototype.Elem = function() { return new Vec4(this.$get()).Elem(); };
+	Vec3.prototype.Cross = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec3);
+		return $toNativeArray($kindFloat64, [v1[1] * v2[2] - v1[2] * v2[1], v1[2] * v2[0] - v1[0] * v2[2], v1[0] * v2[1] - v1[1] * v2[0]]);
+	};
+	$ptrType(Vec3).prototype.Cross = function(v2) { return new Vec3(this.$get()).Cross(v2); };
+	Vec2.prototype.Add = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec2);
+		v1 = $clone(this.$val, Vec2);
+		return $toNativeArray($kindFloat64, [v1[0] + v2[0], v1[1] + v2[1]]);
+	};
+	$ptrType(Vec2).prototype.Add = function(v2) { return new Vec2(this.$get()).Add(v2); };
+	Vec2.prototype.Sub = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec2);
+		v1 = $clone(this.$val, Vec2);
+		return $toNativeArray($kindFloat64, [v1[0] - v2[0], v1[1] - v2[1]]);
+	};
+	$ptrType(Vec2).prototype.Sub = function(v2) { return new Vec2(this.$get()).Sub(v2); };
+	Vec2.prototype.Mul = function(c) {
+		var $ptr, c, v1;
+		v1 = $clone(this.$val, Vec2);
+		return $toNativeArray($kindFloat64, [v1[0] * c, v1[1] * c]);
+	};
+	$ptrType(Vec2).prototype.Mul = function(c) { return new Vec2(this.$get()).Mul(c); };
+	Vec2.prototype.Dot = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec2);
+		v1 = $clone(this.$val, Vec2);
+		return v1[0] * v2[0] + v1[1] * v2[1];
+	};
+	$ptrType(Vec2).prototype.Dot = function(v2) { return new Vec2(this.$get()).Dot(v2); };
+	Vec2.prototype.Len = function() {
+		var $ptr, v1;
+		v1 = $clone(this.$val, Vec2);
+		return math.Hypot(v1[0], v1[1]);
+	};
+	$ptrType(Vec2).prototype.Len = function() { return new Vec2(this.$get()).Len(); };
+	Vec2.prototype.Normalize = function() {
+		var $ptr, l, v1;
+		v1 = $clone(this.$val, Vec2);
+		l = 1 / new Vec2(v1).Len();
+		return $toNativeArray($kindFloat64, [v1[0] * l, v1[1] * l]);
+	};
+	$ptrType(Vec2).prototype.Normalize = function() { return new Vec2(this.$get()).Normalize(); };
+	Vec2.prototype.ApproxEqual = function(v2) {
+		var $ptr, _i, _ref, i, v1, v2;
+		v2 = $clone(v2, Vec2);
+		v1 = $clone(this.$val, Vec2);
+		_ref = v1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 2)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= v1.length) ? $throwRuntimeError("index out of range") : v1[i]), ((i < 0 || i >= v2.length) ? $throwRuntimeError("index out of range") : v2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Vec2).prototype.ApproxEqual = function(v2) { return new Vec2(this.$get()).ApproxEqual(v2); };
+	Vec2.prototype.ApproxEqualThreshold = function(v2, threshold) {
+		var $ptr, _i, _ref, i, threshold, v1, v2;
+		v2 = $clone(v2, Vec2);
+		v1 = $clone(this.$val, Vec2);
+		_ref = v1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 2)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= v1.length) ? $throwRuntimeError("index out of range") : v1[i]), ((i < 0 || i >= v2.length) ? $throwRuntimeError("index out of range") : v2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Vec2).prototype.ApproxEqualThreshold = function(v2, threshold) { return new Vec2(this.$get()).ApproxEqualThreshold(v2, threshold); };
+	Vec2.prototype.ApproxFuncEqual = function(v2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, v1, v2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; v1 = $f.v1; v2 = $f.v2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v2 = $clone(v2, Vec2);
+		v1 = $clone(this.$val, Vec2);
+		_ref = v1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 2)) { break; } */ if(!(_i < 2)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= v1.length) ? $throwRuntimeError("index out of range") : v1[i]), ((i < 0 || i >= v2.length) ? $throwRuntimeError("index out of range") : v2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Vec2.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.v1 = v1; $f.v2 = v2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Vec2).prototype.ApproxFuncEqual = function(v2, eq) { return new Vec2(this.$get()).ApproxFuncEqual(v2, eq); };
+	Vec2.prototype.X = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec2);
+		return v[0];
+	};
+	$ptrType(Vec2).prototype.X = function() { return new Vec2(this.$get()).X(); };
+	Vec2.prototype.Y = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec2);
+		return v[1];
+	};
+	$ptrType(Vec2).prototype.Y = function() { return new Vec2(this.$get()).Y(); };
+	Vec2.prototype.OuterProd2 = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec2);
+		v1 = $clone(this.$val, Vec2);
+		return $toNativeArray($kindFloat64, [v1[0] * v2[0], v1[1] * v2[0], v1[0] * v2[1], v1[1] * v2[1]]);
+	};
+	$ptrType(Vec2).prototype.OuterProd2 = function(v2) { return new Vec2(this.$get()).OuterProd2(v2); };
+	Vec2.prototype.OuterProd3 = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec2);
+		return $toNativeArray($kindFloat64, [v1[0] * v2[0], v1[1] * v2[0], v1[0] * v2[1], v1[1] * v2[1], v1[0] * v2[2], v1[1] * v2[2]]);
+	};
+	$ptrType(Vec2).prototype.OuterProd3 = function(v2) { return new Vec2(this.$get()).OuterProd3(v2); };
+	Vec2.prototype.OuterProd4 = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec4);
+		v1 = $clone(this.$val, Vec2);
+		return $toNativeArray($kindFloat64, [v1[0] * v2[0], v1[1] * v2[0], v1[0] * v2[1], v1[1] * v2[1], v1[0] * v2[2], v1[1] * v2[2], v1[0] * v2[3], v1[1] * v2[3]]);
+	};
+	$ptrType(Vec2).prototype.OuterProd4 = function(v2) { return new Vec2(this.$get()).OuterProd4(v2); };
+	Vec3.prototype.Add = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec3);
+		return $toNativeArray($kindFloat64, [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2]]);
+	};
+	$ptrType(Vec3).prototype.Add = function(v2) { return new Vec3(this.$get()).Add(v2); };
+	Vec3.prototype.Sub = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec3);
+		return $toNativeArray($kindFloat64, [v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2]]);
+	};
+	$ptrType(Vec3).prototype.Sub = function(v2) { return new Vec3(this.$get()).Sub(v2); };
+	Vec3.prototype.Mul = function(c) {
+		var $ptr, c, v1;
+		v1 = $clone(this.$val, Vec3);
+		return $toNativeArray($kindFloat64, [v1[0] * c, v1[1] * c, v1[2] * c]);
+	};
+	$ptrType(Vec3).prototype.Mul = function(c) { return new Vec3(this.$get()).Mul(c); };
+	Vec3.prototype.Dot = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec3);
+		return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2];
+	};
+	$ptrType(Vec3).prototype.Dot = function(v2) { return new Vec3(this.$get()).Dot(v2); };
+	Vec3.prototype.Len = function() {
+		var $ptr, v1;
+		v1 = $clone(this.$val, Vec3);
+		return math.Sqrt(v1[0] * v1[0] + v1[1] * v1[1] + v1[2] * v1[2]);
+	};
+	$ptrType(Vec3).prototype.Len = function() { return new Vec3(this.$get()).Len(); };
+	Vec3.prototype.Normalize = function() {
+		var $ptr, l, v1;
+		v1 = $clone(this.$val, Vec3);
+		l = 1 / new Vec3(v1).Len();
+		return $toNativeArray($kindFloat64, [v1[0] * l, v1[1] * l, v1[2] * l]);
+	};
+	$ptrType(Vec3).prototype.Normalize = function() { return new Vec3(this.$get()).Normalize(); };
+	Vec3.prototype.ApproxEqual = function(v2) {
+		var $ptr, _i, _ref, i, v1, v2;
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec3);
+		_ref = v1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 3)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= v1.length) ? $throwRuntimeError("index out of range") : v1[i]), ((i < 0 || i >= v2.length) ? $throwRuntimeError("index out of range") : v2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Vec3).prototype.ApproxEqual = function(v2) { return new Vec3(this.$get()).ApproxEqual(v2); };
+	Vec3.prototype.ApproxEqualThreshold = function(v2, threshold) {
+		var $ptr, _i, _ref, i, threshold, v1, v2;
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec3);
+		_ref = v1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 3)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= v1.length) ? $throwRuntimeError("index out of range") : v1[i]), ((i < 0 || i >= v2.length) ? $throwRuntimeError("index out of range") : v2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Vec3).prototype.ApproxEqualThreshold = function(v2, threshold) { return new Vec3(this.$get()).ApproxEqualThreshold(v2, threshold); };
+	Vec3.prototype.ApproxFuncEqual = function(v2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, v1, v2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; v1 = $f.v1; v2 = $f.v2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec3);
+		_ref = v1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 3)) { break; } */ if(!(_i < 3)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= v1.length) ? $throwRuntimeError("index out of range") : v1[i]), ((i < 0 || i >= v2.length) ? $throwRuntimeError("index out of range") : v2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Vec3.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.v1 = v1; $f.v2 = v2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Vec3).prototype.ApproxFuncEqual = function(v2, eq) { return new Vec3(this.$get()).ApproxFuncEqual(v2, eq); };
+	Vec3.prototype.X = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec3);
+		return v[0];
+	};
+	$ptrType(Vec3).prototype.X = function() { return new Vec3(this.$get()).X(); };
+	Vec3.prototype.Y = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec3);
+		return v[1];
+	};
+	$ptrType(Vec3).prototype.Y = function() { return new Vec3(this.$get()).Y(); };
+	Vec3.prototype.Z = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec3);
+		return v[2];
+	};
+	$ptrType(Vec3).prototype.Z = function() { return new Vec3(this.$get()).Z(); };
+	Vec3.prototype.OuterProd2 = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec2);
+		v1 = $clone(this.$val, Vec3);
+		return $toNativeArray($kindFloat64, [v1[0] * v2[0], v1[1] * v2[0], v1[2] * v2[0], v1[0] * v2[1], v1[1] * v2[1], v1[2] * v2[1]]);
+	};
+	$ptrType(Vec3).prototype.OuterProd2 = function(v2) { return new Vec3(this.$get()).OuterProd2(v2); };
+	Vec3.prototype.OuterProd3 = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec3);
+		return $toNativeArray($kindFloat64, [v1[0] * v2[0], v1[1] * v2[0], v1[2] * v2[0], v1[0] * v2[1], v1[1] * v2[1], v1[2] * v2[1], v1[0] * v2[2], v1[1] * v2[2], v1[2] * v2[2]]);
+	};
+	$ptrType(Vec3).prototype.OuterProd3 = function(v2) { return new Vec3(this.$get()).OuterProd3(v2); };
+	Vec3.prototype.OuterProd4 = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec4);
+		v1 = $clone(this.$val, Vec3);
+		return $toNativeArray($kindFloat64, [v1[0] * v2[0], v1[1] * v2[0], v1[2] * v2[0], v1[0] * v2[1], v1[1] * v2[1], v1[2] * v2[1], v1[0] * v2[2], v1[1] * v2[2], v1[2] * v2[2], v1[0] * v2[3], v1[1] * v2[3], v1[2] * v2[3]]);
+	};
+	$ptrType(Vec3).prototype.OuterProd4 = function(v2) { return new Vec3(this.$get()).OuterProd4(v2); };
+	Vec4.prototype.Add = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec4);
+		v1 = $clone(this.$val, Vec4);
+		return $toNativeArray($kindFloat64, [v1[0] + v2[0], v1[1] + v2[1], v1[2] + v2[2], v1[3] + v2[3]]);
+	};
+	$ptrType(Vec4).prototype.Add = function(v2) { return new Vec4(this.$get()).Add(v2); };
+	Vec4.prototype.Sub = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec4);
+		v1 = $clone(this.$val, Vec4);
+		return $toNativeArray($kindFloat64, [v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2], v1[3] - v2[3]]);
+	};
+	$ptrType(Vec4).prototype.Sub = function(v2) { return new Vec4(this.$get()).Sub(v2); };
+	Vec4.prototype.Mul = function(c) {
+		var $ptr, c, v1;
+		v1 = $clone(this.$val, Vec4);
+		return $toNativeArray($kindFloat64, [v1[0] * c, v1[1] * c, v1[2] * c, v1[3] * c]);
+	};
+	$ptrType(Vec4).prototype.Mul = function(c) { return new Vec4(this.$get()).Mul(c); };
+	Vec4.prototype.Dot = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec4);
+		v1 = $clone(this.$val, Vec4);
+		return v1[0] * v2[0] + v1[1] * v2[1] + v1[2] * v2[2] + v1[3] * v2[3];
+	};
+	$ptrType(Vec4).prototype.Dot = function(v2) { return new Vec4(this.$get()).Dot(v2); };
+	Vec4.prototype.Len = function() {
+		var $ptr, v1;
+		v1 = $clone(this.$val, Vec4);
+		return math.Sqrt(v1[0] * v1[0] + v1[1] * v1[1] + v1[2] * v1[2] + v1[3] * v1[3]);
+	};
+	$ptrType(Vec4).prototype.Len = function() { return new Vec4(this.$get()).Len(); };
+	Vec4.prototype.Normalize = function() {
+		var $ptr, l, v1;
+		v1 = $clone(this.$val, Vec4);
+		l = 1 / new Vec4(v1).Len();
+		return $toNativeArray($kindFloat64, [v1[0] * l, v1[1] * l, v1[2] * l, v1[3] * l]);
+	};
+	$ptrType(Vec4).prototype.Normalize = function() { return new Vec4(this.$get()).Normalize(); };
+	Vec4.prototype.ApproxEqual = function(v2) {
+		var $ptr, _i, _ref, i, v1, v2;
+		v2 = $clone(v2, Vec4);
+		v1 = $clone(this.$val, Vec4);
+		_ref = v1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 4)) { break; }
+			i = _i;
+			if (!FloatEqual(((i < 0 || i >= v1.length) ? $throwRuntimeError("index out of range") : v1[i]), ((i < 0 || i >= v2.length) ? $throwRuntimeError("index out of range") : v2[i]))) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Vec4).prototype.ApproxEqual = function(v2) { return new Vec4(this.$get()).ApproxEqual(v2); };
+	Vec4.prototype.ApproxEqualThreshold = function(v2, threshold) {
+		var $ptr, _i, _ref, i, threshold, v1, v2;
+		v2 = $clone(v2, Vec4);
+		v1 = $clone(this.$val, Vec4);
+		_ref = v1;
+		_i = 0;
+		while (true) {
+			if (!(_i < 4)) { break; }
+			i = _i;
+			if (!FloatEqualThreshold(((i < 0 || i >= v1.length) ? $throwRuntimeError("index out of range") : v1[i]), ((i < 0 || i >= v2.length) ? $throwRuntimeError("index out of range") : v2[i]), threshold)) {
+				return false;
+			}
+			_i++;
+		}
+		return true;
+	};
+	$ptrType(Vec4).prototype.ApproxEqualThreshold = function(v2, threshold) { return new Vec4(this.$get()).ApproxEqualThreshold(v2, threshold); };
+	Vec4.prototype.ApproxFuncEqual = function(v2, eq) {
+		var $ptr, _i, _r, _ref, eq, i, v1, v2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; eq = $f.eq; i = $f.i; v1 = $f.v1; v2 = $f.v2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v2 = $clone(v2, Vec4);
+		v1 = $clone(this.$val, Vec4);
+		_ref = v1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < 4)) { break; } */ if(!(_i < 4)) { $s = 2; continue; }
+			i = _i;
+			_r = eq(((i < 0 || i >= v1.length) ? $throwRuntimeError("index out of range") : v1[i]), ((i < 0 || i >= v2.length) ? $throwRuntimeError("index out of range") : v2[i])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (!_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!_r) { */ case 3:
+				return false;
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Vec4.prototype.ApproxFuncEqual }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.eq = eq; $f.i = i; $f.v1 = v1; $f.v2 = v2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Vec4).prototype.ApproxFuncEqual = function(v2, eq) { return new Vec4(this.$get()).ApproxFuncEqual(v2, eq); };
+	Vec4.prototype.X = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec4);
+		return v[0];
+	};
+	$ptrType(Vec4).prototype.X = function() { return new Vec4(this.$get()).X(); };
+	Vec4.prototype.Y = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec4);
+		return v[1];
+	};
+	$ptrType(Vec4).prototype.Y = function() { return new Vec4(this.$get()).Y(); };
+	Vec4.prototype.Z = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec4);
+		return v[2];
+	};
+	$ptrType(Vec4).prototype.Z = function() { return new Vec4(this.$get()).Z(); };
+	Vec4.prototype.W = function() {
+		var $ptr, v;
+		v = $clone(this.$val, Vec4);
+		return v[3];
+	};
+	$ptrType(Vec4).prototype.W = function() { return new Vec4(this.$get()).W(); };
+	Vec4.prototype.OuterProd2 = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec2);
+		v1 = $clone(this.$val, Vec4);
+		return $toNativeArray($kindFloat64, [v1[0] * v2[0], v1[1] * v2[0], v1[2] * v2[0], v1[3] * v2[0], v1[0] * v2[1], v1[1] * v2[1], v1[2] * v2[1], v1[3] * v2[1]]);
+	};
+	$ptrType(Vec4).prototype.OuterProd2 = function(v2) { return new Vec4(this.$get()).OuterProd2(v2); };
+	Vec4.prototype.OuterProd3 = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec3);
+		v1 = $clone(this.$val, Vec4);
+		return $toNativeArray($kindFloat64, [v1[0] * v2[0], v1[1] * v2[0], v1[2] * v2[0], v1[3] * v2[0], v1[0] * v2[1], v1[1] * v2[1], v1[2] * v2[1], v1[3] * v2[1], v1[0] * v2[2], v1[1] * v2[2], v1[2] * v2[2], v1[3] * v2[2]]);
+	};
+	$ptrType(Vec4).prototype.OuterProd3 = function(v2) { return new Vec4(this.$get()).OuterProd3(v2); };
+	Vec4.prototype.OuterProd4 = function(v2) {
+		var $ptr, v1, v2;
+		v2 = $clone(v2, Vec4);
+		v1 = $clone(this.$val, Vec4);
+		return $toNativeArray($kindFloat64, [v1[0] * v2[0], v1[1] * v2[0], v1[2] * v2[0], v1[3] * v2[0], v1[0] * v2[1], v1[1] * v2[1], v1[2] * v2[1], v1[3] * v2[1], v1[0] * v2[2], v1[1] * v2[2], v1[2] * v2[2], v1[3] * v2[2], v1[0] * v2[3], v1[1] * v2[3], v1[2] * v2[3], v1[3] * v2[3]]);
+	};
+	$ptrType(Vec4).prototype.OuterProd4 = function(v2) { return new Vec4(this.$get()).OuterProd4(v2); };
+	Mat2.methods = [{prop: "Mat3", name: "Mat3", pkg: "", typ: $funcType([], [Mat3], false)}, {prop: "Mat4", name: "Mat4", pkg: "", typ: $funcType([], [Mat4], false)}, {prop: "Diag", name: "Diag", pkg: "", typ: $funcType([], [Vec2], false)}, {prop: "Add", name: "Add", pkg: "", typ: $funcType([Mat2], [Mat2], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Mat2], [Mat2], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Mat2], false)}, {prop: "Mul2x1", name: "Mul2x1", pkg: "", typ: $funcType([Vec2], [Vec2], false)}, {prop: "Mul2", name: "Mul2", pkg: "", typ: $funcType([Mat2], [Mat2], false)}, {prop: "Mul2x3", name: "Mul2x3", pkg: "", typ: $funcType([Mat2x3], [Mat2x3], false)}, {prop: "Mul2x4", name: "Mul2x4", pkg: "", typ: $funcType([Mat2x4], [Mat2x4], false)}, {prop: "Transpose", name: "Transpose", pkg: "", typ: $funcType([], [Mat2], false)}, {prop: "Det", name: "Det", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Inv", name: "Inv", pkg: "", typ: $funcType([], [Mat2], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Mat2], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Mat2, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Mat2, funcType], [$Bool], false)}, {prop: "At", name: "At", pkg: "", typ: $funcType([$Int, $Int], [$Float64], false)}, {prop: "Index", name: "Index", pkg: "", typ: $funcType([$Int, $Int], [$Int], false)}, {prop: "Row", name: "Row", pkg: "", typ: $funcType([$Int], [Vec2], false)}, {prop: "Rows", name: "Rows", pkg: "", typ: $funcType([], [Vec2, Vec2], false)}, {prop: "Col", name: "Col", pkg: "", typ: $funcType([$Int], [Vec2], false)}, {prop: "Cols", name: "Cols", pkg: "", typ: $funcType([], [Vec2, Vec2], false)}, {prop: "Trace", name: "Trace", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Abs", name: "Abs", pkg: "", typ: $funcType([], [Mat2], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$3.methods = [{prop: "SetCol", name: "SetCol", pkg: "", typ: $funcType([$Int, Vec2], [], false)}, {prop: "SetRow", name: "SetRow", pkg: "", typ: $funcType([$Int, Vec2], [], false)}, {prop: "Set", name: "Set", pkg: "", typ: $funcType([$Int, $Int, $Float64], [], false)}];
+	Mat2x3.methods = [{prop: "Add", name: "Add", pkg: "", typ: $funcType([Mat2x3], [Mat2x3], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Mat2x3], [Mat2x3], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Mat2x3], false)}, {prop: "Mul3x1", name: "Mul3x1", pkg: "", typ: $funcType([Vec3], [Vec2], false)}, {prop: "Mul3x2", name: "Mul3x2", pkg: "", typ: $funcType([Mat3x2], [Mat2], false)}, {prop: "Mul3", name: "Mul3", pkg: "", typ: $funcType([Mat3], [Mat2x3], false)}, {prop: "Mul3x4", name: "Mul3x4", pkg: "", typ: $funcType([Mat3x4], [Mat2x4], false)}, {prop: "Transpose", name: "Transpose", pkg: "", typ: $funcType([], [Mat3x2], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Mat2x3], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Mat2x3, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Mat2x3, funcType], [$Bool], false)}, {prop: "At", name: "At", pkg: "", typ: $funcType([$Int, $Int], [$Float64], false)}, {prop: "Index", name: "Index", pkg: "", typ: $funcType([$Int, $Int], [$Int], false)}, {prop: "Row", name: "Row", pkg: "", typ: $funcType([$Int], [Vec3], false)}, {prop: "Rows", name: "Rows", pkg: "", typ: $funcType([], [Vec3, Vec3], false)}, {prop: "Col", name: "Col", pkg: "", typ: $funcType([$Int], [Vec2], false)}, {prop: "Cols", name: "Cols", pkg: "", typ: $funcType([], [Vec2, Vec2, Vec2], false)}, {prop: "Abs", name: "Abs", pkg: "", typ: $funcType([], [Mat2x3], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$4.methods = [{prop: "SetCol", name: "SetCol", pkg: "", typ: $funcType([$Int, Vec2], [], false)}, {prop: "SetRow", name: "SetRow", pkg: "", typ: $funcType([$Int, Vec3], [], false)}, {prop: "Set", name: "Set", pkg: "", typ: $funcType([$Int, $Int, $Float64], [], false)}];
+	Mat2x4.methods = [{prop: "Add", name: "Add", pkg: "", typ: $funcType([Mat2x4], [Mat2x4], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Mat2x4], [Mat2x4], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Mat2x4], false)}, {prop: "Mul4x1", name: "Mul4x1", pkg: "", typ: $funcType([Vec4], [Vec2], false)}, {prop: "Mul4x2", name: "Mul4x2", pkg: "", typ: $funcType([Mat4x2], [Mat2], false)}, {prop: "Mul4x3", name: "Mul4x3", pkg: "", typ: $funcType([Mat4x3], [Mat2x3], false)}, {prop: "Mul4", name: "Mul4", pkg: "", typ: $funcType([Mat4], [Mat2x4], false)}, {prop: "Transpose", name: "Transpose", pkg: "", typ: $funcType([], [Mat4x2], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Mat2x4], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Mat2x4, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Mat2x4, funcType], [$Bool], false)}, {prop: "At", name: "At", pkg: "", typ: $funcType([$Int, $Int], [$Float64], false)}, {prop: "Index", name: "Index", pkg: "", typ: $funcType([$Int, $Int], [$Int], false)}, {prop: "Row", name: "Row", pkg: "", typ: $funcType([$Int], [Vec4], false)}, {prop: "Rows", name: "Rows", pkg: "", typ: $funcType([], [Vec4, Vec4], false)}, {prop: "Col", name: "Col", pkg: "", typ: $funcType([$Int], [Vec2], false)}, {prop: "Cols", name: "Cols", pkg: "", typ: $funcType([], [Vec2, Vec2, Vec2, Vec2], false)}, {prop: "Abs", name: "Abs", pkg: "", typ: $funcType([], [Mat2x4], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$5.methods = [{prop: "SetCol", name: "SetCol", pkg: "", typ: $funcType([$Int, Vec2], [], false)}, {prop: "SetRow", name: "SetRow", pkg: "", typ: $funcType([$Int, Vec4], [], false)}, {prop: "Set", name: "Set", pkg: "", typ: $funcType([$Int, $Int, $Float64], [], false)}];
+	Mat3x2.methods = [{prop: "Add", name: "Add", pkg: "", typ: $funcType([Mat3x2], [Mat3x2], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Mat3x2], [Mat3x2], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Mat3x2], false)}, {prop: "Mul2x1", name: "Mul2x1", pkg: "", typ: $funcType([Vec2], [Vec3], false)}, {prop: "Mul2", name: "Mul2", pkg: "", typ: $funcType([Mat2], [Mat3x2], false)}, {prop: "Mul2x3", name: "Mul2x3", pkg: "", typ: $funcType([Mat2x3], [Mat3], false)}, {prop: "Mul2x4", name: "Mul2x4", pkg: "", typ: $funcType([Mat2x4], [Mat3x4], false)}, {prop: "Transpose", name: "Transpose", pkg: "", typ: $funcType([], [Mat2x3], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Mat3x2], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Mat3x2, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Mat3x2, funcType], [$Bool], false)}, {prop: "At", name: "At", pkg: "", typ: $funcType([$Int, $Int], [$Float64], false)}, {prop: "Index", name: "Index", pkg: "", typ: $funcType([$Int, $Int], [$Int], false)}, {prop: "Row", name: "Row", pkg: "", typ: $funcType([$Int], [Vec2], false)}, {prop: "Rows", name: "Rows", pkg: "", typ: $funcType([], [Vec2, Vec2, Vec2], false)}, {prop: "Col", name: "Col", pkg: "", typ: $funcType([$Int], [Vec3], false)}, {prop: "Cols", name: "Cols", pkg: "", typ: $funcType([], [Vec3, Vec3], false)}, {prop: "Abs", name: "Abs", pkg: "", typ: $funcType([], [Mat3x2], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$6.methods = [{prop: "SetCol", name: "SetCol", pkg: "", typ: $funcType([$Int, Vec3], [], false)}, {prop: "SetRow", name: "SetRow", pkg: "", typ: $funcType([$Int, Vec2], [], false)}, {prop: "Set", name: "Set", pkg: "", typ: $funcType([$Int, $Int, $Float64], [], false)}];
+	Mat3.methods = [{prop: "Mat2", name: "Mat2", pkg: "", typ: $funcType([], [Mat2], false)}, {prop: "Mat4", name: "Mat4", pkg: "", typ: $funcType([], [Mat4], false)}, {prop: "Diag", name: "Diag", pkg: "", typ: $funcType([], [Vec3], false)}, {prop: "Add", name: "Add", pkg: "", typ: $funcType([Mat3], [Mat3], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Mat3], [Mat3], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Mat3], false)}, {prop: "Mul3x1", name: "Mul3x1", pkg: "", typ: $funcType([Vec3], [Vec3], false)}, {prop: "Mul3x2", name: "Mul3x2", pkg: "", typ: $funcType([Mat3x2], [Mat3x2], false)}, {prop: "Mul3", name: "Mul3", pkg: "", typ: $funcType([Mat3], [Mat3], false)}, {prop: "Mul3x4", name: "Mul3x4", pkg: "", typ: $funcType([Mat3x4], [Mat3x4], false)}, {prop: "Transpose", name: "Transpose", pkg: "", typ: $funcType([], [Mat3], false)}, {prop: "Det", name: "Det", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Inv", name: "Inv", pkg: "", typ: $funcType([], [Mat3], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Mat3], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Mat3, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Mat3, funcType], [$Bool], false)}, {prop: "At", name: "At", pkg: "", typ: $funcType([$Int, $Int], [$Float64], false)}, {prop: "Index", name: "Index", pkg: "", typ: $funcType([$Int, $Int], [$Int], false)}, {prop: "Row", name: "Row", pkg: "", typ: $funcType([$Int], [Vec3], false)}, {prop: "Rows", name: "Rows", pkg: "", typ: $funcType([], [Vec3, Vec3, Vec3], false)}, {prop: "Col", name: "Col", pkg: "", typ: $funcType([$Int], [Vec3], false)}, {prop: "Cols", name: "Cols", pkg: "", typ: $funcType([], [Vec3, Vec3, Vec3], false)}, {prop: "Trace", name: "Trace", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Abs", name: "Abs", pkg: "", typ: $funcType([], [Mat3], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$7.methods = [{prop: "SetCol", name: "SetCol", pkg: "", typ: $funcType([$Int, Vec3], [], false)}, {prop: "SetRow", name: "SetRow", pkg: "", typ: $funcType([$Int, Vec3], [], false)}, {prop: "Set", name: "Set", pkg: "", typ: $funcType([$Int, $Int, $Float64], [], false)}];
+	Mat3x4.methods = [{prop: "Add", name: "Add", pkg: "", typ: $funcType([Mat3x4], [Mat3x4], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Mat3x4], [Mat3x4], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Mat3x4], false)}, {prop: "Mul4x1", name: "Mul4x1", pkg: "", typ: $funcType([Vec4], [Vec3], false)}, {prop: "Mul4x2", name: "Mul4x2", pkg: "", typ: $funcType([Mat4x2], [Mat3x2], false)}, {prop: "Mul4x3", name: "Mul4x3", pkg: "", typ: $funcType([Mat4x3], [Mat3], false)}, {prop: "Mul4", name: "Mul4", pkg: "", typ: $funcType([Mat4], [Mat3x4], false)}, {prop: "Transpose", name: "Transpose", pkg: "", typ: $funcType([], [Mat4x3], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Mat3x4], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Mat3x4, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Mat3x4, funcType], [$Bool], false)}, {prop: "At", name: "At", pkg: "", typ: $funcType([$Int, $Int], [$Float64], false)}, {prop: "Index", name: "Index", pkg: "", typ: $funcType([$Int, $Int], [$Int], false)}, {prop: "Row", name: "Row", pkg: "", typ: $funcType([$Int], [Vec4], false)}, {prop: "Rows", name: "Rows", pkg: "", typ: $funcType([], [Vec4, Vec4, Vec4], false)}, {prop: "Col", name: "Col", pkg: "", typ: $funcType([$Int], [Vec3], false)}, {prop: "Cols", name: "Cols", pkg: "", typ: $funcType([], [Vec3, Vec3, Vec3, Vec3], false)}, {prop: "Abs", name: "Abs", pkg: "", typ: $funcType([], [Mat3x4], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$8.methods = [{prop: "SetCol", name: "SetCol", pkg: "", typ: $funcType([$Int, Vec3], [], false)}, {prop: "SetRow", name: "SetRow", pkg: "", typ: $funcType([$Int, Vec4], [], false)}, {prop: "Set", name: "Set", pkg: "", typ: $funcType([$Int, $Int, $Float64], [], false)}];
+	Mat4x2.methods = [{prop: "Add", name: "Add", pkg: "", typ: $funcType([Mat4x2], [Mat4x2], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Mat4x2], [Mat4x2], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Mat4x2], false)}, {prop: "Mul2x1", name: "Mul2x1", pkg: "", typ: $funcType([Vec2], [Vec4], false)}, {prop: "Mul2", name: "Mul2", pkg: "", typ: $funcType([Mat2], [Mat4x2], false)}, {prop: "Mul2x3", name: "Mul2x3", pkg: "", typ: $funcType([Mat2x3], [Mat4x3], false)}, {prop: "Mul2x4", name: "Mul2x4", pkg: "", typ: $funcType([Mat2x4], [Mat4], false)}, {prop: "Transpose", name: "Transpose", pkg: "", typ: $funcType([], [Mat2x4], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Mat4x2], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Mat4x2, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Mat4x2, funcType], [$Bool], false)}, {prop: "At", name: "At", pkg: "", typ: $funcType([$Int, $Int], [$Float64], false)}, {prop: "Index", name: "Index", pkg: "", typ: $funcType([$Int, $Int], [$Int], false)}, {prop: "Row", name: "Row", pkg: "", typ: $funcType([$Int], [Vec2], false)}, {prop: "Rows", name: "Rows", pkg: "", typ: $funcType([], [Vec2, Vec2, Vec2, Vec2], false)}, {prop: "Col", name: "Col", pkg: "", typ: $funcType([$Int], [Vec4], false)}, {prop: "Cols", name: "Cols", pkg: "", typ: $funcType([], [Vec4, Vec4], false)}, {prop: "Abs", name: "Abs", pkg: "", typ: $funcType([], [Mat4x2], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$9.methods = [{prop: "SetCol", name: "SetCol", pkg: "", typ: $funcType([$Int, Vec4], [], false)}, {prop: "SetRow", name: "SetRow", pkg: "", typ: $funcType([$Int, Vec2], [], false)}, {prop: "Set", name: "Set", pkg: "", typ: $funcType([$Int, $Int, $Float64], [], false)}];
+	Mat4x3.methods = [{prop: "Add", name: "Add", pkg: "", typ: $funcType([Mat4x3], [Mat4x3], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Mat4x3], [Mat4x3], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Mat4x3], false)}, {prop: "Mul3x1", name: "Mul3x1", pkg: "", typ: $funcType([Vec3], [Vec4], false)}, {prop: "Mul3x2", name: "Mul3x2", pkg: "", typ: $funcType([Mat3x2], [Mat4x2], false)}, {prop: "Mul3", name: "Mul3", pkg: "", typ: $funcType([Mat3], [Mat4x3], false)}, {prop: "Mul3x4", name: "Mul3x4", pkg: "", typ: $funcType([Mat3x4], [Mat4], false)}, {prop: "Transpose", name: "Transpose", pkg: "", typ: $funcType([], [Mat3x4], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Mat4x3], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Mat4x3, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Mat4x3, funcType], [$Bool], false)}, {prop: "At", name: "At", pkg: "", typ: $funcType([$Int, $Int], [$Float64], false)}, {prop: "Index", name: "Index", pkg: "", typ: $funcType([$Int, $Int], [$Int], false)}, {prop: "Row", name: "Row", pkg: "", typ: $funcType([$Int], [Vec3], false)}, {prop: "Rows", name: "Rows", pkg: "", typ: $funcType([], [Vec3, Vec3, Vec3, Vec3], false)}, {prop: "Col", name: "Col", pkg: "", typ: $funcType([$Int], [Vec4], false)}, {prop: "Cols", name: "Cols", pkg: "", typ: $funcType([], [Vec4, Vec4, Vec4], false)}, {prop: "Abs", name: "Abs", pkg: "", typ: $funcType([], [Mat4x3], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$10.methods = [{prop: "SetCol", name: "SetCol", pkg: "", typ: $funcType([$Int, Vec4], [], false)}, {prop: "SetRow", name: "SetRow", pkg: "", typ: $funcType([$Int, Vec3], [], false)}, {prop: "Set", name: "Set", pkg: "", typ: $funcType([$Int, $Int, $Float64], [], false)}];
+	Mat4.methods = [{prop: "Mat2", name: "Mat2", pkg: "", typ: $funcType([], [Mat2], false)}, {prop: "Mat3", name: "Mat3", pkg: "", typ: $funcType([], [Mat3], false)}, {prop: "Diag", name: "Diag", pkg: "", typ: $funcType([], [Vec4], false)}, {prop: "Add", name: "Add", pkg: "", typ: $funcType([Mat4], [Mat4], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Mat4], [Mat4], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Mat4], false)}, {prop: "Mul4x1", name: "Mul4x1", pkg: "", typ: $funcType([Vec4], [Vec4], false)}, {prop: "Mul4x2", name: "Mul4x2", pkg: "", typ: $funcType([Mat4x2], [Mat4x2], false)}, {prop: "Mul4x3", name: "Mul4x3", pkg: "", typ: $funcType([Mat4x3], [Mat4x3], false)}, {prop: "Mul4", name: "Mul4", pkg: "", typ: $funcType([Mat4], [Mat4], false)}, {prop: "Transpose", name: "Transpose", pkg: "", typ: $funcType([], [Mat4], false)}, {prop: "Det", name: "Det", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Inv", name: "Inv", pkg: "", typ: $funcType([], [Mat4], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Mat4], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Mat4, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Mat4, funcType], [$Bool], false)}, {prop: "At", name: "At", pkg: "", typ: $funcType([$Int, $Int], [$Float64], false)}, {prop: "Index", name: "Index", pkg: "", typ: $funcType([$Int, $Int], [$Int], false)}, {prop: "Row", name: "Row", pkg: "", typ: $funcType([$Int], [Vec4], false)}, {prop: "Rows", name: "Rows", pkg: "", typ: $funcType([], [Vec4, Vec4, Vec4, Vec4], false)}, {prop: "Col", name: "Col", pkg: "", typ: $funcType([$Int], [Vec4], false)}, {prop: "Cols", name: "Cols", pkg: "", typ: $funcType([], [Vec4, Vec4, Vec4, Vec4], false)}, {prop: "Trace", name: "Trace", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Abs", name: "Abs", pkg: "", typ: $funcType([], [Mat4], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$11.methods = [{prop: "SetCol", name: "SetCol", pkg: "", typ: $funcType([$Int, Vec4], [], false)}, {prop: "SetRow", name: "SetRow", pkg: "", typ: $funcType([$Int, Vec4], [], false)}, {prop: "Set", name: "Set", pkg: "", typ: $funcType([$Int, $Int, $Float64], [], false)}];
+	Vec2.methods = [{prop: "Vec3", name: "Vec3", pkg: "", typ: $funcType([$Float64], [Vec3], false)}, {prop: "Vec4", name: "Vec4", pkg: "", typ: $funcType([$Float64, $Float64], [Vec4], false)}, {prop: "Elem", name: "Elem", pkg: "", typ: $funcType([], [$Float64, $Float64], false)}, {prop: "Add", name: "Add", pkg: "", typ: $funcType([Vec2], [Vec2], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Vec2], [Vec2], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Vec2], false)}, {prop: "Dot", name: "Dot", pkg: "", typ: $funcType([Vec2], [$Float64], false)}, {prop: "Len", name: "Len", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Normalize", name: "Normalize", pkg: "", typ: $funcType([], [Vec2], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Vec2], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Vec2, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Vec2, funcType], [$Bool], false)}, {prop: "X", name: "X", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Y", name: "Y", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "OuterProd2", name: "OuterProd2", pkg: "", typ: $funcType([Vec2], [Mat2], false)}, {prop: "OuterProd3", name: "OuterProd3", pkg: "", typ: $funcType([Vec3], [Mat2x3], false)}, {prop: "OuterProd4", name: "OuterProd4", pkg: "", typ: $funcType([Vec4], [Mat2x4], false)}];
+	Vec3.methods = [{prop: "Vec2", name: "Vec2", pkg: "", typ: $funcType([], [Vec2], false)}, {prop: "Vec4", name: "Vec4", pkg: "", typ: $funcType([$Float64], [Vec4], false)}, {prop: "Elem", name: "Elem", pkg: "", typ: $funcType([], [$Float64, $Float64, $Float64], false)}, {prop: "Cross", name: "Cross", pkg: "", typ: $funcType([Vec3], [Vec3], false)}, {prop: "Add", name: "Add", pkg: "", typ: $funcType([Vec3], [Vec3], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Vec3], [Vec3], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Vec3], false)}, {prop: "Dot", name: "Dot", pkg: "", typ: $funcType([Vec3], [$Float64], false)}, {prop: "Len", name: "Len", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Normalize", name: "Normalize", pkg: "", typ: $funcType([], [Vec3], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Vec3], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Vec3, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Vec3, funcType], [$Bool], false)}, {prop: "X", name: "X", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Y", name: "Y", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Z", name: "Z", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "OuterProd2", name: "OuterProd2", pkg: "", typ: $funcType([Vec2], [Mat3x2], false)}, {prop: "OuterProd3", name: "OuterProd3", pkg: "", typ: $funcType([Vec3], [Mat3], false)}, {prop: "OuterProd4", name: "OuterProd4", pkg: "", typ: $funcType([Vec4], [Mat3x4], false)}];
+	Vec4.methods = [{prop: "Vec2", name: "Vec2", pkg: "", typ: $funcType([], [Vec2], false)}, {prop: "Vec3", name: "Vec3", pkg: "", typ: $funcType([], [Vec3], false)}, {prop: "Elem", name: "Elem", pkg: "", typ: $funcType([], [$Float64, $Float64, $Float64, $Float64], false)}, {prop: "Add", name: "Add", pkg: "", typ: $funcType([Vec4], [Vec4], false)}, {prop: "Sub", name: "Sub", pkg: "", typ: $funcType([Vec4], [Vec4], false)}, {prop: "Mul", name: "Mul", pkg: "", typ: $funcType([$Float64], [Vec4], false)}, {prop: "Dot", name: "Dot", pkg: "", typ: $funcType([Vec4], [$Float64], false)}, {prop: "Len", name: "Len", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Normalize", name: "Normalize", pkg: "", typ: $funcType([], [Vec4], false)}, {prop: "ApproxEqual", name: "ApproxEqual", pkg: "", typ: $funcType([Vec4], [$Bool], false)}, {prop: "ApproxEqualThreshold", name: "ApproxEqualThreshold", pkg: "", typ: $funcType([Vec4, $Float64], [$Bool], false)}, {prop: "ApproxFuncEqual", name: "ApproxFuncEqual", pkg: "", typ: $funcType([Vec4, funcType], [$Bool], false)}, {prop: "X", name: "X", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Y", name: "Y", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Z", name: "Z", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "W", name: "W", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "OuterProd2", name: "OuterProd2", pkg: "", typ: $funcType([Vec2], [Mat4x2], false)}, {prop: "OuterProd3", name: "OuterProd3", pkg: "", typ: $funcType([Vec3], [Mat4x3], false)}, {prop: "OuterProd4", name: "OuterProd4", pkg: "", typ: $funcType([Vec4], [Mat4], false)}];
+	Mat2.init($Float64, 4);
+	Mat2x3.init($Float64, 6);
+	Mat2x4.init($Float64, 8);
+	Mat3x2.init($Float64, 6);
+	Mat3.init($Float64, 9);
+	Mat3x4.init($Float64, 12);
+	Mat4x2.init($Float64, 8);
+	Mat4x3.init($Float64, 12);
+	Mat4.init($Float64, 16);
+	Vec2.init($Float64, 2);
+	Vec3.init($Float64, 3);
+	Vec4.init($Float64, 4);
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = bytes.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = errors.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = f64.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = math.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = sync.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = tabwriter.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$pkg.Epsilon = 1e-10;
+		$pkg.MinNormal = 1.1754943508222875e-38;
+		$pkg.InfPos = math.Inf(1);
+		$pkg.InfNeg = math.Inf(-1);
+		$pkg.NaN = math.NaN();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
 $packages["github.com/inkyblackness/shocked-client/editor/camera"] = (function() {
 	var $pkg = {}, $init, mgl32, math, LimitedCamera, arrayType, ptrType, NewLimited;
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
@@ -27289,19 +30146,31 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
-	var $pkg = {}, $init, bytes, base64, json, fmt, mgl32, camera, env, opengl, model, os, FailureFunc, DataStore, GridRenderable, MainApplication, RenderContext, RestDataStore, RestTransport, TextureRenderable, sliceType, sliceType$1, sliceType$2, ptrType, arrayType, ptrType$1, ptrType$2, sliceType$3, arrayType$1, ptrType$3, ptrType$4, sliceType$4, sliceType$5, sliceType$6, arrayType$2, funcType, funcType$1, funcType$2, funcType$3, ptrType$5, funcType$4, ptrType$6, ptrType$7, ptrType$8, funcType$5, gridVertexShaderSource, gridFragmentShaderSource, textureVertexShaderSource, textureFragmentShaderSource, NewGridRenderable, NewMainApplication, NewRestDataStore, NewTextureRenderable;
+	var $pkg = {}, $init, bytes, base64, json, fmt, mgl32, mgl64, camera, env, opengl, model, os, BitmapTexture, FailureFunc, DataStore, GraphicsTexture, GridRenderable, MainApplication, ColorProvider, PaletteTexture, RenderContext, RestDataStore, RestTransport, TextureRenderable, TileTextureMapRenderable, sliceType, sliceType$1, sliceType$2, ptrType, arrayType, ptrType$1, ptrType$2, sliceType$3, ptrType$3, sliceType$4, sliceType$5, ptrType$4, arrayType$1, arrayType$2, sliceType$6, sliceType$7, sliceType$8, sliceType$9, ptrType$5, funcType, funcType$1, ptrType$6, funcType$2, funcType$3, ptrType$7, funcType$4, ptrType$8, ptrType$9, ptrType$10, ptrType$11, ptrType$12, funcType$5, ptrType$13, gridVertexShaderSource, gridFragmentShaderSource, textureVertexShaderSource, textureFragmentShaderSource, NewBitmapTexture, NewGridRenderable, NewMainApplication, NewPaletteTexture, NewRestDataStore, NewTileTextureMapRenderable;
 	bytes = $packages["bytes"];
 	base64 = $packages["encoding/base64"];
 	json = $packages["encoding/json"];
 	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
+	mgl64 = $packages["github.com/go-gl/mathgl/mgl64"];
 	camera = $packages["github.com/inkyblackness/shocked-client/editor/camera"];
 	env = $packages["github.com/inkyblackness/shocked-client/env"];
 	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
 	model = $packages["github.com/inkyblackness/shocked-model"];
 	os = $packages["os"];
+	BitmapTexture = $pkg.BitmapTexture = $newType(0, $kindStruct, "editor.BitmapTexture", "BitmapTexture", "github.com/inkyblackness/shocked-client/editor", function(gl_, handle_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.gl = $ifaceNil;
+			this.handle = 0;
+			return;
+		}
+		this.gl = gl_;
+		this.handle = handle_;
+	});
 	FailureFunc = $pkg.FailureFunc = $newType(4, $kindFunc, "editor.FailureFunc", "FailureFunc", "github.com/inkyblackness/shocked-client/editor", null);
 	DataStore = $pkg.DataStore = $newType(8, $kindInterface, "editor.DataStore", "DataStore", "github.com/inkyblackness/shocked-client/editor", null);
+	GraphicsTexture = $pkg.GraphicsTexture = $newType(8, $kindInterface, "editor.GraphicsTexture", "GraphicsTexture", "github.com/inkyblackness/shocked-client/editor", null);
 	GridRenderable = $pkg.GridRenderable = $newType(0, $kindStruct, "editor.GridRenderable", "GridRenderable", "github.com/inkyblackness/shocked-client/editor", function(gl_, program_, vertexArrayObject_, vertexPositionBuffer_, vertexPositionAttrib_, viewMatrixUniform_, projectionMatrixUniform_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -27322,7 +30191,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.viewMatrixUniform = viewMatrixUniform_;
 		this.projectionMatrixUniform = projectionMatrixUniform_;
 	});
-	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(store_, glWindow_, gl_, mouseX_, mouseY_, mouseMoveCapture_, view_, gridRenderable_, textureRenderable_) {
+	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", "MainApplication", "github.com/inkyblackness/shocked-client/editor", function(store_, glWindow_, gl_, mouseX_, mouseY_, mouseMoveCapture_, view_, gridRenderable_, textureRenderables_, tileTextureMapRenderable_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.store = $ifaceNil;
@@ -27333,7 +30202,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			this.mouseMoveCapture = $throwNilPointerError;
 			this.view = ptrType$1.nil;
 			this.gridRenderable = ptrType.nil;
-			this.textureRenderable = ptrType$2.nil;
+			this.textureRenderables = sliceType$3.nil;
+			this.tileTextureMapRenderable = ptrType$3.nil;
 			return;
 		}
 		this.store = store_;
@@ -27344,7 +30214,21 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.mouseMoveCapture = mouseMoveCapture_;
 		this.view = view_;
 		this.gridRenderable = gridRenderable_;
-		this.textureRenderable = textureRenderable_;
+		this.textureRenderables = textureRenderables_;
+		this.tileTextureMapRenderable = tileTextureMapRenderable_;
+	});
+	ColorProvider = $pkg.ColorProvider = $newType(4, $kindFunc, "editor.ColorProvider", "ColorProvider", "github.com/inkyblackness/shocked-client/editor", null);
+	PaletteTexture = $pkg.PaletteTexture = $newType(0, $kindStruct, "editor.PaletteTexture", "PaletteTexture", "github.com/inkyblackness/shocked-client/editor", function(gl_, colorProvider_, handle_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.gl = $ifaceNil;
+			this.colorProvider = $throwNilPointerError;
+			this.handle = 0;
+			return;
+		}
+		this.gl = gl_;
+		this.colorProvider = colorProvider_;
+		this.handle = handle_;
 	});
 	RenderContext = $pkg.RenderContext = $newType(0, $kindStruct, "editor.RenderContext", "RenderContext", "github.com/inkyblackness/shocked-client/editor", function(viewportWidth_, viewportHeight_, viewMatrix_, projectionMatrix_) {
 		this.$val = this;
@@ -27369,7 +30253,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.transport = transport_;
 	});
 	RestTransport = $pkg.RestTransport = $newType(8, $kindInterface, "editor.RestTransport", "RestTransport", "github.com/inkyblackness/shocked-client/editor", null);
-	TextureRenderable = $pkg.TextureRenderable = $newType(0, $kindStruct, "editor.TextureRenderable", "TextureRenderable", "github.com/inkyblackness/shocked-client/editor", function(gl_, modelMatrix_, program_, vertexArrayObject_, vertexPositionBuffer_, vertexPositionAttrib_, modelMatrixUniform_, viewMatrixUniform_, projectionMatrixUniform_, paletteTexture_, paletteUniform_, bitmapTexture_, bitmapUniform_) {
+	TextureRenderable = $pkg.TextureRenderable = $newType(0, $kindStruct, "editor.TextureRenderable", "TextureRenderable", "github.com/inkyblackness/shocked-client/editor", function(gl_, modelMatrix_, program_, vertexArrayObject_, vertexPositionBuffer_, vertexPositionAttrib_, modelMatrixUniform_, viewMatrixUniform_, projectionMatrixUniform_, paletteUniform_, bitmapUniform_, paletteTexture_, bitmapTexture_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.gl = $ifaceNil;
@@ -27381,10 +30265,10 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			this.modelMatrixUniform = 0;
 			this.viewMatrixUniform = 0;
 			this.projectionMatrixUniform = 0;
-			this.paletteTexture = 0;
 			this.paletteUniform = 0;
-			this.bitmapTexture = 0;
 			this.bitmapUniform = 0;
+			this.paletteTexture = $ifaceNil;
+			this.bitmapTexture = $ifaceNil;
 			return;
 		}
 		this.gl = gl_;
@@ -27396,10 +30280,40 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.modelMatrixUniform = modelMatrixUniform_;
 		this.viewMatrixUniform = viewMatrixUniform_;
 		this.projectionMatrixUniform = projectionMatrixUniform_;
-		this.paletteTexture = paletteTexture_;
 		this.paletteUniform = paletteUniform_;
-		this.bitmapTexture = bitmapTexture_;
 		this.bitmapUniform = bitmapUniform_;
+		this.paletteTexture = paletteTexture_;
+		this.bitmapTexture = bitmapTexture_;
+	});
+	TileTextureMapRenderable = $pkg.TileTextureMapRenderable = $newType(0, $kindStruct, "editor.TileTextureMapRenderable", "TileTextureMapRenderable", "github.com/inkyblackness/shocked-client/editor", function(gl_, program_, vertexArrayObject_, vertexPositionBuffer_, vertexPositionAttrib_, modelMatrixUniform_, viewMatrixUniform_, projectionMatrixUniform_, paletteUniform_, bitmapUniform_, paletteTexture_, tiles_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.gl = $ifaceNil;
+			this.program = 0;
+			this.vertexArrayObject = 0;
+			this.vertexPositionBuffer = 0;
+			this.vertexPositionAttrib = 0;
+			this.modelMatrixUniform = 0;
+			this.viewMatrixUniform = 0;
+			this.projectionMatrixUniform = 0;
+			this.paletteUniform = 0;
+			this.bitmapUniform = 0;
+			this.paletteTexture = $ifaceNil;
+			this.tiles = sliceType$9.nil;
+			return;
+		}
+		this.gl = gl_;
+		this.program = program_;
+		this.vertexArrayObject = vertexArrayObject_;
+		this.vertexPositionBuffer = vertexPositionBuffer_;
+		this.vertexPositionAttrib = vertexPositionAttrib_;
+		this.modelMatrixUniform = modelMatrixUniform_;
+		this.viewMatrixUniform = viewMatrixUniform_;
+		this.projectionMatrixUniform = projectionMatrixUniform_;
+		this.paletteUniform = paletteUniform_;
+		this.bitmapUniform = bitmapUniform_;
+		this.paletteTexture = paletteTexture_;
+		this.tiles = tiles_;
 	});
 	sliceType = $sliceType($Uint32);
 	sliceType$1 = $sliceType($emptyInterface);
@@ -27408,24 +30322,53 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	arrayType = $arrayType($Float32, 16);
 	ptrType$1 = $ptrType(camera.LimitedCamera);
 	ptrType$2 = $ptrType(TextureRenderable);
-	sliceType$3 = $sliceType($String);
+	sliceType$3 = $sliceType(ptrType$2);
+	ptrType$3 = $ptrType(TileTextureMapRenderable);
+	sliceType$4 = $sliceType($String);
+	sliceType$5 = $sliceType($Int);
+	ptrType$4 = $ptrType(model.Tiles);
 	arrayType$1 = $arrayType(model.Color, 256);
-	ptrType$3 = $ptrType(arrayType$1);
-	ptrType$4 = $ptrType(model.RawBitmap);
-	sliceType$4 = $sliceType($Int);
-	sliceType$5 = $sliceType(model.Tile);
-	sliceType$6 = $sliceType(sliceType$5);
 	arrayType$2 = $arrayType($Uint8, 1024);
-	funcType = $funcType([sliceType$4], [], false);
+	sliceType$6 = $sliceType(model.Tile);
+	sliceType$7 = $sliceType(sliceType$6);
+	sliceType$8 = $sliceType(GraphicsTexture);
+	sliceType$9 = $sliceType(sliceType$8);
+	ptrType$5 = $ptrType(BitmapTexture);
+	funcType = $funcType([sliceType$5], [], false);
 	funcType$1 = $funcType([arrayType$1], [], false);
-	funcType$2 = $funcType([ptrType$4], [], false);
+	ptrType$6 = $ptrType(model.RawBitmap);
+	funcType$2 = $funcType([ptrType$6], [], false);
 	funcType$3 = $funcType([model.Tiles], [], false);
-	ptrType$5 = $ptrType(RenderContext);
+	ptrType$7 = $ptrType(RenderContext);
 	funcType$4 = $funcType([], [], false);
-	ptrType$6 = $ptrType(mgl32.Mat4);
-	ptrType$7 = $ptrType(MainApplication);
-	ptrType$8 = $ptrType(RestDataStore);
+	ptrType$8 = $ptrType(mgl32.Mat4);
+	ptrType$9 = $ptrType(MainApplication);
+	ptrType$10 = $ptrType(arrayType$2);
+	ptrType$11 = $ptrType(PaletteTexture);
+	ptrType$12 = $ptrType(RestDataStore);
 	funcType$5 = $funcType([$String], [], false);
+	ptrType$13 = $ptrType(mgl64.Mat4);
+	NewBitmapTexture = function(gl, width, height, pixelData) {
+		var $ptr, _r, gl, height, pixelData, tex, width, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; gl = $f.gl; height = $f.height; pixelData = $f.pixelData; tex = $f.tex; width = $f.width; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = gl.GenTextures(1); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		tex = new BitmapTexture.ptr($ifaceNil, (x = _r, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0])));
+		$r = gl.BindTexture(3553, tex.handle); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.TexImage2D(3553, 0, 6406, (width >> 0), (height >> 0), 0, 6406, 5121, pixelData); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.TexParameteri(3553, 10240, 9728); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.TexParameteri(3553, 10241, 9728); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.GenerateMipmap(3553); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BindTexture(3553, 0); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return tex;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewBitmapTexture }; } $f.$ptr = $ptr; $f._r = _r; $f.gl = gl; $f.height = height; $f.pixelData = pixelData; $f.tex = tex; $f.width = width; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewBitmapTexture = NewBitmapTexture;
+	BitmapTexture.ptr.prototype.Handle = function() {
+		var $ptr, tex;
+		tex = this;
+		return tex.handle;
+	};
+	BitmapTexture.prototype.Handle = function() { return this.$val.Handle(); };
 	NewGridRenderable = function(gl) {
 		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, err1, err2, fragmentShader, gl, program, renderable, vertexShader, x, x$1, $s, $deferred, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err1 = $f.err1; err2 = $f.err2; fragmentShader = $f.fragmentShader; gl = $f.gl; program = $f.program; renderable = $f.renderable; vertexShader = $f.vertexShader; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
@@ -27532,16 +30475,18 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		camLimit = 2016;
 		return new MainApplication.ptr(store, $ifaceNil, $ifaceNil, 0, 0, (function() {
 			var $ptr;
-		}), camera.NewLimited(-2, 4, 0, camLimit), ptrType.nil, ptrType$2.nil);
+		}), camera.NewLimited(-2, 4, 0, camLimit), ptrType.nil, sliceType$3.nil, ptrType$3.nil);
 	};
 	$pkg.NewMainApplication = NewMainApplication;
 	MainApplication.ptr.prototype.Init = function(glWindow) {
-		var $ptr, _r, _r$1, _r$2, app, bitmap, builder, createTextureRenderable, glWindow, palette, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; app = $f.app; bitmap = $f.bitmap; builder = $f.builder; createTextureRenderable = $f.createTextureRenderable; glWindow = $f.glWindow; palette = $f.palette; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, _r$2, app, bitmapTextures, builder, createMap, glWindow, levelTextureIDs, paletteTexture, tiles, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; app = $f.app; bitmapTextures = $f.bitmapTextures; builder = $f.builder; createMap = $f.createMap; glWindow = $f.glWindow; levelTextureIDs = $f.levelTextureIDs; paletteTexture = $f.paletteTexture; tiles = $f.tiles; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = [app];
-		bitmap = [bitmap];
-		createTextureRenderable = [createTextureRenderable];
-		palette = [palette];
+		bitmapTextures = [bitmapTextures];
+		createMap = [createMap];
+		levelTextureIDs = [levelTextureIDs];
+		paletteTexture = [paletteTexture];
+		tiles = [tiles];
 		app[0] = this;
 		app[0].glWindow = glWindow;
 		$r = glWindow.OnRender($methodVal(app[0], "render")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -27552,10 +30497,10 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		_r = app[0].glWindow.OpenGl(); /* */ $s = 6; case 6: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r$1 = opengl.NewDebugBuilder(_r); /* */ $s = 7; case 7: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		builder = _r$1;
-		builder.OnError((function(app, bitmap, createTextureRenderable, palette) { return function $b(name, errorCodes) {
+		builder.OnError((function(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles) { return function $b(name, errorCodes) {
 			var $ptr, _i, _r$2, _r$3, _ref, errorCode, errorCodes, errorStrings, index, name, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; errorCode = $f.errorCode; errorCodes = $f.errorCodes; errorStrings = $f.errorStrings; index = $f.index; name = $f.name; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			errorStrings = $makeSlice(sliceType$3, errorCodes.$length);
+			errorStrings = $makeSlice(sliceType$4, errorCodes.$length);
 			_ref = errorCodes;
 			_i = 0;
 			/* while (true) { */ case 1:
@@ -27569,7 +30514,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			_r$3 = fmt.Fprintf(os.Stderr, "!!: [%-20s] %v -> %v\n", new sliceType$1([new $String(name), errorCodes, errorStrings])); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 			_r$3;
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._i = _i; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f.errorCode = errorCode; $f.errorCodes = errorCodes; $f.errorStrings = errorStrings; $f.index = index; $f.name = name; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(app, bitmap, createTextureRenderable, palette));
+		}; })(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles));
 		app[0].gl = builder.Build();
 		$r = app[0].gl.Enable(3042); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = app[0].gl.BlendFunc(770, 771); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -27579,48 +30524,95 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ if (!($interfaceIsEqual(app[0].store, $ifaceNil))) { $s = 12; continue; }
 		/* */ $s = 13; continue;
 		/* if (!($interfaceIsEqual(app[0].store, $ifaceNil))) { */ case 12:
-			palette[0] = ptrType$3.nil;
-			bitmap[0] = ptrType$4.nil;
-			createTextureRenderable[0] = (function(app, bitmap, createTextureRenderable, palette) { return function $b() {
-				var $ptr, _r$3, _tuple, pixelData, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; _tuple = $f._tuple; pixelData = $f.pixelData; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-				/* */ if (!($equal(palette[0], ptrType$3.nil, arrayType$1)) && !(bitmap[0] === ptrType$4.nil) && app[0].textureRenderable === ptrType$2.nil) { $s = 1; continue; }
+			paletteTexture[0] = $ifaceNil;
+			levelTextureIDs[0] = sliceType$5.nil;
+			bitmapTextures[0] = {};
+			tiles[0] = ptrType$4.nil;
+			createMap[0] = (function(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles) { return function $b() {
+				var $ptr, _entry, _r$3, _r$4, row, textureID, tileData, x, x$1, y, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _r$3 = $f._r$3; _r$4 = $f._r$4; row = $f.row; textureID = $f.textureID; tileData = $f.tileData; x = $f.x; x$1 = $f.x$1; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				/* */ if (!($interfaceIsEqual(paletteTexture[0], $ifaceNil)) && !(tiles[0] === ptrType$4.nil) && levelTextureIDs[0].$length > 0 && ($keys(bitmapTextures[0]).length === levelTextureIDs[0].$length) && app[0].tileTextureMapRenderable === ptrType$3.nil) { $s = 1; continue; }
 				/* */ $s = 2; continue;
-				/* if (!($equal(palette[0], ptrType$3.nil, arrayType$1)) && !(bitmap[0] === ptrType$4.nil) && app[0].textureRenderable === ptrType$2.nil) { */ case 1:
-					_tuple = base64.StdEncoding.DecodeString(bitmap[0].Pixel);
-					pixelData = _tuple[0];
-					_r$3 = NewTextureRenderable(app[0].gl, bitmap[0].Width, bitmap[0].Height, pixelData, (function(app, bitmap, createTextureRenderable, palette) { return function(index) {
-						var $ptr, entry, index;
-						entry = (palette[0].nilCheck, ((index < 0 || index >= palette[0].length) ? $throwRuntimeError("index out of range") : palette[0][index]));
-						return [(entry.Red << 24 >>> 24), (entry.Green << 24 >>> 24), (entry.Blue << 24 >>> 24), 255];
-					}; })(app, bitmap, createTextureRenderable, palette)); /* */ $s = 3; case 3: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-					app[0].textureRenderable = _r$3;
+				/* if (!($interfaceIsEqual(paletteTexture[0], $ifaceNil)) && !(tiles[0] === ptrType$4.nil) && levelTextureIDs[0].$length > 0 && ($keys(bitmapTextures[0]).length === levelTextureIDs[0].$length) && app[0].tileTextureMapRenderable === ptrType$3.nil) { */ case 1:
+					_r$3 = fmt.Fprintf(os.Stderr, "creating tile map\n", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_r$3;
+					_r$4 = NewTileTextureMapRenderable(app[0].gl, paletteTexture[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+					app[0].tileTextureMapRenderable = _r$4;
+					y = 0;
+					while (true) {
+						if (!(y < tiles[0].Table.$length)) { break; }
+						row = (x = tiles[0].Table, ((y < 0 || y >= x.$length) ? $throwRuntimeError("index out of range") : x.$array[x.$offset + y]));
+						x$1 = 0;
+						while (true) {
+							if (!(x$1 < row.$length)) { break; }
+							tileData = ((x$1 < 0 || x$1 >= row.$length) ? $throwRuntimeError("index out of range") : row.$array[row.$offset + x$1]);
+							if (!(tileData.Properties.Type.$get() === "solid")) {
+								textureID = tileData.Properties.RealWorld.FloorTexture.$get();
+								app[0].tileTextureMapRenderable.SetTileTexture(x$1, 63 - y >> 0, (_entry = bitmapTextures[0][$Int.keyFor(textureID)], _entry !== undefined ? _entry.v : $ifaceNil));
+							}
+							x$1 = x$1 + (1) >> 0;
+						}
+						y = y + (1) >> 0;
+					}
 				/* } */ case 2:
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f._tuple = _tuple; $f.pixelData = pixelData; $f.$s = $s; $f.$r = $r; return $f;
-			}; })(app, bitmap, createTextureRenderable, palette);
-			$r = app[0].store.LevelTextures("test1", "archive", 1, (function(app, bitmap, createTextureRenderable, palette) { return function $b(textureIDs) {
-				var $ptr, textureIDs, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; textureIDs = $f.textureIDs; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-				$r = app[0].store.TextureBitmap("test1", (7 >= textureIDs.$length ? $throwRuntimeError("index out of range") : textureIDs.$array[textureIDs.$offset + 7]), "large", (function(app, bitmap, createTextureRenderable, palette) { return function $b(bmp) {
-					var $ptr, bmp, $s, $r;
-					/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; bmp = $f.bmp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-					bitmap[0] = bmp;
-					$r = createTextureRenderable[0](); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.bmp = bmp; $f.$s = $s; $f.$r = $r; return $f;
-				}; })(app, bitmap, createTextureRenderable, palette), app[0].simpleStoreFailure("TextureBitmap")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.textureIDs = textureIDs; $f.$s = $s; $f.$r = $r; return $f;
-			}; })(app, bitmap, createTextureRenderable, palette), app[0].simpleStoreFailure("LevelTextures")); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = app[0].store.Palette("test1", "game", (function(app, bitmap, createTextureRenderable, palette) { return function $b(colors) {
-				var $ptr, colors, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; colors = $f.colors; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._entry = _entry; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.row = row; $f.textureID = textureID; $f.tileData = tileData; $f.x = x; $f.x$1 = x$1; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+			}; })(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles);
+			$r = app[0].store.Tiles("test1", "archive", 1, (function(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles) { return function $b(data) {
+				var $ptr, _r$3, data, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; data = $f.data; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				data = [data];
+				data[0] = $clone(data[0], model.Tiles);
+				_r$3 = fmt.Fprintf(os.Stderr, "loaded tiles\n", new sliceType$1([])); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_r$3;
+				tiles[0] = data[0];
+				$r = createMap[0](); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f.data = data; $f.$s = $s; $f.$r = $r; return $f;
+			}; })(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles), app[0].simpleStoreFailure("Tiles")); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = app[0].store.LevelTextures("test1", "archive", 1, (function(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles) { return function $b(textureIDs) {
+				var $ptr, _i, _r$3, _ref, id, index, localIndex, textureIDs, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r$3 = $f._r$3; _ref = $f._ref; id = $f.id; index = $f.index; localIndex = $f.localIndex; textureIDs = $f.textureIDs; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				_r$3 = fmt.Fprintf(os.Stderr, "loaded textureIDs, %v to load\n", new sliceType$1([new $Int(textureIDs.$length)])); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_r$3;
+				levelTextureIDs[0] = textureIDs;
+				_ref = textureIDs;
+				_i = 0;
+				/* while (true) { */ case 2:
+					/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 3; continue; }
+					localIndex = [localIndex];
+					index = _i;
+					id = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+					localIndex[0] = index;
+					$r = app[0].store.TextureBitmap("test1", id, "icon", (function(app, bitmapTextures, createMap, levelTextureIDs, localIndex, paletteTexture, tiles) { return function $b(bmp) {
+						var $ptr, _key, _r$4, _tuple, bmp, pixelData, $s, $r;
+						/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _key = $f._key; _r$4 = $f._r$4; _tuple = $f._tuple; bmp = $f.bmp; pixelData = $f.pixelData; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+						_tuple = base64.StdEncoding.DecodeString(bmp.Pixel);
+						pixelData = _tuple[0];
+						_r$4 = NewBitmapTexture(app[0].gl, bmp.Width, bmp.Height, pixelData); /* */ $s = 1; case 1: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+						_key = localIndex[0]; (bitmapTextures[0] || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: _r$4 };
+						$r = createMap[0](); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._key = _key; $f._r$4 = _r$4; $f._tuple = _tuple; $f.bmp = bmp; $f.pixelData = pixelData; $f.$s = $s; $f.$r = $r; return $f;
+					}; })(app, bitmapTextures, createMap, levelTextureIDs, localIndex, paletteTexture, tiles), app[0].simpleStoreFailure("TextureBitmap")); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					_i++;
+				/* } */ $s = 2; continue; case 3:
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._i = _i; $f._r$3 = _r$3; $f._ref = _ref; $f.id = id; $f.index = index; $f.localIndex = localIndex; $f.textureIDs = textureIDs; $f.$s = $s; $f.$r = $r; return $f;
+			}; })(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles), app[0].simpleStoreFailure("LevelTextures")); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = app[0].store.Palette("test1", "game", (function(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles) { return function $b(colors) {
+				var $ptr, _r$3, colorProvider, colors, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$3 = $f._r$3; colorProvider = $f.colorProvider; colors = $f.colors; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				colors = [colors];
 				colors[0] = $clone(colors[0], arrayType$1);
-				palette[0] = colors[0];
-				$r = createTextureRenderable[0](); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.colors = colors; $f.$s = $s; $f.$r = $r; return $f;
-			}; })(app, bitmap, createTextureRenderable, palette), app[0].simpleStoreFailure("Palette")); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				colorProvider = (function(app, bitmapTextures, colors, createMap, levelTextureIDs, paletteTexture, tiles) { return function(index) {
+					var $ptr, entry, index;
+					entry = ((index < 0 || index >= colors[0].length) ? $throwRuntimeError("index out of range") : colors[0][index]);
+					return [(entry.Red << 24 >>> 24), (entry.Green << 24 >>> 24), (entry.Blue << 24 >>> 24), 255];
+				}; })(app, bitmapTextures, colors, createMap, levelTextureIDs, paletteTexture, tiles);
+				_r$3 = NewPaletteTexture(app[0].gl, colorProvider); /* */ $s = 1; case 1: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				paletteTexture[0] = _r$3;
+				$r = createMap[0](); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$3 = _r$3; $f.colorProvider = colorProvider; $f.colors = colors; $f.$s = $s; $f.$r = $r; return $f;
+			}; })(app, bitmapTextures, createMap, levelTextureIDs, paletteTexture, tiles), app[0].simpleStoreFailure("Palette")); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* } */ case 13:
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.app = app; $f.bitmap = bitmap; $f.builder = builder; $f.createTextureRenderable = createTextureRenderable; $f.glWindow = glWindow; $f.palette = palette; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.Init }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.app = app; $f.bitmapTextures = bitmapTextures; $f.builder = builder; $f.createMap = createMap; $f.glWindow = glWindow; $f.levelTextureIDs = levelTextureIDs; $f.paletteTexture = paletteTexture; $f.tiles = tiles; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.Init = function(glWindow) { return this.$val.Init(glWindow); };
 	MainApplication.ptr.prototype.simpleStoreFailure = function(info) {
@@ -27636,8 +30628,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	MainApplication.prototype.simpleStoreFailure = function(info) { return this.$val.simpleStoreFailure(info); };
 	MainApplication.ptr.prototype.render = function() {
-		var $ptr, _r, _tuple, app, context, gl, height, width, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; app = $f.app; context = $f.context; gl = $f.gl; height = $f.height; width = $f.width; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _i, _r, _ref, _tuple, app, context, gl, height, renderable, width, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; app = $f.app; context = $f.context; gl = $f.gl; height = $f.height; renderable = $f.renderable; width = $f.width; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		context = [context];
 		app = this;
 		gl = app.gl;
@@ -27649,12 +30641,20 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = gl.Clear(16640); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		context[0] = new RenderContext.ptr(width, height, $clone(app.view.ViewMatrix(), mgl32.Mat4), $clone(mgl32.Ortho2D(0, width, height, 0), mgl32.Mat4));
 		$r = app.gridRenderable.Render(context[0]); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ if (!(app.textureRenderable === ptrType$2.nil)) { $s = 5; continue; }
-		/* */ $s = 6; continue;
-		/* if (!(app.textureRenderable === ptrType$2.nil)) { */ case 5:
-			$r = app.textureRenderable.Render(context[0]); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* } */ case 6:
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.app = app; $f.context = context; $f.gl = gl; $f.height = height; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
+		_ref = app.textureRenderables;
+		_i = 0;
+		/* while (true) { */ case 5:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 6; continue; }
+			renderable = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+			$r = renderable.Render(context[0]); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_i++;
+		/* } */ $s = 5; continue; case 6:
+		/* */ if (!(app.tileTextureMapRenderable === ptrType$3.nil)) { $s = 8; continue; }
+		/* */ $s = 9; continue;
+		/* if (!(app.tileTextureMapRenderable === ptrType$3.nil)) { */ case 8:
+			$r = app.tileTextureMapRenderable.Render(context[0]); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 9:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.render }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.app = app; $f.context = context; $f.gl = gl; $f.height = height; $f.renderable = renderable; $f.width = width; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.render = function() { return this.$val.render(); };
 	MainApplication.ptr.prototype.unprojectPixel = function(pixelX, pixelY) {
@@ -27733,6 +30733,52 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		}
 	};
 	MainApplication.prototype.onMouseScroll = function(dx, dy) { return this.$val.onMouseScroll(dx, dy); };
+	NewPaletteTexture = function(gl, colorProvider) {
+		var $ptr, _r, colorProvider, gl, palette, tex, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; colorProvider = $f.colorProvider; gl = $f.gl; palette = $f.palette; tex = $f.tex; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		palette = [palette];
+		_r = gl.GenTextures(1); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		tex = new PaletteTexture.ptr($ifaceNil, colorProvider, (x = _r, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0])));
+		palette[0] = arrayType$2.zero();
+		$r = tex.loadColors(palette[0]); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BindTexture(3553, tex.handle); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.TexImage2D(3553, 0, 6408, 256, 1, 0, 6408, 5121, new arrayType$2(palette[0])); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.TexParameteri(3553, 10240, 9728); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.TexParameteri(3553, 10241, 9728); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.GenerateMipmap(3553); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BindTexture(3553, 0); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return tex;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewPaletteTexture }; } $f.$ptr = $ptr; $f._r = _r; $f.colorProvider = colorProvider; $f.gl = gl; $f.palette = palette; $f.tex = tex; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewPaletteTexture = NewPaletteTexture;
+	PaletteTexture.ptr.prototype.Handle = function() {
+		var $ptr, tex;
+		tex = this;
+		return tex.handle;
+	};
+	PaletteTexture.prototype.Handle = function() { return this.$val.Handle(); };
+	PaletteTexture.ptr.prototype.loadColors = function(palette) {
+		var $ptr, _r, _tuple, a, b, g, i, palette, r, tex, x, x$1, x$2, x$3, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; a = $f.a; b = $f.b; g = $f.g; i = $f.i; palette = $f.palette; r = $f.r; tex = $f.tex; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		tex = this;
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 256)) { break; } */ if(!(i < 256)) { $s = 2; continue; }
+			_r = tex.colorProvider(i); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			r = _tuple[0];
+			g = _tuple[1];
+			b = _tuple[2];
+			a = _tuple[3];
+			(x = ($imul(i, 4)) + 0 >> 0, palette.nilCheck, ((x < 0 || x >= palette.length) ? $throwRuntimeError("index out of range") : palette[x] = r));
+			(x$1 = ($imul(i, 4)) + 1 >> 0, palette.nilCheck, ((x$1 < 0 || x$1 >= palette.length) ? $throwRuntimeError("index out of range") : palette[x$1] = g));
+			(x$2 = ($imul(i, 4)) + 2 >> 0, palette.nilCheck, ((x$2 < 0 || x$2 >= palette.length) ? $throwRuntimeError("index out of range") : palette[x$2] = b));
+			(x$3 = ($imul(i, 4)) + 3 >> 0, palette.nilCheck, ((x$3 < 0 || x$3 >= palette.length) ? $throwRuntimeError("index out of range") : palette[x$3] = a));
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: PaletteTexture.ptr.prototype.loadColors }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.a = a; $f.b = b; $f.g = g; $f.i = i; $f.palette = palette; $f.r = r; $f.tex = tex; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	PaletteTexture.prototype.loadColors = function(palette) { return this.$val.loadColors(palette); };
 	RenderContext.ptr.prototype.ViewportSize = function() {
 		var $ptr, _tmp, _tmp$1, context, height, width;
 		width = 0;
@@ -27811,7 +30857,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		store = this;
 		_r = fmt.Sprintf("/projects/%s/%s/levels/%d/textures", new sliceType$1([new $String(projectID), new $String(archiveID), new $Int(levelID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		url = _r;
-		data[0] = new model.LevelTextures.ptr(new model.Referable.ptr(""), sliceType$4.nil);
+		data[0] = new model.LevelTextures.ptr(new model.Referable.ptr(""), sliceType$5.nil);
 		$r = store.get(url, data[0], (function(data, onSuccess) { return function $b() {
 			var $ptr, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -27847,7 +30893,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		store = this;
 		_r = fmt.Sprintf("/projects/%s/%s/levels/%d/tiles", new sliceType$1([new $String(projectID), new $String(archiveID), new $Int(levelID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		url = _r;
-		data[0] = new model.Tiles.ptr(sliceType$6.nil);
+		data[0] = new model.Tiles.ptr(sliceType$7.nil);
 		$r = store.get(url, data[0], (function(data, onSuccess) { return function $b() {
 			var $ptr, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -27857,94 +30903,6 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: RestDataStore.ptr.prototype.Tiles }; } $f.$ptr = $ptr; $f._r = _r; $f.archiveID = archiveID; $f.data = data; $f.levelID = levelID; $f.onFailure = onFailure; $f.onSuccess = onSuccess; $f.projectID = projectID; $f.store = store; $f.url = url; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	RestDataStore.prototype.Tiles = function(projectID, archiveID, levelID, onSuccess, onFailure) { return this.$val.Tiles(projectID, archiveID, levelID, onSuccess, onFailure); };
-	NewTextureRenderable = function(gl, width, height, pixelData, colorProvider) {
-		var $ptr, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, colorProvider, err1, err2, fragmentShader, gl, height, pixelData, program, renderable, vertexShader, width, x, x$1, x$2, x$3, $s, $deferred, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; colorProvider = $f.colorProvider; err1 = $f.err1; err2 = $f.err2; fragmentShader = $f.fragmentShader; gl = $f.gl; height = $f.height; pixelData = $f.pixelData; program = $f.program; renderable = $f.renderable; vertexShader = $f.vertexShader; width = $f.width; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
-		colorProvider = [colorProvider];
-		gl = [gl];
-		height = [height];
-		pixelData = [pixelData];
-		renderable = [renderable];
-		width = [width];
-		_r = opengl.CompileNewShader(gl[0], 35633, textureVertexShaderSource); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		vertexShader = _tuple[0];
-		err1 = _tuple[1];
-		$deferred.push([$methodVal(gl[0], "DeleteShader"), [vertexShader]]);
-		_r$1 = opengl.CompileNewShader(gl[0], 35632, textureFragmentShaderSource); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		fragmentShader = _tuple$1[0];
-		err2 = _tuple$1[1];
-		$deferred.push([$methodVal(gl[0], "DeleteShader"), [fragmentShader]]);
-		_r$2 = opengl.LinkNewProgram(gl[0], new sliceType([vertexShader, fragmentShader])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$2 = _r$2;
-		program = _tuple$2[0];
-		/* */ if (!($interfaceIsEqual(err1, $ifaceNil))) { $s = 4; continue; }
-		/* */ $s = 5; continue;
-		/* if (!($interfaceIsEqual(err1, $ifaceNil))) { */ case 4:
-			_r$3 = fmt.Fprintf(os.Stderr, "Failed to compile shader 1:\n", new sliceType$1([err1])); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			_r$3;
-		/* } */ case 5:
-		/* */ if (!($interfaceIsEqual(err2, $ifaceNil))) { $s = 7; continue; }
-		/* */ $s = 8; continue;
-		/* if (!($interfaceIsEqual(err2, $ifaceNil))) { */ case 7:
-			_r$4 = fmt.Fprintf(os.Stderr, "Failed to compile shader 2:\n", new sliceType$1([err2])); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			_r$4;
-		/* } */ case 8:
-		_r$5 = gl[0].GenVertexArrays(1); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-		_r$6 = gl[0].GenBuffers(1); /* */ $s = 11; case 11: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		_r$7 = gl[0].GetAttribLocation(program, "vertexPosition"); /* */ $s = 12; case 12: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-		_r$8 = gl[0].GetUniformLocation(program, "modelMatrix"); /* */ $s = 13; case 13: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-		_r$9 = gl[0].GetUniformLocation(program, "viewMatrix"); /* */ $s = 14; case 14: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-		_r$10 = gl[0].GetUniformLocation(program, "projectionMatrix"); /* */ $s = 15; case 15: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-		_r$11 = gl[0].GenTextures(1); /* */ $s = 16; case 16: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
-		_r$12 = gl[0].GetUniformLocation(program, "palette"); /* */ $s = 17; case 17: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-		_r$13 = gl[0].GenTextures(1); /* */ $s = 18; case 18: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-		_r$14 = gl[0].GetUniformLocation(program, "bitmap"); /* */ $s = 19; case 19: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
-		renderable[0] = new TextureRenderable.ptr(gl[0], $clone(new mgl32.Mat4(new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Translate3D(64, 64, 0))).Mul4(mgl32.Scale3D(640, 640, 1)), mgl32.Mat4), program, (x = _r$5, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0])), (x$1 = _r$6, (0 >= x$1.$length ? $throwRuntimeError("index out of range") : x$1.$array[x$1.$offset + 0])), _r$7, _r$8, _r$9, _r$10, (x$2 = _r$11, (0 >= x$2.$length ? $throwRuntimeError("index out of range") : x$2.$array[x$2.$offset + 0])), _r$12, (x$3 = _r$13, (0 >= x$3.$length ? $throwRuntimeError("index out of range") : x$3.$array[x$3.$offset + 0])), _r$14);
-		$r = renderable[0].withShader((function(colorProvider, gl, height, pixelData, renderable, width) { return function $b() {
-			var $ptr, _r$15, _tuple$3, a, b, g, i, limit, palette, r, vertices, x$4, x$5, x$6, x$7, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$15 = $f._r$15; _tuple$3 = $f._tuple$3; a = $f.a; b = $f.b; g = $f.g; i = $f.i; limit = $f.limit; palette = $f.palette; r = $f.r; vertices = $f.vertices; x$4 = $f.x$4; x$5 = $f.x$5; x$6 = $f.x$6; x$7 = $f.x$7; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			$r = gl[0].BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			limit = 1;
-			vertices = new sliceType$2([0, 0, 0, limit, 0, 0, limit, limit, 0, limit, limit, 0, 0, limit, 0, 0, 0, 0]);
-			$r = gl[0].BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].ActiveTexture(33984); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].BindTexture(3553, renderable[0].paletteTexture); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			palette = arrayType$2.zero();
-			i = 0;
-			/* while (true) { */ case 5:
-				/* if (!(i < 256)) { break; } */ if(!(i < 256)) { $s = 6; continue; }
-				_r$15 = colorProvider[0](i); /* */ $s = 7; case 7: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
-				_tuple$3 = _r$15;
-				r = _tuple$3[0];
-				g = _tuple$3[1];
-				b = _tuple$3[2];
-				a = _tuple$3[3];
-				(x$4 = ($imul(i, 4)) + 0 >> 0, ((x$4 < 0 || x$4 >= palette.length) ? $throwRuntimeError("index out of range") : palette[x$4] = r));
-				(x$5 = ($imul(i, 4)) + 1 >> 0, ((x$5 < 0 || x$5 >= palette.length) ? $throwRuntimeError("index out of range") : palette[x$5] = g));
-				(x$6 = ($imul(i, 4)) + 2 >> 0, ((x$6 < 0 || x$6 >= palette.length) ? $throwRuntimeError("index out of range") : palette[x$6] = b));
-				(x$7 = ($imul(i, 4)) + 3 >> 0, ((x$7 < 0 || x$7 >= palette.length) ? $throwRuntimeError("index out of range") : palette[x$7] = a));
-				i = i + (1) >> 0;
-			/* } */ $s = 5; continue; case 6:
-			$r = gl[0].TexImage2D(3553, 0, 6408, 256, 1, 0, 6408, 5121, new arrayType$2(palette)); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].TexParameteri(3553, 10240, 9728); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].TexParameteri(3553, 10241, 9728); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].GenerateMipmap(3553); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].BindTexture(3553, 0); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].ActiveTexture(33985); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].BindTexture(3553, renderable[0].bitmapTexture); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].TexImage2D(3553, 0, 6406, (width[0] >> 0), (height[0] >> 0), 0, 6406, 5121, pixelData[0]); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].TexParameteri(3553, 10240, 9728); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].TexParameteri(3553, 10241, 9728); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].GenerateMipmap(3553); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].BindTexture(3553, 0); /* */ $s = 19; case 19: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$15 = _r$15; $f._tuple$3 = _tuple$3; $f.a = a; $f.b = b; $f.g = g; $f.i = i; $f.limit = limit; $f.palette = palette; $f.r = r; $f.vertices = vertices; $f.x$4 = x$4; $f.x$5 = x$5; $f.x$6 = x$6; $f.x$7 = x$7; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(colorProvider, gl, height, pixelData, renderable, width)); /* */ $s = 20; case 20: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		return renderable[0];
-		/* */ } return; } } catch(err) { $err = err; $s = -1; return ptrType$2.nil; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: NewTextureRenderable }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.colorProvider = colorProvider; $f.err1 = err1; $f.err2 = err2; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.height = height; $f.pixelData = pixelData; $f.program = program; $f.renderable = renderable; $f.vertexShader = vertexShader; $f.width = width; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
-	};
-	$pkg.NewTextureRenderable = NewTextureRenderable;
 	TextureRenderable.ptr.prototype.Render = function(context) {
 		var $ptr, context, gl, renderable, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; context = $f.context; gl = $f.gl; renderable = $f.renderable; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -27954,8 +30912,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		renderable[0] = this;
 		gl[0] = renderable[0].gl;
 		$r = renderable[0].withShader((function(context, gl, renderable) { return function $b() {
-			var $ptr, textureUnit, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; textureUnit = $f.textureUnit; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			var $ptr, _arg, _arg$1, _r, _r$1, textureUnit, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; textureUnit = $f.textureUnit; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			$r = renderable[0].setMatrix(renderable[0].modelMatrixUniform, renderable[0].modelMatrix); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$r = renderable[0].setMatrix(renderable[0].viewMatrixUniform, context[0].ViewMatrix()); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$r = renderable[0].setMatrix(renderable[0].projectionMatrixUniform, context[0].ProjectionMatrix()); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -27963,15 +30921,19 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			$r = gl[0].VertexAttribOffset((renderable[0].vertexPositionAttrib >>> 0), 3, 5126, false, 0, 0); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			textureUnit = 0;
 			$r = gl[0].ActiveTexture(33984 + (textureUnit >>> 0) >>> 0); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].BindTexture(3553, renderable[0].paletteTexture); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].Uniform1i(renderable[0].paletteUniform, textureUnit); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r = renderable[0].paletteTexture.Handle(); /* */ $s = 7; case 7: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_arg = _r;
+			$r = gl[0].BindTexture(3553, _arg); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].Uniform1i(renderable[0].paletteUniform, textureUnit); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			textureUnit = 1;
-			$r = gl[0].ActiveTexture(33984 + (textureUnit >>> 0) >>> 0); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].BindTexture(3553, renderable[0].bitmapTexture); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].Uniform1i(renderable[0].bitmapUniform, textureUnit); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].DrawArrays(4, 0, 6); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].BindTexture(3553, 0); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.textureUnit = textureUnit; $f.$s = $s; $f.$r = $r; return $f;
+			$r = gl[0].ActiveTexture(33984 + (textureUnit >>> 0) >>> 0); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$1 = renderable[0].bitmapTexture.Handle(); /* */ $s = 11; case 11: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_arg$1 = _r$1;
+			$r = gl[0].BindTexture(3553, _arg$1); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].Uniform1i(renderable[0].bitmapUniform, textureUnit); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].DrawArrays(4, 0, 6); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].BindTexture(3553, 0); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f.textureUnit = textureUnit; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(context, gl, renderable)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TextureRenderable.ptr.prototype.Render }; } $f.$ptr = $ptr; $f.context = context; $f.gl = gl; $f.renderable = renderable; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -28007,19 +30969,198 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TextureRenderable.ptr.prototype.setMatrix }; } $f.$ptr = $ptr; $f.matrix = matrix; $f.matrixArray = matrixArray; $f.renderable = renderable; $f.uniform = uniform; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	TextureRenderable.prototype.setMatrix = function(uniform, matrix) { return this.$val.setMatrix(uniform, matrix); };
-	ptrType.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([ptrType$5], [], false)}, {prop: "withShader", name: "withShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType$4], [], false)}, {prop: "setMatrix", name: "setMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32, ptrType$6], [], false)}];
-	ptrType$7.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [FailureFunc], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}];
-	ptrType$5.methods = [{prop: "ViewportSize", name: "ViewportSize", pkg: "", typ: $funcType([], [$Int, $Int], false)}, {prop: "ViewMatrix", name: "ViewMatrix", pkg: "", typ: $funcType([], [ptrType$6], false)}, {prop: "ProjectionMatrix", name: "ProjectionMatrix", pkg: "", typ: $funcType([], [ptrType$6], false)}];
-	ptrType$8.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, funcType$4, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$1, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$2, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}];
-	ptrType$2.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([ptrType$5], [], false)}, {prop: "withShader", name: "withShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType$4], [], false)}, {prop: "setMatrix", name: "setMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32, ptrType$6], [], false)}];
+	NewTileTextureMapRenderable = function(gl, paletteTexture) {
+		var $ptr, _r, _r$1, _r$10, _r$11, _r$12, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, err1, err2, fragmentShader, gl, i, paletteTexture, program, renderable, vertexShader, x, x$1, x$2, $s, $deferred, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err1 = $f.err1; err2 = $f.err2; fragmentShader = $f.fragmentShader; gl = $f.gl; i = $f.i; paletteTexture = $f.paletteTexture; program = $f.program; renderable = $f.renderable; vertexShader = $f.vertexShader; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+		gl = [gl];
+		renderable = [renderable];
+		_r = opengl.CompileNewShader(gl[0], 35633, textureVertexShaderSource); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		vertexShader = _tuple[0];
+		err1 = _tuple[1];
+		$deferred.push([$methodVal(gl[0], "DeleteShader"), [vertexShader]]);
+		_r$1 = opengl.CompileNewShader(gl[0], 35632, textureFragmentShaderSource); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		fragmentShader = _tuple$1[0];
+		err2 = _tuple$1[1];
+		$deferred.push([$methodVal(gl[0], "DeleteShader"), [fragmentShader]]);
+		_r$2 = opengl.LinkNewProgram(gl[0], new sliceType([vertexShader, fragmentShader])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		program = _tuple$2[0];
+		/* */ if (!($interfaceIsEqual(err1, $ifaceNil))) { $s = 4; continue; }
+		/* */ $s = 5; continue;
+		/* if (!($interfaceIsEqual(err1, $ifaceNil))) { */ case 4:
+			_r$3 = fmt.Fprintf(os.Stderr, "Failed to compile shader 1:\n", new sliceType$1([err1])); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+		/* } */ case 5:
+		/* */ if (!($interfaceIsEqual(err2, $ifaceNil))) { $s = 7; continue; }
+		/* */ $s = 8; continue;
+		/* if (!($interfaceIsEqual(err2, $ifaceNil))) { */ case 7:
+			_r$4 = fmt.Fprintf(os.Stderr, "Failed to compile shader 2:\n", new sliceType$1([err2])); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4;
+		/* } */ case 8:
+		_r$5 = gl[0].GenVertexArrays(1); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_r$6 = gl[0].GenBuffers(1); /* */ $s = 11; case 11: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_r$7 = gl[0].GetAttribLocation(program, "vertexPosition"); /* */ $s = 12; case 12: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_r$8 = gl[0].GetUniformLocation(program, "modelMatrix"); /* */ $s = 13; case 13: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_r$9 = gl[0].GetUniformLocation(program, "viewMatrix"); /* */ $s = 14; case 14: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		_r$10 = gl[0].GetUniformLocation(program, "projectionMatrix"); /* */ $s = 15; case 15: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		_r$11 = gl[0].GetUniformLocation(program, "palette"); /* */ $s = 16; case 16: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+		_r$12 = gl[0].GetUniformLocation(program, "bitmap"); /* */ $s = 17; case 17: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+		renderable[0] = new TileTextureMapRenderable.ptr(gl[0], program, (x = _r$5, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0])), (x$1 = _r$6, (0 >= x$1.$length ? $throwRuntimeError("index out of range") : x$1.$array[x$1.$offset + 0])), _r$7, _r$8, _r$9, _r$10, _r$11, _r$12, paletteTexture, $makeSlice(sliceType$9, 64));
+		i = 0;
+		while (true) {
+			if (!(i < 64)) { break; }
+			(x$2 = renderable[0].tiles, ((i < 0 || i >= x$2.$length) ? $throwRuntimeError("index out of range") : x$2.$array[x$2.$offset + i] = $makeSlice(sliceType$8, 64)));
+			i = i + (1) >> 0;
+		}
+		$r = renderable[0].withShader((function(gl, renderable) { return function $b() {
+			var $ptr, limit, vertices, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; limit = $f.limit; vertices = $f.vertices; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = gl[0].BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			limit = 1;
+			vertices = new sliceType$2([0, 0, 0, limit, 0, 0, limit, limit, 0, limit, limit, 0, 0, limit, 0, 0, 0, 0]);
+			$r = gl[0].BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.limit = limit; $f.vertices = vertices; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(gl, renderable)); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return renderable[0];
+		/* */ } return; } } catch(err) { $err = err; $s = -1; return ptrType$3.nil; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: NewTileTextureMapRenderable }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err1 = err1; $f.err2 = err2; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.i = i; $f.paletteTexture = paletteTexture; $f.program = program; $f.renderable = renderable; $f.vertexShader = vertexShader; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+	};
+	$pkg.NewTileTextureMapRenderable = NewTileTextureMapRenderable;
+	TileTextureMapRenderable.ptr.prototype.SetTileTexture = function(x, y, tex) {
+		var $ptr, renderable, tex, x, x$1, x$2, y;
+		renderable = this;
+		(x$1 = (x$2 = renderable.tiles, ((y < 0 || y >= x$2.$length) ? $throwRuntimeError("index out of range") : x$2.$array[x$2.$offset + y])), ((x < 0 || x >= x$1.$length) ? $throwRuntimeError("index out of range") : x$1.$array[x$1.$offset + x] = tex));
+	};
+	TileTextureMapRenderable.prototype.SetTileTexture = function(x, y, tex) { return this.$val.SetTileTexture(x, y, tex); };
+	TileTextureMapRenderable.ptr.prototype.Render = function(context) {
+		var $ptr, context, gl, renderable, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; context = $f.context; gl = $f.gl; renderable = $f.renderable; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		context = [context];
+		gl = [gl];
+		renderable = [renderable];
+		renderable[0] = this;
+		gl[0] = renderable[0].gl;
+		$r = renderable[0].withShader((function(context, gl, renderable) { return function $b() {
+			var $ptr, _arg, _arg$1, _i, _i$1, _r, _r$1, _ref, _ref$1, modelMatrix, row, textureUnit, tile, x, y, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _i = $f._i; _i$1 = $f._i$1; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; _ref$1 = $f._ref$1; modelMatrix = $f.modelMatrix; row = $f.row; textureUnit = $f.textureUnit; tile = $f.tile; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = renderable[0].setMatrix32(renderable[0].viewMatrixUniform, context[0].ViewMatrix()); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = renderable[0].setMatrix32(renderable[0].projectionMatrixUniform, context[0].ProjectionMatrix()); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].VertexAttribOffset((renderable[0].vertexPositionAttrib >>> 0), 3, 5126, false, 0, 0); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			textureUnit = 0;
+			$r = gl[0].ActiveTexture(33984 + (textureUnit >>> 0) >>> 0); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r = renderable[0].paletteTexture.Handle(); /* */ $s = 6; case 6: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_arg = _r;
+			$r = gl[0].BindTexture(3553, _arg); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].Uniform1i(renderable[0].paletteUniform, textureUnit); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			textureUnit = 1;
+			$r = gl[0].ActiveTexture(33984 + (textureUnit >>> 0) >>> 0); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_ref = renderable[0].tiles;
+			_i = 0;
+			/* while (true) { */ case 10:
+				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 11; continue; }
+				y = _i;
+				row = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+				_ref$1 = row;
+				_i$1 = 0;
+				/* while (true) { */ case 12:
+					/* if (!(_i$1 < _ref$1.$length)) { break; } */ if(!(_i$1 < _ref$1.$length)) { $s = 13; continue; }
+					modelMatrix = [modelMatrix];
+					x = _i$1;
+					tile = ((_i$1 < 0 || _i$1 >= _ref$1.$length) ? $throwRuntimeError("index out of range") : _ref$1.$array[_ref$1.$offset + _i$1]);
+					/* */ if (!($interfaceIsEqual(tile, $ifaceNil))) { $s = 14; continue; }
+					/* */ $s = 15; continue;
+					/* if (!($interfaceIsEqual(tile, $ifaceNil))) { */ case 14:
+						modelMatrix[0] = $clone(new mgl64.Mat4(new mgl64.Mat4(mgl64.Ident4()).Mul4(mgl64.Translate3D(x * 32, y * 32, 0))).Mul4(mgl64.Scale3D(32, 32, 1)), mgl64.Mat4);
+						$r = renderable[0].setMatrix64(renderable[0].modelMatrixUniform, modelMatrix[0]); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						_r$1 = tile.Handle(); /* */ $s = 17; case 17: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+						_arg$1 = _r$1;
+						$r = gl[0].BindTexture(3553, _arg$1); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						$r = gl[0].Uniform1i(renderable[0].bitmapUniform, textureUnit); /* */ $s = 19; case 19: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						$r = gl[0].DrawArrays(4, 0, 6); /* */ $s = 20; case 20: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* } */ case 15:
+					_i$1++;
+				/* } */ $s = 12; continue; case 13:
+				_i++;
+			/* } */ $s = 10; continue; case 11:
+			$r = gl[0].BindTexture(3553, 0); /* */ $s = 21; case 21: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._i = _i; $f._i$1 = _i$1; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._ref$1 = _ref$1; $f.modelMatrix = modelMatrix; $f.row = row; $f.textureUnit = textureUnit; $f.tile = tile; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(context, gl, renderable)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TileTextureMapRenderable.ptr.prototype.Render }; } $f.$ptr = $ptr; $f.context = context; $f.gl = gl; $f.renderable = renderable; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TileTextureMapRenderable.prototype.Render = function(context) { return this.$val.Render(context); };
+	TileTextureMapRenderable.ptr.prototype.withShader = function(task) {
+		var $ptr, gl, renderable, task, $s, $deferred, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; gl = $f.gl; renderable = $f.renderable; task = $f.task; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+		gl = [gl];
+		renderable = this;
+		gl[0] = renderable.gl;
+		$r = gl[0].UseProgram(renderable.program); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl[0].BindVertexArray(renderable.vertexArrayObject); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl[0].EnableVertexAttribArray((renderable.vertexPositionAttrib >>> 0)); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$deferred.push([(function(gl) { return function $b() {
+			var $ptr, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = gl[0].EnableVertexAttribArray(0); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].BindVertexArray(0); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].UseProgram(0); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(gl), []]);
+		$r = task(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: TileTextureMapRenderable.ptr.prototype.withShader }; } $f.$ptr = $ptr; $f.gl = gl; $f.renderable = renderable; $f.task = task; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+	};
+	TileTextureMapRenderable.prototype.withShader = function(task) { return this.$val.withShader(task); };
+	TileTextureMapRenderable.ptr.prototype.setMatrix32 = function(uniform, matrix) {
+		var $ptr, matrix, matrixArray, renderable, uniform, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; matrix = $f.matrix; matrixArray = $f.matrixArray; renderable = $f.renderable; uniform = $f.uniform; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		matrixArray = [matrixArray];
+		renderable = this;
+		matrixArray[0] = $clone($clone(matrix, arrayType), arrayType);
+		$r = renderable.gl.UniformMatrix4fv(uniform, false, matrixArray[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TileTextureMapRenderable.ptr.prototype.setMatrix32 }; } $f.$ptr = $ptr; $f.matrix = matrix; $f.matrixArray = matrixArray; $f.renderable = renderable; $f.uniform = uniform; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TileTextureMapRenderable.prototype.setMatrix32 = function(uniform, matrix) { return this.$val.setMatrix32(uniform, matrix); };
+	TileTextureMapRenderable.ptr.prototype.setMatrix64 = function(uniform, matrix) {
+		var $ptr, _i, _ref, index, matrix, matrixArray, renderable, uniform, value, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _ref = $f._ref; index = $f.index; matrix = $f.matrix; matrixArray = $f.matrixArray; renderable = $f.renderable; uniform = $f.uniform; value = $f.value; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		matrixArray = [matrixArray];
+		renderable = this;
+		matrixArray[0] = arrayType.zero();
+		_ref = matrix;
+		_i = 0;
+		while (true) {
+			if (!(_i < 16)) { break; }
+			index = _i;
+			value = (_ref.nilCheck, ((_i < 0 || _i >= _ref.length) ? $throwRuntimeError("index out of range") : _ref[_i]));
+			((index < 0 || index >= matrixArray[0].length) ? $throwRuntimeError("index out of range") : matrixArray[0][index] = $fround(value));
+			_i++;
+		}
+		$r = renderable.gl.UniformMatrix4fv(uniform, false, matrixArray[0]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TileTextureMapRenderable.ptr.prototype.setMatrix64 }; } $f.$ptr = $ptr; $f._i = _i; $f._ref = _ref; $f.index = index; $f.matrix = matrix; $f.matrixArray = matrixArray; $f.renderable = renderable; $f.uniform = uniform; $f.value = value; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TileTextureMapRenderable.prototype.setMatrix64 = function(uniform, matrix) { return this.$val.setMatrix64(uniform, matrix); };
+	ptrType$5.methods = [{prop: "Handle", name: "Handle", pkg: "", typ: $funcType([], [$Uint32], false)}];
+	ptrType.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([ptrType$7], [], false)}, {prop: "withShader", name: "withShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType$4], [], false)}, {prop: "setMatrix", name: "setMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32, ptrType$8], [], false)}];
+	ptrType$9.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [FailureFunc], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}];
+	ptrType$11.methods = [{prop: "Handle", name: "Handle", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "loadColors", name: "loadColors", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([ptrType$10], [], false)}];
+	ptrType$7.methods = [{prop: "ViewportSize", name: "ViewportSize", pkg: "", typ: $funcType([], [$Int, $Int], false)}, {prop: "ViewMatrix", name: "ViewMatrix", pkg: "", typ: $funcType([], [ptrType$8], false)}, {prop: "ProjectionMatrix", name: "ProjectionMatrix", pkg: "", typ: $funcType([], [ptrType$8], false)}];
+	ptrType$12.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, funcType$4, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$1, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$2, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}];
+	ptrType$2.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([ptrType$7], [], false)}, {prop: "withShader", name: "withShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType$4], [], false)}, {prop: "setMatrix", name: "setMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32, ptrType$8], [], false)}];
+	ptrType$3.methods = [{prop: "SetTileTexture", name: "SetTileTexture", pkg: "", typ: $funcType([$Int, $Int, GraphicsTexture], [], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([ptrType$7], [], false)}, {prop: "withShader", name: "withShader", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType$4], [], false)}, {prop: "setMatrix32", name: "setMatrix32", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32, ptrType$8], [], false)}, {prop: "setMatrix64", name: "setMatrix64", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32, ptrType$13], [], false)}];
+	BitmapTexture.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "handle", name: "handle", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}]);
 	FailureFunc.init([], [], false);
 	DataStore.init([{prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$1, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$2, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}]);
+	GraphicsTexture.init([{prop: "Handle", name: "Handle", pkg: "", typ: $funcType([], [$Uint32], false)}]);
 	GridRenderable.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "program", name: "program", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}]);
-	MainApplication.init([{prop: "store", name: "store", pkg: "github.com/inkyblackness/shocked-client/editor", typ: DataStore, tag: ""}, {prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "mouseX", name: "mouseX", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "mouseY", name: "mouseY", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "mouseMoveCapture", name: "mouseMoveCapture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: funcType$4, tag: ""}, {prop: "view", name: "view", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$1, tag: ""}, {prop: "gridRenderable", name: "gridRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType, tag: ""}, {prop: "textureRenderable", name: "textureRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$2, tag: ""}]);
+	MainApplication.init([{prop: "store", name: "store", pkg: "github.com/inkyblackness/shocked-client/editor", typ: DataStore, tag: ""}, {prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "mouseX", name: "mouseX", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "mouseY", name: "mouseY", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "mouseMoveCapture", name: "mouseMoveCapture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: funcType$4, tag: ""}, {prop: "view", name: "view", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$1, tag: ""}, {prop: "gridRenderable", name: "gridRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType, tag: ""}, {prop: "textureRenderables", name: "textureRenderables", pkg: "github.com/inkyblackness/shocked-client/editor", typ: sliceType$3, tag: ""}, {prop: "tileTextureMapRenderable", name: "tileTextureMapRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$3, tag: ""}]);
+	ColorProvider.init([$Int], [$Uint8, $Uint8, $Uint8, $Uint8], false);
+	PaletteTexture.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "colorProvider", name: "colorProvider", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ColorProvider, tag: ""}, {prop: "handle", name: "handle", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}]);
 	RenderContext.init([{prop: "viewportWidth", name: "viewportWidth", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int, tag: ""}, {prop: "viewportHeight", name: "viewportHeight", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "projectionMatrix", name: "projectionMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}]);
 	RestDataStore.init([{prop: "transport", name: "transport", pkg: "github.com/inkyblackness/shocked-client/editor", typ: RestTransport, tag: ""}]);
 	RestTransport.init([{prop: "Get", name: "Get", pkg: "", typ: $funcType([$String, funcType$5, funcType$4], [], false)}, {prop: "Post", name: "Post", pkg: "", typ: $funcType([$String, $String, funcType$5, funcType$4], [], false)}, {prop: "Put", name: "Put", pkg: "", typ: $funcType([$String, $String, funcType$5, funcType$4], [], false)}]);
-	TextureRenderable.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "modelMatrix", name: "modelMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "program", name: "program", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "modelMatrixUniform", name: "modelMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "paletteTexture", name: "paletteTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "paletteUniform", name: "paletteUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "bitmapTexture", name: "bitmapTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "bitmapUniform", name: "bitmapUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}]);
+	TextureRenderable.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "modelMatrix", name: "modelMatrix", pkg: "github.com/inkyblackness/shocked-client/editor", typ: mgl32.Mat4, tag: ""}, {prop: "program", name: "program", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "modelMatrixUniform", name: "modelMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "paletteUniform", name: "paletteUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "bitmapUniform", name: "bitmapUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "paletteTexture", name: "paletteTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: GraphicsTexture, tag: ""}, {prop: "bitmapTexture", name: "bitmapTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: GraphicsTexture, tag: ""}]);
+	TileTextureMapRenderable.init([{prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "program", name: "program", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexArrayObject", name: "vertexArrayObject", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "modelMatrixUniform", name: "modelMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "paletteUniform", name: "paletteUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "bitmapUniform", name: "bitmapUniform", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int32, tag: ""}, {prop: "paletteTexture", name: "paletteTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: GraphicsTexture, tag: ""}, {prop: "tiles", name: "tiles", pkg: "github.com/inkyblackness/shocked-client/editor", typ: sliceType$9, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -28028,11 +31169,12 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = json.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = fmt.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = mgl32.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = camera.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = env.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = opengl.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = model.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = os.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mgl64.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = camera.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = env.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = opengl.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = model.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = os.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		gridVertexShaderSource = "\n  attribute vec3 vertexPosition;\n\n  uniform mat4 viewMatrix;\n  uniform mat4 projectionMatrix;\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  void main(void) {\n    gl_Position = projectionMatrix * viewMatrix * vec4(vertexPosition, 1.0);\n\n    color = vec4(0.0, 0.1, 0.0, 0.6);\n    originalPosition = vertexPosition;\n  }\n";
 		gridFragmentShaderSource = "\n  #ifdef GL_ES\n    precision mediump float;\n  #endif\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  float modulo(float x, float y) {\n    return x - y * floor(x/y);\n  }\n\n  float nearGrid(float stepSize, float value) {\n    float remainder = modulo(value - (stepSize / 2.0), stepSize) * 2.0;\n\n    if (remainder >= stepSize) {\n      remainder = (stepSize * 2.0) - remainder;\n    }\n\n    return remainder / stepSize;\n  }\n\n  void main(void) {\n    float alpha = max(nearGrid(32.0, originalPosition.x), nearGrid(32.0, originalPosition.y));\n\n    alpha = pow(2.0, 10.0 * (alpha - 1.0));\n\n    gl_FragColor = vec4(color.rgb, color.a * alpha);\n  }\n";
 		textureVertexShaderSource = "\n  attribute vec3 vertexPosition;\n\n  uniform mat4 modelMatrix;\n  uniform mat4 viewMatrix;\n  uniform mat4 projectionMatrix;\n\n  varying vec2 position;\n\n  void main(void) {\n    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n\n    position = vertexPosition.xy;\n  }\n";
