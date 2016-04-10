@@ -2,11 +2,11 @@ package editor
 
 import (
 	"fmt"
-	"math"
 	"os"
 
-	"github.com/go-gl/mathgl/mgl32"
+	mgl "github.com/go-gl/mathgl/mgl32"
 
+	"github.com/inkyblackness/shocked-client/editor/camera"
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
@@ -19,22 +19,18 @@ type MainApplication struct {
 	mouseX, mouseY   float32
 	mouseMoveCapture func()
 
-	focusX, focusY float32
-
-	requestedZoomLevel       float32
-	viewOffsetX, viewOffsetY float32
-
-	viewMatrix mgl32.Mat4
+	view *camera.LimitedCamera
 
 	gridRenderable *GridRenderable
 }
 
 // NewMainApplication returns a new instance of MainApplication.
 func NewMainApplication() *MainApplication {
+	camLimit := (TilesPerMapSide - 1) * TileBaseLength
+
 	return &MainApplication{
-		requestedZoomLevel: 0,
-		viewMatrix:         mgl32.Ident4(),
-		mouseMoveCapture:   func() {}}
+		mouseMoveCapture: func() {},
+		view:             camera.NewLimited(ZoomLevelMin, ZoomLevelMax, 0, camLimit)}
 }
 
 // Init implements the env.Application interface.
@@ -72,8 +68,6 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
 
 	app.gridRenderable = NewGridRenderable(app.gl)
-
-	app.updateViewMatrix()
 }
 
 func (app *MainApplication) render() {
@@ -86,15 +80,15 @@ func (app *MainApplication) render() {
 	context := RenderContext{
 		viewportWidth:    width,
 		viewportHeight:   height,
-		viewMatrix:       app.viewMatrix,
-		projectionMatrix: mgl32.Ortho2D(0, float32(width), float32(height), 0)}
+		viewMatrix:       app.view.ViewMatrix(),
+		projectionMatrix: mgl.Ortho2D(0, float32(width), float32(height), 0)}
 
 	app.gridRenderable.Render(&context)
 }
 
 func (app *MainApplication) unprojectPixel(pixelX, pixelY float32) (x, y float32) {
-	pixelVec := mgl32.Vec4{pixelX, pixelY, 0.0, 1.0}
-	invertedView := app.viewMatrix.Inv()
+	pixelVec := mgl.Vec4{pixelX, pixelY, 0.0, 1.0}
+	invertedView := app.view.ViewMatrix().Inv()
 	result := invertedView.Mul4x1(pixelVec)
 
 	return result[0], result[1]
@@ -117,7 +111,7 @@ func (app *MainApplication) onMouseButtonDown(mouseButton uint32) {
 			lastWorldMouseX, lastWorldMouseY := app.unprojectPixel(lastMouseX, lastMouseY)
 			worldMouseX, worldMouseY := app.unprojectPixel(app.mouseX, app.mouseY)
 
-			app.ScrollBy(worldMouseX-lastWorldMouseX, worldMouseY-lastWorldMouseY)
+			app.view.MoveBy(worldMouseX-lastWorldMouseX, worldMouseY-lastWorldMouseY)
 			lastMouseX, lastMouseY = app.mouseX, app.mouseY
 		}
 	}
@@ -132,73 +126,9 @@ func (app *MainApplication) onMouseButtonUp(mouseButton uint32) {
 func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 	worldMouseX, worldMouseY := app.unprojectPixel(app.mouseX, app.mouseY)
 	if dy > 0 {
-		app.ZoomAt(-0.5, worldMouseX, worldMouseY)
+		app.view.ZoomAt(-0.5, worldMouseX, worldMouseY)
 	}
 	if dy < 0 {
-		app.ZoomAt(0.5, worldMouseX, worldMouseY)
+		app.view.ZoomAt(0.5, worldMouseX, worldMouseY)
 	}
-}
-
-// ScrollBy adjusts the requested view offset by given delta values in world coordinates.
-func (app *MainApplication) ScrollBy(dx, dy float32) {
-	app.ScrollTo(app.viewOffsetX+dx, app.viewOffsetY+dy)
-}
-
-// ScrollTo sets the requested view offset to the given world coordinates.
-func (app *MainApplication) ScrollTo(worldX, worldY float32) {
-	limit := (TilesPerMapSide - 1) * TileBaseLength
-
-	limitOffset := func(offset float32) float32 {
-		result := offset
-		if offset < -limit {
-			result = -limit
-		}
-		if offset > 0 {
-			result = 0
-		}
-		return result
-	}
-
-	app.viewOffsetX = limitOffset(worldX)
-	app.viewOffsetY = limitOffset(worldY)
-	app.updateViewMatrix()
-}
-
-// ZoomAt adjusts the requested zoom level by given delta, centered around give position.
-// Positive values zoom in.
-func (app *MainApplication) ZoomAt(levelDelta float32, x, y float32) {
-	app.focusX, app.focusY = x, y
-	app.Zoom(levelDelta)
-}
-
-// Zoom adjusts the requested zoom level by given delta. Positive values zoom in.
-func (app *MainApplication) Zoom(levelDelta float32) {
-	newValue := app.requestedZoomLevel + levelDelta
-	if newValue < ZoomLevelMin {
-		newValue = ZoomLevelMin
-	}
-	if newValue > ZoomLevelMax {
-		newValue = ZoomLevelMax
-	}
-	app.requestedZoomLevel = newValue
-
-	focusPoint := mgl32.Vec4{app.focusX, app.focusY, 0.0, 1.0}
-	oldPixel := app.viewMatrix.Mul4x1(focusPoint)
-
-	app.updateViewMatrix()
-
-	newPixel := app.viewMatrix.Mul4x1(focusPoint)
-	scaleFactor := app.scaleFactor()
-	app.ScrollBy(-(newPixel[0]-oldPixel[0])/scaleFactor, -(newPixel[1]-oldPixel[1])/scaleFactor)
-}
-
-func (app *MainApplication) scaleFactor() float32 {
-	return float32(math.Pow(2.0, float64(app.requestedZoomLevel)))
-}
-
-func (app *MainApplication) updateViewMatrix() {
-	scaleFactor := app.scaleFactor()
-	app.viewMatrix = mgl32.Ident4().
-		Mul4(mgl32.Scale3D(scaleFactor, scaleFactor, 1.0)).
-		Mul4(mgl32.Translate3D(app.viewOffsetX, app.viewOffsetY, 0))
 }
