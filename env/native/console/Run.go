@@ -11,7 +11,7 @@ import (
 )
 
 // Run initializes the environment to run the given application within.
-func Run(app env.Application) {
+func Run(app env.Application, deferrer <-chan func()) {
 	runtime.LockOSThread()
 
 	gui := gocui.NewGui()
@@ -37,6 +37,8 @@ func Run(app env.Application) {
 
 	app.Init(window)
 
+	startDeferrerRoutine(gui, deferrer)
+
 	gui.Execute(getWindowUpdater(window))
 	if err := gui.MainLoop(); err != nil && err != gocui.ErrQuit {
 		log.Panicln(err)
@@ -54,6 +56,19 @@ func getWindowUpdater(window *native.OpenGlWindow) (updater func(*gocui.Gui) err
 	}
 
 	return
+}
+
+func startDeferrerRoutine(gui *gocui.Gui, deferrer <-chan func()) {
+	go func() {
+		for task := range deferrer {
+			deferredTask := task
+			gui.Execute(func(*gocui.Gui) error {
+				deferredTask()
+
+				return nil
+			})
+		}
+	}()
 }
 
 func quit(g *gocui.Gui, v *gocui.View) error {
