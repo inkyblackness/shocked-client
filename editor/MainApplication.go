@@ -1,6 +1,7 @@
 package editor
 
 import (
+	"encoding/base64"
 	"fmt"
 	"os"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/inkyblackness/shocked-client/editor/camera"
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/opengl"
-	//"github.com/inkyblackness/shocked-model"
+	"github.com/inkyblackness/shocked-model"
 )
 
 // MainApplication represents the core intelligence of the editor.
@@ -24,7 +25,8 @@ type MainApplication struct {
 
 	view *camera.LimitedCamera
 
-	gridRenderable *GridRenderable
+	gridRenderable    *GridRenderable
+	textureRenderable *TextureRenderable
 }
 
 // NewMainApplication returns a new instance of MainApplication.
@@ -68,7 +70,7 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.gl = builder.Build()
 
 	app.gl.Enable(opengl.BLEND)
-	app.gl.BlendFunc(opengl.SRC_ALPHA, opengl.ONE_MINUS_SRC_COLOR)
+	app.gl.BlendFunc(opengl.SRC_ALPHA, opengl.ONE_MINUS_SRC_ALPHA)
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
 
 	app.gridRenderable = NewGridRenderable(app.gl)
@@ -88,9 +90,38 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 			}, app.simpleStoreFailure("LevelTextures"))
 		}
 	*/
+	if app.store != nil {
+		var palette *[256]model.Color
+		var bitmap *model.RawBitmap
+
+		createTextureRenderable := func() {
+			if palette != nil && bitmap != nil && app.textureRenderable == nil {
+				pixelData, _ := base64.StdEncoding.DecodeString(bitmap.Pixel)
+
+				app.textureRenderable = NewTextureRenderable(app.gl,
+					bitmap.Width, bitmap.Height, pixelData,
+					func(index int) (byte, byte, byte, byte) {
+						entry := &palette[index]
+						return byte(entry.Red), byte(entry.Green), byte(entry.Blue), 255
+					})
+			}
+		}
+
+		app.store.LevelTextures("test1", "archive", 1, func(textureIDs []int) {
+			app.store.TextureBitmap("test1", textureIDs[7], "large", func(bmp *model.RawBitmap) {
+				bitmap = bmp
+				createTextureRenderable()
+			}, app.simpleStoreFailure("TextureBitmap"))
+		}, app.simpleStoreFailure("LevelTextures"))
+
+		app.store.Palette("test1", "game", func(colors [256]model.Color) {
+			palette = &colors
+			createTextureRenderable()
+		}, app.simpleStoreFailure("Palette"))
+	}
 }
 
-func (app *MainApplication) simpleStoreFailure(info string) func() {
+func (app *MainApplication) simpleStoreFailure(info string) FailureFunc {
 	return func() {
 		fmt.Fprintf(os.Stderr, "Failed to process store query <%s>\n", info)
 	}
@@ -110,6 +141,9 @@ func (app *MainApplication) render() {
 		projectionMatrix: mgl.Ortho2D(0, float32(width), float32(height), 0)}
 
 	app.gridRenderable.Render(&context)
+	if app.textureRenderable != nil {
+		app.textureRenderable.Render(&context)
+	}
 }
 
 func (app *MainApplication) unprojectPixel(pixelX, pixelY float32) (x, y float32) {
