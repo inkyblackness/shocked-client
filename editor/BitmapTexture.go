@@ -16,8 +16,19 @@ func NewBitmapTexture(gl opengl.OpenGl, width, height int, pixelData []byte) *Bi
 	tex := &BitmapTexture{
 		handle: gl.GenTextures(1)[0]}
 
+	// The texture has to be blown up to use RGBA from the start;
+	// OpenGL 3.2 doesn't know ALPHA format, Open GL ES 1.0 (WebGL) doesn't know RED or R8.
+	rgbaData := make([]byte, len(pixelData)*BytesPerRgba)
+	for i := 0; i < len(pixelData); i++ {
+		value := pixelData[i]
+		rgbaData[i*BytesPerRgba+0] = value
+		rgbaData[i*BytesPerRgba+1] = value
+		rgbaData[i*BytesPerRgba+2] = value
+		rgbaData[i*BytesPerRgba+3] = value
+	}
+
 	gl.BindTexture(opengl.TEXTURE_2D, tex.handle)
-	gl.TexImage2D(opengl.TEXTURE_2D, 0, opengl.ALPHA, int32(width), int32(height), 0, opengl.ALPHA, opengl.UNSIGNED_BYTE, pixelData)
+	gl.TexImage2D(opengl.TEXTURE_2D, 0, opengl.RGBA, int32(width), int32(height), 0, opengl.RGBA, opengl.UNSIGNED_BYTE, rgbaData)
 	gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MAG_FILTER, opengl.NEAREST)
 	gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MIN_FILTER, opengl.NEAREST)
 	gl.GenerateMipmap(opengl.TEXTURE_2D)
