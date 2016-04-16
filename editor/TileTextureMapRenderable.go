@@ -110,6 +110,7 @@ func (renderable *TileTextureMapRenderable) Render(context *RenderContext) {
 
 			renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
 			/**/
+		scaling := mgl.Scale3D(32.0, 32.0, 1.0)
 		for y, row := range renderable.tiles {
 			for x, tile := range row {
 				if tile != nil {
@@ -121,9 +122,8 @@ func (renderable *TileTextureMapRenderable) Render(context *RenderContext) {
 					renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
 					*/
 					/**/
-					modelMatrix := mgl.Ident4().
-						Mul4(mgl.Translate3D(float64(x)*32.0, float64(y)*32.0, 0.0)).
-						Mul4(mgl.Scale3D(32.0, 32.0, 1.0))
+					modelMatrix := mgl.Translate3D(float64(x)*32.0, float64(y)*32.0, 0.0).
+						Mul4(scaling)
 
 					renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
 					/**/

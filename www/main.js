@@ -26297,7 +26297,7 @@ $packages["golang.org/x/image/math/f64"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/go-gl/mathgl/mgl64"] = (function() {
-	var $pkg = {}, $init, bytes, errors, fmt, f64, math, sync, tabwriter, Mat2, Mat2x3, Mat2x4, Mat3x2, Mat3, Mat3x4, Mat4x2, Mat4x3, Mat4, Vec2, Vec3, Vec4, arrayType, arrayType$1, sliceType$2, arrayType$2, arrayType$3, sliceType$3, arrayType$4, arrayType$5, arrayType$6, funcType, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, Mat2FromCols, Mat3FromCols, Ident4, Mat4FromCols, Translate3D, Scale3D, Abs, FloatEqual, FloatEqualThreshold;
+	var $pkg = {}, $init, bytes, errors, fmt, f64, math, sync, tabwriter, Mat2, Mat2x3, Mat2x4, Mat3x2, Mat3, Mat3x4, Mat4x2, Mat4x3, Mat4, Vec2, Vec3, Vec4, arrayType, arrayType$1, sliceType$2, arrayType$2, arrayType$3, sliceType$3, arrayType$4, arrayType$5, arrayType$6, funcType, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, Mat2FromCols, Mat3FromCols, Mat4FromCols, Translate3D, Scale3D, Abs, FloatEqual, FloatEqualThreshold;
 	bytes = $packages["bytes"];
 	errors = $packages["errors"];
 	fmt = $packages["fmt"];
@@ -28313,11 +28313,6 @@ $packages["github.com/go-gl/mathgl/mgl64"] = (function() {
 		return $toNativeArray($kindFloat64, [m[0], m[5], m[10], m[15]]);
 	};
 	$ptrType(Mat4).prototype.Diag = function() { return new Mat4(this.$get()).Diag(); };
-	Ident4 = function() {
-		var $ptr;
-		return $toNativeArray($kindFloat64, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
-	};
-	$pkg.Ident4 = Ident4;
 	Mat4FromCols = function(col0, col1, col2, col3) {
 		var $ptr, col0, col1, col2, col3;
 		col3 = $clone(col3, Vec4);
@@ -30944,8 +30939,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		renderable[0] = this;
 		gl[0] = renderable[0].gl;
 		$r = renderable[0].withShader((function(context, gl, renderable) { return function $b() {
-			var $ptr, _arg, _arg$1, _i, _i$1, _r, _r$1, _ref, _ref$1, modelMatrix, row, textureUnit, tile, x, y, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _i = $f._i; _i$1 = $f._i$1; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; _ref$1 = $f._ref$1; modelMatrix = $f.modelMatrix; row = $f.row; textureUnit = $f.textureUnit; tile = $f.tile; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			var $ptr, _arg, _arg$1, _i, _i$1, _r, _r$1, _ref, _ref$1, modelMatrix, row, scaling, textureUnit, tile, x, y, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _i = $f._i; _i$1 = $f._i$1; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; _ref$1 = $f._ref$1; modelMatrix = $f.modelMatrix; row = $f.row; scaling = $f.scaling; textureUnit = $f.textureUnit; tile = $f.tile; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			$r = renderable[0].setMatrix32(renderable[0].viewMatrixUniform, context[0].ViewMatrix()); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$r = renderable[0].setMatrix32(renderable[0].projectionMatrixUniform, context[0].ProjectionMatrix()); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$r = gl[0].BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -30958,6 +30953,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			$r = gl[0].Uniform1i(renderable[0].paletteUniform, textureUnit); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			textureUnit = 1;
 			$r = gl[0].ActiveTexture(33984 + (textureUnit >>> 0) >>> 0); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			scaling = $clone(mgl64.Scale3D(32, 32, 1), mgl64.Mat4);
 			_ref = renderable[0].tiles;
 			_i = 0;
 			/* while (true) { */ case 10:
@@ -30974,7 +30970,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 					/* */ if (!($interfaceIsEqual(tile, $ifaceNil))) { $s = 14; continue; }
 					/* */ $s = 15; continue;
 					/* if (!($interfaceIsEqual(tile, $ifaceNil))) { */ case 14:
-						modelMatrix[0] = $clone(new mgl64.Mat4(new mgl64.Mat4(mgl64.Ident4()).Mul4(mgl64.Translate3D(x * 32, y * 32, 0))).Mul4(mgl64.Scale3D(32, 32, 1)), mgl64.Mat4);
+						modelMatrix[0] = $clone(new mgl64.Mat4(mgl64.Translate3D(x * 32, y * 32, 0)).Mul4(scaling), mgl64.Mat4);
 						$r = renderable[0].setMatrix64(renderable[0].modelMatrixUniform, modelMatrix[0]); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 						_r$1 = tile.Handle(); /* */ $s = 17; case 17: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 						_arg$1 = _r$1;
@@ -30987,7 +30983,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 				_i++;
 			/* } */ $s = 10; continue; case 11:
 			$r = gl[0].BindTexture(3553, 0); /* */ $s = 21; case 21: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._i = _i; $f._i$1 = _i$1; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._ref$1 = _ref$1; $f.modelMatrix = modelMatrix; $f.row = row; $f.textureUnit = textureUnit; $f.tile = tile; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._i = _i; $f._i$1 = _i$1; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._ref$1 = _ref$1; $f.modelMatrix = modelMatrix; $f.row = row; $f.scaling = scaling; $f.textureUnit = textureUnit; $f.tile = tile; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(context, gl, renderable)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TileTextureMapRenderable.ptr.prototype.Render }; } $f.$ptr = $ptr; $f.context = context; $f.gl = gl; $f.renderable = renderable; $f.$s = $s; $f.$r = $r; return $f;
 	};

@@ -67,6 +67,7 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 		fmt.Fprintf(os.Stderr, "!!: [%-20s] %v -> %v\n", name, errorCodes, errorStrings)
 	})
 
+	//app.gl = app.glWindow.OpenGl()
 	app.gl = builder.Build()
 
 	app.gl.Enable(opengl.BLEND)
