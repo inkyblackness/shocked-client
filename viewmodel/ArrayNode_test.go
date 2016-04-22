@@ -10,7 +10,7 @@ type ArrayNodeSuite struct {
 var _ = check.Suite(&ArrayNodeSuite{})
 
 func (suite *ArrayNodeSuite) TestSpecializeCallsArray(c *check.C) {
-	node := NewArrayNode([]Node{})
+	node := NewArrayNode()
 	visitor := NewTestingNodeVisitor()
 
 	node.Specialize(visitor)
@@ -20,11 +20,11 @@ func (suite *ArrayNodeSuite) TestSpecializeCallsArray(c *check.C) {
 
 func (suite *ArrayNodeSuite) TestGetReturnsInitialValue(c *check.C) {
 	initial := []Node{NewStringValueNode("abc")}
-	c.Check(NewArrayNode(initial).Get(), check.DeepEquals, initial)
+	c.Check(NewArrayNode(initial...).Get(), check.DeepEquals, initial)
 }
 
 func (suite *ArrayNodeSuite) TestSetChangesCurrentValue(c *check.C) {
-	node := NewArrayNode(nil)
+	node := NewArrayNode()
 	newEntry := NewStringValueNode("efg")
 
 	node.Set([]Node{newEntry, newEntry})
@@ -33,7 +33,7 @@ func (suite *ArrayNodeSuite) TestSetChangesCurrentValue(c *check.C) {
 }
 
 func (suite *ArrayNodeSuite) TestSetCallsRegisteredSubscriberWithNewEntries(c *check.C) {
-	node := NewArrayNode(nil)
+	node := NewArrayNode()
 	var capturedEntries []Node
 
 	node.Subscribe(func(newEntries []Node) {

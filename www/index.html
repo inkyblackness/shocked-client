@@ -14,14 +14,14 @@
 <div class="rootContainer">
   <div class="menuContainer">
 
-    <div data-bind="foreach: { data: mainSections, as: 'section' }">
-      <span><input type="radio" name="mainSection" data-bind="checkedValue: section, checked: $root.selectedMainSection" /><span data-bind="text: section" /></span>
+    <div data-bind="foreach: { data: view.mainSections, as: 'section' }">
+      <span><input type="radio" name="mainSection" data-bind="checkedValue: section, checked: $root.view.selectedMainSection" /><span data-bind="text: section" /></span>
     </div>
 
   </div>
 
   <div class="heightTaker">
-    <div class="main" data-bind="visible: selectedMainSection() === 'main'">
+    <div class="main" data-bind="visible: view.selectedMainSection() === 'main'">
       <div class="mainControls">
 
       Controls

@@ -10,12 +10,15 @@ import (
 	"github.com/inkyblackness/shocked-client/editor/camera"
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/opengl"
+	"github.com/inkyblackness/shocked-client/viewmodel"
 	"github.com/inkyblackness/shocked-model"
 )
 
 // MainApplication represents the core intelligence of the editor.
 type MainApplication struct {
 	store DataStore
+
+	viewModel *ViewModel
 
 	glWindow env.OpenGlWindow
 	gl       opengl.OpenGl
@@ -35,8 +38,14 @@ func NewMainApplication(store DataStore) *MainApplication {
 
 	return &MainApplication{
 		store:            store,
+		viewModel:        NewViewModel(),
 		mouseMoveCapture: func() {},
 		view:             camera.NewLimited(ZoomLevelMin, ZoomLevelMax, 0, camLimit)}
+}
+
+// ViewModel implements the env.Application interface.
+func (app *MainApplication) ViewModel() viewmodel.Node {
+	return app.viewModel.Root()
 }
 
 // Init implements the env.Application interface.

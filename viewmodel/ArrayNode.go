@@ -10,7 +10,7 @@ type ArrayNode struct {
 }
 
 // NewArrayNode returns a new instance of an ArrayNode.
-func NewArrayNode(entries []Node) *ArrayNode {
+func NewArrayNode(entries ...Node) *ArrayNode {
 	node := &ArrayNode{entries: entries}
 
 	return node
