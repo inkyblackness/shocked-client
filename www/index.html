@@ -12,36 +12,13 @@
 </head>
 <body>
 <div class="rootContainer">
-  <div class="menuContainer">
-
-    <div data-bind="foreach: { data: view.mainSections, as: 'section' }">
-      <span><input type="radio" name="mainSection" data-bind="checkedValue: section, checked: $root.view.selectedMainSection" /><span data-bind="text: section" /></span>
-    </div>
-
-  </div>
 
   <div class="heightTaker">
-    <div class="main" data-bind="visible: view.selectedMainSection() === 'project'">
-      <h2>Project</h2>
-      <p>
-        Active: <select data-bind="options: projects.available, optionsCaption: '', value: projects.selected"></select>
-      </p>
-      <!--
-      <p>
-        Create:
-        <input type="text" placeholder="new project name" data-bind="textInput: projects.newProjectId">
-        <button data-bind="enable: projects.canCreateNewProject(), click: projects.createProject">Create</button>
-      </p>
-      -->
-    </div>
-
-    <div class="main" data-bind="visible: view.selectedMainSection() === 'main'">
+    <div class="main">
 
       <div class="mainControls">
-
-      Controls
-      <!-- controls go here -->
-
+        <div data-bind="template: { name: 'vm-' + type + '-template', data: $root }">
+        </div>
       </div>
 
       <div class="tileMap">
@@ -52,6 +29,32 @@
   </div>
 </div>
 </body>
+
+<script type="text/html" id="vm-section-template">
+  <div data-bind="if: available">
+    <div data-bind="foreach: { data: nodes, as: 'node' }">
+      <div data-bind="template: { name: 'vm-' + node.type + '-template', data: node }"></div>
+    </div>
+  </div>
+</script>
+
+<script type="text/html" id="vm-sectionSelection-template">
+  <table style="width: 100%"><tbody><tr>
+    <td class="propertyLabel" data-bind="text: label"></td>
+    <td><select style="width: 100%" data-bind="options: values, optionsCaption: '', value: selected"></select>
+  </tr></tbody></table>
+  <div data-bind="if: sections[selected()]">
+    <div data-bind="template: { name: 'vm-' + sections[selected()].type + '-template', data: sections[selected()] }"></div>
+  </div>
+</script>
+
+<script type="text/html" id="vm-valueSelection-template">
+  <table style="width: 100%"><tbody><tr>
+    <td class="propertyLabel" data-bind="text: label"></td>
+    <td><select style="width: 100%" data-bind="options: values, optionsCaption: '', value: selected"></select></td>
+  </tr></tbody></table>
+</script>
+
 <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
 <!-- <script type="text/javascript" src="//knockoutjs.com/downloads/knockout-3.4.0.js"></script> -->
 <script type="text/javascript" src="main.js"></script>

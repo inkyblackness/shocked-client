@@ -1,6 +1,7 @@
 package console
 
 import (
+	"fmt"
 	"log"
 	"runtime"
 
@@ -8,7 +9,12 @@ import (
 
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/env/native"
+	//"github.com/inkyblackness/shocked-client/viewmodel"
 )
+
+type appRunner struct {
+	app env.Application
+}
 
 // Run initializes the environment to run the given application within.
 func Run(app env.Application, deferrer <-chan func()) {
@@ -20,9 +26,21 @@ func Run(app env.Application, deferrer <-chan func()) {
 	}
 	defer gui.Close()
 
-	gui.SetLayout(layout)
+	runner := &appRunner{app: app}
+
+	gui.Cursor = true
+	gui.Mouse = true
+	gui.SelBgColor = gocui.ColorGreen
+	gui.SelFgColor = gocui.ColorBlack
+	gui.SetLayout(runner.layout)
 
 	if err := gui.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
+		log.Panicln(err)
+	}
+	if err := gui.SetKeybinding("mainSection", gocui.KeyArrowDown, gocui.ModNone, cursorDown); err != nil {
+		log.Panicln(err)
+	}
+	if err := gui.SetKeybinding("mainSection", gocui.KeyArrowUp, gocui.ModNone, cursorUp); err != nil {
 		log.Panicln(err)
 	}
 
@@ -75,19 +93,48 @@ func quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
 }
 
-func layout(g *gocui.Gui) error {
+func (runner *appRunner) layout(g *gocui.Gui) error {
+	//vm := runner.app.ViewModel()
 	maxX, maxY := g.Size()
-	if _, err := g.SetView("side", -1, -1, int(0.2*float32(maxX)), maxY-5); err != nil &&
-		err != gocui.ErrUnknownView {
-		return err
+
+	if view, err := g.SetView("mainSection", -1, -1, maxX, maxY); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+		view.Highlight = true
+		/*
+			selectedMainSection := vm.(*viewmodel.ContainerNode).Get()["view"].(*viewmodel.ContainerNode).Get()["selectedMainSection"].(*viewmodel.StringValueNode).Get()
+			fmt.Fprintf(view, "v Main Section: <%v>\n", selectedMainSection)
+		*/
+		fmt.Fprintf(view, "Line1\n")
+		fmt.Fprintf(view, "Extra Line\n")
+		g.SetCurrentView("mainSection")
 	}
-	if _, err := g.SetView("main", int(0.2*float32(maxX)), -1, maxX, maxY-5); err != nil &&
-		err != gocui.ErrUnknownView {
-		return err
+	return nil
+}
+
+func cursorDown(g *gocui.Gui, v *gocui.View) error {
+	if v != nil {
+		cx, cy := v.Cursor()
+		if err := v.SetCursor(cx, cy+1); err != nil {
+			ox, oy := v.Origin()
+			if err := v.SetOrigin(ox, oy+1); err != nil {
+				return err
+			}
+		}
 	}
-	if _, err := g.SetView("cmdline", -1, maxY-5, maxX, maxY); err != nil &&
-		err != gocui.ErrUnknownView {
-		return err
+	return nil
+}
+
+func cursorUp(g *gocui.Gui, v *gocui.View) error {
+	if v != nil {
+		ox, oy := v.Origin()
+		cx, cy := v.Cursor()
+		if err := v.SetCursor(cx, cy-1); err != nil && oy > 0 {
+			if err := v.SetOrigin(ox, oy-1); err != nil {
+				return err
+			}
+		}
 	}
 	return nil
 }

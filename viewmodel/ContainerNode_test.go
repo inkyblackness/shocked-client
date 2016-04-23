@@ -10,7 +10,7 @@ type ContainerNodeSuite struct {
 var _ = check.Suite(&ContainerNodeSuite{})
 
 func (suite *ContainerNodeSuite) TestSpecializeCallsContainer(c *check.C) {
-	node := NewContainerNode(map[string]Node{})
+	node := NewContainerNode("", someNodeMap())
 	visitor := NewTestingNodeVisitor()
 
 	node.Specialize(visitor)
@@ -18,7 +18,12 @@ func (suite *ContainerNodeSuite) TestSpecializeCallsContainer(c *check.C) {
 	c.Check(visitor.containerNodes, check.DeepEquals, []Node{node})
 }
 
+func (suite *ContainerNodeSuite) TestLabel(c *check.C) {
+	c.Check(NewContainerNode("l1", someNodeMap()).Label(), check.Equals, "l1")
+	c.Check(NewContainerNode("l2", someNodeMap()).Label(), check.Equals, "l2")
+}
+
 func (suite *ContainerNodeSuite) TestGetReturnsInitialValue(c *check.C) {
-	initial := map[string]Node{"a": NewStringValueNode("abc"), "b": NewStringValueNode("def")}
-	c.Check(NewContainerNode(initial).Get(), check.DeepEquals, initial)
+	initial := someNodeMap()
+	c.Check(NewContainerNode("", initial).Get(), check.DeepEquals, initial)
 }

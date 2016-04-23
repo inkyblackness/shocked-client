@@ -10,7 +10,7 @@ type StringValueNodeSuite struct {
 var _ = check.Suite(&StringValueNodeSuite{})
 
 func (suite *StringValueNodeSuite) TestSpecializeCallsStringValue(c *check.C) {
-	node := NewStringValueNode("abc")
+	node := NewStringValueNode("label", "abc")
 	visitor := NewTestingNodeVisitor()
 
 	node.Specialize(visitor)
@@ -18,13 +18,18 @@ func (suite *StringValueNodeSuite) TestSpecializeCallsStringValue(c *check.C) {
 	c.Check(visitor.stringValueNodes, check.DeepEquals, []Node{node})
 }
 
+func (suite *StringValueNodeSuite) TestLabel(c *check.C) {
+	c.Check(NewStringValueNode("l1", "").Label(), check.Equals, "l1")
+	c.Check(NewStringValueNode("l2", "").Label(), check.Equals, "l2")
+}
+
 func (suite *StringValueNodeSuite) TestGetReturnsInitialValue(c *check.C) {
-	c.Check(NewStringValueNode("test").Get(), check.Equals, "test")
-	c.Check(NewStringValueNode("other").Get(), check.Equals, "other")
+	c.Check(NewStringValueNode("", "test").Get(), check.Equals, "test")
+	c.Check(NewStringValueNode("", "other").Get(), check.Equals, "other")
 }
 
 func (suite *StringValueNodeSuite) TestSetChangesCurrentValue(c *check.C) {
-	node := NewStringValueNode("first")
+	node := NewStringValueNode("", "first")
 
 	node.Set("second")
 
@@ -32,7 +37,7 @@ func (suite *StringValueNodeSuite) TestSetChangesCurrentValue(c *check.C) {
 }
 
 func (suite *StringValueNodeSuite) TestSetCallsRegisteredSubscriberWithNewValue(c *check.C) {
-	node := NewStringValueNode("init")
+	node := NewStringValueNode("", "init")
 	var capturedValue string
 
 	node.Subscribe(func(newValue string) {

@@ -5,16 +5,23 @@ type StringValueListener func(newValue string)
 
 // StringValueNode is a node holding a simple string value.
 type StringValueNode struct {
+	label     string
 	listeners []StringValueListener
 	value     string
 }
 
 // NewStringValueNode returns a new instance of a StringValueNode.
-func NewStringValueNode(value string) *StringValueNode {
+func NewStringValueNode(label string, value string) *StringValueNode {
 	node := &StringValueNode{
+		label: label,
 		value: value}
 
 	return node
+}
+
+// Label is the Node interface implementation.
+func (node *StringValueNode) Label() string {
+	return node.label
 }
 
 // Specialize is the Node interface implementation.
