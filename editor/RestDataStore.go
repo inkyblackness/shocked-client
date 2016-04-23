@@ -27,6 +27,20 @@ func (store *RestDataStore) get(url string, responseData interface{}, onSuccess 
 	})
 }
 
+// Projects implements the DataStore interface.
+func (store *RestDataStore) Projects(onSuccess func(projects []string), onFailure FailureFunc) {
+	url := "/projects"
+	var data model.Projects
+
+	store.get(url, &data, func() {
+		projectIDs := make([]string, len(data.Items))
+		for index, item := range data.Items {
+			projectIDs[index] = item.ID
+		}
+		onSuccess(projectIDs)
+	}, onFailure)
+}
+
 // Palette implements the DataStore interface.
 func (store *RestDataStore) Palette(projectID string, paletteID string,
 	onSuccess func(colors [256]model.Color), onFailure FailureFunc) {

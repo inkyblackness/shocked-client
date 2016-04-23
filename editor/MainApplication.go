@@ -35,12 +35,18 @@ type MainApplication struct {
 // NewMainApplication returns a new instance of MainApplication.
 func NewMainApplication(store DataStore) *MainApplication {
 	camLimit := (TilesPerMapSide - 1) * TileBaseLength
-
-	return &MainApplication{
+	app := &MainApplication{
 		store:            store,
 		viewModel:        NewViewModel(),
 		mouseMoveCapture: func() {},
 		view:             camera.NewLimited(ZoomLevelMin, ZoomLevelMax, 0, camLimit)}
+
+	app.viewModel.OnSelectedProjectChanged(app.onSelectedProjectChanged)
+	store.Projects(func(projectIDs []string) {
+		app.viewModel.SetProjects(projectIDs)
+	}, app.simpleStoreFailure("Projects"))
+
+	return app
 }
 
 // ViewModel implements the env.Application interface.
@@ -84,67 +90,6 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
 
 	app.gridRenderable = NewGridRenderable(app.gl)
-
-	if app.store != nil {
-		var paletteTexture GraphicsTexture
-		var levelTextureIDs []int
-		bitmapTextures := make(map[int]GraphicsTexture)
-		var tiles *model.Tiles
-
-		createMap := func() {
-			if paletteTexture != nil && tiles != nil &&
-				len(levelTextureIDs) > 0 && len(bitmapTextures) == len(levelTextureIDs) &&
-				app.tileTextureMapRenderable == nil {
-
-				fmt.Fprintf(os.Stderr, "creating tile map\n")
-				app.tileTextureMapRenderable = NewTileTextureMapRenderable(app.gl, paletteTexture)
-
-				for y := 0; y < len(tiles.Table); y++ {
-					row := tiles.Table[y]
-					for x := 0; x < len(row); x++ {
-						tileData := &row[x]
-
-						if *tileData.Properties.Type != model.Solid {
-							textureID := *tileData.Properties.RealWorld.FloorTexture
-
-							app.tileTextureMapRenderable.SetTileTexture(x, 63-y, bitmapTextures[textureID])
-						}
-					}
-				}
-			}
-		}
-
-		app.store.Tiles("test1", "archive", 1, func(data model.Tiles) {
-			fmt.Fprintf(os.Stderr, "loaded tiles\n")
-			tiles = &data
-
-			createMap()
-		}, app.simpleStoreFailure("Tiles"))
-
-		app.store.LevelTextures("test1", "archive", 1, func(textureIDs []int) {
-			fmt.Fprintf(os.Stderr, "loaded textureIDs, %v to load\n", len(textureIDs))
-			levelTextureIDs = textureIDs
-			for index, id := range textureIDs {
-				localIndex := index
-				app.store.TextureBitmap("test1", id, "large", func(bmp *model.RawBitmap) {
-					pixelData, _ := base64.StdEncoding.DecodeString(bmp.Pixel)
-					bitmapTextures[localIndex] = NewBitmapTexture(app.gl, bmp.Width, bmp.Height, pixelData)
-
-					createMap()
-				}, app.simpleStoreFailure("TextureBitmap"))
-			}
-		}, app.simpleStoreFailure("LevelTextures"))
-
-		app.store.Palette("test1", "game", func(colors [256]model.Color) {
-			colorProvider := func(index int) (byte, byte, byte, byte) {
-				entry := &colors[index]
-				return byte(entry.Red), byte(entry.Green), byte(entry.Blue), 255
-			}
-			paletteTexture = NewPaletteTexture(app.gl, colorProvider)
-
-			createMap()
-		}, app.simpleStoreFailure("Palette"))
-	}
 }
 
 func (app *MainApplication) simpleStoreFailure(info string) FailureFunc {
@@ -216,5 +161,68 @@ func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 	}
 	if dy < 0 {
 		app.view.ZoomAt(0.5, worldMouseX, worldMouseY)
+	}
+}
+
+func (app *MainApplication) onSelectedProjectChanged(projectID string) {
+	if projectID != "" {
+		var paletteTexture GraphicsTexture
+		var levelTextureIDs []int
+		bitmapTextures := make(map[int]GraphicsTexture)
+		var tiles *model.Tiles
+
+		createMap := func() {
+			if paletteTexture != nil && tiles != nil &&
+				len(levelTextureIDs) > 0 && len(bitmapTextures) == len(levelTextureIDs) &&
+				app.tileTextureMapRenderable == nil {
+
+				fmt.Fprintf(os.Stderr, "creating tile map\n")
+				app.tileTextureMapRenderable = NewTileTextureMapRenderable(app.gl, paletteTexture)
+
+				for y := 0; y < len(tiles.Table); y++ {
+					row := tiles.Table[y]
+					for x := 0; x < len(row); x++ {
+						tileData := &row[x]
+
+						if *tileData.Properties.Type != model.Solid {
+							textureID := *tileData.Properties.RealWorld.FloorTexture
+
+							app.tileTextureMapRenderable.SetTileTexture(x, 63-y, bitmapTextures[textureID])
+						}
+					}
+				}
+			}
+		}
+
+		app.store.Tiles(projectID, "archive", 1, func(data model.Tiles) {
+			fmt.Fprintf(os.Stderr, "loaded tiles\n")
+			tiles = &data
+
+			createMap()
+		}, app.simpleStoreFailure("Tiles"))
+
+		app.store.LevelTextures(projectID, "archive", 1, func(textureIDs []int) {
+			fmt.Fprintf(os.Stderr, "loaded textureIDs, %v to load\n", len(textureIDs))
+			levelTextureIDs = textureIDs
+			for index, id := range textureIDs {
+				localIndex := index
+				app.store.TextureBitmap(projectID, id, "large", func(bmp *model.RawBitmap) {
+					pixelData, _ := base64.StdEncoding.DecodeString(bmp.Pixel)
+					bitmapTextures[localIndex] = NewBitmapTexture(app.gl, bmp.Width, bmp.Height, pixelData)
+
+					createMap()
+				}, app.simpleStoreFailure("TextureBitmap"))
+			}
+		}, app.simpleStoreFailure("LevelTextures"))
+
+		app.store.Palette(projectID, "game", func(colors [256]model.Color) {
+			colorProvider := func(index int) (byte, byte, byte, byte) {
+				entry := &colors[index]
+				return byte(entry.Red), byte(entry.Green), byte(entry.Blue), 255
+			}
+			paletteTexture = NewPaletteTexture(app.gl, colorProvider)
+
+			createMap()
+		}, app.simpleStoreFailure("Palette"))
 	}
 }

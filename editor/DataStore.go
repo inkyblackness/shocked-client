@@ -9,6 +9,9 @@ type FailureFunc func()
 
 // DataStore describes the necessary methods for querying and modifying editor data.
 type DataStore interface {
+	// Projects queries the currently available projects.
+	Projects(onSuccess func(projects []string), onFailure FailureFunc)
+
 	// Palette queries a palette.
 	Palette(projectID string, paletteID string, onSuccess func(colors [256]model.Color), onFailure FailureFunc)
 

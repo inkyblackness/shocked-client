@@ -27,6 +27,9 @@ func (filler *viewModelFiller) StringValue(node *viewmodel.StringValueNode) {
 	observable.Subscribe(func(jsValue *js.Object) {
 		newValue := jsValue.String()
 
+		if jsValue == js.Undefined {
+			newValue = ""
+		}
 		if node.Get() != newValue {
 			node.Set(newValue)
 		}
