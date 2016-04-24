@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	mgl "github.com/go-gl/mathgl/mgl32"
 
@@ -17,6 +18,9 @@ import (
 
 // MainApplication represents the core intelligence of the editor.
 type MainApplication struct {
+	lastElapsedTick time.Time
+	elapsedMSec     int64
+
 	store DataStore
 
 	viewModel *ViewModel
@@ -29,7 +33,7 @@ type MainApplication struct {
 
 	view *camera.LimitedCamera
 
-	paletteTexture           GraphicsTexture
+	paletteTexture           *PaletteTexture
 	gridRenderable           *GridRenderable
 	tileTextureMapRenderable *TileTextureMapRenderable
 }
@@ -38,6 +42,7 @@ type MainApplication struct {
 func NewMainApplication(store DataStore) *MainApplication {
 	camLimit := (TilesPerMapSide - 1) * TileBaseLength
 	app := &MainApplication{
+		lastElapsedTick:  time.Now(),
 		store:            store,
 		viewModel:        NewViewModel(),
 		mouseMoveCapture: func() {},
@@ -101,6 +106,16 @@ func (app *MainApplication) simpleStoreFailure(info string) FailureFunc {
 	}
 }
 
+func (app *MainApplication) updateElapsedNano() {
+	now := time.Now()
+	diff := now.Sub(app.lastElapsedTick).Nanoseconds()
+
+	if diff > 0 {
+		app.elapsedMSec += diff / 1000000
+	}
+	app.lastElapsedTick = now
+}
+
 func (app *MainApplication) render() {
 	gl := app.gl
 	width, height := app.glWindow.Size()
@@ -108,6 +123,10 @@ func (app *MainApplication) render() {
 	gl.Viewport(0, 0, int32(width), int32(height))
 	gl.Clear(opengl.COLOR_BUFFER_BIT | opengl.DEPTH_BUFFER_BIT)
 
+	app.updateElapsedNano()
+	if app.paletteTexture != nil {
+		app.paletteTexture.Update()
+	}
 	context := RenderContext{
 		viewportWidth:    width,
 		viewportHeight:   height,
@@ -167,6 +186,24 @@ func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 	}
 }
 
+func (app *MainApplication) animatedPaletteIndex(index int) int {
+	newIndex := index
+	loopIndex := func(from int, count int, stepTimeMSec int64) {
+		if newIndex >= from && newIndex < (from+count) {
+			step := app.elapsedMSec / stepTimeMSec
+			newIndex = from + int(int64(newIndex-from)+step)%count
+		}
+	}
+	loopIndex(0x03, 5, 1200)
+	loopIndex(0x0B, 5, 700)
+	loopIndex(0x10, 5, 360)
+	loopIndex(0x15, 3, 1800)
+	loopIndex(0x18, 3, 1430)
+	loopIndex(0x1B, 5, 1080)
+
+	return newIndex
+}
+
 func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 	app.viewModel.SetLevels(nil)
 
@@ -182,7 +219,7 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 
 		app.store.Palette(projectID, "game", func(colors [256]model.Color) {
 			colorProvider := func(index int) (byte, byte, byte, byte) {
-				entry := &colors[index]
+				entry := &colors[app.animatedPaletteIndex(index)]
 				return byte(entry.Red), byte(entry.Green), byte(entry.Blue), 255
 			}
 			app.paletteTexture = NewPaletteTexture(app.gl, colorProvider)

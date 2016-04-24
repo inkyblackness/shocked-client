@@ -28,15 +28,7 @@ func NewPaletteTexture(gl opengl.OpenGl, colorProvider ColorProvider) *PaletteTe
 		colorProvider: colorProvider,
 		handle:        gl.GenTextures(1)[0]}
 
-	var palette [ColorsPerPalette * BytesPerRgba]byte
-
-	tex.loadColors(&palette)
-	gl.BindTexture(opengl.TEXTURE_2D, tex.handle)
-	gl.TexImage2D(opengl.TEXTURE_2D, 0, opengl.RGBA, ColorsPerPalette, 1, 0, opengl.RGBA, opengl.UNSIGNED_BYTE, palette[:])
-	gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MAG_FILTER, opengl.NEAREST)
-	gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MIN_FILTER, opengl.NEAREST)
-	gl.GenerateMipmap(opengl.TEXTURE_2D)
-	gl.BindTexture(opengl.TEXTURE_2D, 0)
+	tex.Update()
 
 	return tex
 }
@@ -52,6 +44,20 @@ func (tex *PaletteTexture) Dispose() {
 // Handle returns the texture handle.
 func (tex *PaletteTexture) Handle() uint32 {
 	return tex.handle
+}
+
+// Update reloads the palette.
+func (tex *PaletteTexture) Update() {
+	gl := tex.gl
+	var palette [ColorsPerPalette * BytesPerRgba]byte
+
+	tex.loadColors(&palette)
+	gl.BindTexture(opengl.TEXTURE_2D, tex.handle)
+	gl.TexImage2D(opengl.TEXTURE_2D, 0, opengl.RGBA, ColorsPerPalette, 1, 0, opengl.RGBA, opengl.UNSIGNED_BYTE, palette[:])
+	gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MAG_FILTER, opengl.NEAREST)
+	gl.TexParameteri(opengl.TEXTURE_2D, opengl.TEXTURE_MIN_FILTER, opengl.NEAREST)
+	gl.GenerateMipmap(opengl.TEXTURE_2D)
+	gl.BindTexture(opengl.TEXTURE_2D, 0)
 }
 
 func (tex *PaletteTexture) loadColors(palette *[ColorsPerPalette * BytesPerRgba]byte) {
