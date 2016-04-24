@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"os"
+	"strconv"
 
 	mgl "github.com/go-gl/mathgl/mgl32"
 
@@ -42,6 +43,7 @@ func NewMainApplication(store DataStore) *MainApplication {
 		view:             camera.NewLimited(ZoomLevelMin, ZoomLevelMax, 0, camLimit)}
 
 	app.viewModel.OnSelectedProjectChanged(app.onSelectedProjectChanged)
+	app.viewModel.OnSelectedLevelChanged(app.onSelectedLevelChanged)
 	store.Projects(func(projectIDs []string) {
 		app.viewModel.SetProjects(projectIDs)
 	}, app.simpleStoreFailure("Projects"))
@@ -165,7 +167,23 @@ func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 }
 
 func (app *MainApplication) onSelectedProjectChanged(projectID string) {
+	app.viewModel.SetLevels(nil)
 	if projectID != "" {
+		app.store.Levels(projectID, "archive", func(levels []model.Level) {
+			levelIDs := make([]string, len(levels))
+			for index, level := range levels {
+				levelIDs[index] = level.ID
+			}
+			app.viewModel.SetLevels(levelIDs)
+		}, app.simpleStoreFailure("Levels"))
+	}
+}
+
+func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
+	projectID := app.viewModel.SelectedProject()
+	levelID, levelIDError := strconv.ParseInt(levelIDString, 10, 16)
+
+	if projectID != "" && levelIDError == nil {
 		var paletteTexture GraphicsTexture
 		var levelTextureIDs []int
 		bitmapTextures := make(map[int]GraphicsTexture)
@@ -176,7 +194,6 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 				len(levelTextureIDs) > 0 && len(bitmapTextures) == len(levelTextureIDs) &&
 				app.tileTextureMapRenderable == nil {
 
-				fmt.Fprintf(os.Stderr, "creating tile map\n")
 				app.tileTextureMapRenderable = NewTileTextureMapRenderable(app.gl, paletteTexture)
 
 				for y := 0; y < len(tiles.Table); y++ {
@@ -194,14 +211,13 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 			}
 		}
 
-		app.store.Tiles(projectID, "archive", 1, func(data model.Tiles) {
-			fmt.Fprintf(os.Stderr, "loaded tiles\n")
+		app.store.Tiles(projectID, "archive", int(levelID), func(data model.Tiles) {
 			tiles = &data
 
 			createMap()
 		}, app.simpleStoreFailure("Tiles"))
 
-		app.store.LevelTextures(projectID, "archive", 1, func(textureIDs []int) {
+		app.store.LevelTextures(projectID, "archive", int(levelID), func(textureIDs []int) {
 			fmt.Fprintf(os.Stderr, "loaded textureIDs, %v to load\n", len(textureIDs))
 			levelTextureIDs = textureIDs
 			for index, id := range textureIDs {

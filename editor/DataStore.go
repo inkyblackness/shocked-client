@@ -14,6 +14,8 @@ type DataStore interface {
 
 	// Palette queries a palette.
 	Palette(projectID string, paletteID string, onSuccess func(colors [256]model.Color), onFailure FailureFunc)
+	// Levels queries all levels of a project.
+	Levels(projectID string, archiveID string, onSuccess func(levels []model.Level), onFailure FailureFunc)
 
 	// LevelTextures queries the texture IDs for a level.
 	LevelTextures(projectID string, archiveID string, levelID int, onSuccess func(textureIDs []int), onFailure FailureFunc)

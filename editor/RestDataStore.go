@@ -52,6 +52,16 @@ func (store *RestDataStore) Palette(projectID string, paletteID string,
 	}, onFailure)
 }
 
+// Levels implements the DataStore interface.
+func (store *RestDataStore) Levels(projectID string, archiveID string, onSuccess func(levels []model.Level), onFailure FailureFunc) {
+	url := fmt.Sprintf("/projects/%s/%s/levels", projectID, archiveID)
+	var data model.Levels
+
+	store.get(url, &data, func() {
+		onSuccess(data.List)
+	}, onFailure)
+}
+
 // LevelTextures implements the DataStore interface.
 func (store *RestDataStore) LevelTextures(projectID string, archiveID string, levelID int,
 	onSuccess func(textureIDs []int), onFailure FailureFunc) {
