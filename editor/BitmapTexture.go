@@ -14,6 +14,7 @@ type BitmapTexture struct {
 // NewBitmapTexture downloads the provided raw data to OpenGL and returns a BitmapTexture instance.
 func NewBitmapTexture(gl opengl.OpenGl, width, height int, pixelData []byte) *BitmapTexture {
 	tex := &BitmapTexture{
+		gl:     gl,
 		handle: gl.GenTextures(1)[0]}
 
 	// The texture has to be blown up to use RGBA from the start;
@@ -35,6 +36,14 @@ func NewBitmapTexture(gl opengl.OpenGl, width, height int, pixelData []byte) *Bi
 	gl.BindTexture(opengl.TEXTURE_2D, 0)
 
 	return tex
+}
+
+// Dispose implements the GraphicsTexture interface.
+func (tex *BitmapTexture) Dispose() {
+	if tex.handle != 0 {
+		tex.gl.DeleteTextures([]uint32{tex.handle})
+		tex.handle = 0
+	}
 }
 
 // Handle returns the texture handle.

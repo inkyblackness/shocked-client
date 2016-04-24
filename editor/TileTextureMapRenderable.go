@@ -80,9 +80,25 @@ func NewTileTextureMapRenderable(gl opengl.OpenGl, paletteTexture GraphicsTextur
 	return renderable
 }
 
+// Dispose releases any internal resources
+func (renderable *TileTextureMapRenderable) Dispose() {
+	renderable.gl.DeleteProgram(renderable.program)
+	renderable.gl.DeleteBuffers([]uint32{renderable.vertexPositionBuffer})
+	renderable.gl.DeleteVertexArrays([]uint32{renderable.vertexArrayObject})
+}
+
 // SetTileTexture sets the texture for the specified tile coordinate.
 func (renderable *TileTextureMapRenderable) SetTileTexture(x, y int, tex GraphicsTexture) {
 	renderable.tiles[y][x] = tex
+}
+
+// Clear resets all tiles.
+func (renderable *TileTextureMapRenderable) Clear() {
+	for _, row := range renderable.tiles {
+		for index := 0; index < len(row); index++ {
+			row[index] = nil
+		}
+	}
 }
 
 // Render renders

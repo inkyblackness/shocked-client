@@ -24,6 +24,7 @@ type PaletteTexture struct {
 // NewPaletteTexture creates a new PaletteTexture instance.
 func NewPaletteTexture(gl opengl.OpenGl, colorProvider ColorProvider) *PaletteTexture {
 	tex := &PaletteTexture{
+		gl:            gl,
 		colorProvider: colorProvider,
 		handle:        gl.GenTextures(1)[0]}
 
@@ -38,6 +39,14 @@ func NewPaletteTexture(gl opengl.OpenGl, colorProvider ColorProvider) *PaletteTe
 	gl.BindTexture(opengl.TEXTURE_2D, 0)
 
 	return tex
+}
+
+// Dispose implements the GraphicsTexture interface.
+func (tex *PaletteTexture) Dispose() {
+	if tex.handle != 0 {
+		tex.gl.DeleteTextures([]uint32{tex.handle})
+		tex.handle = 0
+	}
 }
 
 // Handle returns the texture handle.

@@ -29,6 +29,7 @@ type MainApplication struct {
 
 	view *camera.LimitedCamera
 
+	paletteTexture           GraphicsTexture
 	gridRenderable           *GridRenderable
 	tileTextureMapRenderable *TileTextureMapRenderable
 }
@@ -168,7 +169,26 @@ func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 
 func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 	app.viewModel.SetLevels(nil)
+
+	if app.tileTextureMapRenderable != nil {
+		app.tileTextureMapRenderable.Dispose()
+		app.tileTextureMapRenderable = nil
+	}
+	if app.paletteTexture != nil {
+		app.paletteTexture.Dispose()
+		app.paletteTexture = nil
+	}
 	if projectID != "" {
+
+		app.store.Palette(projectID, "game", func(colors [256]model.Color) {
+			colorProvider := func(index int) (byte, byte, byte, byte) {
+				entry := &colors[index]
+				return byte(entry.Red), byte(entry.Green), byte(entry.Blue), 255
+			}
+			app.paletteTexture = NewPaletteTexture(app.gl, colorProvider)
+			app.tileTextureMapRenderable = NewTileTextureMapRenderable(app.gl, app.paletteTexture)
+		}, app.simpleStoreFailure("Palette"))
+
 		app.store.Levels(projectID, "archive", func(levels []model.Level) {
 			levelIDs := make([]string, len(levels))
 			for index, level := range levels {
@@ -183,18 +203,18 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 	projectID := app.viewModel.SelectedProject()
 	levelID, levelIDError := strconv.ParseInt(levelIDString, 10, 16)
 
+	if app.tileTextureMapRenderable != nil {
+		app.tileTextureMapRenderable.Clear()
+	}
 	if projectID != "" && levelIDError == nil {
-		var paletteTexture GraphicsTexture
 		var levelTextureIDs []int
 		bitmapTextures := make(map[int]GraphicsTexture)
 		var tiles *model.Tiles
 
 		createMap := func() {
-			if paletteTexture != nil && tiles != nil &&
+			if tiles != nil &&
 				len(levelTextureIDs) > 0 && len(bitmapTextures) == len(levelTextureIDs) &&
-				app.tileTextureMapRenderable == nil {
-
-				app.tileTextureMapRenderable = NewTileTextureMapRenderable(app.gl, paletteTexture)
+				app.tileTextureMapRenderable != nil {
 
 				for y := 0; y < len(tiles.Table); y++ {
 					row := tiles.Table[y]
@@ -230,15 +250,5 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 				}, app.simpleStoreFailure("TextureBitmap"))
 			}
 		}, app.simpleStoreFailure("LevelTextures"))
-
-		app.store.Palette(projectID, "game", func(colors [256]model.Color) {
-			colorProvider := func(index int) (byte, byte, byte, byte) {
-				entry := &colors[index]
-				return byte(entry.Red), byte(entry.Green), byte(entry.Blue), 255
-			}
-			paletteTexture = NewPaletteTexture(app.gl, colorProvider)
-
-			createMap()
-		}, app.simpleStoreFailure("Palette"))
 	}
 }
