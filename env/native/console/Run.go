@@ -136,7 +136,7 @@ func (runner *appRunner) layout(g *gocui.Gui) error {
 	view, _ := g.SetView("mainControls", -1, -1, maxX/2, maxY)
 	_, originY := view.Origin()
 	_, cursorY := view.Cursor()
-	view.Highlight = true
+
 	view.Clear()
 	runner.mainControlLines = 0
 	runner.highlightedTexter = nil
@@ -144,6 +144,7 @@ func (runner *appRunner) layout(g *gocui.Gui) error {
 	if g.CurrentView() == nil {
 		g.SetCurrentView("mainControls")
 	}
+	view.Highlight = g.CurrentView() == view
 
 	runner.rootTexter.TextMain(func(label, line string, texter ViewModelNodeTexter) {
 		paddedLabel := fmt.Sprintf("%20s", label)
