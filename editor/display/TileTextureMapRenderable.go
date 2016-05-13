@@ -209,7 +209,7 @@ func (renderable *TileTextureMapRenderable) Render(context *RenderContext) {
 }
 
 func (renderable *TileTextureMapRenderable) ensureTileType(tileType model.TileType) (verticeCount int) {
-	displayedType := model.Open
+	displayedType := model.TileType(model.Open)
 
 	verticeCount = 6
 	if tileType == model.DiagonalOpenNorthEast || tileType == model.DiagonalOpenNorthWest ||
