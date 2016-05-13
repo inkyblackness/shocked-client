@@ -17,12 +17,12 @@ var textureVertexShaderSource = `
   uniform mat4 viewMatrix;
   uniform mat4 projectionMatrix;
 
-  varying vec2 position;
+  varying vec2 uv;
 
   void main(void) {
     gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);
 
-    position = vertexPosition.xy;
+    uv = vertexPosition.xy;
   }
 `
 
@@ -34,10 +34,10 @@ var textureFragmentShaderSource = `
   uniform sampler2D palette;
   uniform sampler2D bitmap;
 
-  varying vec2 position;
+  varying vec2 uv;
 
   void main(void) {
-    vec4 pixel = texture2D(bitmap, position);
+    vec4 pixel = texture2D(bitmap, uv);
     vec4 color = texture2D(palette, vec2(pixel.a, 0.5));
 
     gl_FragColor = color;

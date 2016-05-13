@@ -14,6 +14,41 @@ import (
 	"github.com/inkyblackness/shocked-client/opengl"
 )
 
+var mapTileVertexShaderSource = `
+  attribute vec3 vertexPosition;
+
+  uniform mat4 modelMatrix;
+  uniform mat4 viewMatrix;
+  uniform mat4 projectionMatrix;
+  uniform mat4 uvMatrix;
+
+  varying vec2 uv;
+
+  void main(void) {
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);
+
+    uv = (uvMatrix * vec4(vertexPosition, 1.0)).xy;
+  }
+`
+
+var mapTileFragmentShaderSource = `
+  #ifdef GL_ES
+    precision mediump float;
+  #endif
+
+  uniform sampler2D palette;
+  uniform sampler2D bitmap;
+
+  varying vec2 uv;
+
+  void main(void) {
+    vec4 pixel = texture2D(bitmap, uv);
+    vec4 color = texture2D(palette, vec2(pixel.a, 0.5));
+
+    gl_FragColor = color;
+  }
+`
+
 // TextureQuery is a getter function to retrieve the texture for the given
 // level texture index.
 type TextureQuery func(index int) graphics.Texture
@@ -29,6 +64,7 @@ type TileTextureMapRenderable struct {
 	modelMatrixUniform      int32
 	viewMatrixUniform       int32
 	projectionMatrixUniform int32
+	uvMatrixUniform         int32
 
 	paletteUniform int32
 	bitmapUniform  int32
@@ -36,15 +72,28 @@ type TileTextureMapRenderable struct {
 	paletteTexture graphics.Texture
 	textureQuery   TextureQuery
 
-	tiles [][]*model.TileProperties
+	tiles        [][]*model.TileProperties
+	lastTileType model.TileType
+}
+
+var uvRotations map[int]*mgl.Mat4
+
+func init() {
+	uvRotations = make(map[int]*mgl.Mat4)
+	for i := 0; i < 4; i++ {
+		matrix := mgl.Translate3D(0.5, 0.5, 0.0).
+			Mul4(mgl.HomogRotate3DZ(math.Pi * float64(i) / 2.0)).
+			Mul4(mgl.Translate3D(-0.5, -0.5, 0.0))
+		uvRotations[i] = &matrix
+	}
 }
 
 // NewTileTextureMapRenderable returns a new instance of a renderable for tile maps
 func NewTileTextureMapRenderable(gl opengl.OpenGl, paletteTexture graphics.Texture,
 	textureQuery TextureQuery) *TileTextureMapRenderable {
-	vertexShader, err1 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, textureVertexShaderSource)
+	vertexShader, err1 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, mapTileVertexShaderSource)
 	defer gl.DeleteShader(vertexShader)
-	fragmentShader, err2 := opengl.CompileNewShader(gl, opengl.FRAGMENT_SHADER, textureFragmentShaderSource)
+	fragmentShader, err2 := opengl.CompileNewShader(gl, opengl.FRAGMENT_SHADER, mapTileFragmentShaderSource)
 	defer gl.DeleteShader(fragmentShader)
 	program, _ := opengl.LinkNewProgram(gl, vertexShader, fragmentShader)
 
@@ -64,11 +113,13 @@ func NewTileTextureMapRenderable(gl opengl.OpenGl, paletteTexture graphics.Textu
 		modelMatrixUniform:      gl.GetUniformLocation(program, "modelMatrix"),
 		viewMatrixUniform:       gl.GetUniformLocation(program, "viewMatrix"),
 		projectionMatrixUniform: gl.GetUniformLocation(program, "projectionMatrix"),
+		uvMatrixUniform:         gl.GetUniformLocation(program, "uvMatrix"),
 		paletteUniform:          gl.GetUniformLocation(program, "palette"),
 		bitmapUniform:           gl.GetUniformLocation(program, "bitmap"),
 		paletteTexture:          paletteTexture,
 		textureQuery:            textureQuery,
-		tiles:                   make([][]*model.TileProperties, 64)}
+		tiles:                   make([][]*model.TileProperties, 64),
+		lastTileType:            model.Solid}
 
 	for i := 0; i < 64; i++ {
 		renderable.tiles[i] = make([]*model.TileProperties, 64)
@@ -138,16 +189,16 @@ func (renderable *TileTextureMapRenderable) Render(context *RenderContext) {
 					texture := renderable.textureQuery(*tile.RealWorld.FloorTexture)
 					if texture != nil {
 						modelMatrix := mgl.Translate3D(float64(x)*32.0, float64(y)*32.0, 0.0).
-							Mul4(scaling).
-							Mul4(mgl.Translate3D(0.5, 0.5, 0.0)).
-							Mul4(mgl.HomogRotate3DZ(math.Pi * float64(*tile.RealWorld.FloorTextureRotations) / 2.0)).
-							Mul4(mgl.Translate3D(-0.5, -0.5, 0.0))
+							Mul4(scaling)
 
+						uvMatrix := uvRotations[*tile.RealWorld.FloorTextureRotations]
+						renderable.setMatrix64(renderable.uvMatrixUniform, uvMatrix)
 						renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
+						verticeCount := renderable.ensureTileType(*tile.Type)
 						gl.BindTexture(opengl.TEXTURE_2D, texture.Handle())
 						gl.Uniform1i(renderable.bitmapUniform, textureUnit)
 
-						gl.DrawArrays(opengl.TRIANGLES, 0, 6)
+						gl.DrawArrays(opengl.TRIANGLES, 0, int32(verticeCount))
 					}
 				}
 			}
@@ -155,6 +206,59 @@ func (renderable *TileTextureMapRenderable) Render(context *RenderContext) {
 
 		gl.BindTexture(opengl.TEXTURE_2D, 0)
 	})
+}
+
+func (renderable *TileTextureMapRenderable) ensureTileType(tileType model.TileType) (verticeCount int) {
+	displayedType := model.Open
+
+	verticeCount = 6
+	if tileType == model.DiagonalOpenNorthEast || tileType == model.DiagonalOpenNorthWest ||
+		tileType == model.DiagonalOpenSouthEast || tileType == model.DiagonalOpenSouthWest {
+		displayedType = tileType
+		verticeCount = 3
+	}
+	if renderable.lastTileType != displayedType {
+		gl := renderable.gl
+		var vertices []float32
+		limit := float32(1.0)
+
+		if displayedType == model.DiagonalOpenNorthEast {
+			vertices = []float32{
+				0.0, 0.0, 0.0,
+				limit, 0.0, 0.0,
+				limit, limit, 0.0}
+		} else if displayedType == model.DiagonalOpenNorthWest {
+			vertices = []float32{
+				0.0, 0.0, 0.0,
+				limit, 0.0, 0.0,
+				0.0, limit, 0.0}
+		} else if displayedType == model.DiagonalOpenSouthEast {
+			vertices = []float32{
+				limit, 0.0, 0.0,
+				limit, limit, 0.0,
+				0.0, limit, 0.0}
+		} else if displayedType == model.DiagonalOpenSouthWest {
+			vertices = []float32{
+				0.0, 0.0, 0.0,
+				limit, limit, 0.0,
+				0.0, limit, 0.0}
+		} else if displayedType == model.Open {
+			vertices = []float32{
+				0.0, 0.0, 0.0,
+				limit, 0.0, 0.0,
+				limit, limit, 0.0,
+
+				limit, limit, 0.0,
+				0.0, limit, 0.0,
+				0.0, 0.0, 0.0}
+		}
+		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.vertexPositionBuffer)
+		gl.BufferData(opengl.ARRAY_BUFFER, len(vertices)*4, vertices, opengl.STATIC_DRAW)
+
+		renderable.lastTileType = displayedType
+	}
+
+	return
 }
 
 func (renderable *TileTextureMapRenderable) withShader(task func()) {
