@@ -38,6 +38,12 @@ html, body, .rootContainer, .mapControls, .tileMap {
     padding-right: 10px;
 }
 
+.sectionSelection {
+   width: "100%";
+   border: 1pt solid black;
+   padding: 2px;
+}
+
 .mainControls {
     width: 20%;
     float: left;
