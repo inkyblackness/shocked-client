@@ -76,14 +76,14 @@ type TileTextureMapRenderable struct {
 	lastTileType model.TileType
 }
 
-var uvRotations map[int]*mgl.Mat4
+var uvRotations map[int]*mgl32.Mat4
 
 func init() {
-	uvRotations = make(map[int]*mgl.Mat4)
+	uvRotations = make(map[int]*mgl32.Mat4)
 	for i := 0; i < 4; i++ {
-		matrix := mgl.Translate3D(0.5, 0.5, 0.0).
-			Mul4(mgl.HomogRotate3DZ(math.Pi * float64(i) / 2.0)).
-			Mul4(mgl.Translate3D(-0.5, -0.5, 0.0))
+		matrix := mgl32.Translate3D(0.5, 0.5, 0.0).
+			Mul4(mgl32.HomogRotate3DZ(float32(math.Pi * float32(i) / 2.0))).
+			Mul4(mgl32.Translate3D(-0.5, -0.5, 0.0))
 		uvRotations[i] = &matrix
 	}
 }
@@ -192,7 +192,7 @@ func (renderable *TileTextureMapRenderable) Render(context *RenderContext) {
 							Mul4(scaling)
 
 						uvMatrix := uvRotations[*tile.RealWorld.FloorTextureRotations]
-						renderable.setMatrix64(renderable.uvMatrixUniform, uvMatrix)
+						renderable.setMatrix32(renderable.uvMatrixUniform, uvMatrix)
 						renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
 						verticeCount := renderable.ensureTileType(*tile.Type)
 						gl.BindTexture(opengl.TEXTURE_2D, texture.Handle())
