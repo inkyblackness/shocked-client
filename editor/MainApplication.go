@@ -11,6 +11,7 @@ import (
 
 	"github.com/inkyblackness/shocked-client/editor/camera"
 	"github.com/inkyblackness/shocked-client/editor/display"
+	editormodel "github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/opengl"
@@ -35,7 +36,10 @@ type MainApplication struct {
 
 	view *camera.LimitedCamera
 
-	paletteTexture           *graphics.PaletteTexture
+	paletteTexture *graphics.PaletteTexture
+	levelTextures  []int
+	textureStore   *editormodel.BufferedTextureStore
+
 	gridRenderable           *display.GridRenderable
 	tileTextureMapRenderable *display.TileTextureMapRenderable
 }
@@ -52,6 +56,9 @@ func NewMainApplication(store DataStore) *MainApplication {
 
 	app.viewModel.OnSelectedProjectChanged(app.onSelectedProjectChanged)
 	app.viewModel.OnSelectedLevelChanged(app.onSelectedLevelChanged)
+
+	app.textureStore = editormodel.NewBufferedTextureStore(app.loadTexture)
+
 	store.Projects(func(projectIDs []string) {
 		app.viewModel.SetProjects(projectIDs)
 	}, app.simpleStoreFailure("Projects"))
@@ -213,6 +220,7 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 		app.paletteTexture.Dispose()
 		app.paletteTexture = nil
 	}
+	app.textureStore.Reset()
 	if projectID != "" {
 
 		app.store.Palette(projectID, "game", func(colors [256]model.Color) {
@@ -221,7 +229,7 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 				return byte(entry.Red), byte(entry.Green), byte(entry.Blue), 255
 			}
 			app.paletteTexture = graphics.NewPaletteTexture(app.gl, colorProvider)
-			app.tileTextureMapRenderable = display.NewTileTextureMapRenderable(app.gl, app.paletteTexture)
+			app.tileTextureMapRenderable = display.NewTileTextureMapRenderable(app.gl, app.paletteTexture, app.levelTexture)
 		}, app.simpleStoreFailure("Palette"))
 
 		app.store.Levels(projectID, "archive", func(levels []model.Level) {
@@ -242,48 +250,34 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 		app.tileTextureMapRenderable.Clear()
 	}
 	if projectID != "" && levelIDError == nil {
-		var levelTextureIDs []int
-		bitmapTextures := make(map[int]graphics.Texture)
-		var tiles *model.Tiles
-
-		createMap := func() {
-			if tiles != nil &&
-				len(levelTextureIDs) > 0 && len(bitmapTextures) == len(levelTextureIDs) &&
-				app.tileTextureMapRenderable != nil {
-
-				for y := 0; y < len(tiles.Table); y++ {
-					row := tiles.Table[y]
-					for x := 0; x < len(row); x++ {
-						tileData := &row[x]
-
-						if *tileData.Properties.Type != model.Solid {
-							textureID := *tileData.Properties.RealWorld.FloorTexture
-
-							app.tileTextureMapRenderable.SetTileTexture(x, 63-y, bitmapTextures[textureID])
-						}
-					}
+		app.store.Tiles(projectID, "archive", int(levelID), func(data model.Tiles) {
+			for y, row := range data.Table {
+				for x := 0; x < len(row); x++ {
+					properties := &row[x].Properties
+					app.tileTextureMapRenderable.SetTile(x, 63-y, properties)
 				}
 			}
-		}
-
-		app.store.Tiles(projectID, "archive", int(levelID), func(data model.Tiles) {
-			tiles = &data
-
-			createMap()
 		}, app.simpleStoreFailure("Tiles"))
 
 		app.store.LevelTextures(projectID, "archive", int(levelID), func(textureIDs []int) {
-			fmt.Fprintf(os.Stderr, "loaded textureIDs, %v to load\n", len(textureIDs))
-			levelTextureIDs = textureIDs
-			for index, id := range textureIDs {
-				localIndex := index
-				app.store.TextureBitmap(projectID, id, "large", func(bmp *model.RawBitmap) {
-					pixelData, _ := base64.StdEncoding.DecodeString(bmp.Pixel)
-					bitmapTextures[localIndex] = graphics.NewBitmapTexture(app.gl, bmp.Width, bmp.Height, pixelData)
-
-					createMap()
-				}, app.simpleStoreFailure("TextureBitmap"))
-			}
+			app.levelTextures = textureIDs
 		}, app.simpleStoreFailure("LevelTextures"))
 	}
+}
+
+func (app *MainApplication) loadTexture(id int) {
+	projectID := app.viewModel.SelectedProject()
+
+	app.store.TextureBitmap(projectID, id, "large", func(bmp *model.RawBitmap) {
+		pixelData, _ := base64.StdEncoding.DecodeString(bmp.Pixel)
+		app.textureStore.SetTexture(id, graphics.NewBitmapTexture(app.gl, bmp.Width, bmp.Height, pixelData))
+	}, app.simpleStoreFailure("TextureBitmap"))
+}
+
+func (app *MainApplication) levelTexture(index int) (texture graphics.Texture) {
+	if index >= 0 && index < len(app.levelTextures) {
+		texture = app.textureStore.Texture(app.levelTextures[index])
+	}
+
+	return
 }

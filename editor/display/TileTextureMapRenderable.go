@@ -7,9 +7,15 @@ import (
 	mgl32 "github.com/go-gl/mathgl/mgl32"
 	mgl "github.com/go-gl/mathgl/mgl64"
 
+	"github.com/inkyblackness/shocked-model"
+
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
+
+// TextureQuery is a getter function to retrieve the texture for the given
+// level texture index.
+type TextureQuery func(index int) graphics.Texture
 
 // TileTextureMapRenderable is a renderable for textures.
 type TileTextureMapRenderable struct {
@@ -27,12 +33,14 @@ type TileTextureMapRenderable struct {
 	bitmapUniform  int32
 
 	paletteTexture graphics.Texture
+	textureQuery   TextureQuery
 
-	tiles [][]graphics.Texture
+	tiles [][]*model.TileProperties
 }
 
 // NewTileTextureMapRenderable returns a new instance of a renderable for tile maps
-func NewTileTextureMapRenderable(gl opengl.OpenGl, paletteTexture graphics.Texture) *TileTextureMapRenderable {
+func NewTileTextureMapRenderable(gl opengl.OpenGl, paletteTexture graphics.Texture,
+	textureQuery TextureQuery) *TileTextureMapRenderable {
 	vertexShader, err1 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, textureVertexShaderSource)
 	defer gl.DeleteShader(vertexShader)
 	fragmentShader, err2 := opengl.CompileNewShader(gl, opengl.FRAGMENT_SHADER, textureFragmentShaderSource)
@@ -55,13 +63,14 @@ func NewTileTextureMapRenderable(gl opengl.OpenGl, paletteTexture graphics.Textu
 		modelMatrixUniform:      gl.GetUniformLocation(program, "modelMatrix"),
 		viewMatrixUniform:       gl.GetUniformLocation(program, "viewMatrix"),
 		projectionMatrixUniform: gl.GetUniformLocation(program, "projectionMatrix"),
-		paletteTexture:          paletteTexture,
 		paletteUniform:          gl.GetUniformLocation(program, "palette"),
 		bitmapUniform:           gl.GetUniformLocation(program, "bitmap"),
-		tiles:                   make([][]graphics.Texture, 64)}
+		paletteTexture:          paletteTexture,
+		textureQuery:            textureQuery,
+		tiles:                   make([][]*model.TileProperties, 64)}
 
 	for i := 0; i < 64; i++ {
-		renderable.tiles[i] = make([]graphics.Texture, 64)
+		renderable.tiles[i] = make([]*model.TileProperties, 64)
 	}
 
 	renderable.withShader(func() {
@@ -88,9 +97,9 @@ func (renderable *TileTextureMapRenderable) Dispose() {
 	renderable.gl.DeleteVertexArrays([]uint32{renderable.vertexArrayObject})
 }
 
-// SetTileTexture sets the texture for the specified tile coordinate.
-func (renderable *TileTextureMapRenderable) SetTileTexture(x, y int, tex graphics.Texture) {
-	renderable.tiles[y][x] = tex
+// SetTile sets the properties for the specified tile coordinate.
+func (renderable *TileTextureMapRenderable) SetTile(x, y int, properties *model.TileProperties) {
+	renderable.tiles[y][x] = properties
 }
 
 // Clear resets all tiles.
@@ -130,24 +139,18 @@ func (renderable *TileTextureMapRenderable) Render(context *RenderContext) {
 		scaling := mgl.Scale3D(32.0, 32.0, 1.0)
 		for y, row := range renderable.tiles {
 			for x, tile := range row {
-				if tile != nil {
-					/* at zero
-					modelMatrix := mgl.Ident4().
-						Mul4(mgl.Translate3D(float64(0)*32.0, float64(0)*32.0, 0.0)).
-						Mul4(mgl.Scale3D(32.0, 32.0, 1.0))
+				if tile != nil && *tile.Type != model.Solid && tile.RealWorld != nil {
+					texture := renderable.textureQuery(*tile.RealWorld.FloorTexture)
+					if texture != nil {
+						modelMatrix := mgl.Translate3D(float64(x)*32.0, float64(y)*32.0, 0.0).
+							Mul4(scaling)
 
-					renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
-					*/
-					/**/
-					modelMatrix := mgl.Translate3D(float64(x)*32.0, float64(y)*32.0, 0.0).
-						Mul4(scaling)
+						renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
+						gl.BindTexture(opengl.TEXTURE_2D, texture.Handle())
+						gl.Uniform1i(renderable.bitmapUniform, textureUnit)
 
-					renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
-					/**/
-					gl.BindTexture(opengl.TEXTURE_2D, tile.Handle())
-					gl.Uniform1i(renderable.bitmapUniform, textureUnit)
-
-					gl.DrawArrays(opengl.TRIANGLES, 0, 6)
+						gl.DrawArrays(opengl.TRIANGLES, 0, 6)
+					}
 				}
 			}
 		}
