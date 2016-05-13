@@ -10,7 +10,9 @@ import (
 	mgl "github.com/go-gl/mathgl/mgl32"
 
 	"github.com/inkyblackness/shocked-client/editor/camera"
+	"github.com/inkyblackness/shocked-client/editor/display"
 	"github.com/inkyblackness/shocked-client/env"
+	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/opengl"
 	"github.com/inkyblackness/shocked-client/viewmodel"
 	"github.com/inkyblackness/shocked-model"
@@ -33,9 +35,9 @@ type MainApplication struct {
 
 	view *camera.LimitedCamera
 
-	paletteTexture           *PaletteTexture
-	gridRenderable           *GridRenderable
-	tileTextureMapRenderable *TileTextureMapRenderable
+	paletteTexture           *graphics.PaletteTexture
+	gridRenderable           *display.GridRenderable
+	tileTextureMapRenderable *display.TileTextureMapRenderable
 }
 
 // NewMainApplication returns a new instance of MainApplication.
@@ -97,7 +99,7 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.gl.BlendFunc(opengl.SRC_ALPHA, opengl.ONE_MINUS_SRC_ALPHA)
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
 
-	app.gridRenderable = NewGridRenderable(app.gl)
+	app.gridRenderable = display.NewGridRenderable(app.gl)
 }
 
 func (app *MainApplication) simpleStoreFailure(info string) FailureFunc {
@@ -127,15 +129,11 @@ func (app *MainApplication) render() {
 	if app.paletteTexture != nil {
 		app.paletteTexture.Update()
 	}
-	context := RenderContext{
-		viewportWidth:    width,
-		viewportHeight:   height,
-		viewMatrix:       app.view.ViewMatrix(),
-		projectionMatrix: mgl.Ortho2D(0, float32(width), float32(height), 0)}
+	context := display.NewBasicRenderContext(width, height, app.view.ViewMatrix())
 
-	app.gridRenderable.Render(&context)
+	app.gridRenderable.Render(context)
 	if app.tileTextureMapRenderable != nil {
-		app.tileTextureMapRenderable.Render(&context)
+		app.tileTextureMapRenderable.Render(context)
 	}
 }
 
@@ -222,8 +220,8 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 				entry := &colors[app.animatedPaletteIndex(index)]
 				return byte(entry.Red), byte(entry.Green), byte(entry.Blue), 255
 			}
-			app.paletteTexture = NewPaletteTexture(app.gl, colorProvider)
-			app.tileTextureMapRenderable = NewTileTextureMapRenderable(app.gl, app.paletteTexture)
+			app.paletteTexture = graphics.NewPaletteTexture(app.gl, colorProvider)
+			app.tileTextureMapRenderable = display.NewTileTextureMapRenderable(app.gl, app.paletteTexture)
 		}, app.simpleStoreFailure("Palette"))
 
 		app.store.Levels(projectID, "archive", func(levels []model.Level) {
@@ -245,7 +243,7 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 	}
 	if projectID != "" && levelIDError == nil {
 		var levelTextureIDs []int
-		bitmapTextures := make(map[int]GraphicsTexture)
+		bitmapTextures := make(map[int]graphics.Texture)
 		var tiles *model.Tiles
 
 		createMap := func() {
@@ -281,7 +279,7 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 				localIndex := index
 				app.store.TextureBitmap(projectID, id, "large", func(bmp *model.RawBitmap) {
 					pixelData, _ := base64.StdEncoding.DecodeString(bmp.Pixel)
-					bitmapTextures[localIndex] = NewBitmapTexture(app.gl, bmp.Width, bmp.Height, pixelData)
+					bitmapTextures[localIndex] = graphics.NewBitmapTexture(app.gl, bmp.Width, bmp.Height, pixelData)
 
 					createMap()
 				}, app.simpleStoreFailure("TextureBitmap"))

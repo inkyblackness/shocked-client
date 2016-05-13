@@ -1,4 +1,4 @@
-package editor
+package display
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 	mgl32 "github.com/go-gl/mathgl/mgl32"
 	mgl "github.com/go-gl/mathgl/mgl64"
 
+	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
 
@@ -25,13 +26,13 @@ type TileTextureMapRenderable struct {
 	paletteUniform int32
 	bitmapUniform  int32
 
-	paletteTexture GraphicsTexture
+	paletteTexture graphics.Texture
 
-	tiles [][]GraphicsTexture
+	tiles [][]graphics.Texture
 }
 
 // NewTileTextureMapRenderable returns a new instance of a renderable for tile maps
-func NewTileTextureMapRenderable(gl opengl.OpenGl, paletteTexture GraphicsTexture) *TileTextureMapRenderable {
+func NewTileTextureMapRenderable(gl opengl.OpenGl, paletteTexture graphics.Texture) *TileTextureMapRenderable {
 	vertexShader, err1 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, textureVertexShaderSource)
 	defer gl.DeleteShader(vertexShader)
 	fragmentShader, err2 := opengl.CompileNewShader(gl, opengl.FRAGMENT_SHADER, textureFragmentShaderSource)
@@ -57,10 +58,10 @@ func NewTileTextureMapRenderable(gl opengl.OpenGl, paletteTexture GraphicsTextur
 		paletteTexture:          paletteTexture,
 		paletteUniform:          gl.GetUniformLocation(program, "palette"),
 		bitmapUniform:           gl.GetUniformLocation(program, "bitmap"),
-		tiles:                   make([][]GraphicsTexture, 64)}
+		tiles:                   make([][]graphics.Texture, 64)}
 
 	for i := 0; i < 64; i++ {
-		renderable.tiles[i] = make([]GraphicsTexture, 64)
+		renderable.tiles[i] = make([]graphics.Texture, 64)
 	}
 
 	renderable.withShader(func() {
@@ -88,7 +89,7 @@ func (renderable *TileTextureMapRenderable) Dispose() {
 }
 
 // SetTileTexture sets the texture for the specified tile coordinate.
-func (renderable *TileTextureMapRenderable) SetTileTexture(x, y int, tex GraphicsTexture) {
+func (renderable *TileTextureMapRenderable) SetTileTexture(x, y int, tex graphics.Texture) {
 	renderable.tiles[y][x] = tex
 }
 

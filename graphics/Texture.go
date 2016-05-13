@@ -1,7 +1,7 @@
-package editor
+package graphics
 
-// GraphicsTexture describes a texture in graphics memory.
-type GraphicsTexture interface {
+// Texture describes a texture in graphics memory.
+type Texture interface {
 	// Dispose releases any internal resources.
 	Dispose()
 	// Handle returns the texture handle.

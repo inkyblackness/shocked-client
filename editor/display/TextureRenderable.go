@@ -1,4 +1,4 @@
-package editor
+package display
 
 import (
 	"fmt"
@@ -6,6 +6,7 @@ import (
 
 	mgl "github.com/go-gl/mathgl/mgl32"
 
+	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
 
@@ -60,13 +61,13 @@ type TextureRenderable struct {
 	paletteUniform int32
 	bitmapUniform  int32
 
-	paletteTexture GraphicsTexture
-	bitmapTexture  GraphicsTexture
+	paletteTexture graphics.Texture
+	bitmapTexture  graphics.Texture
 }
 
 // NewTextureRenderable returns a new instance of a texture renderable
 func NewTextureRenderable(gl opengl.OpenGl, positionX, positionY float32, displaySize float32,
-	paletteTexture GraphicsTexture, bitmapTexture GraphicsTexture) *TextureRenderable {
+	paletteTexture graphics.Texture, bitmapTexture graphics.Texture) *TextureRenderable {
 	vertexShader, err1 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, textureVertexShaderSource)
 	defer gl.DeleteShader(vertexShader)
 	fragmentShader, err2 := opengl.CompileNewShader(gl, opengl.FRAGMENT_SHADER, textureFragmentShaderSource)

@@ -1,4 +1,4 @@
-package editor
+package graphics
 
 import (
 	"github.com/inkyblackness/shocked-client/opengl"

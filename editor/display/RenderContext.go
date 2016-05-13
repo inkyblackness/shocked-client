@@ -1,4 +1,4 @@
-package editor
+package display
 
 import (
 	"github.com/go-gl/mathgl/mgl32"
@@ -11,6 +11,15 @@ type RenderContext struct {
 
 	viewMatrix       mgl32.Mat4
 	projectionMatrix mgl32.Mat4
+}
+
+// NewBasicRenderContext returns a render context for the provided parameters.
+func NewBasicRenderContext(width, height int, viewMatrix mgl32.Mat4) *RenderContext {
+	return &RenderContext{
+		viewportWidth:    width,
+		viewportHeight:   height,
+		viewMatrix:       viewMatrix,
+		projectionMatrix: mgl32.Ortho2D(0, float32(width), float32(height), 0)}
 }
 
 // ViewportSize returns the size of the current viewport, in pixel.
