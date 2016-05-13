@@ -6,7 +6,7 @@ import (
 
 // ViewModel contains the raw view model node structure, wrapped with simple accessors.
 type ViewModel struct {
-	root viewmodel.Node
+	root *viewmodel.SectionSelectionNode
 
 	projects *viewmodel.ValueSelectionNode
 	levels   *viewmodel.ValueSelectionNode
@@ -42,6 +42,11 @@ func (vm *ViewModel) Root() viewmodel.Node {
 	return vm.root
 }
 
+// SelectMapSection ensures the map controls are selected.
+func (vm *ViewModel) SelectMapSection() {
+	vm.root.Selection().Selected().Set("Map")
+}
+
 // SelectedProject returns the identifier of the currently selected project.
 func (vm *ViewModel) SelectedProject() string {
 	return vm.projects.Selected().Get()
@@ -55,6 +60,11 @@ func (vm *ViewModel) OnSelectedProjectChanged(callback func(projectID string)) {
 // SetProjects sets the list of available project identifier.
 func (vm *ViewModel) SetProjects(projectIDs []string) {
 	vm.projects.SetValues(projectIDs)
+}
+
+// SelectProject sets the currently selected project.
+func (vm *ViewModel) SelectProject(id string) {
+	vm.projects.Selected().Set(id)
 }
 
 // OnSelectedLevelChanged registers a callback for a change in the selected level

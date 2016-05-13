@@ -62,6 +62,10 @@ func NewMainApplication(store DataStore) *MainApplication {
 
 	store.Projects(func(projectIDs []string) {
 		app.viewModel.SetProjects(projectIDs)
+		if (len(projectIDs) == 1) && (projectIDs[0] == "(inplace)") {
+			app.viewModel.SelectProject("(inplace)")
+			app.viewModel.SelectMapSection()
+		}
 	}, app.simpleStoreFailure("Projects"))
 
 	return app
