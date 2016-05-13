@@ -2,6 +2,7 @@ package display
 
 import (
 	"fmt"
+	"math"
 	"os"
 
 	mgl32 "github.com/go-gl/mathgl/mgl32"
@@ -129,13 +130,7 @@ func (renderable *TileTextureMapRenderable) Render(context *RenderContext) {
 
 		textureUnit = 1
 		gl.ActiveTexture(opengl.TEXTURE0 + uint32(textureUnit))
-		/*
-			modelMatrix := mgl.Ident4().
-				Mul4(mgl.Translate3D(float64(0)*32.0, float64(0)*32.0, 0.0)).
-				Mul4(mgl.Scale3D(32.0, 32.0, 1.0))
 
-			renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
-			/**/
 		scaling := mgl.Scale3D(32.0, 32.0, 1.0)
 		for y, row := range renderable.tiles {
 			for x, tile := range row {
@@ -143,7 +138,10 @@ func (renderable *TileTextureMapRenderable) Render(context *RenderContext) {
 					texture := renderable.textureQuery(*tile.RealWorld.FloorTexture)
 					if texture != nil {
 						modelMatrix := mgl.Translate3D(float64(x)*32.0, float64(y)*32.0, 0.0).
-							Mul4(scaling)
+							Mul4(scaling).
+							Mul4(mgl.Translate3D(0.5, 0.5, 0.0)).
+							Mul4(mgl.HomogRotate3DZ(math.Pi * float64(*tile.RealWorld.FloorTextureRotations) / 2.0)).
+							Mul4(mgl.Translate3D(-0.5, -0.5, 0.0))
 
 						renderable.setMatrix64(renderable.modelMatrixUniform, &modelMatrix)
 						gl.BindTexture(opengl.TEXTURE_2D, texture.Handle())
