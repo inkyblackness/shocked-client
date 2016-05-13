@@ -42,6 +42,7 @@ type MainApplication struct {
 
 	gridRenderable           *display.GridRenderable
 	tileTextureMapRenderable *display.TileTextureMapRenderable
+	tileGridMapRenderable    *display.TileGridMapRenderable
 }
 
 // NewMainApplication returns a new instance of MainApplication.
@@ -142,6 +143,9 @@ func (app *MainApplication) render() {
 	if app.tileTextureMapRenderable != nil {
 		app.tileTextureMapRenderable.Render(context)
 	}
+	if app.tileGridMapRenderable != nil {
+		app.tileGridMapRenderable.Render(context)
+	}
 }
 
 func (app *MainApplication) unprojectPixel(pixelX, pixelY float32) (x, y float32) {
@@ -216,6 +220,10 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 		app.tileTextureMapRenderable.Dispose()
 		app.tileTextureMapRenderable = nil
 	}
+	if app.tileGridMapRenderable != nil {
+		app.tileGridMapRenderable.Dispose()
+		app.tileGridMapRenderable = nil
+	}
 	if app.paletteTexture != nil {
 		app.paletteTexture.Dispose()
 		app.paletteTexture = nil
@@ -230,6 +238,7 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 			}
 			app.paletteTexture = graphics.NewPaletteTexture(app.gl, colorProvider)
 			app.tileTextureMapRenderable = display.NewTileTextureMapRenderable(app.gl, app.paletteTexture, app.levelTexture)
+			app.tileGridMapRenderable = display.NewTileGridMapRenderable(app.gl)
 		}, app.simpleStoreFailure("Palette"))
 
 		app.store.Levels(projectID, "archive", func(levels []model.Level) {
@@ -249,12 +258,16 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 	if app.tileTextureMapRenderable != nil {
 		app.tileTextureMapRenderable.Clear()
 	}
+	if app.tileGridMapRenderable != nil {
+		app.tileGridMapRenderable.Clear()
+	}
 	if projectID != "" && levelIDError == nil {
 		app.store.Tiles(projectID, "archive", int(levelID), func(data model.Tiles) {
 			for y, row := range data.Table {
 				for x := 0; x < len(row); x++ {
 					properties := &row[x].Properties
 					app.tileTextureMapRenderable.SetTile(x, 63-y, properties)
+					app.tileGridMapRenderable.SetTile(x, 63-y, properties)
 				}
 			}
 		}, app.simpleStoreFailure("Tiles"))
