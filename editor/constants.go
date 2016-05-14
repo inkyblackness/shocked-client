@@ -10,5 +10,5 @@ const (
 	TileBaseLength = float32(32)
 	// TilesPerMapSide specifies how many tiles are per side of a map.
 	// This value is implicitly identical to the actual data.
-	TilesPerMapSide = float32(64)
+	TilesPerMapSide = 64
 )

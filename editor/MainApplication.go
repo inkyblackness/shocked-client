@@ -32,6 +32,7 @@ type MainApplication struct {
 	gl       opengl.OpenGl
 
 	mouseX, mouseY   float32
+	mouseDragged     bool
 	mouseMoveCapture func()
 
 	view *camera.LimitedCamera
@@ -39,10 +40,12 @@ type MainApplication struct {
 	paletteTexture *graphics.PaletteTexture
 	levelTextures  []int
 	textureStore   *editormodel.BufferedTextureStore
+	tileMap        *editormodel.TileMap
 
 	gridRenderable           *display.GridRenderable
 	tileTextureMapRenderable *display.TileTextureMapRenderable
 	tileGridMapRenderable    *display.TileGridMapRenderable
+	tileSelectionRenderable  *display.TileSelectionRenderable
 }
 
 // NewMainApplication returns a new instance of MainApplication.
@@ -59,6 +62,7 @@ func NewMainApplication(store DataStore) *MainApplication {
 	app.viewModel.OnSelectedLevelChanged(app.onSelectedLevelChanged)
 
 	app.textureStore = editormodel.NewBufferedTextureStore(app.loadTexture)
+	app.tileMap = editormodel.NewTileMap(TilesPerMapSide, TilesPerMapSide)
 
 	store.Projects(func(projectIDs []string) {
 		app.viewModel.SetProjects(projectIDs)
@@ -112,6 +116,11 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
 
 	app.gridRenderable = display.NewGridRenderable(app.gl)
+	app.tileSelectionRenderable = display.NewTileSelectionRenderable(app.gl, func(callback display.TileSelectionCallback) {
+		app.tileMap.ForEachSelected(func(coord editormodel.TileCoordinate, tile *editormodel.Tile) {
+			callback(coord)
+		})
+	})
 }
 
 func (app *MainApplication) simpleStoreFailure(info string) FailureFunc {
@@ -147,6 +156,7 @@ func (app *MainApplication) render() {
 	if app.tileTextureMapRenderable != nil {
 		app.tileTextureMapRenderable.Render(context)
 	}
+	app.tileSelectionRenderable.Render(context)
 	if app.tileGridMapRenderable != nil {
 		app.tileGridMapRenderable.Render(context)
 	}
@@ -175,10 +185,12 @@ func (app *MainApplication) onMouseButtonDown(mouseButton uint32) {
 	if (mouseButton & env.MousePrimary) == env.MousePrimary {
 		lastMouseX, lastMouseY := app.mouseX, app.mouseY
 
+		app.mouseDragged = false
 		app.mouseMoveCapture = func() {
 			lastWorldMouseX, lastWorldMouseY := app.unprojectPixel(lastMouseX, lastMouseY)
 			worldMouseX, worldMouseY := app.unprojectPixel(app.mouseX, app.mouseY)
 
+			app.mouseDragged = true
 			app.view.MoveBy(worldMouseX-lastWorldMouseX, worldMouseY-lastWorldMouseY)
 			lastMouseX, lastMouseY = app.mouseX, app.mouseY
 		}
@@ -188,6 +200,9 @@ func (app *MainApplication) onMouseButtonDown(mouseButton uint32) {
 func (app *MainApplication) onMouseButtonUp(mouseButton uint32) {
 	if (mouseButton & env.MousePrimary) == env.MousePrimary {
 		app.mouseMoveCapture = func() {}
+		if !app.mouseDragged {
+			app.onMouseClick()
+		}
 	}
 }
 
@@ -199,6 +214,15 @@ func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 	if dy < 0 {
 		app.view.ZoomAt(0.5, worldMouseX, worldMouseY)
 	}
+}
+
+func (app *MainApplication) onMouseClick() {
+	worldMouseX, worldMouseY := app.unprojectPixel(app.mouseX, app.mouseY)
+	tileX, _ := int(worldMouseX/TileBaseLength), (int(worldMouseX/TileBaseLength*256.0))%256
+	tileY, _ := int(TilesPerMapSide)-1-int(worldMouseY/TileBaseLength), 255-((int(worldMouseY/TileBaseLength*256.0))%256)
+
+	app.tileMap.ClearSelection()
+	app.tileMap.SetSelected(editormodel.TileCoordinateOf(tileX, tileY), true)
 }
 
 func (app *MainApplication) animatedPaletteIndex(index int) int {
