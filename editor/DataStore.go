@@ -24,4 +24,11 @@ type DataStore interface {
 
 	// Tiles queries the complete tile map of a level.
 	Tiles(projectID string, archiveID string, levelID int, onSuccess func(tiles model.Tiles), onFailure FailureFunc)
+
+	// Tile requests the properties of a specific tile.
+	Tile(projectID string, archiveID string, levelID int, x, y int,
+		onSuccess func(properties model.TileProperties), onFailure FailureFunc)
+	// SetTile requests to update properties of a specific tile.
+	SetTile(projectID string, archiveID string, levelID int, x, y int, properties model.TileProperties,
+		onSuccess func(properties model.TileProperties), onFailure FailureFunc)
 }

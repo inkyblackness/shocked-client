@@ -27,7 +27,8 @@ type MainApplication struct {
 
 	store DataStore
 
-	viewModel *ViewModel
+	viewModel         *ViewModel
+	viewModelUpdating bool
 
 	glWindow env.OpenGlWindow
 	gl       opengl.OpenGl
@@ -38,6 +39,7 @@ type MainApplication struct {
 
 	view *camera.LimitedCamera
 
+	activeLevelID  int
 	paletteTexture *graphics.PaletteTexture
 	levelTextures  []int
 	textureStore   *editormodel.BufferedTextureStore
@@ -61,7 +63,9 @@ func NewMainApplication(store DataStore) *MainApplication {
 
 	app.viewModel.OnSelectedProjectChanged(app.onSelectedProjectChanged)
 	app.viewModel.OnSelectedLevelChanged(app.onSelectedLevelChanged)
+	app.viewModel.Tiles().TileType().Selected().Subscribe(app.onTileTypeChanged)
 
+	app.activeLevelID = -1
 	app.textureStore = editormodel.NewBufferedTextureStore(app.loadTexture)
 	app.tileMap = editormodel.NewTileMap(TilesPerMapSide, TilesPerMapSide)
 
@@ -300,21 +304,22 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 	}
 	app.tileMap.Clear()
 	app.onTileSelectionChanged()
+	app.activeLevelID = -1
 
 	if projectID != "" && levelIDError == nil {
-		app.store.Tiles(projectID, "archive", int(levelID), func(data model.Tiles) {
+		app.activeLevelID = int(levelID)
+
+		app.store.Tiles(projectID, "archive", app.activeLevelID, func(data model.Tiles) {
 			for y, row := range data.Table {
 				for x := 0; x < len(row); x++ {
 					coord := editormodel.TileCoordinateOf(x, y)
 					properties := &row[x].Properties
-					app.tileTextureMapRenderable.SetTile(x, 63-y, properties)
-					app.tileGridMapRenderable.SetTile(x, 63-y, properties)
-					app.tileMap.Tile(coord).SetProperties(properties)
+					app.onTilePropertiesUpdated(coord, properties)
 				}
 			}
 		}, app.simpleStoreFailure("Tiles"))
 
-		app.store.LevelTextures(projectID, "archive", int(levelID), func(textureIDs []int) {
+		app.store.LevelTextures(projectID, "archive", app.activeLevelID, func(textureIDs []int) {
 			app.levelTextures = textureIDs
 		}, app.simpleStoreFailure("LevelTextures"))
 	}
@@ -337,6 +342,73 @@ func (app *MainApplication) levelTexture(index int) (texture graphics.Texture) {
 	return
 }
 
+func (app *MainApplication) onTilePropertiesUpdated(coord editormodel.TileCoordinate, properties *model.TileProperties) {
+	x, y := coord.XY()
+
+	app.tileTextureMapRenderable.SetTile(x, 63-y, properties)
+	app.tileGridMapRenderable.SetTile(x, 63-y, properties)
+	app.tileMap.Tile(coord).SetProperties(properties)
+}
+
+func (app *MainApplication) updateViewModel(updater func()) {
+	app.viewModelUpdating = true
+	defer func() {
+		app.viewModelUpdating = false
+	}()
+
+	updater()
+}
+
+func (app *MainApplication) requestSelectedTilesChange(modifier func(*model.TileProperties), updateNeighbours bool) {
+	if !app.viewModelUpdating {
+		projectID := app.viewModel.SelectedProject()
+		archiveID := "archive"
+		levelID := app.activeLevelID
+		neighbours := make(map[editormodel.TileCoordinate]int)
+		writesPending := 0
+
+		onWriteCompleted := func() {
+			writesPending--
+			if writesPending == 0 {
+				for coord := range neighbours {
+					localCoord := coord
+					x, y := localCoord.XY()
+					app.store.Tile(projectID, archiveID, levelID, x, y, func(properties model.TileProperties) {
+						app.onTilePropertiesUpdated(localCoord, &properties)
+					}, app.simpleStoreFailure("GetTile"))
+				}
+			}
+		}
+
+		app.tileMap.ForEachSelected(func(coord editormodel.TileCoordinate, tile *editormodel.Tile) {
+			var properties model.TileProperties
+
+			modifier(&properties)
+
+			writesPending++
+			x, y := coord.XY()
+			if updateNeighbours {
+				if x > 0 {
+					neighbours[editormodel.TileCoordinateOf(x-1, y)]++
+				}
+				if (x + 1) < TilesPerMapSide {
+					neighbours[editormodel.TileCoordinateOf(x+1, y)]++
+				}
+				if y > 0 {
+					neighbours[editormodel.TileCoordinateOf(x, y-1)]++
+				}
+				if (y + 1) < TilesPerMapSide {
+					neighbours[editormodel.TileCoordinateOf(x, y+1)]++
+				}
+			}
+			app.store.SetTile(projectID, archiveID, levelID, x, y, properties, func(newProperties model.TileProperties) {
+				app.onTilePropertiesUpdated(coord, &newProperties)
+				onWriteCompleted()
+			}, app.simpleStoreFailure("SetTile"))
+		})
+	}
+}
+
 func (app *MainApplication) onTileSelectionChanged() {
 	tileType := util.NewValueUnifier("")
 
@@ -344,5 +416,16 @@ func (app *MainApplication) onTileSelectionChanged() {
 		tileType.Add(string(*tile.Properties().Type))
 	})
 
-	app.viewModel.Tiles().TileType().Selected().Set(tileType.Value().(string))
+	app.updateViewModel(func() {
+		app.viewModel.Tiles().TileType().Selected().Set(tileType.Value().(string))
+	})
+}
+
+func (app *MainApplication) onTileTypeChanged(newType string) {
+	if newType != "" {
+		app.requestSelectedTilesChange(func(properties *model.TileProperties) {
+			properties.Type = new(model.TileType)
+			*properties.Type = model.TileType(newType)
+		}, true)
+	}
 }

@@ -27,6 +27,16 @@ func (store *RestDataStore) get(url string, responseData interface{}, onSuccess 
 	})
 }
 
+func (store *RestDataStore) put(url string, requestData interface{}, responseData interface{}, onSuccess func(), onFailure FailureFunc) {
+	data, _ := json.Marshal(requestData)
+	store.transport.Put(url, data, func(jsonString string) {
+		json.Unmarshal(bytes.NewBufferString(jsonString).Bytes(), responseData)
+		onSuccess()
+	}, func() {
+		onFailure()
+	})
+}
+
 // Projects implements the DataStore interface.
 func (store *RestDataStore) Projects(onSuccess func(projects []string), onFailure FailureFunc) {
 	url := "/projects"
@@ -92,5 +102,27 @@ func (store *RestDataStore) Tiles(projectID string, archiveID string, levelID in
 
 	store.get(url, &data, func() {
 		onSuccess(data)
+	}, onFailure)
+}
+
+// Tile implements the DataStore interface.
+func (store *RestDataStore) Tile(projectID string, archiveID string, levelID int, x, y int,
+	onSuccess func(properties model.TileProperties), onFailure FailureFunc) {
+	url := fmt.Sprintf("/projects/%s/%s/levels/%d/tiles/%d/%d", projectID, archiveID, levelID, y, x)
+	var data model.Tile
+
+	store.get(url, &data, func() {
+		onSuccess(data.Properties)
+	}, onFailure)
+}
+
+// SetTile implements the DataStore interface.
+func (store *RestDataStore) SetTile(projectID string, archiveID string, levelID int, x, y int, properties model.TileProperties,
+	onSuccess func(properties model.TileProperties), onFailure FailureFunc) {
+	url := fmt.Sprintf("/projects/%s/%s/levels/%d/tiles/%d/%d", projectID, archiveID, levelID, y, x)
+	var data model.Tile
+
+	store.put(url, &properties, &data, func() {
+		onSuccess(data.Properties)
 	}, onFailure)
 }

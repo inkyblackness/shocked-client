@@ -1,6 +1,7 @@
 package native
 
 import (
+	"bytes"
 	"io/ioutil"
 	"net/http"
 )
@@ -28,12 +29,15 @@ func (rest *RestTransport) Get(url string, onSuccess func(jsonString string), on
 }
 
 // Put stores data at the given URL.
-func (rest *RestTransport) Put(url string, jsonString string, onSuccess func(jsonString string), onFailure func()) {
+func (rest *RestTransport) Put(url string, jsonString []byte, onSuccess func(jsonString string), onFailure func()) {
+	request, _ := http.NewRequest(http.MethodPut, rest.serverBase+url, bytes.NewReader(jsonString))
 
+	request.Header.Add("Content-Type", "application/json")
+	rest.handle(request, onSuccess, onFailure)
 }
 
 // Post requests to add new data at the given URL.
-func (rest *RestTransport) Post(url string, jsonString string, onSucces func(jsonString string), onFailure func()) {
+func (rest *RestTransport) Post(url string, jsonString []byte, onSucces func(jsonString string), onFailure func()) {
 }
 
 func (rest *RestTransport) handle(request *http.Request, onSuccess func(jsonString string), onFailure func()) {
