@@ -62,6 +62,18 @@ func (window *WebGlWindow) registerMouseListener() {
 
 		return x, y, inRect
 	}
+	getEventModifier := func(event *js.Object) uint32 {
+		modifier := uint32(0)
+
+		if event.Get("ctrlKey").Bool() {
+			modifier |= env.ModControl
+		}
+		if event.Get("shiftKey").Bool() {
+			modifier |= env.ModShift
+		}
+
+		return modifier
+	}
 
 	window.canvas.Call("addEventListener", "contextmenu", func(event *js.Object) bool {
 		event.Call("preventDefault")
@@ -82,7 +94,8 @@ func (window *WebGlWindow) registerMouseListener() {
 
 			if (inRect || (notifiedMouseButtons != 0)) && ((notifiedMouseButtons & button) != button) {
 				notifiedMouseButtons |= button
-				window.CallOnMouseButtonDown(button)
+				modifierMask := getEventModifier(event)
+				window.CallOnMouseButtonDown(button, modifierMask)
 			}
 		}
 	})
@@ -92,7 +105,8 @@ func (window *WebGlWindow) registerMouseListener() {
 		if knownButton {
 			if (notifiedMouseButtons & button) == button {
 				notifiedMouseButtons &= ^button
-				window.CallOnMouseButtonUp(button)
+				modifierMask := getEventModifier(event)
+				window.CallOnMouseButtonUp(button, modifierMask)
 			}
 		}
 	})

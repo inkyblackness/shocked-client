@@ -14,8 +14,8 @@ func InitAbstractOpenGlWindow() AbstractOpenGlWindow {
 	return AbstractOpenGlWindow{
 		CallRender:            func() {},
 		CallOnMouseMove:       func(float32, float32) {},
-		CallOnMouseButtonUp:   func(uint32) {},
-		CallOnMouseButtonDown: func(uint32) {}}
+		CallOnMouseButtonUp:   func(uint32, uint32) {},
+		CallOnMouseButtonDown: func(uint32, uint32) {}}
 }
 
 // OnRender implements the OpenGlWindow interface.

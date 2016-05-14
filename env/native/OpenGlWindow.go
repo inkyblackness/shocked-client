@@ -79,10 +79,18 @@ func (window *OpenGlWindow) onMouseButton(rawWindow *glfw.Window, rawButton glfw
 	button, knownButton := buttonsByIndex[rawButton]
 
 	if knownButton {
+		modifierMask := uint32(0)
+
+		if (mods & glfw.ModControl) != 0 {
+			modifierMask |= env.ModControl
+		}
+		if (mods & glfw.ModShift) != 0 {
+			modifierMask |= env.ModShift
+		}
 		if action == glfw.Press {
-			window.CallOnMouseButtonDown(button)
+			window.CallOnMouseButtonDown(button, modifierMask)
 		} else if action == glfw.Release {
-			window.CallOnMouseButtonUp(button)
+			window.CallOnMouseButtonUp(button, modifierMask)
 		}
 	}
 }

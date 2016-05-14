@@ -17,7 +17,7 @@ type MouseMoveCallback func(x float32, y float32)
 // MouseButtonCallback is the function to receive button up/down events.
 // An Up event is sent for every reported Down event, even if the mouse cursor is outside
 // the client area.
-type MouseButtonCallback func(buttonMask uint32)
+type MouseButtonCallback func(buttonMask uint32, modifierMask uint32)
 
 // MouseScrollCallback is the function to receive scroll events.
 // Delta values are right-hand oriented: positive values go right/down/far.
