@@ -163,12 +163,12 @@ func (app *MainApplication) unprojectPixel(pixelX, pixelY float32) (x, y float32
 func (app *MainApplication) onMouseMove(x float32, y float32) {
 	app.mouseX, app.mouseY = x, y
 
+	app.mouseMoveCapture()
+
 	worldMouseX, worldMouseY := app.unprojectPixel(app.mouseX, app.mouseY)
 	tileX, subX := int(worldMouseX/TileBaseLength), (int(worldMouseX/TileBaseLength*256.0))%256
 	tileY, subY := int(TilesPerMapSide)-1-int(worldMouseY/TileBaseLength), 255-((int(worldMouseY/TileBaseLength*256.0))%256)
 	app.viewModel.SetPointerAt(tileX, tileY, subX, subY)
-
-	app.mouseMoveCapture()
 }
 
 func (app *MainApplication) onMouseButtonDown(mouseButton uint32) {
