@@ -30474,13 +30474,14 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		_r$9 = gl[0].GetUniformLocation(program, "projectionMatrix"); /* */ $s = 14; case 14: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
 		renderable[0] = new GridRenderable.ptr(gl[0], program, (x = _r$5, (0 >= x.$length ? $throwRuntimeError("index out of range") : x.$array[x.$offset + 0])), (x$1 = _r$6, (0 >= x$1.$length ? $throwRuntimeError("index out of range") : x$1.$array[x$1.$offset + 0])), _r$7, _r$8, _r$9);
 		$r = renderable[0].withShader((function(gl, renderable) { return function $b() {
-			var $ptr, limit, vertices, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; limit = $f.limit; vertices = $f.vertices; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			var $ptr, half, limit, vertices, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; half = $f.half; limit = $f.limit; vertices = $f.vertices; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			$r = gl[0].BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			limit = 2048;
-			vertices = new sliceType$2([0, 0, 0, limit, 0, 0, limit, limit, 0, limit, limit, 0, 0, limit, 0, 0, 0, 0]);
+			half = 16;
+			limit = $fround(2048 + half);
+			vertices = new sliceType$2([-half, -half, 0, limit, -half, 0, limit, limit, 0, limit, limit, 0, -half, limit, 0, -half, -half, 0]);
 			$r = gl[0].BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.limit = limit; $f.vertices = vertices; $f.$s = $s; $f.$r = $r; return $f;
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.half = half; $f.limit = limit; $f.vertices = vertices; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(gl, renderable)); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return renderable[0];
 		/* */ } return; } } catch(err) { $err = err; $s = -1; return ptrType.nil; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: NewGridRenderable }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err1 = err1; $f.err2 = err2; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.program = program; $f.renderable = renderable; $f.vertexShader = vertexShader; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
@@ -31027,7 +31028,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		$r = os.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		uvRotations = false;
 		gridVertexShaderSource = "\n  attribute vec3 vertexPosition;\n\n  uniform mat4 viewMatrix;\n  uniform mat4 projectionMatrix;\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  void main(void) {\n    gl_Position = projectionMatrix * viewMatrix * vec4(vertexPosition, 1.0);\n\n    color = vec4(0.0, 0.1, 0.0, 0.6);\n    originalPosition = vertexPosition;\n  }\n";
-		gridFragmentShaderSource = "\n  #ifdef GL_ES\n    precision mediump float;\n  #endif\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  float modulo(float x, float y) {\n    return x - y * floor(x/y);\n  }\n\n  float nearGrid(float stepSize, float value) {\n    float remainder = modulo(value - (stepSize / 2.0), stepSize) * 2.0;\n\n    if (remainder >= stepSize) {\n      remainder = (stepSize * 2.0) - remainder;\n    }\n\n    return remainder / stepSize;\n  }\n\n  void main(void) {\n    float alpha = max(nearGrid(32.0, originalPosition.x), nearGrid(32.0, originalPosition.y));\n\n    alpha = pow(2.0, 10.0 * (alpha - 1.0));\n\n    gl_FragColor = vec4(color.rgb, color.a * alpha);\n  }\n";
+		gridFragmentShaderSource = "\n  #ifdef GL_ES\n    precision mediump float;\n  #endif\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  float modulo(float x, float y) {\n    return x - y * floor(x/y);\n  }\n\n  float nearGrid(float stepSize, float value) {\n    float remainder = modulo(value - (stepSize / 2.0), stepSize) * 2.0;\n\n    if (remainder >= stepSize) {\n      remainder = (stepSize * 2.0) - remainder;\n    }\n\n    return remainder / stepSize;\n  }\n\n  void main(void) {\n    float alphaX = nearGrid(32.0, originalPosition.x);\n    float alphaY = nearGrid(32.0, originalPosition.y);\n    bool beyondX = (originalPosition.x / 32.0) >= 64.0;\n    bool beyondY = (originalPosition.y / 32.0) >= 64.0;\n    float alpha = 0.0;\n\n    if (!beyondX && !beyondY) {\n       alpha = max(alphaX, alphaY);\n    } else if (beyondX && !beyondY) {\n       alpha = alphaX;\n    } else if (beyondY && !beyondX) {\n       alpha = alphaY;\n    } else {\n       alpha = min(alphaX, alphaY);\n    }\n\n    alpha = pow(2.0, 10.0 * (alpha - 1.0));\n\n    gl_FragColor = vec4(color.rgb, color.a * alpha);\n  }\n";
 		mapTileGridVertexShaderSource = "\n  attribute vec3 vertexPosition;\n\n  uniform mat4 viewMatrix;\n  uniform mat4 projectionMatrix;\n\n  varying float height;\n\n  void main(void) {\n    gl_Position = projectionMatrix * viewMatrix * vec4(vertexPosition.xy, 0.0, 1.0);\n    height = vertexPosition.z;\n  }\n";
 		mapTileGridFragmentShaderSource = "\n  #ifdef GL_ES\n    precision mediump float;\n  #endif\n\n  varying float height;\n\n  void main(void) {\n    gl_FragColor = vec4(0.0, 0.8, 0.0, height);\n  }\n";
 		mapTileVertexShaderSource = "\n  attribute vec3 vertexPosition;\n\n  uniform mat4 modelMatrix;\n  uniform mat4 viewMatrix;\n  uniform mat4 projectionMatrix;\n  uniform mat4 uvMatrix;\n\n  varying vec2 uv;\n\n  void main(void) {\n    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition, 1.0);\n\n    uv = (uvMatrix * vec4(vertexPosition, 1.0)).xy;\n  }\n";
@@ -31952,6 +31953,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		_tmp$1 = y;
 		app.mouseX = _tmp;
 		app.mouseY = _tmp$1;
+		$r = app.mouseMoveCapture(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_tuple = app.unprojectPixel(app.mouseX, app.mouseY);
 		worldMouseX = _tuple[0];
 		worldMouseY = _tuple[1];
@@ -31963,8 +31965,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		_tmp$5 = 255 - ((_r$1 = (($fround($fround(worldMouseY / 32) * 256) >> 0)) % 256, _r$1 === _r$1 ? _r$1 : $throwRuntimeError("integer divide by zero"))) >> 0;
 		tileY = _tmp$4;
 		subY = _tmp$5;
-		$r = app.viewModel.SetPointerAt(tileX, tileY, subX, subY); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = app.mouseMoveCapture(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = app.viewModel.SetPointerAt(tileX, tileY, subX, subY); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseMove }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tmp$4 = _tmp$4; $f._tmp$5 = _tmp$5; $f._tuple = _tuple; $f.app = app; $f.subX = subX; $f.subY = subY; $f.tileX = tileX; $f.tileY = tileY; $f.worldMouseX = worldMouseX; $f.worldMouseY = worldMouseY; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.onMouseMove = function(x, y) { return this.$val.onMouseMove(x, y); };

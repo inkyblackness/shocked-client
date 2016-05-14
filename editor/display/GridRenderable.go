@@ -49,7 +49,21 @@ var gridFragmentShaderSource = `
   }
 
   void main(void) {
-    float alpha = max(nearGrid(32.0, originalPosition.x), nearGrid(32.0, originalPosition.y));
+    float alphaX = nearGrid(32.0, originalPosition.x);
+    float alphaY = nearGrid(32.0, originalPosition.y);
+    bool beyondX = (originalPosition.x / 32.0) >= 64.0;
+    bool beyondY = (originalPosition.y / 32.0) >= 64.0;
+    float alpha = 0.0;
+
+    if (!beyondX && !beyondY) {
+       alpha = max(alphaX, alphaY);
+    } else if (beyondX && !beyondY) {
+       alpha = alphaX;
+    } else if (beyondY && !beyondX) {
+       alpha = alphaY;
+    } else {
+       alpha = min(alphaX, alphaY);
+    }
 
     alpha = pow(2.0, 10.0 * (alpha - 1.0));
 
@@ -95,15 +109,16 @@ func NewGridRenderable(gl opengl.OpenGl) *GridRenderable {
 
 	renderable.withShader(func() {
 		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.vertexPositionBuffer)
-		limit := float32(32.0 * 64.0)
+		half := float32(16.0)
+		limit := float32(32.0*64.0 + half)
 		var vertices = []float32{
-			0.0, 0.0, 0.0,
-			limit, 0.0, 0.0,
+			-half, -half, 0.0,
+			limit, -half, 0.0,
 			limit, limit, 0.0,
 
 			limit, limit, 0.0,
-			0.0, limit, 0.0,
-			0.0, 0.0, 0.0}
+			-half, limit, 0.0,
+			-half, -half, 0.0}
 		gl.BufferData(opengl.ARRAY_BUFFER, len(vertices)*4, vertices, opengl.STATIC_DRAW)
 	})
 
