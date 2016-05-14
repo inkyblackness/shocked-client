@@ -34,9 +34,16 @@ func (tileMap *TileMap) ClearSelection() {
 	tileMap.selectedTiles = make(map[TileCoordinate]*Tile)
 }
 
+// IsSelected returns true if the tile at given coordinate is currently selected.
+func (tileMap *TileMap) IsSelected(coord TileCoordinate) bool {
+	_, isSelected := tileMap.selectedTiles[coord]
+
+	return isSelected
+}
+
 // SetSelected sets the selection state of the tile at given coordinate.
 func (tileMap *TileMap) SetSelected(coord TileCoordinate, value bool) {
-	_, isSelected := tileMap.selectedTiles[coord]
+	isSelected := tileMap.IsSelected(coord)
 	tile, exists := tileMap.tiles[coord]
 
 	if isSelected && !value {

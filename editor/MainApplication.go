@@ -181,7 +181,7 @@ func (app *MainApplication) onMouseMove(x float32, y float32) {
 	app.viewModel.SetPointerAt(tileX, tileY, subX, subY)
 }
 
-func (app *MainApplication) onMouseButtonDown(mouseButton uint32) {
+func (app *MainApplication) onMouseButtonDown(mouseButton uint32, modifierMask uint32) {
 	if (mouseButton & env.MousePrimary) == env.MousePrimary {
 		lastMouseX, lastMouseY := app.mouseX, app.mouseY
 
@@ -197,11 +197,11 @@ func (app *MainApplication) onMouseButtonDown(mouseButton uint32) {
 	}
 }
 
-func (app *MainApplication) onMouseButtonUp(mouseButton uint32) {
+func (app *MainApplication) onMouseButtonUp(mouseButton uint32, modifierMask uint32) {
 	if (mouseButton & env.MousePrimary) == env.MousePrimary {
 		app.mouseMoveCapture = func() {}
 		if !app.mouseDragged {
-			app.onMouseClick()
+			app.onMouseClick(modifierMask)
 		}
 	}
 }
@@ -216,13 +216,18 @@ func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 	}
 }
 
-func (app *MainApplication) onMouseClick() {
+func (app *MainApplication) onMouseClick(modifierMask uint32) {
 	worldMouseX, worldMouseY := app.unprojectPixel(app.mouseX, app.mouseY)
 	tileX, _ := int(worldMouseX/TileBaseLength), (int(worldMouseX/TileBaseLength*256.0))%256
 	tileY, _ := int(TilesPerMapSide)-1-int(worldMouseY/TileBaseLength), 255-((int(worldMouseY/TileBaseLength*256.0))%256)
 
-	app.tileMap.ClearSelection()
-	app.tileMap.SetSelected(editormodel.TileCoordinateOf(tileX, tileY), true)
+	tileCoord := editormodel.TileCoordinateOf(tileX, tileY)
+	if (modifierMask & env.ModControl) != 0 {
+		app.tileMap.SetSelected(tileCoord, !app.tileMap.IsSelected(tileCoord))
+	} else {
+		app.tileMap.ClearSelection()
+		app.tileMap.SetSelected(tileCoord, true)
+	}
 }
 
 func (app *MainApplication) animatedPaletteIndex(index int) int {
