@@ -38,6 +38,7 @@ func (visitor *ViewModelTexterVisitor) BoolValue(node *viewmodel.BoolValueNode) 
 
 // StringValue is the viewmodel.NodeVisitor implementation.
 func (visitor *ViewModelTexterVisitor) StringValue(node *viewmodel.StringValueNode) {
+	visitor.instance = NewStringValueNodeTexter(node, visitor.listener)
 }
 
 // Container is the viewmodel.NodeVisitor implementation.

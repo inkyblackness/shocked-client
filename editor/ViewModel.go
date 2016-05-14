@@ -1,15 +1,21 @@
 package editor
 
 import (
+	"fmt"
+
 	"github.com/inkyblackness/shocked-client/viewmodel"
 )
 
 // ViewModel contains the raw view model node structure, wrapped with simple accessors.
 type ViewModel struct {
-	root *viewmodel.SectionSelectionNode
+	root *viewmodel.SectionNode
+
+	mainSection *viewmodel.SectionSelectionNode
 
 	projects *viewmodel.ValueSelectionNode
 	levels   *viewmodel.ValueSelectionNode
+
+	pointerCoordinate *viewmodel.StringValueNode
 }
 
 // NewViewModel returns a new ViewModel instance.
@@ -30,9 +36,15 @@ func NewViewModel() *ViewModel {
 	})
 	mapSection := viewmodel.NewSectionNode("Map", []viewmodel.Node{mapSectionSelection}, projectSelected)
 
-	vm.root = viewmodel.NewSectionSelectionNode("Section", map[string]*viewmodel.SectionNode{
+	vm.mainSection = viewmodel.NewSectionSelectionNode("Section", map[string]*viewmodel.SectionNode{
 		"Project": projectSection,
 		"Map":     mapSection}, "Project")
+
+	vm.pointerCoordinate = viewmodel.NewStringValueNode("Pointer at", "")
+
+	vm.root = viewmodel.NewSectionNode("",
+		[]viewmodel.Node{vm.mainSection, vm.pointerCoordinate},
+		viewmodel.NewBoolValueNode("", true))
 
 	return vm
 }
@@ -44,7 +56,7 @@ func (vm *ViewModel) Root() viewmodel.Node {
 
 // SelectMapSection ensures the map controls are selected.
 func (vm *ViewModel) SelectMapSection() {
-	vm.root.Selection().Selected().Set("Map")
+	vm.mainSection.Selection().Selected().Set("Map")
 }
 
 // SelectedProject returns the identifier of the currently selected project.
@@ -75,4 +87,14 @@ func (vm *ViewModel) OnSelectedLevelChanged(callback func(levelID string)) {
 // SetLevels sets the list of available level identifier.
 func (vm *ViewModel) SetLevels(levelIDs []string) {
 	vm.levels.SetValues(levelIDs)
+}
+
+// SetPointerAt registers where the pointer is currently hovering at.
+func (vm *ViewModel) SetPointerAt(tileX, tileY int, subX, subY int) {
+	text := ""
+
+	if (tileX >= 0) && (tileY >= 0) && (tileX < int(TilesPerMapSide)) && (tileY < int(TilesPerMapSide)) {
+		text = fmt.Sprintf("Tile: %2d/%2d Sub: %3d/%3d", tileX, tileY, subX, subY)
+	}
+	vm.pointerCoordinate.Set(text)
 }

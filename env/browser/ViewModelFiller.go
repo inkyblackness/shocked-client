@@ -76,7 +76,7 @@ func (filler *viewModelFiller) BoolValue(node *viewmodel.BoolValueNode) {
 	observable := ko.NewObservable(node.Get())
 
 	filler.object = observable.ToJS()
-	filler.object.Set("type", "observable")
+	filler.object.Set("type", "bool")
 	filler.object.Set("label", node.Label())
 	node.Subscribe(func(newValue bool) {
 		if observable.Get().Bool() != newValue {
@@ -95,9 +95,10 @@ func (filler *viewModelFiller) BoolValue(node *viewmodel.BoolValueNode) {
 func (filler *viewModelFiller) StringValue(node *viewmodel.StringValueNode) {
 	observable := ko.NewObservable(node.Get())
 
-	filler.object = observable.ToJS()
-	filler.object.Set("type", "observable")
+	filler.object = js.Global.Get("Object").New()
+	filler.object.Set("type", "string")
 	filler.object.Set("label", node.Label())
+	filler.object.Set("data", observable.ToJS())
 	node.Subscribe(func(newValue string) {
 		if observable.Get().String() != newValue {
 			observable.Set(newValue)
