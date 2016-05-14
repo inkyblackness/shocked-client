@@ -22,6 +22,14 @@ func NewTileMap(width, height int) *TileMap {
 	return tileMap
 }
 
+// Clear resets the map to the initial state.
+func (tileMap *TileMap) Clear() {
+	tileMap.ClearSelection()
+	for _, tile := range tileMap.tiles {
+		tile.SetProperties(nil)
+	}
+}
+
 // ForEachSelected iterates through all selected tiles and calls the specified callback.
 func (tileMap *TileMap) ForEachSelected(callback func(coord TileCoordinate, tile *Tile)) {
 	for coord, tile := range tileMap.selectedTiles {

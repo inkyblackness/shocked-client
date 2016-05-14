@@ -298,6 +298,9 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 	if app.tileGridMapRenderable != nil {
 		app.tileGridMapRenderable.Clear()
 	}
+	app.tileMap.Clear()
+	app.onTileSelectionChanged()
+
 	if projectID != "" && levelIDError == nil {
 		app.store.Tiles(projectID, "archive", int(levelID), func(data model.Tiles) {
 			for y, row := range data.Table {

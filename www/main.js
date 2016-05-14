@@ -30492,6 +30492,26 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 		return tileMap;
 	};
 	$pkg.NewTileMap = NewTileMap;
+	TileMap.ptr.prototype.Clear = function() {
+		var $ptr, _entry, _i, _keys, _ref, tile, tileMap;
+		tileMap = this;
+		tileMap.ClearSelection();
+		_ref = tileMap.tiles;
+		_i = 0;
+		_keys = $keys(_ref);
+		while (true) {
+			if (!(_i < _keys.length)) { break; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				continue;
+			}
+			tile = _entry.v;
+			tile.SetProperties(ptrType.nil);
+			_i++;
+		}
+	};
+	TileMap.prototype.Clear = function() { return this.$val.Clear(); };
 	TileMap.ptr.prototype.ForEachSelected = function(callback) {
 		var $ptr, _entry, _i, _keys, _ref, callback, coord, tile, tileMap, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _ref = $f._ref; callback = $f.callback; coord = $f.coord; tile = $f.tile; tileMap = $f.tileMap; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -30554,7 +30574,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 	ptrType$2.methods = [{prop: "Reset", name: "Reset", pkg: "", typ: $funcType([], [], false)}, {prop: "Texture", name: "Texture", pkg: "", typ: $funcType([$Int], [graphics.Texture], false)}, {prop: "SetTexture", name: "SetTexture", pkg: "", typ: $funcType([$Int, graphics.Texture], [], false)}];
 	ptrType$1.methods = [{prop: "SetProperties", name: "SetProperties", pkg: "", typ: $funcType([ptrType], [], false)}, {prop: "Properties", name: "Properties", pkg: "", typ: $funcType([], [ptrType], false)}];
 	TileCoordinate.methods = [{prop: "XY", name: "XY", pkg: "", typ: $funcType([], [$Int, $Int], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
-	ptrType$3.methods = [{prop: "ForEachSelected", name: "ForEachSelected", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "ClearSelection", name: "ClearSelection", pkg: "", typ: $funcType([], [], false)}, {prop: "IsSelected", name: "IsSelected", pkg: "", typ: $funcType([TileCoordinate], [$Bool], false)}, {prop: "SetSelected", name: "SetSelected", pkg: "", typ: $funcType([TileCoordinate, $Bool], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([TileCoordinate], [ptrType$1], false)}];
+	ptrType$3.methods = [{prop: "Clear", name: "Clear", pkg: "", typ: $funcType([], [], false)}, {prop: "ForEachSelected", name: "ForEachSelected", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "ClearSelection", name: "ClearSelection", pkg: "", typ: $funcType([], [], false)}, {prop: "IsSelected", name: "IsSelected", pkg: "", typ: $funcType([TileCoordinate], [$Bool], false)}, {prop: "SetSelected", name: "SetSelected", pkg: "", typ: $funcType([TileCoordinate, $Bool], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([TileCoordinate], [ptrType$1], false)}];
 	TextureQuery.init([$Int], [], false);
 	BufferedTextureStore.init([{prop: "query", name: "query", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: TextureQuery, tag: ""}, {prop: "textures", name: "textures", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: mapType, tag: ""}]);
 	Tile.init([{prop: "properties", name: "properties", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: ptrType, tag: ""}]);
@@ -32581,9 +32601,11 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		if (!(app[0].tileGridMapRenderable === ptrType$8.nil)) {
 			app[0].tileGridMapRenderable.Clear();
 		}
-		/* */ if (!(projectID === "") && $interfaceIsEqual(levelIDError, $ifaceNil)) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (!(projectID === "") && $interfaceIsEqual(levelIDError, $ifaceNil)) { */ case 1:
+		app[0].tileMap.Clear();
+		$r = app[0].onTileSelectionChanged(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ if (!(projectID === "") && $interfaceIsEqual(levelIDError, $ifaceNil)) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!(projectID === "") && $interfaceIsEqual(levelIDError, $ifaceNil)) { */ case 2:
 			$r = app[0].store.Tiles(projectID, "archive", ((levelID.$low + ((levelID.$high >> 31) * 4294967296)) >> 0), (function(app) { return function(data) {
 				var $ptr, _i, _ref, coord, data, properties, row, x, y;
 				data = $clone(data, model.Tiles);
@@ -32605,12 +32627,12 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 					}
 					_i++;
 				}
-			}; })(app), app[0].simpleStoreFailure("Tiles")); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			}; })(app), app[0].simpleStoreFailure("Tiles")); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$r = app[0].store.LevelTextures(projectID, "archive", ((levelID.$low + ((levelID.$high >> 31) * 4294967296)) >> 0), (function(app) { return function(textureIDs) {
 				var $ptr, textureIDs;
 				app[0].levelTextures = textureIDs;
-			}; })(app), app[0].simpleStoreFailure("LevelTextures")); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* } */ case 2:
+			}; })(app), app[0].simpleStoreFailure("LevelTextures")); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 3:
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onSelectedLevelChanged }; } $f.$ptr = $ptr; $f._tuple = _tuple; $f.app = app; $f.levelID = levelID; $f.levelIDError = levelIDError; $f.levelIDString = levelIDString; $f.projectID = projectID; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.onSelectedLevelChanged = function(levelIDString) { return this.$val.onSelectedLevelChanged(levelIDString); };
