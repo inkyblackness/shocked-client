@@ -52,3 +52,8 @@ func (tileMap *TileMap) SetSelected(coord TileCoordinate, value bool) {
 		tileMap.selectedTiles[coord] = tile
 	}
 }
+
+// Tile returns the tile at the given coordinate
+func (tileMap *TileMap) Tile(coord TileCoordinate) *Tile {
+	return tileMap.tiles[coord]
+}

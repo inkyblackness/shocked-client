@@ -15,6 +15,7 @@ import (
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/opengl"
+	"github.com/inkyblackness/shocked-client/util"
 	"github.com/inkyblackness/shocked-client/viewmodel"
 	"github.com/inkyblackness/shocked-model"
 )
@@ -228,6 +229,7 @@ func (app *MainApplication) onMouseClick(modifierMask uint32) {
 		app.tileMap.ClearSelection()
 		app.tileMap.SetSelected(tileCoord, true)
 	}
+	app.onTileSelectionChanged()
 }
 
 func (app *MainApplication) animatedPaletteIndex(index int) int {
@@ -300,9 +302,11 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 		app.store.Tiles(projectID, "archive", int(levelID), func(data model.Tiles) {
 			for y, row := range data.Table {
 				for x := 0; x < len(row); x++ {
+					coord := editormodel.TileCoordinateOf(x, y)
 					properties := &row[x].Properties
 					app.tileTextureMapRenderable.SetTile(x, 63-y, properties)
 					app.tileGridMapRenderable.SetTile(x, 63-y, properties)
+					app.tileMap.Tile(coord).SetProperties(properties)
 				}
 			}
 		}, app.simpleStoreFailure("Tiles"))
@@ -328,4 +332,14 @@ func (app *MainApplication) levelTexture(index int) (texture graphics.Texture) {
 	}
 
 	return
+}
+
+func (app *MainApplication) onTileSelectionChanged() {
+	tileType := util.NewValueUnifier("")
+
+	app.tileMap.ForEachSelected(func(coord editormodel.TileCoordinate, tile *editormodel.Tile) {
+		tileType.Add(string(*tile.Properties().Type))
+	})
+
+	app.viewModel.Tiles().TileType().Selected().Set(tileType.Value().(string))
 }

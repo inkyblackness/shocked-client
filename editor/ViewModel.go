@@ -16,6 +16,8 @@ type ViewModel struct {
 	levels   *viewmodel.ValueSelectionNode
 
 	pointerCoordinate *viewmodel.StringValueNode
+
+	tiles *TilesViewModel
 }
 
 // NewViewModel returns a new ViewModel instance.
@@ -26,9 +28,11 @@ func NewViewModel() *ViewModel {
 	projectSection := viewmodel.NewSectionNode("Project", []viewmodel.Node{vm.projects}, viewmodel.NewBoolValueNode("Available", true))
 
 	vm.levels = viewmodel.NewValueSelectionNode("Level", nil, "")
+	vm.tiles = NewTilesViewModel()
 	mapControlSection := viewmodel.NewSectionNode("Control", []viewmodel.Node{vm.levels}, viewmodel.NewBoolValueNode("", true))
 	mapSectionSelection := viewmodel.NewSectionSelectionNode("Map Section", map[string]*viewmodel.SectionNode{
-		"Control": mapControlSection}, "Control")
+		"Control": mapControlSection,
+		"Tiles":   vm.tiles.root}, "Control")
 
 	projectSelected := viewmodel.NewBoolValueNode("Available", false)
 	vm.projects.Selected().Subscribe(func(projectID string) {
@@ -97,4 +101,9 @@ func (vm *ViewModel) SetPointerAt(tileX, tileY int, subX, subY int) {
 		text = fmt.Sprintf("Tile: %2d/%2d Sub: %3d/%3d", tileX, tileY, subX, subY)
 	}
 	vm.pointerCoordinate.Set(text)
+}
+
+// Tiles returns the sub-section about tiles.
+func (vm *ViewModel) Tiles() *TilesViewModel {
+	return vm.tiles
 }
