@@ -64,6 +64,10 @@ func NewMainApplication(store DataStore) *MainApplication {
 	app.viewModel.OnSelectedProjectChanged(app.onSelectedProjectChanged)
 	app.viewModel.OnSelectedLevelChanged(app.onSelectedLevelChanged)
 	app.viewModel.Tiles().TileType().Selected().Subscribe(app.onTileTypeChanged)
+	app.viewModel.Tiles().FloorHeight().Selected().Subscribe(app.onTileFloorHeightChanged)
+	app.viewModel.Tiles().CeilingHeight().Selected().Subscribe(app.onTileCeilingHeightChanged)
+	app.viewModel.Tiles().SlopeHeight().Selected().Subscribe(app.onTileSlopeHeightChanged)
+	app.viewModel.Tiles().SlopeControl().Selected().Subscribe(app.onTileSlopeControlChanged)
 
 	app.activeLevelID = -1
 	app.textureStore = editormodel.NewBufferedTextureStore(app.loadTexture)
@@ -411,13 +415,25 @@ func (app *MainApplication) requestSelectedTilesChange(modifier func(*model.Tile
 
 func (app *MainApplication) onTileSelectionChanged() {
 	tileType := util.NewValueUnifier("")
+	floorHeight := util.NewValueUnifier("")
+	ceilingHeight := util.NewValueUnifier("")
+	slopeHeight := util.NewValueUnifier("")
+	slopeControl := util.NewValueUnifier("")
 
 	app.tileMap.ForEachSelected(func(coord editormodel.TileCoordinate, tile *editormodel.Tile) {
 		tileType.Add(string(*tile.Properties().Type))
+		floorHeight.Add(fmt.Sprintf("%d", *tile.Properties().FloorHeight))
+		ceilingHeight.Add(fmt.Sprintf("%d", 32-*tile.Properties().CeilingHeight))
+		slopeHeight.Add(fmt.Sprintf("%d", *tile.Properties().SlopeHeight))
+		slopeControl.Add(string(*tile.Properties().SlopeControl))
 	})
 
 	app.updateViewModel(func() {
 		app.viewModel.Tiles().TileType().Selected().Set(tileType.Value().(string))
+		app.viewModel.Tiles().FloorHeight().Selected().Set(floorHeight.Value().(string))
+		app.viewModel.Tiles().CeilingHeight().Selected().Set(ceilingHeight.Value().(string))
+		app.viewModel.Tiles().SlopeHeight().Selected().Set(slopeHeight.Value().(string))
+		app.viewModel.Tiles().SlopeControl().Selected().Set(slopeControl.Value().(string))
 	})
 }
 
@@ -426,6 +442,48 @@ func (app *MainApplication) onTileTypeChanged(newType string) {
 		app.requestSelectedTilesChange(func(properties *model.TileProperties) {
 			properties.Type = new(model.TileType)
 			*properties.Type = model.TileType(newType)
+		}, true)
+	}
+}
+
+func (app *MainApplication) onTileFloorHeightChanged(newValueString string) {
+	newValue, err := strconv.ParseInt(newValueString, 10, 16)
+
+	if newValueString != "" && err == nil {
+		app.requestSelectedTilesChange(func(properties *model.TileProperties) {
+			properties.FloorHeight = new(model.HeightUnit)
+			*properties.FloorHeight = model.HeightUnit(int(newValue))
+		}, true)
+	}
+}
+
+func (app *MainApplication) onTileCeilingHeightChanged(newValueString string) {
+	newValue, err := strconv.ParseInt(newValueString, 10, 16)
+
+	if newValueString != "" && err == nil {
+		app.requestSelectedTilesChange(func(properties *model.TileProperties) {
+			properties.CeilingHeight = new(model.HeightUnit)
+			*properties.CeilingHeight = model.HeightUnit(32 - int(newValue))
+		}, true)
+	}
+}
+
+func (app *MainApplication) onTileSlopeHeightChanged(newValueString string) {
+	newValue, err := strconv.ParseInt(newValueString, 10, 16)
+
+	if newValueString != "" && err == nil {
+		app.requestSelectedTilesChange(func(properties *model.TileProperties) {
+			properties.SlopeHeight = new(model.HeightUnit)
+			*properties.SlopeHeight = model.HeightUnit(int(newValue))
+		}, true)
+	}
+}
+
+func (app *MainApplication) onTileSlopeControlChanged(newValue string) {
+	if newValue != "" {
+		app.requestSelectedTilesChange(func(properties *model.TileProperties) {
+			properties.SlopeControl = new(model.SlopeControl)
+			*properties.SlopeControl = model.SlopeControl(newValue)
 		}, true)
 	}
 }

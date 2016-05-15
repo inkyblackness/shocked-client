@@ -33391,7 +33391,7 @@ $packages["github.com/inkyblackness/shocked-client/util"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
-	var $pkg = {}, $init, bytes, base64, json, fmt, mgl32, camera, display, model$1, env, graphics, opengl, util, viewmodel, model, os, strconv, time, FailureFunc, DataStore, MainApplication, RestDataStore, RestTransport, TilesViewModel, ViewModel, ptrType, ptrType$1, ptrType$2, ptrType$3, sliceType, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, sliceType$1, sliceType$2, arrayType, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, sliceType$3, sliceType$4, sliceType$5, sliceType$6, ptrType$15, ptrType$16, sliceType$7, ptrType$17, ptrType$18, ptrType$19, funcType, funcType$1, funcType$2, funcType$3, funcType$4, ptrType$20, funcType$5, funcType$6, ptrType$21, funcType$7, funcType$8, ptrType$22, ptrType$23, funcType$9, sliceType$8, NewMainApplication, NewRestDataStore, NewTilesViewModel, NewViewModel;
+	var $pkg = {}, $init, bytes, base64, json, fmt, mgl32, camera, display, model$1, env, graphics, opengl, util, viewmodel, model, os, strconv, time, FailureFunc, DataStore, MainApplication, RestDataStore, RestTransport, TilesViewModel, ViewModel, ptrType, ptrType$1, ptrType$2, ptrType$3, sliceType, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, sliceType$1, sliceType$2, arrayType, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, sliceType$3, sliceType$4, sliceType$5, sliceType$6, ptrType$15, ptrType$16, sliceType$7, ptrType$17, ptrType$18, ptrType$19, funcType, funcType$1, funcType$2, funcType$3, funcType$4, ptrType$20, funcType$5, funcType$6, ptrType$21, funcType$7, funcType$8, ptrType$22, ptrType$23, funcType$9, sliceType$8, NewMainApplication, NewRestDataStore, heightsForSelection, NewTilesViewModel, NewViewModel;
 	bytes = $packages["bytes"];
 	base64 = $packages["encoding/base64"];
 	json = $packages["encoding/json"];
@@ -33468,15 +33468,23 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.transport = transport_;
 	});
 	RestTransport = $pkg.RestTransport = $newType(8, $kindInterface, "editor.RestTransport", "RestTransport", "github.com/inkyblackness/shocked-client/editor", null);
-	TilesViewModel = $pkg.TilesViewModel = $newType(0, $kindStruct, "editor.TilesViewModel", "TilesViewModel", "github.com/inkyblackness/shocked-client/editor", function(root_, tileType_) {
+	TilesViewModel = $pkg.TilesViewModel = $newType(0, $kindStruct, "editor.TilesViewModel", "TilesViewModel", "github.com/inkyblackness/shocked-client/editor", function(root_, tileType_, floorHeight_, ceilingHeight_, slopeHeight_, slopeControl_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.root = ptrType$15.nil;
 			this.tileType = ptrType$16.nil;
+			this.floorHeight = ptrType$16.nil;
+			this.ceilingHeight = ptrType$16.nil;
+			this.slopeHeight = ptrType$16.nil;
+			this.slopeControl = ptrType$16.nil;
 			return;
 		}
 		this.root = root_;
 		this.tileType = tileType_;
+		this.floorHeight = floorHeight_;
+		this.ceilingHeight = ceilingHeight_;
+		this.slopeHeight = slopeHeight_;
+		this.slopeControl = slopeControl_;
 	});
 	ViewModel = $pkg.ViewModel = $newType(0, $kindStruct, "editor.ViewModel", "ViewModel", "github.com/inkyblackness/shocked-client/editor", function(root_, mainSection_, projects_, levels_, pointerCoordinate_, tiles_) {
 		this.$val = this;
@@ -33541,16 +33549,21 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	funcType$9 = $funcType([$String], [], false);
 	sliceType$8 = $sliceType($Uint8);
 	NewMainApplication = function(store) {
-		var $ptr, app, camLimit, store, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; app = $f.app; camLimit = $f.camLimit; store = $f.store; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, app, camLimit, store, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; camLimit = $f.camLimit; store = $f.store; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = [app];
 		camLimit = 2016;
-		app[0] = new MainApplication.ptr($clone(time.Now(), time.Time), new $Int64(0, 0), store, NewViewModel(), false, $ifaceNil, $ifaceNil, 0, 0, false, (function(app) { return function() {
+		_r = NewViewModel(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		app[0] = new MainApplication.ptr($clone(time.Now(), time.Time), new $Int64(0, 0), store, _r, false, $ifaceNil, $ifaceNil, 0, 0, false, (function(app) { return function() {
 			var $ptr;
 		}; })(app), camera.NewLimited(-2, 4, 0, camLimit), 0, ptrType$3.nil, sliceType.nil, ptrType$4.nil, ptrType$5.nil, ptrType$6.nil, ptrType$7.nil, ptrType$8.nil, ptrType$9.nil);
 		app[0].viewModel.OnSelectedProjectChanged($methodVal(app[0], "onSelectedProjectChanged"));
 		app[0].viewModel.OnSelectedLevelChanged($methodVal(app[0], "onSelectedLevelChanged"));
 		app[0].viewModel.Tiles().TileType().Selected().Subscribe($methodVal(app[0], "onTileTypeChanged"));
+		app[0].viewModel.Tiles().FloorHeight().Selected().Subscribe($methodVal(app[0], "onTileFloorHeightChanged"));
+		app[0].viewModel.Tiles().CeilingHeight().Selected().Subscribe($methodVal(app[0], "onTileCeilingHeightChanged"));
+		app[0].viewModel.Tiles().SlopeHeight().Selected().Subscribe($methodVal(app[0], "onTileSlopeHeightChanged"));
+		app[0].viewModel.Tiles().SlopeControl().Selected().Subscribe($methodVal(app[0], "onTileSlopeControlChanged"));
 		app[0].activeLevelID = -1;
 		app[0].textureStore = model$1.NewBufferedTextureStore($methodVal(app[0], "loadTexture"));
 		app[0].tileMap = model$1.NewTileMap(64, 64);
@@ -33565,9 +33578,9 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 				$r = app[0].viewModel.SelectMapSection(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			/* } */ case 3:
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.projectIDs = projectIDs; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(app), app[0].simpleStoreFailure("Projects")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		}; })(app), app[0].simpleStoreFailure("Projects")); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		return app[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewMainApplication }; } $f.$ptr = $ptr; $f.app = app; $f.camLimit = camLimit; $f.store = store; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewMainApplication }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.camLimit = camLimit; $f.store = store; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewMainApplication = NewMainApplication;
 	MainApplication.ptr.prototype.ViewModel = function() {
@@ -34113,24 +34126,45 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	MainApplication.prototype.requestSelectedTilesChange = function(modifier, updateNeighbours) { return this.$val.requestSelectedTilesChange(modifier, updateNeighbours); };
 	MainApplication.ptr.prototype.onTileSelectionChanged = function() {
-		var $ptr, app, tileType, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; app = $f.app; tileType = $f.tileType; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, app, ceilingHeight, floorHeight, slopeControl, slopeHeight, tileType, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; app = $f.app; ceilingHeight = $f.ceilingHeight; floorHeight = $f.floorHeight; slopeControl = $f.slopeControl; slopeHeight = $f.slopeHeight; tileType = $f.tileType; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = [app];
+		ceilingHeight = [ceilingHeight];
+		floorHeight = [floorHeight];
+		slopeControl = [slopeControl];
+		slopeHeight = [slopeHeight];
 		tileType = [tileType];
 		app[0] = this;
 		tileType[0] = util.NewValueUnifier(new $String(""));
-		$r = app[0].tileMap.ForEachSelected((function(app, tileType) { return function(coord, tile) {
-			var $ptr, coord, tile;
+		floorHeight[0] = util.NewValueUnifier(new $String(""));
+		ceilingHeight[0] = util.NewValueUnifier(new $String(""));
+		slopeHeight[0] = util.NewValueUnifier(new $String(""));
+		slopeControl[0] = util.NewValueUnifier(new $String(""));
+		$r = app[0].tileMap.ForEachSelected((function(app, ceilingHeight, floorHeight, slopeControl, slopeHeight, tileType) { return function $b(coord, tile) {
+			var $ptr, _r, _r$1, _r$2, coord, tile, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; coord = $f.coord; tile = $f.tile; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			coord = $clone(coord, model$1.TileCoordinate);
 			tileType[0].Add(new $String(tile.Properties().Type.$get()));
-		}; })(app, tileType)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = app[0].updateViewModel((function(app, tileType) { return function $b() {
+			_r = fmt.Sprintf("%d", new sliceType$2([new model.HeightUnit(tile.Properties().FloorHeight.$get())])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$r = floorHeight[0].Add(new $String(_r)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$1 = fmt.Sprintf("%d", new sliceType$2([new model.HeightUnit((32 - tile.Properties().CeilingHeight.$get() >> 0))])); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$r = ceilingHeight[0].Add(new $String(_r$1)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$2 = fmt.Sprintf("%d", new sliceType$2([new model.HeightUnit(tile.Properties().SlopeHeight.$get())])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			$r = slopeHeight[0].Add(new $String(_r$2)); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			slopeControl[0].Add(new $String(tile.Properties().SlopeControl.$get()));
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.coord = coord; $f.tile = tile; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(app, ceilingHeight, floorHeight, slopeControl, slopeHeight, tileType)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = app[0].updateViewModel((function(app, ceilingHeight, floorHeight, slopeControl, slopeHeight, tileType) { return function $b() {
 			var $ptr, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			$r = app[0].viewModel.Tiles().TileType().Selected().Set($assertType(tileType[0].Value(), $String)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = app[0].viewModel.Tiles().FloorHeight().Selected().Set($assertType(floorHeight[0].Value(), $String)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = app[0].viewModel.Tiles().CeilingHeight().Selected().Set($assertType(ceilingHeight[0].Value(), $String)); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = app[0].viewModel.Tiles().SlopeHeight().Selected().Set($assertType(slopeHeight[0].Value(), $String)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = app[0].viewModel.Tiles().SlopeControl().Selected().Set($assertType(slopeControl[0].Value(), $String)); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(app, tileType)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onTileSelectionChanged }; } $f.$ptr = $ptr; $f.app = app; $f.tileType = tileType; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(app, ceilingHeight, floorHeight, slopeControl, slopeHeight, tileType)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onTileSelectionChanged }; } $f.$ptr = $ptr; $f.app = app; $f.ceilingHeight = ceilingHeight; $f.floorHeight = floorHeight; $f.slopeControl = slopeControl; $f.slopeHeight = slopeHeight; $f.tileType = tileType; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.onTileSelectionChanged = function() { return this.$val.onTileSelectionChanged(); };
 	MainApplication.ptr.prototype.onTileTypeChanged = function(newType) {
@@ -34150,6 +34184,83 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onTileTypeChanged }; } $f.$ptr = $ptr; $f.app = app; $f.newType = newType; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.onTileTypeChanged = function(newType) { return this.$val.onTileTypeChanged(newType); };
+	MainApplication.ptr.prototype.onTileFloorHeightChanged = function(newValueString) {
+		var $ptr, _tuple, app, err, newValue, newValueString, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _tuple = $f._tuple; app = $f.app; err = $f.err; newValue = $f.newValue; newValueString = $f.newValueString; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		newValue = [newValue];
+		app = this;
+		_tuple = strconv.ParseInt(newValueString, 10, 16);
+		newValue[0] = _tuple[0];
+		err = _tuple[1];
+		/* */ if (!(newValueString === "") && $interfaceIsEqual(err, $ifaceNil)) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!(newValueString === "") && $interfaceIsEqual(err, $ifaceNil)) { */ case 1:
+			$r = app.requestSelectedTilesChange((function(newValue) { return function(properties) {
+				var $ptr, properties;
+				properties.FloorHeight = $newDataPointer(0, ptrType$11);
+				properties.FloorHeight.$set((((newValue[0].$low + ((newValue[0].$high >> 31) * 4294967296)) >> 0) >> 0));
+			}; })(newValue), true); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onTileFloorHeightChanged }; } $f.$ptr = $ptr; $f._tuple = _tuple; $f.app = app; $f.err = err; $f.newValue = newValue; $f.newValueString = newValueString; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MainApplication.prototype.onTileFloorHeightChanged = function(newValueString) { return this.$val.onTileFloorHeightChanged(newValueString); };
+	MainApplication.ptr.prototype.onTileCeilingHeightChanged = function(newValueString) {
+		var $ptr, _tuple, app, err, newValue, newValueString, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _tuple = $f._tuple; app = $f.app; err = $f.err; newValue = $f.newValue; newValueString = $f.newValueString; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		newValue = [newValue];
+		app = this;
+		_tuple = strconv.ParseInt(newValueString, 10, 16);
+		newValue[0] = _tuple[0];
+		err = _tuple[1];
+		/* */ if (!(newValueString === "") && $interfaceIsEqual(err, $ifaceNil)) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!(newValueString === "") && $interfaceIsEqual(err, $ifaceNil)) { */ case 1:
+			$r = app.requestSelectedTilesChange((function(newValue) { return function(properties) {
+				var $ptr, properties;
+				properties.CeilingHeight = $newDataPointer(0, ptrType$11);
+				properties.CeilingHeight.$set(((32 - ((newValue[0].$low + ((newValue[0].$high >> 31) * 4294967296)) >> 0) >> 0) >> 0));
+			}; })(newValue), true); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onTileCeilingHeightChanged }; } $f.$ptr = $ptr; $f._tuple = _tuple; $f.app = app; $f.err = err; $f.newValue = newValue; $f.newValueString = newValueString; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MainApplication.prototype.onTileCeilingHeightChanged = function(newValueString) { return this.$val.onTileCeilingHeightChanged(newValueString); };
+	MainApplication.ptr.prototype.onTileSlopeHeightChanged = function(newValueString) {
+		var $ptr, _tuple, app, err, newValue, newValueString, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _tuple = $f._tuple; app = $f.app; err = $f.err; newValue = $f.newValue; newValueString = $f.newValueString; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		newValue = [newValue];
+		app = this;
+		_tuple = strconv.ParseInt(newValueString, 10, 16);
+		newValue[0] = _tuple[0];
+		err = _tuple[1];
+		/* */ if (!(newValueString === "") && $interfaceIsEqual(err, $ifaceNil)) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!(newValueString === "") && $interfaceIsEqual(err, $ifaceNil)) { */ case 1:
+			$r = app.requestSelectedTilesChange((function(newValue) { return function(properties) {
+				var $ptr, properties;
+				properties.SlopeHeight = $newDataPointer(0, ptrType$11);
+				properties.SlopeHeight.$set((((newValue[0].$low + ((newValue[0].$high >> 31) * 4294967296)) >> 0) >> 0));
+			}; })(newValue), true); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onTileSlopeHeightChanged }; } $f.$ptr = $ptr; $f._tuple = _tuple; $f.app = app; $f.err = err; $f.newValue = newValue; $f.newValueString = newValueString; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MainApplication.prototype.onTileSlopeHeightChanged = function(newValueString) { return this.$val.onTileSlopeHeightChanged(newValueString); };
+	MainApplication.ptr.prototype.onTileSlopeControlChanged = function(newValue) {
+		var $ptr, app, newValue, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; app = $f.app; newValue = $f.newValue; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		newValue = [newValue];
+		app = this;
+		/* */ if (!(newValue[0] === "")) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!(newValue[0] === "")) { */ case 1:
+			$r = app.requestSelectedTilesChange((function(newValue) { return function(properties) {
+				var $ptr, properties;
+				properties.SlopeControl = $newDataPointer("", ptrType$12);
+				properties.SlopeControl.$set(newValue[0]);
+			}; })(newValue), true); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onTileSlopeControlChanged }; } $f.$ptr = $ptr; $f.app = app; $f.newValue = newValue; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MainApplication.prototype.onTileSlopeControlChanged = function(newValue) { return this.$val.onTileSlopeControlChanged(newValue); };
 	NewRestDataStore = function(transport) {
 		var $ptr, transport;
 		return new RestDataStore.ptr(transport);
@@ -34359,12 +34470,42 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: RestDataStore.ptr.prototype.SetTile }; } $f.$ptr = $ptr; $f._r = _r; $f.archiveID = archiveID; $f.data = data; $f.levelID = levelID; $f.onFailure = onFailure; $f.onSuccess = onSuccess; $f.projectID = projectID; $f.properties = properties; $f.store = store; $f.url = url; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	RestDataStore.prototype.SetTile = function(projectID, archiveID, levelID, x, y, properties, onSuccess, onFailure) { return this.$val.SetTile(projectID, archiveID, levelID, x, y, properties, onSuccess, onFailure); };
+	heightsForSelection = function(start, stop) {
+		var $ptr, _r, level, list, start, stop, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; level = $f.level; list = $f.list; start = $f.start; stop = $f.stop; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		list = sliceType$1.nil;
+		level = start;
+		/* while (true) { */ case 1:
+			/* if (!(level <= stop)) { break; } */ if(!(level <= stop)) { $s = 2; continue; }
+			_r = fmt.Sprintf("%d", new sliceType$2([new $Int(level)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			list = $append(list, _r);
+			level = level + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		list = $append(list, "");
+		return list;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: heightsForSelection }; } $f.$ptr = $ptr; $f._r = _r; $f.level = level; $f.list = list; $f.start = start; $f.stop = stop; $f.$s = $s; $f.$r = $r; return $f;
+	};
 	NewTilesViewModel = function() {
-		var $ptr, vm;
-		vm = new TilesViewModel.ptr(ptrType$15.nil, ptrType$16.nil);
+		var $ptr, _arg, _arg$1, _arg$2, _r, _r$1, _r$2, _r$3, _r$4, _r$5, vm, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; vm = $f.vm; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		vm = new TilesViewModel.ptr(ptrType$15.nil, ptrType$16.nil, ptrType$16.nil, ptrType$16.nil, ptrType$16.nil, ptrType$16.nil);
 		vm.tileType = viewmodel.NewValueSelectionNode("Tile Type", new sliceType$1(["open", "solid", "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast", "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest", "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest", "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast", ""]), "");
-		vm.root = viewmodel.NewSectionNode("Tiles", new sliceType$7([vm.tileType]), viewmodel.NewBoolValueNode("", true));
+		_r = heightsForSelection(0, 31); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg = _r;
+		_r$1 = viewmodel.NewValueSelectionNode("Floor Height Level", _arg, ""); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		vm.floorHeight = _r$1;
+		_r$2 = heightsForSelection(1, 32); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_arg$1 = _r$2;
+		_r$3 = viewmodel.NewValueSelectionNode("Ceiling Height Level", _arg$1, ""); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		vm.ceilingHeight = _r$3;
+		_r$4 = heightsForSelection(0, 31); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_arg$2 = _r$4;
+		_r$5 = viewmodel.NewValueSelectionNode("Slope Height", _arg$2, ""); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		vm.slopeHeight = _r$5;
+		vm.slopeControl = viewmodel.NewValueSelectionNode("Slope Control", new sliceType$1(["ceilingInverted", "ceilingMirrored", "ceilingFlat", "floorFlat", ""]), "");
+		vm.root = viewmodel.NewSectionNode("Tiles", new sliceType$7([vm.tileType, vm.floorHeight, vm.ceilingHeight, vm.slopeHeight, vm.slopeControl]), viewmodel.NewBoolValueNode("", true));
 		return vm;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewTilesViewModel }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.vm = vm; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewTilesViewModel = NewTilesViewModel;
 	TilesViewModel.ptr.prototype.TileType = function() {
@@ -34373,27 +34514,55 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		return vm.tileType;
 	};
 	TilesViewModel.prototype.TileType = function() { return this.$val.TileType(); };
+	TilesViewModel.ptr.prototype.FloorHeight = function() {
+		var $ptr, vm;
+		vm = this;
+		return vm.floorHeight;
+	};
+	TilesViewModel.prototype.FloorHeight = function() { return this.$val.FloorHeight(); };
+	TilesViewModel.ptr.prototype.CeilingHeight = function() {
+		var $ptr, vm;
+		vm = this;
+		return vm.ceilingHeight;
+	};
+	TilesViewModel.prototype.CeilingHeight = function() { return this.$val.CeilingHeight(); };
+	TilesViewModel.ptr.prototype.SlopeHeight = function() {
+		var $ptr, vm;
+		vm = this;
+		return vm.slopeHeight;
+	};
+	TilesViewModel.prototype.SlopeHeight = function() { return this.$val.SlopeHeight(); };
+	TilesViewModel.ptr.prototype.SlopeControl = function() {
+		var $ptr, vm;
+		vm = this;
+		return vm.slopeControl;
+	};
+	TilesViewModel.prototype.SlopeControl = function() { return this.$val.SlopeControl(); };
 	NewViewModel = function() {
-		var $ptr, mapControlSection, mapSection, mapSectionSelection, projectSection, projectSelected, vm;
+		var $ptr, _r, mapControlSection, mapSection, mapSectionSelection, projectSection, projectSelected, vm, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; mapControlSection = $f.mapControlSection; mapSection = $f.mapSection; mapSectionSelection = $f.mapSectionSelection; projectSection = $f.projectSection; projectSelected = $f.projectSelected; vm = $f.vm; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		projectSelected = [projectSelected];
 		vm = new ViewModel.ptr(ptrType$15.nil, ptrType$17.nil, ptrType$16.nil, ptrType$16.nil, ptrType$18.nil, ptrType$19.nil);
 		vm.projects = viewmodel.NewValueSelectionNode("Select", sliceType$1.nil, "");
 		projectSection = viewmodel.NewSectionNode("Project", new sliceType$7([vm.projects]), viewmodel.NewBoolValueNode("Available", true));
 		vm.levels = viewmodel.NewValueSelectionNode("Level", sliceType$1.nil, "");
-		vm.tiles = NewTilesViewModel();
+		_r = NewTilesViewModel(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		vm.tiles = _r;
 		mapControlSection = viewmodel.NewSectionNode("Control", new sliceType$7([vm.levels]), viewmodel.NewBoolValueNode("", true));
 		mapSectionSelection = viewmodel.NewSectionSelectionNode("Map Section", $makeMap($String.keyFor, [{ k: "Control", v: mapControlSection }, { k: "Tiles", v: vm.tiles.root }]), "Control");
-		projectSelected = viewmodel.NewBoolValueNode("Available", false);
-		vm.projects.Selected().Subscribe((function $b(projectID) {
+		projectSelected[0] = viewmodel.NewBoolValueNode("Available", false);
+		vm.projects.Selected().Subscribe((function(projectSelected) { return function $b(projectID) {
 			var $ptr, projectID, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; projectID = $f.projectID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			$r = projectSelected.Set(!(projectID === "")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = projectSelected[0].Set(!(projectID === "")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.projectID = projectID; $f.$s = $s; $f.$r = $r; return $f;
-		}));
-		mapSection = viewmodel.NewSectionNode("Map", new sliceType$7([mapSectionSelection]), projectSelected);
+		}; })(projectSelected));
+		mapSection = viewmodel.NewSectionNode("Map", new sliceType$7([mapSectionSelection]), projectSelected[0]);
 		vm.mainSection = viewmodel.NewSectionSelectionNode("Section", $makeMap($String.keyFor, [{ k: "Project", v: projectSection }, { k: "Map", v: mapSection }]), "Project");
 		vm.pointerCoordinate = viewmodel.NewStringValueNode("Pointer at", "");
 		vm.root = viewmodel.NewSectionNode("", new sliceType$7([vm.mainSection, vm.pointerCoordinate]), viewmodel.NewBoolValueNode("", true));
 		return vm;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewViewModel }; } $f.$ptr = $ptr; $f._r = _r; $f.mapControlSection = mapControlSection; $f.mapSection = mapSection; $f.mapSectionSelection = mapSectionSelection; $f.projectSection = projectSection; $f.projectSelected = projectSelected; $f.vm = vm; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewViewModel = NewViewModel;
 	ViewModel.ptr.prototype.Root = function() {
@@ -34473,16 +34642,16 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		return vm.tiles;
 	};
 	ViewModel.prototype.Tiles = function() { return this.$val.Tiles(); };
-	ptrType$22.methods = [{prop: "ViewModel", name: "ViewModel", pkg: "", typ: $funcType([], [viewmodel.Node], false)}, {prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [FailureFunc], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseClick", name: "onMouseClick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "animatedPaletteIndex", name: "animatedPaletteIndex", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int], [$Int], false)}, {prop: "onSelectedProjectChanged", name: "onSelectedProjectChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}, {prop: "onSelectedLevelChanged", name: "onSelectedLevelChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}, {prop: "loadTexture", name: "loadTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int], [], false)}, {prop: "levelTexture", name: "levelTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int], [graphics.Texture], false)}, {prop: "onTilePropertiesUpdated", name: "onTilePropertiesUpdated", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([model$1.TileCoordinate, ptrType$21], [], false)}, {prop: "updateViewModel", name: "updateViewModel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType$7], [], false)}, {prop: "requestSelectedTilesChange", name: "requestSelectedTilesChange", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType$8, $Bool], [], false)}, {prop: "onTileSelectionChanged", name: "onTileSelectionChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onTileTypeChanged", name: "onTileTypeChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}];
+	ptrType$22.methods = [{prop: "ViewModel", name: "ViewModel", pkg: "", typ: $funcType([], [viewmodel.Node], false)}, {prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [FailureFunc], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseClick", name: "onMouseClick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "animatedPaletteIndex", name: "animatedPaletteIndex", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int], [$Int], false)}, {prop: "onSelectedProjectChanged", name: "onSelectedProjectChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}, {prop: "onSelectedLevelChanged", name: "onSelectedLevelChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}, {prop: "loadTexture", name: "loadTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int], [], false)}, {prop: "levelTexture", name: "levelTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int], [graphics.Texture], false)}, {prop: "onTilePropertiesUpdated", name: "onTilePropertiesUpdated", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([model$1.TileCoordinate, ptrType$21], [], false)}, {prop: "updateViewModel", name: "updateViewModel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType$7], [], false)}, {prop: "requestSelectedTilesChange", name: "requestSelectedTilesChange", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([funcType$8, $Bool], [], false)}, {prop: "onTileSelectionChanged", name: "onTileSelectionChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onTileTypeChanged", name: "onTileTypeChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}, {prop: "onTileFloorHeightChanged", name: "onTileFloorHeightChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}, {prop: "onTileCeilingHeightChanged", name: "onTileCeilingHeightChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}, {prop: "onTileSlopeHeightChanged", name: "onTileSlopeHeightChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}, {prop: "onTileSlopeControlChanged", name: "onTileSlopeControlChanged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [], false)}];
 	ptrType$23.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, funcType$7, FailureFunc], [], false)}, {prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType$7, FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$3, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$2, FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$1, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$5, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$6, FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$4, FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$4, FailureFunc], [], false)}];
-	ptrType$19.methods = [{prop: "TileType", name: "TileType", pkg: "", typ: $funcType([], [ptrType$16], false)}];
+	ptrType$19.methods = [{prop: "TileType", name: "TileType", pkg: "", typ: $funcType([], [ptrType$16], false)}, {prop: "FloorHeight", name: "FloorHeight", pkg: "", typ: $funcType([], [ptrType$16], false)}, {prop: "CeilingHeight", name: "CeilingHeight", pkg: "", typ: $funcType([], [ptrType$16], false)}, {prop: "SlopeHeight", name: "SlopeHeight", pkg: "", typ: $funcType([], [ptrType$16], false)}, {prop: "SlopeControl", name: "SlopeControl", pkg: "", typ: $funcType([], [ptrType$16], false)}];
 	ptrType$1.methods = [{prop: "Root", name: "Root", pkg: "", typ: $funcType([], [viewmodel.Node], false)}, {prop: "SelectMapSection", name: "SelectMapSection", pkg: "", typ: $funcType([], [], false)}, {prop: "SelectedProject", name: "SelectedProject", pkg: "", typ: $funcType([], [$String], false)}, {prop: "OnSelectedProjectChanged", name: "OnSelectedProjectChanged", pkg: "", typ: $funcType([funcType$9], [], false)}, {prop: "SetProjects", name: "SetProjects", pkg: "", typ: $funcType([sliceType$1], [], false)}, {prop: "SelectProject", name: "SelectProject", pkg: "", typ: $funcType([$String], [], false)}, {prop: "OnSelectedLevelChanged", name: "OnSelectedLevelChanged", pkg: "", typ: $funcType([funcType$9], [], false)}, {prop: "SetLevels", name: "SetLevels", pkg: "", typ: $funcType([sliceType$1], [], false)}, {prop: "SetPointerAt", name: "SetPointerAt", pkg: "", typ: $funcType([$Int, $Int, $Int, $Int], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([], [ptrType$19], false)}];
 	FailureFunc.init([], [], false);
 	DataStore.init([{prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType, FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$1, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$2, FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$3, FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$4, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$5, FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$4, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$6, FailureFunc], [], false)}]);
 	MainApplication.init([{prop: "lastElapsedTick", name: "lastElapsedTick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: time.Time, tag: ""}, {prop: "elapsedMSec", name: "elapsedMSec", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int64, tag: ""}, {prop: "store", name: "store", pkg: "github.com/inkyblackness/shocked-client/editor", typ: DataStore, tag: ""}, {prop: "viewModel", name: "viewModel", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$1, tag: ""}, {prop: "viewModelUpdating", name: "viewModelUpdating", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Bool, tag: ""}, {prop: "glWindow", name: "glWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: env.OpenGlWindow, tag: ""}, {prop: "gl", name: "gl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: opengl.OpenGl, tag: ""}, {prop: "mouseX", name: "mouseX", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "mouseY", name: "mouseY", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Float32, tag: ""}, {prop: "mouseDragged", name: "mouseDragged", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Bool, tag: ""}, {prop: "mouseMoveCapture", name: "mouseMoveCapture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: funcType$7, tag: ""}, {prop: "view", name: "view", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$2, tag: ""}, {prop: "activeLevelID", name: "activeLevelID", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $Int, tag: ""}, {prop: "paletteTexture", name: "paletteTexture", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$3, tag: ""}, {prop: "levelTextures", name: "levelTextures", pkg: "github.com/inkyblackness/shocked-client/editor", typ: sliceType, tag: ""}, {prop: "textureStore", name: "textureStore", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$4, tag: ""}, {prop: "tileMap", name: "tileMap", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$5, tag: ""}, {prop: "gridRenderable", name: "gridRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$6, tag: ""}, {prop: "tileTextureMapRenderable", name: "tileTextureMapRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$7, tag: ""}, {prop: "tileGridMapRenderable", name: "tileGridMapRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$8, tag: ""}, {prop: "tileSelectionRenderable", name: "tileSelectionRenderable", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$9, tag: ""}]);
 	RestDataStore.init([{prop: "transport", name: "transport", pkg: "github.com/inkyblackness/shocked-client/editor", typ: RestTransport, tag: ""}]);
 	RestTransport.init([{prop: "Get", name: "Get", pkg: "", typ: $funcType([$String, funcType$9, funcType$7], [], false)}, {prop: "Post", name: "Post", pkg: "", typ: $funcType([$String, sliceType$8, funcType$9, funcType$7], [], false)}, {prop: "Put", name: "Put", pkg: "", typ: $funcType([$String, sliceType$8, funcType$9, funcType$7], [], false)}]);
-	TilesViewModel.init([{prop: "root", name: "root", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$15, tag: ""}, {prop: "tileType", name: "tileType", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$16, tag: ""}]);
+	TilesViewModel.init([{prop: "root", name: "root", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$15, tag: ""}, {prop: "tileType", name: "tileType", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$16, tag: ""}, {prop: "floorHeight", name: "floorHeight", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$16, tag: ""}, {prop: "ceilingHeight", name: "ceilingHeight", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$16, tag: ""}, {prop: "slopeHeight", name: "slopeHeight", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$16, tag: ""}, {prop: "slopeControl", name: "slopeControl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$16, tag: ""}]);
 	ViewModel.init([{prop: "root", name: "root", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$15, tag: ""}, {prop: "mainSection", name: "mainSection", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$17, tag: ""}, {prop: "projects", name: "projects", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$16, tag: ""}, {prop: "levels", name: "levels", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$16, tag: ""}, {prop: "pointerCoordinate", name: "pointerCoordinate", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$18, tag: ""}, {prop: "tiles", name: "tiles", pkg: "github.com/inkyblackness/shocked-client/editor", typ: ptrType$19, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
