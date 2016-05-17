@@ -1,6 +1,8 @@
 package console
 
 import (
+	"fmt"
+
 	"github.com/inkyblackness/shocked-client/viewmodel"
 )
 
@@ -26,5 +28,5 @@ func (texter *StringValueNodeTexter) Act(viewFactory NodeDetailViewFactory) {
 
 // TextMain implements the ViewModelNodeTexter interface.
 func (texter *StringValueNodeTexter) TextMain(addLine ViewModelLiner) {
-	addLine(texter.node.Label(), texter.node.Get(), texter)
+	addLine(texter.node.Label(), fmt.Sprintf("  [%s]", texter.node.Get()), texter)
 }

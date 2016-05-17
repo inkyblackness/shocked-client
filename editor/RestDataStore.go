@@ -83,6 +83,16 @@ func (store *RestDataStore) LevelTextures(projectID string, archiveID string, le
 	}, onFailure)
 }
 
+// Textures implements the DataStore interface.
+func (store *RestDataStore) Textures(projectID string, onSuccess func(textures []model.Texture), onFailure FailureFunc) {
+	url := fmt.Sprintf("/projects/%s/textures", projectID)
+	var data model.Textures
+
+	store.get(url, &data, func() {
+		onSuccess(data.List)
+	}, onFailure)
+}
+
 // TextureBitmap implements the DataStore interface.
 func (store *RestDataStore) TextureBitmap(projectID string, textureID int, size string,
 	onSuccess func(bmp *model.RawBitmap), onFailure FailureFunc) {

@@ -42,6 +42,7 @@ type MainApplication struct {
 	activeLevelID  int
 	paletteTexture *graphics.PaletteTexture
 	levelTextures  []int
+	textureData    []model.Texture
 	textureStore   *editormodel.BufferedTextureStore
 	tileMap        *editormodel.TileMap
 
@@ -273,9 +274,11 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 		app.paletteTexture.Dispose()
 		app.paletteTexture = nil
 	}
+	app.textureData = nil
+	app.viewModel.SetTextureCount(0)
 	app.textureStore.Reset()
-	if projectID != "" {
 
+	if projectID != "" {
 		app.store.Palette(projectID, "game", func(colors [256]model.Color) {
 			colorProvider := func(index int) (byte, byte, byte, byte) {
 				entry := &colors[app.animatedPaletteIndex(index)]
@@ -285,6 +288,11 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 			app.tileTextureMapRenderable = display.NewTileTextureMapRenderable(app.gl, app.paletteTexture, app.levelTexture)
 			app.tileGridMapRenderable = display.NewTileGridMapRenderable(app.gl)
 		}, app.simpleStoreFailure("Palette"))
+
+		app.store.Textures(projectID, func(textures []model.Texture) {
+			app.textureData = textures
+			app.viewModel.SetTextureCount(len(textures))
+		}, app.simpleStoreFailure("Textures"))
 
 		app.store.Levels(projectID, "archive", func(levels []model.Level) {
 			levelIDs := make([]string, len(levels))

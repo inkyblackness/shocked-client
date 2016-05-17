@@ -12,8 +12,9 @@ type ViewModel struct {
 
 	mainSection *viewmodel.SectionSelectionNode
 
-	projects *viewmodel.ValueSelectionNode
-	levels   *viewmodel.ValueSelectionNode
+	projects     *viewmodel.ValueSelectionNode
+	textureCount *viewmodel.StringValueNode
+	levels       *viewmodel.ValueSelectionNode
 
 	pointerCoordinate *viewmodel.StringValueNode
 
@@ -25,7 +26,9 @@ func NewViewModel() *ViewModel {
 	vm := &ViewModel{}
 
 	vm.projects = viewmodel.NewValueSelectionNode("Select", nil, "")
-	projectSection := viewmodel.NewSectionNode("Project", []viewmodel.Node{vm.projects}, viewmodel.NewBoolValueNode("Available", true))
+	vm.textureCount = viewmodel.NewStringValueNode("Texture Count", "")
+	projectSection := viewmodel.NewSectionNode("Project", []viewmodel.Node{vm.projects, vm.textureCount},
+		viewmodel.NewBoolValueNode("Available", true))
 
 	vm.levels = viewmodel.NewValueSelectionNode("Level", nil, "")
 	vm.tiles = NewTilesViewModel()
@@ -81,6 +84,11 @@ func (vm *ViewModel) SetProjects(projectIDs []string) {
 // SelectProject sets the currently selected project.
 func (vm *ViewModel) SelectProject(id string) {
 	vm.projects.Selected().Set(id)
+}
+
+// SetTextureCount sets the amount of textures of the project.
+func (vm *ViewModel) SetTextureCount(value int) {
+	vm.textureCount.Set(fmt.Sprintf("%d", value))
 }
 
 // OnSelectedLevelChanged registers a callback for a change in the selected level

@@ -19,6 +19,8 @@ type DataStore interface {
 
 	// LevelTextures queries the texture IDs for a level.
 	LevelTextures(projectID string, archiveID string, levelID int, onSuccess func(textureIDs []int), onFailure FailureFunc)
+	// Textures queries all texture information of a project.
+	Textures(projectID string, onSuccess func(textures []model.Texture), onFailure FailureFunc)
 	// TextureBitmap queries the texture bitmap of a texture.
 	TextureBitmap(projectID string, textureID int, size string, onSuccess func(bmp *model.RawBitmap), onFailure FailureFunc)
 
