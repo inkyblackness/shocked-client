@@ -204,13 +204,19 @@ func (runner *appRunner) ForList(controller ListDetailController, index int) Det
 
 	runner.gui.Execute(func(*gocui.Gui) error {
 		maxX, maxY := runner.gui.Size()
+		visibleLines := maxY - 2
 
 		view, _ := runner.gui.SetView("listDetail", maxX/2, 0, maxX-1, maxY-1)
 		view.Highlight = true
 		redrawDetails(view)
 
-		// TODO: may require repositioning of origin
-		view.SetCursor(0, index)
+		if index < visibleLines {
+			view.SetCursor(0, index)
+		} else {
+			halfHeight := visibleLines / 2
+			view.SetOrigin(0, index-halfHeight)
+			view.SetCursor(0, halfHeight)
+		}
 		runner.gui.SetCurrentView(view.Name())
 		return nil
 	})
