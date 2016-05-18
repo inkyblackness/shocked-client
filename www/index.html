@@ -12,363 +12,66 @@
 </head>
 <body>
 <div class="rootContainer">
-  <div class="menuContainer">
-
-    <div data-bind="foreach: { data: mainSections, as: 'section' }">
-      <span><input type="radio" name="mainSection" data-bind="checkedValue: section, checked: $root.selectedMainSection" /><span data-bind="text: section" /></span>
-    </div>
-
-  </div>
 
   <div class="heightTaker">
-    <div data-bind="visible: selectedMainSection() === 'project'">
-      <h2>Project</h2>
-      <p>
-      Active: <select data-bind="options: projects.available, optionsText: 'id', optionsCaption: '', value: projects.selected"></select>
-      </p>
-      <p>
-      Create:
-      <input type="text" placeholder="new project name" data-bind="textInput: projects.newProjectId">
-      <button data-bind="enable: projects.canCreateNewProject(), click: projects.createProject">Create</button>
-      </p>
-      <p>
-      Stats:
-        <table>
-          <tr><td>Levels:</td><td data-bind="text: $root.levels.available().length"></td></tr>
-          <tr><td>Textures:</td><td data-bind="text: $root.textures.all().length"></td></tr>
-        </table>
-      </p>
-    </div>
+    <div class="main">
 
-    <div class="levelMap" data-bind="visible: selectedMainSection() === 'map'">
-      <div class="mapControls">
-
-        <div class="menuContainer">
-
-          <div data-bind="foreach: { data: map.mapSection, as: 'section' }">
-            <span><input type="radio" name="mapSection" data-bind="checkedValue: section, checked: $root.map.selectedMapSection" /><span data-bind="text: section" /></span>
-          </div>
-
+      <div class="mainControls">
+        <div data-bind="template: { name: 'vm-' + type + '-template', data: $root }">
         </div>
-
-        <div data-bind="visible: map.selectedMapSection() === 'control'">
-          <p>
-          Active Map: <select data-bind="options: levels.available, optionsText: 'id', optionsCaption: '', value: map.selectedLevel"></select>
-          </p>
-
-        <div style="width: 100%;" data-bind="ifnot: map.isCyberspace">
-
-        <h3>Level Texture Palette (<span data-bind="text: $root.map.levelTextures().length"></span>)</h3>
-        <div style="width: 100%; overflow: auto;">
-          <table>
-            <tbody>
-              <tr style="width: 100%;" data-bind="foreach: { data: map.levelTextures, as: 'texture' }">
-                <td style="position: relative;">
-                  <div style="width: 64px; height: 64px; border: solid 1px black;">
-                    <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: texture.largeTextureUrl }" width="64px" height="64px">
-                    <div style="position: absolute; top: 4px; left: 2px;">
-                      <span style="background: rgba(255,255,255,0.7);" data-bind="text: $index" />
-                    </div>
-                  </div>
-                </td>
-                <td data-bind="if: $index() === 31">
-                  <div style="width: 16px; height: 64px; background: red;"></div>
-                </td>
-              </tr>
-              <tr style="width: 100%;" data-bind="foreach: { data: map.levelTextures, as: 'texture' }">
-                <td>
-                  <span><input type="radio" name="levelTexture" data-bind="checkedValue: $index, checked: $root.map.selectedLevelTextureIndex" /><span data-bind="text: texture.id"/></span>
-                </td>
-                <td data-bind="if: $index() === 31"></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div data-bind="visible: $root.map.selectedLevelTextureIndex() >= 0">
-          <p>
-          <select data-bind="options: textures.all, optionsText: 'title', optionsCaption: '', value: map.selectedLevelTexture"></select>
-          <button data-bind="enable: $root.map.selectedLevelTextureIndex() >= 0, click: map.changeLevelTexture">Change</button>
-          </p>
-          <p data-bind="if: map.selectedLevelTexture()">
-            <img class="checkerboard" data-bind="attr: { src: map.selectedLevelTexture().largeTextureUrl }" width="64px" height="64px">
-          </p>
-        </div>
-
-        </div> <!-- !isCyberspace -->
-
-        </div>
-
-
-        <div data-bind="visible: map.selectedMapSection() === 'tiles'">
-
-        <h3>Tile Selection (<span data-bind="text: $root.map.selectedTiles().length"></span>)</h3>
-        <p>
-          Tile Type:
-          <select data-bind="options: map.tileTypes, value: map.selectedTileType"></select>
-        </p>
-        <p>
-          Slope Control:
-          <select data-bind="options: map.slopeControls, value: map.selectedSlopeControl"></select>
-        </p>
-        <p>
-
-        <div style="width: 100%;">
-          <table>
-            <tbody>
-              <tr>
-                <th>&nbsp;</th>
-                <th>Floor</th>
-                <th>Slope</th>
-                <th>Ceiling</th>
-              </tr>
-              <tr>
-                <td>Heights</td>
-                <td><select data-bind="options: map.heightValues, value: map.selectedFloorHeight"></select></td>
-                <td><select data-bind="options: map.heightValues, value: map.selectedSlopeHeight"></select></td>
-                <td><select data-bind="options: map.depthValues, value: map.selectedCeilingHeight"></select></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        </p>
-
-        <div style="width: 100%;" data-bind="ifnot: map.isCyberspace">
-
-        <div style="width: 100%;">
-          <table style="right: 0px;">
-            <tbody>
-              <tr>
-                <th>&nbsp;</th>
-                <th>Floor</th>
-                <th>Wall</th>
-                <th>Ceiling</th>
-              </tr>
-              <tr>
-                <td>
-                  Textures
-                </td>
-                <td style="position: relative;">
-                  <div style="width: 64px; height: 64px; border: solid 1px black;">
-                    <div data-bind="if: $root.map.selectedTileFloorTextureIndex() >= 0">
-                      <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: $root.map.selectedTileFloorTextureUrl }" width="64px" height="64px">
-                      <div style="position: absolute; top: 4px; left: 2px;">
-                        <span style="background: rgba(255,255,255,0.7);" data-bind="text: $root.map.selectedTileFloorTextureIndex" />
-                      </div>
-                    </div>
-                    <div data-bind="if: ($root.map.selectedTileFloorTextureIndex() < 0) && ($root.map.selectedTiles().length > 1)">
-                      <span>many</span>
-                    </div>
-                  </div>
-                </td>
-                <td style="position: relative;">
-                  <div style="width: 64px; height: 64px; border: solid 1px black;">
-                    <div data-bind="if: $root.map.selectedTileWallTextureIndex() >= 0">
-                      <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: $root.map.selectedTileWallTextureUrl }" width="64px" height="64px">
-                      <div style="position: absolute; top: 4px; left: 2px;">
-                        <span style="background: rgba(255,255,255,0.7);" data-bind="text: $root.map.selectedTileWallTextureIndex" />
-                      </div>
-                    </div>
-                    <div data-bind="if: ($root.map.selectedTileWallTextureIndex() < 0) && ($root.map.selectedTiles().length > 1)">
-                      <span>many</span>
-                    </div>
-                  </div>
-                </td>
-                <td style="position: relative;">
-                  <div style="width: 64px; height: 64px; border: solid 1px black;">
-                    <div data-bind="if: $root.map.selectedTileCeilingTextureIndex() >= 0">
-                      <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: $root.map.selectedTileCeilingTextureUrl }" width="64px" height="64px">
-                      <div style="position: absolute; top: 4px; left: 2px;">
-                        <span style="background: rgba(255,255,255,0.7);" data-bind="text: $root.map.selectedTileCeilingTextureIndex" />
-                      </div>
-                    </div>
-                    <div data-bind="if: ($root.map.selectedTileCeilingTextureIndex() < 0) && ($root.map.selectedTiles().length > 1)">
-                      <span>many</span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Change</td>
-                <td><input type="checkbox" data-bind="checked: $root.map.enableFloorTextureUpdate" /></td>
-                <td><input type="checkbox" data-bind="checked: $root.map.enableWallTextureUpdate" /></td>
-                <td><input type="checkbox" data-bind="checked: $root.map.enableCeilingTextureUpdate" /></td>
-              </tr>
-              <tr>
-                <td>Rotations</td>
-                <td><select data-bind="options: map.rotations, value: map.selectedTileFloorTextureRotations"></select></td>
-                <td></td>
-                <td><select data-bind="options: map.rotations, value: map.selectedTileCeilingTextureRotations"></select></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p>
-        Wall texture offset:
-        <td><select data-bind="options: map.heightValues, value: map.selectedWallTextureOffset"></select></td>
-        </p>
-        <p>
-        Use adjacent wall texture:
-        <td><select data-bind="options: map.maybeValues, value: map.selectedUseAdjacentWallTexture"></select></td>
-        </p>
-
-        <h3>Level Textures (<span data-bind="text: $root.map.levelTextures().length"></span>); Set Checkbox above and click to change.</h3>
-        <div style="width: 100%; overflow: auto;">
-          <table>
-            <tbody>
-              <tr style="width: 100%;" data-bind="foreach: { data: map.levelTextures, as: 'texture' }">
-                <td style="position: relative;">
-                  <div style="width: 64px; height: 64px; border: solid 1px black;" data-bind="click: $root.map.getTextureIndexSetter($index())">
-                    <img style="position: absolute; top: 1px; left: 1px;" data-bind="attr: { src: texture.largeTextureUrl }" width="64px" height="64px">
-                    <div style="position: absolute; top: 4px; left: 2px;">
-                      <span style="background: rgba(255,255,255,0.7);" data-bind="text: $index" />
-                    </div>
-                  </div>
-                </td>
-                <td data-bind="if: $index() === 31">
-                  <div style="width: 16px; height: 64px; background: red;"></div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p>
-          Map Texture Display: 
-          <select data-bind="options: map.textureDisplay, value: map.selectedTextureDisplay"></select>
-        </p>
-
-        </div> <!-- !isCyberspace -->
-
-        </div>
-
-
-        <div data-bind="visible: map.selectedMapSection() === 'objects'">
-
-        <h3>Level Objects (<span data-bind="text: $root.map.filteredLevelObjects().length + '/' + $root.map.levelObjects().length"></span>)</h3>
-        <div style="width: 100%; height: 200px; overflow: auto;">
-          <table style="border-spacing: 5px; border-collapse: separate;">
-            <thead>
-              <tr style="width: 100%;">
-                <td>Idx</td>
-                <td>ID</td>
-                <td>Pos</td>
-                <td>Name</td>
-                <td>Class Data</td>
-              </tr>
-            </thead>
-            <tbody data-bind="foreach: { data: map.filteredLevelObjects, as: 'object' }">
-              <tr style="width: 100%;">
-                <td><span data-bind="text: object.raw.id"></span></td>
-                <td><span data-bind="text: object.raw.class + '/' + object.raw.subclass + '/' + object.raw.type"></span></td>
-                <td><span data-bind="text: object.raw.properties.tileX + '-' + object.raw.properties.tileY"></span></td>
-                <td><span data-bind="text: object.name"></span></td>
-                <td><span data-bind="text: object.hacking.classDataString"></span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        </div>
-
       </div>
 
       <div class="tileMap">
-        <div style="width: 2048px; height: 2048px;" data-bind="foreach: { data: map.tileRows, as: 'tileRow' }">
-          <div style="position: relative; left: 0px; width: 2048px; height: 32px;" data-bind="foreach: { data: tileRow.tileColumns, as: 'tile' }">
-            <div style="position: absolute; overflow: hidden; top: 0px; width: 32px; height: 32px;" data-bind="click: $root.map.onTileClicked, style: { left: tile.x*32 + 'px' }">
-              <div class="tile" data-bind="if: tile.tileType() !== 'solid'">
-                <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowFloorTexture, style: { backgroundImage: 'url('+tile.floorTextureUrl()+')' }, css: 'rotations'+tile.floorTextureRotations()"></div>
-                <div class="tile tileTexture" data-bind="visible: $root.map.shouldShowCeilingTexture, style: { backgroundImage: 'url('+tile.ceilingTextureUrl()+')' }, css: 'rotations'+tile.ceilingTextureRotations()"></div>
-
-                <div class="tile" data-bind="css: 'tileType-'+tile.tileType()"></div>
-                <div class="tile" data-bind="css: { 'wall-southEastToNorthWest': tile.hasWallSouthEastToNorthWest(), 'wall-southWestToNorthEast': tile.hasWallSouthWestToNorthEast() }"></div>
-
-                <div class="tile" data-bind="style: { 'border-top': '1px solid rgba(0,255,0,' + tile.northWallHeight() + ')', 'border-bottom': '1px solid rgba(0,255,0,' + tile.southWallHeight() + ')', 'border-right': '1px solid rgba(0,255,0,' + tile.eastWallHeight() + ')', 'border-left': '1px solid rgba(0,255,0,' + tile.westWallHeight() + ')' }"></div>
-              </div>
-
-              <div class="tile tileSelected" data-bind="visible: tile.isSelected"></div>
-            </div>
-          </div>
-        </div>
+        <canvas id="output" style="width: 100%; height: 100%; background: black;" />
       </div>
-    </div>
-
-    <div data-bind="visible: selectedMainSection() === 'textures'">
-
-      <p>
-        <table>
-          <tbody>
-          <tr><td>
-          <div style="position: relative; background: black;" data-bind="foreach: { data: textures.page, as: 'texture' }, style: { width: (2 + ($root.textures.pageSideWidth() * 130)) + 'px', height: (2 + ($root.textures.pageSideWidth() * 130)) + 'px' }">
-            <div style="position: absolute; width: 130px; height: 130px; " data-bind="click: $root.textures.selectTexture, style: { left: (2 + (($index() % $root.textures.pageSideWidth()) * 130)) + 'px', top: (2 + (Math.floor($index() / $root.textures.pageSideWidth()) * 130)) + 'px' }">
-
-              <img class="checkerboard" data-bind="attr: { src: texture.largeTextureUrl }" width="128px" height="128px">
-              <div style="position: absolute; top: 4px; left: 2px;">
-                <span style="background: rgba(255,255,255,0.7);" data-bind="text: texture.id" />
-              </div>
-            </div>
-          </div>
-          <button data-bind="enable: textures.pageIndex() > 0, click: textures.previousPage">prev</button>
-          <span>Page <span data-bind="text: textures.pageIndex() + 1"></span></span>
-          <button data-bind="enable: textures.canShowNextPage, click: textures.nextPage">next</button>
-          <span>(Click texture to select)</span>
-          </td>
-          <td>
-
-          <div data-bind="if: textures.selectedTexture">
-            <span>ID: <span data-bind="text: textures.selectedTexture().id"></span></span>
-            <table style="border: 1px solid black;">
-              <thead>
-                <tr style="width: 100%;">
-                  <td>Large</td>
-                  <td>Medium</td>
-                  <td>Small</td>
-                  <td>Icon</td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="checkerboard" style="width: 100%;">
-                  <td><img data-bind="attr: { src: textures.selectedTexture().largeTextureUrl}"></td>
-                  <td><img data-bind="attr: { src: textures.selectedTexture().mediumTextureUrl}"></td>
-                  <td><img data-bind="attr: { src: textures.selectedTexture().smallTextureUrl}"></td>
-                  <td><img data-bind="attr: { src: textures.selectedTexture().iconTextureUrl}"></td>
-                </tr>
-              </tbody>
-            </table>
-            
-            <table>
-              <thead>
-                <tr style="width: 100%;">
-                  <td>Lang</td>
-                  <td>Names</td>
-                  <td>Can't be used</td>
-                </tr>
-              </thead>
-              <tbody data-bind="foreach: { data: textures.selectedTexture().texts, as: 'text' }">
-                <tr style="width: 100%;">
-                  <td data-bind="text: $root.languages[$index()]"></td>
-                  <td><input type="text" data-bind="textInput: text.name"></td>
-                  <td><input type="text" data-bind="textInput: text.cantBeUsed"></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          </td></tr>
-          </tbody>
-        </table>
-
-      </p>
     </div>
 
   </div>
 </div>
 </body>
-<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="//knockoutjs.com/downloads/knockout-3.4.0.js"></script>
-<script type="text/javascript" src="client.js"></script>
-<script type="text/javascript">
-  client.buildAndRun();
+
+<script type="text/html" id="vm-section-template">
+  <div data-bind="if: available">
+    <div data-bind="foreach: { data: nodes, as: 'node' }">
+      <div data-bind="template: { name: 'vm-' + node.type + '-template', data: node }"></div>
+    </div>
+  </div>
 </script>
+
+<script type="text/html" id="vm-sectionSelection-template">
+  <div class="sectionSelection">
+  <table style="width: 100%; border-bottom: 1px dashed lightgray;"><tbody><tr>
+    <td class="propertyLabel" data-bind="text: label"></td>
+    <td><select style="width: 100%" data-bind="options: values, optionsCaption: '', value: selected.data"></select></td>
+  </tr></tbody></table>
+  <div data-bind="if: sections[selected.data()]">
+    <div data-bind="template: { name: 'vm-' + sections[selected.data()].type + '-template', data: sections[selected.data()] }"></div>
+  </div>
+  </div>
+</script>
+
+<script type="text/html" id="vm-valueSelection-template">
+  <table style="width: 100%"><tbody><tr>
+    <td class="propertyLabel" data-bind="text: label"></td>
+    <td><select style="width: 100%" data-bind="options: values, optionsCaption: '', value: selected.data"></select></td>
+  </tr></tbody></table>
+</script>
+
+<script type="text/html" id="vm-string-template">
+  <table style="width: 100%"><tbody><tr>
+    <td class="propertyLabel" data-bind="text: label"></td>
+    <td><input style="width: 100%" data-bind="textInput: data, attr: { readonly: readonly }" /></td>
+  </tr></tbody></table>
+</script>
+
+<script type="text/html" id="vm-action-template">
+  <table style="width: 100%"><tbody><tr>
+    <td class="propertyLabel">&nbsp;</td>
+    <td><button style="width: 100%" data-bind="text: label, click: act" /></td>
+  </tr></tbody></table>
+</script>
+
+<script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+<!-- <script type="text/javascript" src="//knockoutjs.com/downloads/knockout-3.4.0.js"></script> -->
+<script type="text/javascript" src="main.js"></script>
 </html>
