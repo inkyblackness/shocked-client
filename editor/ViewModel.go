@@ -14,7 +14,11 @@ type ViewModel struct {
 
 	projects     *viewmodel.ValueSelectionNode
 	textureCount *viewmodel.StringValueNode
-	levels       *viewmodel.ValueSelectionNode
+
+	levels            *viewmodel.ValueSelectionNode
+	levelTextureIndex *viewmodel.ValueSelectionNode
+	levelTextureID    *viewmodel.ValueSelectionNode
+	levelTextureIDs   []int
 
 	pointerCoordinate *viewmodel.StringValueNode
 
@@ -24,6 +28,7 @@ type ViewModel struct {
 // NewViewModel returns a new ViewModel instance.
 func NewViewModel() *ViewModel {
 	vm := &ViewModel{}
+	isRealWorldMap := viewmodel.NewBoolValueNode("Is RealWolrd", true)
 
 	vm.projects = viewmodel.NewValueSelectionNode("Select", nil, "")
 	vm.textureCount = viewmodel.NewStringValueNode("Texture Count", "")
@@ -32,10 +37,16 @@ func NewViewModel() *ViewModel {
 
 	vm.levels = viewmodel.NewValueSelectionNode("Level", nil, "")
 	vm.tiles = NewTilesViewModel()
+
+	vm.levelTextureIndex = viewmodel.NewValueSelectionNode("Texture Index", []string{""}, "")
+	vm.levelTextureID = viewmodel.NewValueSelectionNode("Texture ID", []string{""}, "")
+	levelTexturesControlSection := viewmodel.NewSectionNode("Level Textures",
+		[]viewmodel.Node{vm.levelTextureIndex, vm.levelTextureID}, isRealWorldMap)
 	mapControlSection := viewmodel.NewSectionNode("Control", []viewmodel.Node{vm.levels}, viewmodel.NewBoolValueNode("", true))
 	mapSectionSelection := viewmodel.NewSectionSelectionNode("Map Section", map[string]*viewmodel.SectionNode{
-		"Control": mapControlSection,
-		"Tiles":   vm.tiles.root}, "Control")
+		"Control":        mapControlSection,
+		"Level Textures": levelTexturesControlSection,
+		"Tiles":          vm.tiles.root}, "Control")
 
 	projectSelected := viewmodel.NewBoolValueNode("Available", false)
 	vm.projects.Selected().Subscribe(func(projectID string) {
@@ -88,7 +99,13 @@ func (vm *ViewModel) SelectProject(id string) {
 
 // SetTextureCount sets the amount of textures of the project.
 func (vm *ViewModel) SetTextureCount(value int) {
+	textureIDs := []string{""}
+
 	vm.textureCount.Set(fmt.Sprintf("%d", value))
+	if value > 0 {
+		textureIDs = intStringList(0, value-1)
+	}
+	vm.levelTextureID.SetValues(textureIDs)
 }
 
 // OnSelectedLevelChanged registers a callback for a change in the selected level
@@ -114,4 +131,27 @@ func (vm *ViewModel) SetPointerAt(tileX, tileY int, subX, subY int) {
 // Tiles returns the sub-section about tiles.
 func (vm *ViewModel) Tiles() *TilesViewModel {
 	return vm.tiles
+}
+
+// SetLevelTextures registers the texture IDs of the level
+func (vm *ViewModel) SetLevelTextures(textureIDs []int) {
+	idCount := len(textureIDs)
+	vm.levelTextureIDs = textureIDs
+	vm.tiles.SetLevelTextureCount(idCount)
+
+	indexStrings := []string{""}
+	if idCount > 0 {
+		indexStrings = intStringList(0, idCount-1)
+	}
+	vm.levelTextureIndex.SetValues(indexStrings)
+}
+
+// LevelTextureIndex returns the value selection node for the level texture index.
+func (vm *ViewModel) LevelTextureIndex() *viewmodel.ValueSelectionNode {
+	return vm.levelTextureIndex
+}
+
+// LevelTextureID returns the value selection node for the level texture ID.
+func (vm *ViewModel) LevelTextureID() *viewmodel.ValueSelectionNode {
+	return vm.levelTextureID
 }

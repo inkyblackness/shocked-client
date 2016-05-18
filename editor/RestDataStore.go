@@ -83,6 +83,17 @@ func (store *RestDataStore) LevelTextures(projectID string, archiveID string, le
 	}, onFailure)
 }
 
+// SetLevelTextures implements the DataStore interface.
+func (store *RestDataStore) SetLevelTextures(projectID string, archiveID string, levelID int, textureIDs []int,
+	onSuccess func(textureIDs []int), onFailure FailureFunc) {
+	url := fmt.Sprintf("/projects/%s/%s/levels/%d/textures", projectID, archiveID, levelID)
+	var data model.LevelTextures
+
+	store.put(url, textureIDs, &data, func() {
+		onSuccess(data.IDs)
+	}, onFailure)
+}
+
 // Textures implements the DataStore interface.
 func (store *RestDataStore) Textures(projectID string, onSuccess func(textures []model.Texture), onFailure FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/textures", projectID)

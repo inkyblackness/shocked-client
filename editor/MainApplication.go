@@ -69,6 +69,26 @@ func NewMainApplication(store DataStore) *MainApplication {
 	app.viewModel.Tiles().CeilingHeight().Selected().Subscribe(app.onTileCeilingHeightChanged)
 	app.viewModel.Tiles().SlopeHeight().Selected().Subscribe(app.onTileSlopeHeightChanged)
 	app.viewModel.Tiles().SlopeControl().Selected().Subscribe(app.onTileSlopeControlChanged)
+	app.viewModel.Tiles().FloorTexture().Selected().Subscribe(app.tileIntRealWorldValueChangeCallback(func(properties *model.RealWorldTileProperties) **int {
+		return &properties.FloorTexture
+	}, false))
+	app.viewModel.Tiles().CeilingTexture().Selected().Subscribe(app.tileIntRealWorldValueChangeCallback(func(properties *model.RealWorldTileProperties) **int {
+		return &properties.CeilingTexture
+	}, false))
+	app.viewModel.Tiles().WallTexture().Selected().Subscribe(app.tileIntRealWorldValueChangeCallback(func(properties *model.RealWorldTileProperties) **int {
+		return &properties.WallTexture
+	}, false))
+	app.viewModel.Tiles().FloorTextureRotations().Selected().Subscribe(app.tileIntRealWorldValueChangeCallback(func(properties *model.RealWorldTileProperties) **int {
+		return &properties.FloorTextureRotations
+	}, false))
+	app.viewModel.Tiles().CeilingTextureRotations().Selected().Subscribe(app.tileIntRealWorldValueChangeCallback(func(properties *model.RealWorldTileProperties) **int {
+		return &properties.CeilingTextureRotations
+	}, false))
+	app.viewModel.Tiles().WallTextureOffset().Selected().Subscribe(app.onTileWallTextureOffsetChanged)
+	app.viewModel.Tiles().UseAdjacentWallTexture().Selected().Subscribe(app.onTileUseAdjacentWallTextureChanged)
+
+	app.viewModel.LevelTextureIndex().Selected().Subscribe(app.onLevelTextureIndexChanged)
+	app.viewModel.LevelTextureID().Selected().Subscribe(app.onLevelTextureIDChanged)
 
 	app.activeLevelID = -1
 	app.textureStore = editormodel.NewBufferedTextureStore(app.loadTexture)
@@ -260,7 +280,10 @@ func (app *MainApplication) animatedPaletteIndex(index int) int {
 }
 
 func (app *MainApplication) onSelectedProjectChanged(projectID string) {
-	app.viewModel.SetLevels(nil)
+	app.updateViewModel(func() {
+		app.viewModel.SetLevels(nil)
+		app.viewModel.SetTextureCount(0)
+	})
 
 	if app.tileTextureMapRenderable != nil {
 		app.tileTextureMapRenderable.Dispose()
@@ -275,7 +298,6 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 		app.paletteTexture = nil
 	}
 	app.textureData = nil
-	app.viewModel.SetTextureCount(0)
 	app.textureStore.Reset()
 
 	if projectID != "" {
@@ -291,7 +313,9 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 
 		app.store.Textures(projectID, func(textures []model.Texture) {
 			app.textureData = textures
-			app.viewModel.SetTextureCount(len(textures))
+			app.updateViewModel(func() {
+				app.viewModel.SetTextureCount(len(textures))
+			})
 		}, app.simpleStoreFailure("Textures"))
 
 		app.store.Levels(projectID, "archive", func(levels []model.Level) {
@@ -299,7 +323,9 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 			for index, level := range levels {
 				levelIDs[index] = level.ID
 			}
-			app.viewModel.SetLevels(levelIDs)
+			app.updateViewModel(func() {
+				app.viewModel.SetLevels(levelIDs)
+			})
 		}, app.simpleStoreFailure("Levels"))
 	}
 }
@@ -317,6 +343,9 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 	app.tileMap.Clear()
 	app.onTileSelectionChanged()
 	app.activeLevelID = -1
+	app.updateViewModel(func() {
+		app.viewModel.SetLevelTextures(nil)
+	})
 
 	if projectID != "" && levelIDError == nil {
 		app.activeLevelID = int(levelID)
@@ -331,10 +360,16 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 			}
 		}, app.simpleStoreFailure("Tiles"))
 
-		app.store.LevelTextures(projectID, "archive", app.activeLevelID, func(textureIDs []int) {
-			app.levelTextures = textureIDs
-		}, app.simpleStoreFailure("LevelTextures"))
+		app.store.LevelTextures(projectID, "archive", app.activeLevelID,
+			app.onStoreLevelTexturesChanged, app.simpleStoreFailure("LevelTextures"))
 	}
+}
+
+func (app *MainApplication) onStoreLevelTexturesChanged(textureIDs []int) {
+	app.levelTextures = textureIDs
+	app.updateViewModel(func() {
+		app.viewModel.SetLevelTextures(app.levelTextures)
+	})
 }
 
 func (app *MainApplication) loadTexture(id int) {
@@ -427,6 +462,13 @@ func (app *MainApplication) onTileSelectionChanged() {
 	ceilingHeight := util.NewValueUnifier("")
 	slopeHeight := util.NewValueUnifier("")
 	slopeControl := util.NewValueUnifier("")
+	floorTexture := util.NewValueUnifier("")
+	ceilingTexture := util.NewValueUnifier("")
+	wallTexture := util.NewValueUnifier("")
+	floorTextureRotations := util.NewValueUnifier("")
+	ceilingTextureRotations := util.NewValueUnifier("")
+	useAdjacentWallTexture := util.NewValueUnifier("")
+	wallTextureOffset := util.NewValueUnifier("")
 
 	app.tileMap.ForEachSelected(func(coord editormodel.TileCoordinate, tile *editormodel.Tile) {
 		tileType.Add(string(*tile.Properties().Type))
@@ -434,6 +476,20 @@ func (app *MainApplication) onTileSelectionChanged() {
 		ceilingHeight.Add(fmt.Sprintf("%d", 32-*tile.Properties().CeilingHeight))
 		slopeHeight.Add(fmt.Sprintf("%d", *tile.Properties().SlopeHeight))
 		slopeControl.Add(string(*tile.Properties().SlopeControl))
+		if tile.Properties().RealWorld != nil {
+			realWorld := tile.Properties().RealWorld
+			floorTexture.Add(fmt.Sprintf("%d", *realWorld.FloorTexture))
+			ceilingTexture.Add(fmt.Sprintf("%d", *realWorld.CeilingTexture))
+			wallTexture.Add(fmt.Sprintf("%d", *realWorld.WallTexture))
+			floorTextureRotations.Add(fmt.Sprintf("%d", *realWorld.FloorTextureRotations))
+			ceilingTextureRotations.Add(fmt.Sprintf("%d", *realWorld.CeilingTextureRotations))
+			if *realWorld.UseAdjacentWallTexture {
+				useAdjacentWallTexture.Add("yes")
+			} else {
+				useAdjacentWallTexture.Add("no")
+			}
+			wallTextureOffset.Add(fmt.Sprintf("%d", *realWorld.WallTextureOffset))
+		}
 	})
 
 	app.updateViewModel(func() {
@@ -442,6 +498,13 @@ func (app *MainApplication) onTileSelectionChanged() {
 		app.viewModel.Tiles().CeilingHeight().Selected().Set(ceilingHeight.Value().(string))
 		app.viewModel.Tiles().SlopeHeight().Selected().Set(slopeHeight.Value().(string))
 		app.viewModel.Tiles().SlopeControl().Selected().Set(slopeControl.Value().(string))
+		app.viewModel.Tiles().FloorTexture().Selected().Set(floorTexture.Value().(string))
+		app.viewModel.Tiles().CeilingTexture().Selected().Set(ceilingTexture.Value().(string))
+		app.viewModel.Tiles().WallTexture().Selected().Set(wallTexture.Value().(string))
+		app.viewModel.Tiles().FloorTextureRotations().Selected().Set(floorTextureRotations.Value().(string))
+		app.viewModel.Tiles().CeilingTextureRotations().Selected().Set(ceilingTextureRotations.Value().(string))
+		app.viewModel.Tiles().UseAdjacentWallTexture().Selected().Set(useAdjacentWallTexture.Value().(string))
+		app.viewModel.Tiles().WallTextureOffset().Selected().Set(wallTextureOffset.Value().(string))
 	})
 }
 
@@ -493,5 +556,85 @@ func (app *MainApplication) onTileSlopeControlChanged(newValue string) {
 			properties.SlopeControl = new(model.SlopeControl)
 			*properties.SlopeControl = model.SlopeControl(newValue)
 		}, true)
+	}
+}
+
+func (app *MainApplication) tileIntValueChangeCallback(accessor func(*model.TileProperties) **int, updateNeighbors bool) func(string) {
+	return func(newValueString string) {
+		newValue, err := strconv.ParseInt(newValueString, 10, 16)
+
+		if newValueString != "" && err == nil {
+			app.requestSelectedTilesChange(func(properties *model.TileProperties) {
+				intPointer := accessor(properties)
+				*intPointer = new(int)
+				**intPointer = int(newValue)
+			}, updateNeighbors)
+		}
+	}
+}
+
+func (app *MainApplication) tileIntRealWorldValueChangeCallback(accessor func(*model.RealWorldTileProperties) **int,
+	updateNeighbors bool) func(string) {
+	return app.tileIntValueChangeCallback(func(properties *model.TileProperties) **int {
+		if properties.RealWorld == nil {
+			properties.RealWorld = &model.RealWorldTileProperties{}
+		}
+		return accessor(properties.RealWorld)
+	}, updateNeighbors)
+}
+
+func (app *MainApplication) onTileWallTextureOffsetChanged(newValueString string) {
+	newValue, err := strconv.ParseInt(newValueString, 10, 16)
+
+	if newValueString != "" && err == nil {
+		app.requestSelectedTilesChange(func(properties *model.TileProperties) {
+			if properties.RealWorld == nil {
+				properties.RealWorld = &model.RealWorldTileProperties{}
+			}
+			properties.RealWorld.WallTextureOffset = new(model.HeightUnit)
+			*properties.RealWorld.WallTextureOffset = model.HeightUnit(int(newValue))
+		}, true)
+	}
+}
+
+func (app *MainApplication) onTileUseAdjacentWallTextureChanged(newValue string) {
+	if newValue != "" {
+		app.requestSelectedTilesChange(func(properties *model.TileProperties) {
+			if properties.RealWorld == nil {
+				properties.RealWorld = &model.RealWorldTileProperties{}
+			}
+			properties.RealWorld.UseAdjacentWallTexture = new(bool)
+			*properties.RealWorld.UseAdjacentWallTexture = newValue == "yes"
+		}, true)
+	}
+}
+
+func (app *MainApplication) onLevelTextureIndexChanged(newValueString string) {
+	newValue, err := strconv.ParseInt(newValueString, 10, 16)
+
+	app.updateViewModel(func() {
+		if (newValueString != "") && (err == nil) && (newValue >= 0) && (int(newValue) < len(app.levelTextures)) {
+			app.viewModel.LevelTextureID().Selected().Set(fmt.Sprintf("%d", app.levelTextures[newValue]))
+		} else {
+			app.viewModel.LevelTextureID().Selected().Set("")
+		}
+	})
+}
+
+func (app *MainApplication) onLevelTextureIDChanged(newValueString string) {
+	if !app.viewModelUpdating {
+		newValue, idErr := strconv.ParseInt(newValueString, 10, 16)
+		index, indexErr := strconv.ParseInt(app.viewModel.LevelTextureIndex().Selected().Get(), 10, 16)
+
+		if (newValueString != "") && (idErr == nil) && (indexErr == nil) &&
+			(newValue >= 0) && (int(newValue) < len(app.textureData)) {
+			app.levelTextures[index] = int(newValue)
+
+			projectID := app.viewModel.SelectedProject()
+			archiveID := "archive"
+			levelID := app.activeLevelID
+			app.store.SetLevelTextures(projectID, archiveID, levelID, app.levelTextures,
+				app.onStoreLevelTexturesChanged, app.simpleStoreFailure("SetLevelTextures"))
+		}
 	}
 }
