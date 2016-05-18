@@ -11,6 +11,8 @@ type FailureFunc func()
 type DataStore interface {
 	// Projects queries the currently available projects.
 	Projects(onSuccess func(projects []string), onFailure FailureFunc)
+	// NewProject requests to create a new project with given ID.
+	NewProject(projectID string, onSuccess func(), onFailure FailureFunc)
 
 	// Palette queries a palette.
 	Palette(projectID string, paletteID string, onSuccess func(colors [256]model.Color), onFailure FailureFunc)

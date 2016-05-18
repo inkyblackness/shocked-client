@@ -9,7 +9,8 @@ type NodeDetailViewFactory interface {
 	// ForList creates a detail view for a single column list.
 	ForList(controller ListDetailController, index int) DetailDataChangeCallback
 
-	//forString(controller stringDetailController) detailDataChangeCallback
+	// ForString creates a detail view for a string.
+	ForString(controller StringDetailController) DetailDataChangeCallback
 }
 
 // NullDetailChangeCallback is the Null-Object implementation of DetailDataChangeCallback.

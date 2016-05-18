@@ -8,6 +8,7 @@ type TestingNodeVisitor struct {
 	tableNodes            []Node
 	stringValueNodes      []Node
 	boolValueNodes        []Node
+	actionNodes           []Node
 }
 
 func NewTestingNodeVisitor() *TestingNodeVisitor {
@@ -40,4 +41,8 @@ func (visitor *TestingNodeVisitor) Container(node *ContainerNode) {
 
 func (visitor *TestingNodeVisitor) Table(node *TableNode) {
 	visitor.tableNodes = append(visitor.tableNodes, node)
+}
+
+func (visitor *TestingNodeVisitor) Action(node *ActionNode) {
+	visitor.actionNodes = append(visitor.actionNodes, node)
 }

@@ -60,7 +60,14 @@
 <script type="text/html" id="vm-string-template">
   <table style="width: 100%"><tbody><tr>
     <td class="propertyLabel" data-bind="text: label"></td>
-    <td><input style="width: 100%" data-bind="textInput: data" /></td>
+    <td><input style="width: 100%" data-bind="textInput: data, attr: { readonly: readonly }" /></td>
+  </tr></tbody></table>
+</script>
+
+<script type="text/html" id="vm-action-template">
+  <table style="width: 100%"><tbody><tr>
+    <td class="propertyLabel">&nbsp;</td>
+    <td><button style="width: 100%" data-bind="text: label, click: act" /></td>
   </tr></tbody></table>
 </script>
 

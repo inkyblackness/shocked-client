@@ -63,6 +63,7 @@ func NewMainApplication(store DataStore) *MainApplication {
 		view:             camera.NewLimited(ZoomLevelMin, ZoomLevelMax, 0, camLimit)}
 
 	app.viewModel.OnSelectedProjectChanged(app.onSelectedProjectChanged)
+	app.viewModel.CreateProject().Subscribe(app.onCreateProject)
 	app.viewModel.OnSelectedLevelChanged(app.onSelectedLevelChanged)
 	app.viewModel.Tiles().TileType().Selected().Subscribe(app.onTileTypeChanged)
 	app.viewModel.Tiles().FloorHeight().Selected().Subscribe(app.onTileFloorHeightChanged)
@@ -94,15 +95,26 @@ func NewMainApplication(store DataStore) *MainApplication {
 	app.textureStore = editormodel.NewBufferedTextureStore(app.loadTexture)
 	app.tileMap = editormodel.NewTileMap(TilesPerMapSide, TilesPerMapSide)
 
-	store.Projects(func(projectIDs []string) {
+	app.queryProjectsAndSelect("(inplace)")
+
+	return app
+}
+
+func (app *MainApplication) queryProjectsAndSelect(projectID string) {
+	app.store.Projects(func(projectIDs []string) {
 		app.viewModel.SetProjects(projectIDs)
-		if (len(projectIDs) == 1) && (projectIDs[0] == "(inplace)") {
-			app.viewModel.SelectProject("(inplace)")
+
+		found := false
+		for _, id := range projectIDs {
+			if id == projectID {
+				found = true
+			}
+		}
+		if found {
+			app.viewModel.SelectProject(projectID)
 			app.viewModel.SelectMapSection()
 		}
 	}, app.simpleStoreFailure("Projects"))
-
-	return app
 }
 
 // ViewModel implements the env.Application interface.
@@ -277,6 +289,17 @@ func (app *MainApplication) animatedPaletteIndex(index int) int {
 	loopIndex(0x1B, 5, 1080)
 
 	return newIndex
+}
+
+func (app *MainApplication) onCreateProject() {
+	projectID := app.viewModel.NewProjectID().Get()
+
+	if projectID != "" {
+		app.store.NewProject(projectID, func() {
+			app.viewModel.NewProjectID().Set("")
+			app.queryProjectsAndSelect(projectID)
+		}, app.simpleStoreFailure("NewProject"))
+	}
 }
 
 func (app *MainApplication) onSelectedProjectChanged(projectID string) {

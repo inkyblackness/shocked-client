@@ -8,6 +8,7 @@ type StringValueNode struct {
 	label     string
 	listeners []StringValueListener
 	value     string
+	editable  bool
 }
 
 // NewStringValueNode returns a new instance of a StringValueNode.
@@ -15,6 +16,14 @@ func NewStringValueNode(label string, value string) *StringValueNode {
 	node := &StringValueNode{
 		label: label,
 		value: value}
+
+	return node
+}
+
+// NewEditableStringValueNode returns a new instance of an editable StringValueNode.
+func NewEditableStringValueNode(label string, value string) *StringValueNode {
+	node := NewStringValueNode(label, value)
+	node.editable = true
 
 	return node
 }
@@ -27,6 +36,11 @@ func (node *StringValueNode) Label() string {
 // Specialize is the Node interface implementation.
 func (node *StringValueNode) Specialize(visitor NodeVisitor) {
 	visitor.StringValue(node)
+}
+
+// Editable returns true if the node is meant to be user-editable.
+func (node *StringValueNode) Editable() bool {
+	return node.editable
 }
 
 // Subscribe registers the provided listener for value changes.

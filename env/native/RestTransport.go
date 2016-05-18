@@ -37,7 +37,11 @@ func (rest *RestTransport) Put(url string, jsonString []byte, onSuccess func(jso
 }
 
 // Post requests to add new data at the given URL.
-func (rest *RestTransport) Post(url string, jsonString []byte, onSucces func(jsonString string), onFailure func()) {
+func (rest *RestTransport) Post(url string, jsonString []byte, onSuccess func(jsonString string), onFailure func()) {
+	request, _ := http.NewRequest(http.MethodPost, rest.serverBase+url, bytes.NewReader(jsonString))
+
+	request.Header.Add("Content-Type", "application/json")
+	rest.handle(request, onSuccess, onFailure)
 }
 
 func (rest *RestTransport) handle(request *http.Request, onSuccess func(jsonString string), onFailure func()) {
@@ -52,7 +56,7 @@ func (rest *RestTransport) handle(request *http.Request, onSuccess func(jsonStri
 			defer response.Body.Close()
 		}
 
-		if err == nil && response.StatusCode == 200 {
+		if (err == nil) && (response.StatusCode == http.StatusOK) || (response.StatusCode == http.StatusCreated) {
 			var bodyData []byte
 
 			bodyData, err = ioutil.ReadAll(response.Body)

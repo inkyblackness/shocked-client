@@ -37,6 +37,26 @@ func (store *RestDataStore) put(url string, requestData interface{}, responseDat
 	})
 }
 
+func (store *RestDataStore) post(url string, requestData interface{}, responseData interface{}, onSuccess func(), onFailure FailureFunc) {
+	data, _ := json.Marshal(requestData)
+	store.transport.Post(url, data, func(jsonString string) {
+		json.Unmarshal(bytes.NewBufferString(jsonString).Bytes(), responseData)
+		onSuccess()
+	}, func() {
+		onFailure()
+	})
+}
+
+// NewProject implements the DataStore interface.
+func (store *RestDataStore) NewProject(projectID string, onSuccess func(), onFailure FailureFunc) {
+	url := fmt.Sprintf("/projects")
+	var inData model.ProjectTemplate
+	var outData model.Project
+
+	inData.ID = projectID
+	store.post(url, &inData, &outData, onSuccess, onFailure)
+}
+
 // Projects implements the DataStore interface.
 func (store *RestDataStore) Projects(onSuccess func(projects []string), onFailure FailureFunc) {
 	url := "/projects"

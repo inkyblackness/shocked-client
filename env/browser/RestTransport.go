@@ -55,5 +55,22 @@ func (rest *RestTransport) Put(url string, jsonString []byte, onSuccess func(jso
 }
 
 // Post requests to add new data at the given URL.
-func (rest *RestTransport) Post(url string, jsonString []byte, onSucces func(jsonString string), onFailure func()) {
+func (rest *RestTransport) Post(url string, jsonString []byte, onSuccess func(jsonString string), onFailure func()) {
+	ajaxopt := map[string]interface{}{
+		"method":      "POST",
+		"url":         url,
+		"dataType":    "json",
+		"contentType": "application/json",
+		"data":        string(jsonString),
+		"jsonp":       false,
+		"processData": false,
+		"success": func(data interface{}) {
+			jsonString := JSON.Stringify(data)
+			onSuccess(jsonString)
+		},
+		"error": func(status interface{}) {
+			onFailure()
+		}}
+
+	jquery.Ajax(ajaxopt)
 }

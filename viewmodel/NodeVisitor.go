@@ -19,4 +19,7 @@ type NodeVisitor interface {
 	Container(node *ContainerNode)
 	// Table will be called for any TableNode.
 	Table(node *TableNode)
+
+	// Action will be called for any ActionNode.
+	Action(node *ActionNode)
 }

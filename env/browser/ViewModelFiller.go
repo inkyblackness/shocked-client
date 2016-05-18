@@ -98,6 +98,7 @@ func (filler *viewModelFiller) StringValue(node *viewmodel.StringValueNode) {
 	filler.object = js.Global.Get("Object").New()
 	filler.object.Set("type", "string")
 	filler.object.Set("label", node.Label())
+	filler.object.Set("readonly", !node.Editable())
 	filler.object.Set("data", observable.ToJS())
 	node.Subscribe(func(newValue string) {
 		if observable.Get().String() != newValue {
@@ -149,4 +150,11 @@ func (filler *viewModelFiller) Table(node *viewmodel.TableNode) {
 
 	setEntries(node.Get())
 	node.Subscribe(setEntries)
+}
+
+func (filler *viewModelFiller) Action(node *viewmodel.ActionNode) {
+	filler.object = js.Global.Get("Object").New()
+	filler.object.Set("type", "action")
+	filler.object.Set("label", node.Label())
+	filler.object.Set("act", node.Act)
 }

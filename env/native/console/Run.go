@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"runtime"
+	"strings"
 
 	"github.com/jroimartin/gocui"
 
@@ -20,7 +21,8 @@ type appRunner struct {
 	activeDetailTexter ViewModelNodeTexter
 	mainControlLines   int
 
-	activeListDetailController ListDetailController
+	activeListDetailController   ListDetailController
+	activeStringDetailController StringDetailController
 }
 
 // Run initializes the environment to run the given application within.
@@ -68,6 +70,12 @@ func Run(app env.Application, deferrer <-chan func()) {
 		log.Panicln(err)
 	}
 	if err := gui.SetKeybinding("listDetail", gocui.KeyArrowUp, gocui.ModNone, runner.cursorUp); err != nil {
+		log.Panicln(err)
+	}
+	if err := gui.SetKeybinding("stringDetail", gocui.KeyEnter, gocui.ModNone, runner.confirmStringDetail); err != nil {
+		log.Panicln(err)
+	}
+	if err := gui.SetKeybinding("stringDetail", gocui.KeyEsc, gocui.ModNone, runner.cancelStringDetail); err != nil {
 		log.Panicln(err)
 	}
 
@@ -230,18 +238,69 @@ func (runner *appRunner) ForList(controller ListDetailController, index int) Det
 	}
 }
 
+func (runner *appRunner) ForString(controller StringDetailController) DetailDataChangeCallback {
+	runner.activeStringDetailController = controller
+
+	redrawDetails := func(view *gocui.View) {
+		view.Clear()
+		controller.WriteDetails(view)
+	}
+
+	runner.gui.Execute(func(*gocui.Gui) error {
+		maxX, maxY := runner.gui.Size()
+
+		view, _ := runner.gui.SetView("stringDetail", maxX/2, 0, maxX-1, maxY-1)
+		view.Editable = true
+		view.Frame = true
+		redrawDetails(view)
+
+		runner.gui.SetCurrentView(view.Name())
+		return nil
+	})
+
+	return func() {
+		runner.gui.Execute(func(*gocui.Gui) error {
+			view, _ := runner.gui.View("stringDetail")
+			redrawDetails(view)
+			return nil
+		})
+	}
+}
+
+func (runner *appRunner) restoreMainView() {
+	runner.activeListDetailController = nil
+	runner.activeStringDetailController = nil
+	runner.gui.SetCurrentView("mainControls")
+}
+
 func (runner *appRunner) confirmListDetail(gui *gocui.Gui, view *gocui.View) error {
 	_, originY := view.Origin()
 	_, cursorY := view.Cursor()
 	runner.activeListDetailController.Confirm(originY + cursorY)
-	runner.gui.SetCurrentView("mainControls")
+	runner.restoreMainView()
 	runner.gui.DeleteView(view.Name())
 	return nil
 }
 
 func (runner *appRunner) cancelListDetail(gui *gocui.Gui, view *gocui.View) error {
 	runner.activeListDetailController.Cancel()
-	runner.gui.SetCurrentView("mainControls")
+	runner.restoreMainView()
+	runner.gui.DeleteView(view.Name())
+	return nil
+}
+
+func (runner *appRunner) confirmStringDetail(gui *gocui.Gui, view *gocui.View) error {
+	text := strings.TrimSpace(view.Buffer())
+
+	runner.activeStringDetailController.Confirm(text)
+	runner.restoreMainView()
+	runner.gui.DeleteView(view.Name())
+	return nil
+}
+
+func (runner *appRunner) cancelStringDetail(gui *gocui.Gui, view *gocui.View) error {
+	runner.activeStringDetailController.Cancel()
+	runner.restoreMainView()
 	runner.gui.DeleteView(view.Name())
 	return nil
 }

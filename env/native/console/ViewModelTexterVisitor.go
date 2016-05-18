@@ -48,3 +48,8 @@ func (visitor *ViewModelTexterVisitor) Container(node *viewmodel.ContainerNode) 
 // Table is the viewmodel.NodeVisitor implementation.
 func (visitor *ViewModelTexterVisitor) Table(node *viewmodel.TableNode) {
 }
+
+// Action is the viewmodel.NodeVisitor implementation.
+func (visitor *ViewModelTexterVisitor) Action(node *viewmodel.ActionNode) {
+	visitor.instance = NewActionNodeTexter(node, visitor.listener)
+}
