@@ -400,10 +400,23 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 	})
 }
 
+func (app *MainApplication) activeLevel() (level *model.Level) {
+	activeLevelIDString := fmt.Sprintf("%d", app.activeLevelID)
+
+	for _, temp := range app.levels {
+		if temp.ID == activeLevelIDString {
+			level = &temp
+		}
+	}
+
+	return
+}
+
 func (app *MainApplication) isActiveLevelRealWorld() (realWorld bool) {
-	if (app.activeLevelID >= 0) && (app.activeLevelID < len(app.levels)) {
-		level := &app.levels[app.activeLevelID]
-		realWorld = !level.Properties.CyberspaceFlag
+	activeLevel := app.activeLevel()
+
+	if activeLevel != nil {
+		realWorld = !activeLevel.Properties.CyberspaceFlag
 	}
 
 	return
