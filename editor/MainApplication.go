@@ -39,6 +39,7 @@ type MainApplication struct {
 
 	view *camera.LimitedCamera
 
+	levels         []model.Level
 	activeLevelID  int
 	paletteTexture *graphics.PaletteTexture
 	levelTextures  []int
@@ -322,6 +323,7 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 	}
 	app.textureData = nil
 	app.textureStore.Reset()
+	app.levels = nil
 
 	if projectID != "" {
 		app.store.Palette(projectID, "game", func(colors [256]model.Color) {
@@ -330,7 +332,6 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 				return byte(entry.Red), byte(entry.Green), byte(entry.Blue), 255
 			}
 			app.paletteTexture = graphics.NewPaletteTexture(app.gl, colorProvider)
-			app.tileTextureMapRenderable = display.NewTileTextureMapRenderable(app.gl, app.paletteTexture, app.levelTexture)
 			app.tileGridMapRenderable = display.NewTileGridMapRenderable(app.gl)
 		}, app.simpleStoreFailure("Palette"))
 
@@ -346,6 +347,7 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 			for index, level := range levels {
 				levelIDs[index] = level.ID
 			}
+			app.levels = levels
 			app.updateViewModel(func() {
 				app.viewModel.SetLevels(levelIDs)
 			})
@@ -359,6 +361,8 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 
 	if app.tileTextureMapRenderable != nil {
 		app.tileTextureMapRenderable.Clear()
+		app.tileTextureMapRenderable.Dispose()
+		app.tileTextureMapRenderable = nil
 	}
 	if app.tileGridMapRenderable != nil {
 		app.tileGridMapRenderable.Clear()
@@ -373,6 +377,10 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 	if projectID != "" && levelIDError == nil {
 		app.activeLevelID = int(levelID)
 
+		if app.isActiveLevelRealWorld() {
+			app.tileTextureMapRenderable = display.NewTileTextureMapRenderable(app.gl, app.paletteTexture, app.levelTexture)
+		}
+
 		app.store.Tiles(projectID, "archive", app.activeLevelID, func(data model.Tiles) {
 			for y, row := range data.Table {
 				for x := 0; x < len(row); x++ {
@@ -386,6 +394,19 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 		app.store.LevelTextures(projectID, "archive", app.activeLevelID,
 			app.onStoreLevelTexturesChanged, app.simpleStoreFailure("LevelTextures"))
 	}
+
+	app.updateViewModel(func() {
+		app.viewModel.SetLevelIsRealWorld(app.isActiveLevelRealWorld())
+	})
+}
+
+func (app *MainApplication) isActiveLevelRealWorld() (realWorld bool) {
+	if (app.activeLevelID >= 0) && (app.activeLevelID < len(app.levels)) {
+		level := &app.levels[app.activeLevelID]
+		realWorld = !level.Properties.CyberspaceFlag
+	}
+
+	return
 }
 
 func (app *MainApplication) onStoreLevelTexturesChanged(textureIDs []int) {
@@ -415,7 +436,9 @@ func (app *MainApplication) levelTexture(index int) (texture graphics.Texture) {
 func (app *MainApplication) onTilePropertiesUpdated(coord editormodel.TileCoordinate, properties *model.TileProperties) {
 	x, y := coord.XY()
 
-	app.tileTextureMapRenderable.SetTile(x, 63-y, properties)
+	if app.tileTextureMapRenderable != nil {
+		app.tileTextureMapRenderable.SetTile(x, 63-y, properties)
+	}
 	app.tileGridMapRenderable.SetTile(x, 63-y, properties)
 	app.tileMap.Tile(coord).SetProperties(properties)
 }

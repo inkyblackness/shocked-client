@@ -18,6 +18,7 @@ type ViewModel struct {
 	textureCount  *viewmodel.StringValueNode
 
 	levels            *viewmodel.ValueSelectionNode
+	levelIsRealWorld  *viewmodel.BoolValueNode
 	levelTextureIndex *viewmodel.ValueSelectionNode
 	levelTextureID    *viewmodel.ValueSelectionNode
 	levelTextureIDs   []int
@@ -30,7 +31,6 @@ type ViewModel struct {
 // NewViewModel returns a new ViewModel instance.
 func NewViewModel() *ViewModel {
 	vm := &ViewModel{}
-	isRealWorldMap := viewmodel.NewBoolValueNode("Is RealWolrd", true)
 
 	vm.projects = viewmodel.NewValueSelectionNode("Select", nil, "")
 	vm.newProjectID = viewmodel.NewEditableStringValueNode("New Project Name", "")
@@ -41,12 +41,13 @@ func NewViewModel() *ViewModel {
 		viewmodel.NewBoolValueNode("Available", true))
 
 	vm.levels = viewmodel.NewValueSelectionNode("Level", nil, "")
-	vm.tiles = NewTilesViewModel()
+	vm.levelIsRealWorld = viewmodel.NewBoolValueNode("Is Real World", false)
+	vm.tiles = NewTilesViewModel(vm.levelIsRealWorld)
 
 	vm.levelTextureIndex = viewmodel.NewValueSelectionNode("Texture Index", []string{""}, "")
 	vm.levelTextureID = viewmodel.NewValueSelectionNode("Texture ID", []string{""}, "")
 	levelTexturesControlSection := viewmodel.NewSectionNode("Level Textures",
-		[]viewmodel.Node{vm.levelTextureIndex, vm.levelTextureID}, isRealWorldMap)
+		[]viewmodel.Node{vm.levelTextureIndex, vm.levelTextureID}, vm.levelIsRealWorld)
 	mapControlSection := viewmodel.NewSectionNode("Control", []viewmodel.Node{vm.levels}, viewmodel.NewBoolValueNode("", true))
 	mapSectionSelection := viewmodel.NewSectionSelectionNode("Map Section", map[string]*viewmodel.SectionNode{
 		"Control":        mapControlSection,
@@ -141,6 +142,11 @@ func (vm *ViewModel) SetPointerAt(tileX, tileY int, subX, subY int) {
 		text = fmt.Sprintf("Tile: %2d/%2d Sub: %3d/%3d", tileX, tileY, subX, subY)
 	}
 	vm.pointerCoordinate.Set(text)
+}
+
+// SetLevelIsRealWorld sets whether the currently displayed level is the real world - or cyberspace otherwise.
+func (vm *ViewModel) SetLevelIsRealWorld(value bool) {
+	vm.levelIsRealWorld.Set(value)
 }
 
 // Tiles returns the sub-section about tiles.

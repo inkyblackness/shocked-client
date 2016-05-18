@@ -37,7 +37,7 @@ func intStringList(start, stop int) (list []string) {
 }
 
 // NewTilesViewModel returns a new instance of a TilesViewModel.
-func NewTilesViewModel() *TilesViewModel {
+func NewTilesViewModel(levelIsRealWorld *viewmodel.BoolValueNode) *TilesViewModel {
 	vm := &TilesViewModel{}
 
 	vm.tileType = viewmodel.NewValueSelectionNode("Tile Type", []string{string(model.Open), string(model.Solid),
@@ -63,11 +63,15 @@ func NewTilesViewModel() *TilesViewModel {
 	vm.useAdjacentWallTexture = viewmodel.NewValueSelectionNode("Use Adj. Wall Tex", []string{"yes", "no", ""}, "")
 	vm.wallTextureOffset = viewmodel.NewValueSelectionNode("Wall Texture Offset", intStringList(0, 31), "")
 
-	vm.root = viewmodel.NewSectionNode("Tiles",
-		[]viewmodel.Node{vm.tileType, vm.floorHeight, vm.ceilingHeight, vm.slopeHeight, vm.slopeControl,
-			vm.floorTexture, vm.ceilingTexture, vm.wallTexture,
+	realWorldSection := viewmodel.NewSectionNode("Real World",
+		[]viewmodel.Node{vm.floorTexture, vm.ceilingTexture, vm.wallTexture,
 			vm.floorTextureRotations, vm.ceilingTextureRotations,
 			vm.useAdjacentWallTexture, vm.wallTextureOffset},
+		levelIsRealWorld)
+
+	vm.root = viewmodel.NewSectionNode("Tiles",
+		[]viewmodel.Node{vm.tileType, vm.floorHeight, vm.ceilingHeight, vm.slopeHeight, vm.slopeControl,
+			realWorldSection},
 		viewmodel.NewBoolValueNode("", true))
 
 	return vm
