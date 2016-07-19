@@ -39,14 +39,14 @@ type MainApplication struct {
 
 	view *camera.LimitedCamera
 
-	levels         []model.Level
-	activeLevelID  int
-	paletteTexture *graphics.PaletteTexture
-	levelTextures  []int
-	textureData    []model.Texture
-	textureStore   *editormodel.BufferedTextureStore
-	tileMap        *editormodel.TileMap
-	levelObjects   map[string]*model.LevelObject
+	levels           []model.Level
+	activeLevelID    int
+	paletteTexture   *graphics.PaletteTexture
+	levelTextures    []int
+	textureData      []model.Texture
+	gameTextureStore *editormodel.BufferedTextureStore
+	tileMap          *editormodel.TileMap
+	levelObjects     map[string]*model.LevelObject
 
 	gridRenderable           *display.GridRenderable
 	tileTextureMapRenderable *display.TileTextureMapRenderable
@@ -95,7 +95,7 @@ func NewMainApplication(store DataStore) *MainApplication {
 	app.viewModel.LevelTextureID().Selected().Subscribe(app.onLevelTextureIDChanged)
 
 	app.activeLevelID = -1
-	app.textureStore = editormodel.NewBufferedTextureStore(app.loadTexture)
+	app.gameTextureStore = editormodel.NewBufferedTextureStore(app.loadGameTexture)
 	app.tileMap = editormodel.NewTileMap(TilesPerMapSide, TilesPerMapSide)
 
 	app.queryProjectsAndSelect("(inplace)")
@@ -324,7 +324,7 @@ func (app *MainApplication) onSelectedProjectChanged(projectID string) {
 		app.paletteTexture = nil
 	}
 	app.textureData = nil
-	app.textureStore.Reset()
+	app.gameTextureStore.Reset()
 	app.levels = nil
 
 	if projectID != "" {
@@ -434,18 +434,19 @@ func (app *MainApplication) onStoreLevelTexturesChanged(textureIDs []int) {
 	})
 }
 
-func (app *MainApplication) loadTexture(id int) {
+func (app *MainApplication) loadGameTexture(id editormodel.TextureKey) {
 	projectID := app.viewModel.SelectedProject()
+	gameTextureKey := id.(editormodel.GameTextureKey)
 
-	app.store.TextureBitmap(projectID, id, "large", func(bmp *model.RawBitmap) {
+	app.store.TextureBitmap(projectID, gameTextureKey.ID(), "large", func(bmp *model.RawBitmap) {
 		pixelData, _ := base64.StdEncoding.DecodeString(bmp.Pixel)
-		app.textureStore.SetTexture(id, graphics.NewBitmapTexture(app.gl, bmp.Width, bmp.Height, pixelData))
+		app.gameTextureStore.SetTexture(id, graphics.NewBitmapTexture(app.gl, bmp.Width, bmp.Height, pixelData))
 	}, app.simpleStoreFailure("TextureBitmap"))
 }
 
 func (app *MainApplication) levelTexture(index int) (texture graphics.Texture) {
 	if index >= 0 && index < len(app.levelTextures) {
-		texture = app.textureStore.Texture(app.levelTextures[index])
+		texture = app.gameTextureStore.Texture(editormodel.GameTextureKeyFor(app.levelTextures[index]))
 	}
 
 	return
