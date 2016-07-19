@@ -167,3 +167,14 @@ func (store *RestDataStore) SetTile(projectID string, archiveID string, levelID 
 		onSuccess(data.Properties)
 	}, onFailure)
 }
+
+// LevelObjects implements the DataStore interface.
+func (store *RestDataStore) LevelObjects(projectID string, archiveID string, levelID int,
+	onSuccess func(objects *model.LevelObjects), onFailure FailureFunc) {
+	url := fmt.Sprintf("/projects/%s/%s/levels/%d/objects", projectID, archiveID, levelID)
+	var data model.LevelObjects
+
+	store.get(url, &data, func() {
+		onSuccess(&data)
+	}, onFailure)
+}

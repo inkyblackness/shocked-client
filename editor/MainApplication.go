@@ -46,6 +46,7 @@ type MainApplication struct {
 	textureData    []model.Texture
 	textureStore   *editormodel.BufferedTextureStore
 	tileMap        *editormodel.TileMap
+	levelObjects   map[string]*model.LevelObject
 
 	gridRenderable           *display.GridRenderable
 	tileTextureMapRenderable *display.TileTextureMapRenderable
@@ -61,7 +62,8 @@ func NewMainApplication(store DataStore) *MainApplication {
 		store:            store,
 		viewModel:        NewViewModel(),
 		mouseMoveCapture: func() {},
-		view:             camera.NewLimited(ZoomLevelMin, ZoomLevelMax, 0, camLimit)}
+		view:             camera.NewLimited(ZoomLevelMin, ZoomLevelMax, 0, camLimit),
+		levelObjects:     make(map[string]*model.LevelObject)}
 
 	app.viewModel.OnSelectedProjectChanged(app.onSelectedProjectChanged)
 	app.viewModel.CreateProject().Subscribe(app.onCreateProject)
@@ -393,6 +395,9 @@ func (app *MainApplication) onSelectedLevelChanged(levelIDString string) {
 
 		app.store.LevelTextures(projectID, "archive", app.activeLevelID,
 			app.onStoreLevelTexturesChanged, app.simpleStoreFailure("LevelTextures"))
+
+		app.store.LevelObjects(projectID, "archive", app.activeLevelID,
+			app.onStoreLevelObjectsChanged, app.simpleStoreFailure("LevelObjects"))
 	}
 
 	app.updateViewModel(func() {
@@ -695,5 +700,13 @@ func (app *MainApplication) onLevelTextureIDChanged(newValueString string) {
 			app.store.SetLevelTextures(projectID, archiveID, levelID, app.levelTextures,
 				app.onStoreLevelTexturesChanged, app.simpleStoreFailure("SetLevelTextures"))
 		}
+	}
+}
+
+func (app *MainApplication) onStoreLevelObjectsChanged(levelObjects *model.LevelObjects) {
+	app.levelObjects = make(map[string]*model.LevelObject)
+	for i := 0; i < len(levelObjects.Table); i++ {
+		levelObject := &levelObjects.Table[i]
+		app.levelObjects[levelObject.ID] = levelObject
 	}
 }

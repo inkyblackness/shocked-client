@@ -38,4 +38,8 @@ type DataStore interface {
 	// SetTile requests to update properties of a specific tile.
 	SetTile(projectID string, archiveID string, levelID int, x, y int, properties model.TileProperties,
 		onSuccess func(properties model.TileProperties), onFailure FailureFunc)
+
+	// LevelObjects requests all objects of the level.
+	LevelObjects(projectID string, archiveID string, levelID int,
+		onSuccess func(objects *model.LevelObjects), onFailure FailureFunc)
 }
