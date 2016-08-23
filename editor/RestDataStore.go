@@ -71,6 +71,16 @@ func (store *RestDataStore) Projects(onSuccess func(projects []string), onFailur
 	}, onFailure)
 }
 
+// Font implements the DataStore interface.
+func (store *RestDataStore) Font(projectID string, fontID int, onSuccess func(font *model.Font), onFailure FailureFunc) {
+	url := fmt.Sprintf("/projects/%s/fonts/%v", projectID, fontID)
+	var data model.Font
+
+	store.get(url, &data, func() {
+		onSuccess(&data)
+	}, onFailure)
+}
+
 // Palette implements the DataStore interface.
 func (store *RestDataStore) Palette(projectID string, paletteID string,
 	onSuccess func(colors [256]model.Color), onFailure FailureFunc) {

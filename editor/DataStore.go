@@ -14,6 +14,9 @@ type DataStore interface {
 	// NewProject requests to create a new project with given ID.
 	NewProject(projectID string, onSuccess func(), onFailure FailureFunc)
 
+	// Font queries a specific font.
+	Font(projectID string, fontID int, onSuccess func(font *model.Font), onFailure FailureFunc)
+
 	// Palette queries a palette.
 	Palette(projectID string, paletteID string, onSuccess func(colors [256]model.Color), onFailure FailureFunc)
 	// Levels queries all levels of a project.

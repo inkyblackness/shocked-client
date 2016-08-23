@@ -439,7 +439,7 @@ func (app *MainApplication) loadGameTexture(id editormodel.TextureKey) {
 	gameTextureKey := id.(editormodel.GameTextureKey)
 
 	app.store.TextureBitmap(projectID, gameTextureKey.ID(), "large", func(bmp *model.RawBitmap) {
-		pixelData, _ := base64.StdEncoding.DecodeString(bmp.Pixel)
+		pixelData, _ := base64.StdEncoding.DecodeString(bmp.Pixels)
 		app.gameTextureStore.SetTexture(id, graphics.NewBitmapTexture(app.gl, bmp.Width, bmp.Height, pixelData))
 	}, app.simpleStoreFailure("TextureBitmap"))
 }
