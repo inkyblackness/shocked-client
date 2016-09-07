@@ -90,24 +90,21 @@ func (renderer *bitmapTextRenderer) outline(bmp Bitmap) {
 		return
 	}
 
-	for y := 0; y < bmp.Height; y++ {
-		lines := perimeter(y, bmp.Height)
-		for x := 0; x < bmp.Width; x++ {
-			pixelOffset := bmp.Width*y + x
-			if bmp.Pixels[pixelOffset] == 0 {
-				columns := perimeter(x, bmp.Width)
-				isNeighbour := false
+	for pixelOffset, pixelValue := range bmp.Pixels {
+		if pixelValue == 0 {
+			lines := perimeter(pixelOffset/bmp.Width, bmp.Height)
+			columns := perimeter(pixelOffset%bmp.Width, bmp.Width)
+			isNeighbour := false
 
-				for _, lineOffset := range lines {
-					for _, columnOffset := range columns {
-						if bmp.Pixels[(y+lineOffset)*bmp.Width+(x+columnOffset)] == 1 {
-							isNeighbour = true
-						}
+			for _, lineOffset := range lines {
+				for _, columnOffset := range columns {
+					if !isNeighbour && (bmp.Pixels[pixelOffset+lineOffset*bmp.Width+columnOffset] == 1) {
+						isNeighbour = true
 					}
 				}
-				if isNeighbour {
-					bmp.Pixels[pixelOffset] = 2
-				}
+			}
+			if isNeighbour {
+				bmp.Pixels[pixelOffset] = 2
 			}
 		}
 	}
