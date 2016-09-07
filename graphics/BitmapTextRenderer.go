@@ -51,6 +51,9 @@ func (renderer *bitmapTextRenderer) Render(text string) Bitmap {
 			outStartX += charWidth
 		}
 	}
+	if renderer.font.Monochrome {
+		renderer.outline(bmp)
+	}
 
 	return bmp
 }
@@ -73,4 +76,39 @@ func (renderer *bitmapTextRenderer) mapCharactersToIndex(text string) [][]int {
 	lines = append(lines, curLine)
 
 	return lines
+}
+
+func (renderer *bitmapTextRenderer) outline(bmp Bitmap) {
+	perimeter := func(index, limit int) (values []int) {
+		if index > 0 {
+			values = append(values, -1)
+		}
+		values = append(values, 0)
+		if index < (limit - 1) {
+			values = append(values, 1)
+		}
+		return
+	}
+
+	for y := 0; y < bmp.Height; y++ {
+		lines := perimeter(y, bmp.Height)
+		for x := 0; x < bmp.Width; x++ {
+			pixelOffset := bmp.Width*y + x
+			if bmp.Pixels[pixelOffset] == 0 {
+				columns := perimeter(x, bmp.Width)
+				isNeighbour := false
+
+				for _, lineOffset := range lines {
+					for _, columnOffset := range columns {
+						if bmp.Pixels[(y+lineOffset)*bmp.Width+(x+columnOffset)] == 1 {
+							isNeighbour = true
+						}
+					}
+				}
+				if isNeighbour {
+					bmp.Pixels[pixelOffset] = 2
+				}
+			}
+		}
+	}
 }
