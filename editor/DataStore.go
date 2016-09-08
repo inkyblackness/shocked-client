@@ -17,6 +17,9 @@ type DataStore interface {
 	// Font queries a specific font.
 	Font(projectID string, fontID int, onSuccess func(font *model.Font), onFailure FailureFunc)
 
+	// GameObjectIcon queries the icon bitmap of a game object.
+	GameObjectIcon(projectID string, class, subclass, objType int, onSuccess func(bmp *model.RawBitmap), onFailure FailureFunc)
+
 	// Palette queries a palette.
 	Palette(projectID string, paletteID string, onSuccess func(colors [256]model.Color), onFailure FailureFunc)
 	// Levels queries all levels of a project.

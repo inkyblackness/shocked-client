@@ -81,6 +81,17 @@ func (store *RestDataStore) Font(projectID string, fontID int, onSuccess func(fo
 	}, onFailure)
 }
 
+// GameObjectIcon implements the DataStore interface.
+func (store *RestDataStore) GameObjectIcon(projectID string, class, subclass, objType int,
+	onSuccess func(bmp *model.RawBitmap), onFailure FailureFunc) {
+	url := fmt.Sprintf("/projects/%s/objects/%d/%d/%d/icon/raw", projectID, class, subclass, objType)
+	var data model.RawBitmap
+
+	store.get(url, &data, func() {
+		onSuccess(&data)
+	}, onFailure)
+}
+
 // Palette implements the DataStore interface.
 func (store *RestDataStore) Palette(projectID string, paletteID string,
 	onSuccess func(colors [256]model.Color), onFailure FailureFunc) {
