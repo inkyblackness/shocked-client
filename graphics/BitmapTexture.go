@@ -8,6 +8,8 @@ import (
 type BitmapTexture struct {
 	gl opengl.OpenGl
 
+	width  float32
+	height float32
 	handle uint32
 }
 
@@ -15,6 +17,8 @@ type BitmapTexture struct {
 func NewBitmapTexture(gl opengl.OpenGl, width, height int, pixelData []byte) *BitmapTexture {
 	tex := &BitmapTexture{
 		gl:     gl,
+		width:  float32(width),
+		height: float32(height),
 		handle: gl.GenTextures(1)[0]}
 
 	// The texture has to be blown up to use RGBA from the start;
@@ -44,6 +48,11 @@ func (tex *BitmapTexture) Dispose() {
 		tex.gl.DeleteTextures([]uint32{tex.handle})
 		tex.handle = 0
 	}
+}
+
+// Size returns the dimensions of the bitmap, in pixels.
+func (tex *BitmapTexture) Size() (width, height float32) {
+	return tex.width, tex.height
 }
 
 // Handle returns the texture handle.

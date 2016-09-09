@@ -53,7 +53,7 @@ type BasicHighlighter struct {
 }
 
 // NewBasicHighlighter returns a new instance of BasicHighlighter.
-func NewBasicHighlighter(gl opengl.OpenGl) *BasicHighlighter {
+func NewBasicHighlighter(gl opengl.OpenGl, color [4]float32) *BasicHighlighter {
 	vertexShader, err1 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, basicHighlighterVertexShaderSource)
 	defer gl.DeleteShader(vertexShader)
 	fragmentShader, err2 := opengl.CompileNewShader(gl, opengl.FRAGMENT_SHADER, basicHighlighterFragmentShaderSource)
@@ -91,7 +91,6 @@ func NewBasicHighlighter(gl opengl.OpenGl) *BasicHighlighter {
 			-half, -half, 0.0}
 		gl.BufferData(opengl.ARRAY_BUFFER, len(vertices)*4, vertices, opengl.STATIC_DRAW)
 
-		color := [4]float32{0.0, 0.0, 1.0, 0.3}
 		gl.Uniform4fv(highlighter.inColorUniform, &color)
 	})
 

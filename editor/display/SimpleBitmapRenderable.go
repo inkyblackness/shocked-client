@@ -53,8 +53,6 @@ var simpleBitmapFragmentShaderSource = `
 type SimpleBitmapRenderable struct {
 	gl opengl.OpenGl
 
-	modelMatrix mgl.Mat4
-
 	program                 uint32
 	vertexArrayObject       uint32
 	vertexPositionBuffer    uint32
@@ -69,12 +67,10 @@ type SimpleBitmapRenderable struct {
 	bitmapUniform  int32
 
 	paletteTexture graphics.Texture
-	bitmapTexture  graphics.Texture
 }
 
 // NewSimpleBitmapRenderable returns a new instance of a simple bitmap renderable
-func NewSimpleBitmapRenderable(gl opengl.OpenGl, positionX, positionY float32, displaySize float32,
-	paletteTexture graphics.Texture) *SimpleBitmapRenderable {
+func NewSimpleBitmapRenderable(gl opengl.OpenGl, paletteTexture graphics.Texture) *SimpleBitmapRenderable {
 	vertexShader, err1 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, simpleBitmapVertexShaderSource)
 	defer gl.DeleteShader(vertexShader)
 	fragmentShader, err2 := opengl.CompileNewShader(gl, opengl.FRAGMENT_SHADER, simpleBitmapFragmentShaderSource)
@@ -91,9 +87,6 @@ func NewSimpleBitmapRenderable(gl opengl.OpenGl, positionX, positionY float32, d
 	renderable := &SimpleBitmapRenderable{
 		gl:      gl,
 		program: program,
-		modelMatrix: mgl.Ident4().
-			Mul4(mgl.Translate3D(positionX, positionY, 0.0)).
-			Mul4(mgl.Scale3D(displaySize, displaySize, 1.0)),
 
 		vertexArrayObject:       gl.GenVertexArrays(1)[0],
 		vertexPositionBuffer:    gl.GenBuffers(1)[0],
@@ -107,30 +100,17 @@ func NewSimpleBitmapRenderable(gl opengl.OpenGl, positionX, positionY float32, d
 		paletteUniform:          gl.GetUniformLocation(program, "palette"),
 		bitmapUniform:           gl.GetUniformLocation(program, "bitmap")}
 
-	return renderable
-}
-
-// SetBitmap sets the bitmap to use.
-func (renderable *SimpleBitmapRenderable) SetBitmap(bmp graphics.Bitmap) {
-	if renderable.bitmapTexture != nil {
-		renderable.bitmapTexture.Dispose()
-		renderable.bitmapTexture = nil
-	}
-
-	renderable.bitmapTexture = graphics.NewBitmapTexture(renderable.gl, bmp.Width, bmp.Height, bmp.Pixels)
-
 	renderable.withShader(func() {
 		gl := renderable.gl
-		halfWidth := float32(bmp.Width) / 2.0
-		halfHeight := float32(bmp.Height) / 2.0
+		half := float32(0.5)
 		var vertices = []float32{
-			-halfWidth, -halfHeight, 0.0,
-			halfWidth, -halfHeight, 0.0,
-			halfWidth, halfHeight, 0.0,
+			-half, -half, 0.0,
+			half, -half, 0.0,
+			half, half, 0.0,
 
-			halfWidth, halfHeight, 0.0,
-			-halfWidth, halfHeight, 0.0,
-			-halfWidth, -halfHeight, 0.0}
+			half, half, 0.0,
+			-half, half, 0.0,
+			-half, -half, 0.0}
 		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.vertexPositionBuffer)
 		gl.BufferData(opengl.ARRAY_BUFFER, len(vertices)*4, vertices, opengl.STATIC_DRAW)
 
@@ -146,40 +126,45 @@ func (renderable *SimpleBitmapRenderable) SetBitmap(bmp graphics.Bitmap) {
 		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.uvPositionBuffer)
 		gl.BufferData(opengl.ARRAY_BUFFER, len(uv)*4, uv, opengl.STATIC_DRAW)
 	})
+
+	return renderable
 }
 
-// Render renders
-func (renderable *SimpleBitmapRenderable) Render(context *RenderContext) {
+// Render renders the bitmap with the center at given position
+func (renderable *SimpleBitmapRenderable) Render(context *RenderContext, x, y float32, texture *graphics.BitmapTexture) {
 	gl := renderable.gl
 
-	if renderable.bitmapTexture != nil {
-		renderable.withShader(func() {
-			renderable.setMatrix(renderable.modelMatrixUniform, &renderable.modelMatrix)
-			renderable.setMatrix(renderable.viewMatrixUniform, context.ViewMatrix())
-			renderable.setMatrix(renderable.projectionMatrixUniform, context.ProjectionMatrix())
+	width, height := texture.Size()
+	modelMatrix := mgl.Ident4().
+		Mul4(mgl.Translate3D(x, y, 0.0)).
+		Mul4(mgl.Scale3D(width, height, 1.0))
 
-			gl.EnableVertexAttribArray(uint32(renderable.vertexPositionAttrib))
-			gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.vertexPositionBuffer)
-			gl.VertexAttribOffset(uint32(renderable.vertexPositionAttrib), 3, opengl.FLOAT, false, 0, 0)
-			gl.EnableVertexAttribArray(uint32(renderable.uvPositionAttrib))
-			gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.uvPositionBuffer)
-			gl.VertexAttribOffset(uint32(renderable.uvPositionAttrib), 3, opengl.FLOAT, false, 0, 0)
+	renderable.withShader(func() {
+		renderable.setMatrix(renderable.modelMatrixUniform, &modelMatrix)
+		renderable.setMatrix(renderable.viewMatrixUniform, context.ViewMatrix())
+		renderable.setMatrix(renderable.projectionMatrixUniform, context.ProjectionMatrix())
 
-			textureUnit := int32(0)
-			gl.ActiveTexture(opengl.TEXTURE0 + uint32(textureUnit))
-			gl.BindTexture(opengl.TEXTURE_2D, renderable.paletteTexture.Handle())
-			gl.Uniform1i(renderable.paletteUniform, textureUnit)
+		gl.EnableVertexAttribArray(uint32(renderable.vertexPositionAttrib))
+		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.vertexPositionBuffer)
+		gl.VertexAttribOffset(uint32(renderable.vertexPositionAttrib), 3, opengl.FLOAT, false, 0, 0)
+		gl.EnableVertexAttribArray(uint32(renderable.uvPositionAttrib))
+		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.uvPositionBuffer)
+		gl.VertexAttribOffset(uint32(renderable.uvPositionAttrib), 3, opengl.FLOAT, false, 0, 0)
 
-			textureUnit = 1
-			gl.ActiveTexture(opengl.TEXTURE0 + uint32(textureUnit))
-			gl.BindTexture(opengl.TEXTURE_2D, renderable.bitmapTexture.Handle())
-			gl.Uniform1i(renderable.bitmapUniform, textureUnit)
+		textureUnit := int32(0)
+		gl.ActiveTexture(opengl.TEXTURE0 + uint32(textureUnit))
+		gl.BindTexture(opengl.TEXTURE_2D, renderable.paletteTexture.Handle())
+		gl.Uniform1i(renderable.paletteUniform, textureUnit)
 
-			gl.DrawArrays(opengl.TRIANGLES, 0, 6)
+		textureUnit = 1
+		gl.ActiveTexture(opengl.TEXTURE0 + uint32(textureUnit))
+		gl.BindTexture(opengl.TEXTURE_2D, texture.Handle())
+		gl.Uniform1i(renderable.bitmapUniform, textureUnit)
 
-			gl.BindTexture(opengl.TEXTURE_2D, 0)
-		})
-	}
+		gl.DrawArrays(opengl.TRIANGLES, 0, 6)
+
+		gl.BindTexture(opengl.TEXTURE_2D, 0)
+	})
 }
 
 func (renderable *SimpleBitmapRenderable) withShader(task func()) {
