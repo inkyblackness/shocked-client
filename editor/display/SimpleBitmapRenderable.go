@@ -113,18 +113,6 @@ func NewSimpleBitmapRenderable(gl opengl.OpenGl, paletteTexture graphics.Texture
 			-half, -half, 0.0}
 		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.vertexPositionBuffer)
 		gl.BufferData(opengl.ARRAY_BUFFER, len(vertices)*4, vertices, opengl.STATIC_DRAW)
-
-		limit := float32(1.0)
-		var uv = []float32{
-			0.0, 0.0, 0.0,
-			limit, 0.0, 0.0,
-			limit, limit, 0.0,
-
-			limit, limit, 0.0,
-			0.0, limit, 0.0,
-			0.0, 0.0, 0.0}
-		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.uvPositionBuffer)
-		gl.BufferData(opengl.ARRAY_BUFFER, len(uv)*4, uv, opengl.STATIC_DRAW)
 	})
 
 	return renderable
@@ -155,12 +143,24 @@ func (renderable *SimpleBitmapRenderable) Render(context *RenderContext, icons [
 		gl.Uniform1i(renderable.bitmapUniform, textureUnit)
 		for _, icon := range icons {
 			x, y := icon.Center()
+			u, v := icon.Icon().UV()
 			width, height := renderable.limitedSize(icon)
 			modelMatrix := mgl.Ident4().
 				Mul4(mgl.Translate3D(x, y, 0.0)).
 				Mul4(mgl.Scale3D(width, height, 1.0))
 
 			renderable.setMatrix(renderable.modelMatrixUniform, &modelMatrix)
+
+			var uv = []float32{
+				0.0, 0.0, 0.0,
+				u, 0.0, 0.0,
+				u, v, 0.0,
+
+				u, v, 0.0,
+				0.0, v, 0.0,
+				0.0, 0.0, 0.0}
+			gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.uvPositionBuffer)
+			gl.BufferData(opengl.ARRAY_BUFFER, len(uv)*4, uv, opengl.STATIC_DRAW)
 
 			gl.BindTexture(opengl.TEXTURE_2D, icon.Icon().Handle())
 			gl.DrawArrays(opengl.TRIANGLES, 0, 6)
