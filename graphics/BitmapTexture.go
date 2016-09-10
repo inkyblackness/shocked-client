@@ -13,6 +13,9 @@ type BitmapTexture struct {
 	handle uint32
 }
 
+// BitmapRetriever is a thunk that retrieves a cached bitmap.
+type BitmapRetriever func() *BitmapTexture
+
 // NewBitmapTexture downloads the provided raw data to OpenGL and returns a BitmapTexture instance.
 func NewBitmapTexture(gl opengl.OpenGl, width, height int, pixelData []byte) *BitmapTexture {
 	tex := &BitmapTexture{

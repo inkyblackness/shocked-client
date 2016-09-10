@@ -11,7 +11,7 @@ func NewNullTextRenderer() TextRenderer {
 
 func (renderer *nullTextRenderer) Render(text string) Bitmap {
 	return Bitmap{
-		Width:  1,
-		Height: 1,
-		Pixels: []byte{0x00}}
+		Width:  2,
+		Height: 2,
+		Pixels: []byte{0x00, 0x00, 0x00, 0x00}}
 }

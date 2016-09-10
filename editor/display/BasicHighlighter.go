@@ -107,22 +107,26 @@ func (highlighter *BasicHighlighter) Dispose() {
 }
 
 // Render renders the highlight.
-func (highlighter *BasicHighlighter) Render(context *RenderContext, x, y float32, width, height float32) {
+func (highlighter *BasicHighlighter) Render(context *RenderContext, areas []Area) {
 	gl := highlighter.gl
 
-	modelMatrix := mgl.Ident4().
-		Mul4(mgl.Translate3D(x, y, 0.0)).
-		Mul4(mgl.Scale3D(width, height, 1.0))
-
 	highlighter.withShader(func() {
-		highlighter.setMatrix(highlighter.modelMatrixUniform, &modelMatrix)
 		highlighter.setMatrix(highlighter.viewMatrixUniform, context.ViewMatrix())
 		highlighter.setMatrix(highlighter.projectionMatrixUniform, context.ProjectionMatrix())
 
 		gl.BindBuffer(opengl.ARRAY_BUFFER, highlighter.vertexPositionBuffer)
 		gl.VertexAttribOffset(uint32(highlighter.vertexPositionAttrib), 3, opengl.FLOAT, false, 0, 0)
 
-		gl.DrawArrays(opengl.TRIANGLES, 0, 6)
+		for _, area := range areas {
+			x, y := area.Center()
+			width, height := area.Size()
+			modelMatrix := mgl.Ident4().
+				Mul4(mgl.Translate3D(x, y, 0.0)).
+				Mul4(mgl.Scale3D(width, height, 1.0))
+
+			highlighter.setMatrix(highlighter.modelMatrixUniform, &modelMatrix)
+			gl.DrawArrays(opengl.TRIANGLES, 0, 6)
+		}
 	})
 }
 

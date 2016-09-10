@@ -131,16 +131,10 @@ func NewSimpleBitmapRenderable(gl opengl.OpenGl, paletteTexture graphics.Texture
 }
 
 // Render renders the bitmap with the center at given position
-func (renderable *SimpleBitmapRenderable) Render(context *RenderContext, x, y float32, texture *graphics.BitmapTexture) {
+func (renderable *SimpleBitmapRenderable) Render(context *RenderContext, icons []PlacedIcon) {
 	gl := renderable.gl
 
-	width, height := texture.Size()
-	modelMatrix := mgl.Ident4().
-		Mul4(mgl.Translate3D(x, y, 0.0)).
-		Mul4(mgl.Scale3D(width, height, 1.0))
-
 	renderable.withShader(func() {
-		renderable.setMatrix(renderable.modelMatrixUniform, &modelMatrix)
 		renderable.setMatrix(renderable.viewMatrixUniform, context.ViewMatrix())
 		renderable.setMatrix(renderable.projectionMatrixUniform, context.ProjectionMatrix())
 
@@ -158,13 +152,37 @@ func (renderable *SimpleBitmapRenderable) Render(context *RenderContext, x, y fl
 
 		textureUnit = 1
 		gl.ActiveTexture(opengl.TEXTURE0 + uint32(textureUnit))
-		gl.BindTexture(opengl.TEXTURE_2D, texture.Handle())
 		gl.Uniform1i(renderable.bitmapUniform, textureUnit)
+		for _, icon := range icons {
+			x, y := icon.Center()
+			width, height := renderable.limitedSize(icon)
+			modelMatrix := mgl.Ident4().
+				Mul4(mgl.Translate3D(x, y, 0.0)).
+				Mul4(mgl.Scale3D(width, height, 1.0))
 
-		gl.DrawArrays(opengl.TRIANGLES, 0, 6)
+			renderable.setMatrix(renderable.modelMatrixUniform, &modelMatrix)
 
+			gl.BindTexture(opengl.TEXTURE_2D, icon.Icon().Handle())
+			gl.DrawArrays(opengl.TRIANGLES, 0, 6)
+		}
 		gl.BindTexture(opengl.TEXTURE_2D, 0)
 	})
+}
+
+func (renderable *SimpleBitmapRenderable) limitedSize(icon PlacedIcon) (width, height float32) {
+	width, height = icon.Icon().Size()
+	larger := width
+
+	if larger < height {
+		larger = height
+	}
+	if larger > 16.0 {
+		ratio := 16.0 / larger
+		width *= ratio
+		height *= ratio
+	}
+
+	return
 }
 
 func (renderable *SimpleBitmapRenderable) withShader(task func()) {
