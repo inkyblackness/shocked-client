@@ -33,3 +33,17 @@ func (suite *SectionNodeSuite) TestGetReturnsInitialValue(c *check.C) {
 	initial := someNodeList()
 	c.Check(NewSectionNode("", initial, NewBoolValueNode("", false)).Get(), check.DeepEquals, initial)
 }
+
+func (suite *SectionNodeSuite) TestSetCallsRegisteredSubscriber(c *check.C) {
+	initial := someNodeList()
+	node := NewSectionNode("", initial, NewBoolValueNode("", false))
+	called := false
+
+	node.Subscribe(func() {
+		called = true
+	})
+
+	node.Set([]Node{})
+
+	c.Check(called, check.Equals, true)
+}

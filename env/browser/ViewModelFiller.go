@@ -25,7 +25,11 @@ func (filler *viewModelFiller) Section(node *viewmodel.SectionNode) {
 		node.Available().Specialize(availableFiller)
 		filler.object.Set("available", availableFiller.object)
 	}
-	{
+
+	observableNodes := ko.NewObservableArray()
+	filler.object.Set("nodes", observableNodes)
+
+	updateSubNodes := func() {
 		nodes := node.Get()
 		objNodes := make([]*js.Object, len(nodes))
 
@@ -34,8 +38,10 @@ func (filler *viewModelFiller) Section(node *viewmodel.SectionNode) {
 			subNode.Specialize(subFiller)
 			objNodes[index] = subFiller.object
 		}
-		filler.object.Set("nodes", objNodes)
+		observableNodes.Set(objNodes)
 	}
+	node.Subscribe(updateSubNodes)
+	updateSubNodes()
 }
 
 func (filler *viewModelFiller) SectionSelection(node *viewmodel.SectionSelectionNode) {

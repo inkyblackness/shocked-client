@@ -7,21 +7,21 @@ import (
 // SectionNodeTexter is a texter for sections.
 type SectionNodeTexter struct {
 	node      *viewmodel.SectionNode
+	listener  ViewModelListener
 	subTexter []ViewModelNodeTexter
 }
 
 // NewSectionNodeTexter returns a new instance of SectionNodeTexter.
 func NewSectionNodeTexter(node *viewmodel.SectionNode, listener ViewModelListener) *SectionNodeTexter {
-	subNodes := node.Get()
 	texter := &SectionNodeTexter{
-		subTexter: make([]ViewModelNodeTexter, len(subNodes)),
-		node:      node}
+		node:     node,
+		listener: listener}
 
-	for index, subNode := range subNodes {
-		visitor := NewViewModelTexterVisitor(listener)
-		subNode.Specialize(visitor)
-		texter.subTexter[index] = visitor.instance
-	}
+	texter.updateSubTexter()
+	node.Subscribe(func() {
+		texter.updateSubTexter()
+		listener.OnMainDataChanged()
+	})
 	node.Available().Subscribe(func(bool) {
 		listener.OnMainDataChanged()
 	})
@@ -39,5 +39,15 @@ func (texter *SectionNodeTexter) TextMain(addLine ViewModelLiner) {
 		for _, subTexter := range texter.subTexter {
 			subTexter.TextMain(addLine)
 		}
+	}
+}
+
+func (texter *SectionNodeTexter) updateSubTexter() {
+	subNodes := texter.node.Get()
+	texter.subTexter = make([]ViewModelNodeTexter, len(subNodes))
+	for index, subNode := range subNodes {
+		visitor := NewViewModelTexterVisitor(texter.listener)
+		subNode.Specialize(visitor)
+		texter.subTexter[index] = visitor.instance
 	}
 }
