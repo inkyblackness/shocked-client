@@ -25,7 +25,8 @@ type ViewModel struct {
 
 	pointerCoordinate *viewmodel.StringValueNode
 
-	tiles *TilesViewModel
+	tiles        *TilesViewModel
+	levelObjects *ObjectsViewModel
 }
 
 // NewViewModel returns a new ViewModel instance.
@@ -43,6 +44,7 @@ func NewViewModel() *ViewModel {
 	vm.levels = viewmodel.NewValueSelectionNode("Level", nil, "")
 	vm.levelIsRealWorld = viewmodel.NewBoolValueNode("Is Real World", false)
 	vm.tiles = NewTilesViewModel(vm.levelIsRealWorld)
+	vm.levelObjects = NewObjectsViewModel(vm.levelIsRealWorld)
 
 	vm.levelTextureIndex = viewmodel.NewValueSelectionNode("Texture Index", []string{""}, "")
 	vm.levelTextureID = viewmodel.NewValueSelectionNode("Texture ID", []string{""}, "")
@@ -52,7 +54,8 @@ func NewViewModel() *ViewModel {
 	mapSectionSelection := viewmodel.NewSectionSelectionNode("Map Section", map[string]*viewmodel.SectionNode{
 		"Control":        mapControlSection,
 		"Level Textures": levelTexturesControlSection,
-		"Tiles":          vm.tiles.root}, "Control")
+		"Tiles":          vm.tiles.root,
+		"Objects":        vm.levelObjects.root}, "Control")
 
 	projectSelected := viewmodel.NewBoolValueNode("Available", false)
 	vm.projects.Selected().Subscribe(func(projectID string) {
@@ -152,6 +155,11 @@ func (vm *ViewModel) SetLevelIsRealWorld(value bool) {
 // Tiles returns the sub-section about tiles.
 func (vm *ViewModel) Tiles() *TilesViewModel {
 	return vm.tiles
+}
+
+// LevelObjects returns the sub-section about level objects.
+func (vm *ViewModel) LevelObjects() *ObjectsViewModel {
+	return vm.levelObjects
 }
 
 // SetLevelTextures registers the texture IDs of the level

@@ -105,6 +105,8 @@ func NewMainApplication(store DataStore) *MainApplication {
 	app.viewModel.LevelTextureIndex().Selected().Subscribe(app.onLevelTextureIndexChanged)
 	app.viewModel.LevelTextureID().Selected().Subscribe(app.onLevelTextureIDChanged)
 
+	app.viewModel.LevelObjects().SelectedObject().Selected().Subscribe(app.onSelectedObjectIndexChanged)
+
 	app.activeLevelID = -1
 	app.gameTextureStore = editormodel.NewBufferedTextureStore(app.loadGameTexture)
 	app.tileMap = editormodel.NewTileMap(TilesPerMapSide, TilesPerMapSide)
@@ -749,6 +751,7 @@ func (app *MainApplication) onStoreLevelObjectsChanged(levelObjects *model.Level
 		levelObject := editormodel.NewLevelObject(data, app.iconRetriever(id))
 		app.levelObjects[levelObject.Index()] = levelObject
 	}
+	app.viewModel.LevelObjects().SetObjectCount(len(app.levelObjects))
 }
 
 func (app *MainApplication) iconRetriever(id editormodel.ObjectID) graphics.BitmapRetriever {
@@ -767,4 +770,15 @@ func (app *MainApplication) iconRetriever(id editormodel.ObjectID) graphics.Bitm
 	}
 
 	return func() *graphics.BitmapTexture { return app.gameObjectIconRetriever[id]() }
+}
+
+func (app *MainApplication) onSelectedObjectIndexChanged(string) {
+	index := app.viewModel.LevelObjects().SelectedObjectIndex()
+	levelObject := app.levelObjects[index]
+	class, subclass, objType := -1, -1, -1
+
+	if levelObject != nil {
+		class, subclass, objType = levelObject.ID()
+	}
+	app.viewModel.LevelObjects().SetObjectID(class, subclass, objType)
 }
