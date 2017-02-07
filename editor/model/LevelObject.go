@@ -35,6 +35,11 @@ func (obj *LevelObject) ID() (class, subclass, objType int) {
 	return obj.data.Class, obj.data.Subclass, obj.data.Type
 }
 
+// ClassData returns the raw data for the level object.
+func (obj *LevelObject) ClassData() []int {
+	return obj.data.Hacking.ClassData
+}
+
 // Center returns the location of the object within the map
 func (obj *LevelObject) Center() (x, y float32) {
 	x = (float32(obj.data.BaseProperties.TileX) + (float32(obj.data.BaseProperties.FineX) / float32(0xFF))) * 32.0

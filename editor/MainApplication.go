@@ -18,6 +18,10 @@ import (
 	"github.com/inkyblackness/shocked-client/util"
 	"github.com/inkyblackness/shocked-client/viewmodel"
 	"github.com/inkyblackness/shocked-model"
+
+	"github.com/inkyblackness/res"
+	"github.com/inkyblackness/res/data/interpreters"
+	"github.com/inkyblackness/res/data/levelobj"
 )
 
 // MainApplication represents the core intelligence of the editor.
@@ -776,9 +780,38 @@ func (app *MainApplication) onSelectedObjectIndexChanged(string) {
 	index := app.viewModel.LevelObjects().SelectedObjectIndex()
 	levelObject := app.levelObjects[index]
 	class, subclass, objType := -1, -1, -1
+	rawDataString := ""
+	var propertyNodes []viewmodel.Node
 
 	if levelObject != nil {
+		var classDataBytes []byte
 		class, subclass, objType = levelObject.ID()
+		for index, b := range levelObject.ClassData() {
+			if index > 0 {
+				rawDataString += " "
+			}
+			rawDataString += fmt.Sprintf("%02X", b)
+			classDataBytes = append(classDataBytes, byte(b))
+		}
+
+		objID := res.MakeObjectID(res.ObjectClass(class), res.ObjectSubclass(subclass), res.ObjectType(objType))
+		rootInterpreter := levelobj.ForRealWorld(objID, classDataBytes)
+
+		var listProperties func(path string, interpreter *interpreters.Instance)
+
+		listProperties = func(path string, interpreter *interpreters.Instance) {
+			propertyKeys := interpreter.Keys()
+			for _, propertyKey := range propertyKeys {
+				propertyNodes = append(propertyNodes, viewmodel.NewStringValueNode(path+propertyKey, fmt.Sprintf("%v", interpreter.Get(propertyKey))))
+			}
+			refinementKeys := interpreter.ActiveRefinements()
+			for _, refinementKey := range refinementKeys {
+				listProperties(path+"."+refinementKey, interpreter.Refined(refinementKey))
+			}
+		}
+		listProperties("", rootInterpreter)
 	}
 	app.viewModel.LevelObjects().SetObjectID(class, subclass, objType)
+	app.viewModel.LevelObjects().RawData().Set(rawDataString)
+	app.viewModel.LevelObjects().Properties().Set(propertyNodes)
 }

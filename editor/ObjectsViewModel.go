@@ -13,6 +13,8 @@ type ObjectsViewModel struct {
 
 	selectedObject *viewmodel.ValueSelectionNode
 	cst            *viewmodel.StringValueNode
+	rawData        *viewmodel.StringValueNode
+	properties     *viewmodel.SectionNode
 }
 
 // NewObjectsViewModel returns a new instance of a ObjectsViewModel.
@@ -21,9 +23,11 @@ func NewObjectsViewModel(levelIsRealWorld *viewmodel.BoolValueNode) *ObjectsView
 
 	vm.selectedObject = viewmodel.NewValueSelectionNode("Selected Object", []string{""}, "")
 	vm.cst = viewmodel.NewStringValueNode("C/S/T", "")
+	vm.rawData = viewmodel.NewEditableStringValueNode("Raw Data", "")
+	vm.properties = viewmodel.NewSectionNode("Properties", nil, viewmodel.NewBoolValueNode("", true))
 
 	vm.root = viewmodel.NewSectionNode("Objects",
-		[]viewmodel.Node{vm.selectedObject, vm.cst},
+		[]viewmodel.Node{vm.selectedObject, vm.cst, vm.rawData, vm.properties},
 		viewmodel.NewBoolValueNode("", true))
 
 	return vm
@@ -59,4 +63,14 @@ func (vm *ObjectsViewModel) SetObjectCount(count int) {
 func (vm *ObjectsViewModel) SetObjectID(class, subclass, objType int) {
 	id := fmt.Sprintf("%2d/%d/%2d", class, subclass, objType)
 	vm.cst.Set(id)
+}
+
+// RawData returns the text node for the raw byte string.
+func (vm *ObjectsViewModel) RawData() *viewmodel.StringValueNode {
+	return vm.rawData
+}
+
+// Properties returns the section for object properties.
+func (vm *ObjectsViewModel) Properties() *viewmodel.SectionNode {
+	return vm.properties
 }
