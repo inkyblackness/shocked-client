@@ -46,14 +46,15 @@ type MainApplication struct {
 	gameObjectIcons         map[editormodel.ObjectID]*graphics.BitmapTexture
 	gameObjectIconRetriever map[editormodel.ObjectID]graphics.BitmapRetriever
 
-	levels           []model.Level
-	activeLevelID    int
-	paletteTexture   *graphics.PaletteTexture
-	levelTextures    []int
-	textureData      []model.Texture
-	gameTextureStore *editormodel.BufferedTextureStore
-	tileMap          *editormodel.TileMap
-	levelObjects     map[int]*editormodel.LevelObject
+	levels             []model.Level
+	activeLevelID      int
+	paletteTexture     *graphics.PaletteTexture
+	levelTextures      []int
+	textureData        []model.Texture
+	gameTextureStore   *editormodel.BufferedTextureStore
+	tileMap            *editormodel.TileMap
+	levelObjects       map[int]*editormodel.LevelObject
+	levelObjectIndices []int
 
 	defaultFont graphics.TextRenderer
 	defaultIcon *graphics.BitmapTexture
@@ -227,7 +228,8 @@ func (app *MainApplication) render() {
 
 	areaList := make([]display.Area, 0, len(app.levelObjects))
 	iconList := make([]display.PlacedIcon, 0, len(app.levelObjects))
-	for _, obj := range app.levelObjects {
+	for _, objectIndex := range app.levelObjectIndices {
+		obj := app.levelObjects[objectIndex]
 		areaList = append(areaList, obj)
 		iconList = append(iconList, obj)
 	}
@@ -748,14 +750,17 @@ func (app *MainApplication) onLevelTextureIDChanged(newValueString string) {
 }
 
 func (app *MainApplication) onStoreLevelObjectsChanged(levelObjects *model.LevelObjects) {
+	objectCount := len(levelObjects.Table)
 	app.levelObjects = make(map[int]*editormodel.LevelObject)
-	for i := 0; i < len(levelObjects.Table); i++ {
+	app.levelObjectIndices = make([]int, objectCount)
+	for i := 0; i < objectCount; i++ {
 		data := &levelObjects.Table[i]
 		id := editormodel.MakeObjectID(data.Class, data.Subclass, data.Type)
 		levelObject := editormodel.NewLevelObject(data, app.iconRetriever(id))
 		app.levelObjects[levelObject.Index()] = levelObject
+		app.levelObjectIndices[i] = levelObject.Index()
 	}
-	app.viewModel.LevelObjects().SetObjectCount(len(app.levelObjects))
+	app.viewModel.LevelObjects().SetObjectCount(objectCount)
 }
 
 func (app *MainApplication) iconRetriever(id editormodel.ObjectID) graphics.BitmapRetriever {
