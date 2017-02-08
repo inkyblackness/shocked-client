@@ -129,9 +129,16 @@ func (window *WebGlWindow) startRenderLoop() {
 	}
 	var indirecter indirecterType
 	browserWindow := js.Global.Get("window")
+	lastWidth, lastHeight := window.Size()
 
 	indirecter.render = func() {
 		browserWindow.Call("requestAnimationFrame", indirecter.render)
+		curWidth, curHeight := window.Size()
+
+		if (curWidth != lastWidth) || (curHeight != lastHeight) {
+			lastWidth, lastHeight = curWidth, curHeight
+			window.CallResize(curWidth, curHeight)
+		}
 		window.CallRender()
 	}
 	indirecter.render()

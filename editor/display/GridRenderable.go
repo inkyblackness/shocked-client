@@ -51,8 +51,8 @@ var gridFragmentShaderSource = `
   void main(void) {
     float alphaX = nearGrid(32.0, originalPosition.x);
     float alphaY = nearGrid(32.0, originalPosition.y);
-    bool beyondX = (originalPosition.x / 32.0) >= 64.0;
-    bool beyondY = (originalPosition.y / 32.0) >= 64.0;
+    bool beyondX = (originalPosition.x / 32.0) >= 64.0 || (originalPosition.x < 0.0);
+    bool beyondY = (originalPosition.y / 32.0) >= 64.0 || (originalPosition.y < 0.0);
     float alpha = 0.0;
 
     if (!beyondX && !beyondY) {

@@ -41,6 +41,7 @@ func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 			glfwWindow.SetCursorPosCallback(window.onCursorPos)
 			glfwWindow.SetMouseButtonCallback(window.onMouseButton)
 			glfwWindow.SetScrollCallback(window.onMouseScroll)
+			glfwWindow.SetFramebufferSizeCallback(window.onFramebufferResize)
 		}
 	}
 	return
@@ -69,6 +70,10 @@ func (window *OpenGlWindow) OpenGl() opengl.OpenGl {
 // Size implements the env.OpenGlWindow interface.
 func (window *OpenGlWindow) Size() (width int, height int) {
 	return window.glfwWindow.GetFramebufferSize()
+}
+
+func (window *OpenGlWindow) onFramebufferResize(rawWindow *glfw.Window, width int, height int) {
+	window.CallResize(width, height)
 }
 
 func (window *OpenGlWindow) onCursorPos(rawWindow *glfw.Window, x float64, y float64) {

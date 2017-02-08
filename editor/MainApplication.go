@@ -34,8 +34,11 @@ type MainApplication struct {
 	viewModel         *ViewModel
 	viewModelUpdating bool
 
-	glWindow env.OpenGlWindow
-	gl       opengl.OpenGl
+	glWindow         env.OpenGlWindow
+	windowWidth      int
+	windowHeight     int
+	gl               opengl.OpenGl
+	projectionMatrix mgl.Mat4
 
 	mouseX, mouseY   float32
 	mouseDragged     bool
@@ -70,16 +73,20 @@ type MainApplication struct {
 
 // NewMainApplication returns a new instance of MainApplication.
 func NewMainApplication(store DataStore) *MainApplication {
-	camLimit := (TilesPerMapSide - 1) * TileBaseLength
+	tileBaseHalf := TileBaseLength / 2
+	camLimit := TilesPerMapSide*TileBaseLength - tileBaseHalf
 	app := &MainApplication{
+		projectionMatrix:        mgl.Ident4(),
 		lastElapsedTick:         time.Now(),
 		store:                   store,
 		viewModel:               NewViewModel(),
 		mouseMoveCapture:        func() {},
-		view:                    camera.NewLimited(ZoomLevelMin, ZoomLevelMax, 0, camLimit),
+		view:                    camera.NewLimited(ZoomLevelMin, ZoomLevelMax, -tileBaseHalf, camLimit),
 		gameObjectIcons:         make(map[editormodel.ObjectID]*graphics.BitmapTexture),
 		gameObjectIconRetriever: make(map[editormodel.ObjectID]graphics.BitmapRetriever),
 		levelObjects:            make(map[int]*editormodel.LevelObject)}
+
+	app.view.MoveTo(float32(TilesPerMapSide*TileBaseLength)/-2.0, float32(TilesPerMapSide*TileBaseLength)/-2.0)
 
 	app.viewModel.OnSelectedProjectChanged(app.onSelectedProjectChanged)
 	app.viewModel.CreateProject().Subscribe(app.onCreateProject)
@@ -148,6 +155,7 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.glWindow = glWindow
 
 	glWindow.OnRender(app.render)
+	glWindow.OnResize(app.onWindowResize)
 	glWindow.OnMouseMove(app.onMouseMove)
 	glWindow.OnMouseButtonDown(app.onMouseButtonDown)
 	glWindow.OnMouseButtonUp(app.onMouseButtonUp)
@@ -178,6 +186,8 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.gl.BlendFunc(opengl.SRC_ALPHA, opengl.ONE_MINUS_SRC_ALPHA)
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
 
+	app.onWindowResize(glWindow.Size())
+
 	app.gridRenderable = display.NewGridRenderable(app.gl)
 	app.tileSelectionRenderable = display.NewTileSelectionRenderable(app.gl, func(callback display.TileSelectionCallback) {
 		app.tileMap.ForEachSelected(func(coord editormodel.TileCoordinate, tile *editormodel.Tile) {
@@ -204,18 +214,22 @@ func (app *MainApplication) updateElapsedNano() {
 	app.lastElapsedTick = now
 }
 
+func (app *MainApplication) onWindowResize(width int, height int) {
+	app.windowWidth, app.windowHeight = width, height
+	app.projectionMatrix = mgl.Ortho2D(float32(width)/-2.0, float32(width)/2.0, float32(height)/2.0, float32(height)/-2.0)
+	app.gl.Viewport(0, 0, int32(width), int32(height))
+}
+
 func (app *MainApplication) render() {
 	gl := app.gl
-	width, height := app.glWindow.Size()
 
-	gl.Viewport(0, 0, int32(width), int32(height))
 	gl.Clear(opengl.COLOR_BUFFER_BIT | opengl.DEPTH_BUFFER_BIT)
 
 	app.updateElapsedNano()
 	if app.paletteTexture != nil {
 		app.paletteTexture.Update()
 	}
-	context := display.NewBasicRenderContext(width, height, app.view.ViewMatrix())
+	context := display.NewBasicRenderContext(app.windowWidth, app.windowHeight, app.projectionMatrix, app.view.ViewMatrix())
 
 	app.gridRenderable.Render(context)
 	if app.tileTextureMapRenderable != nil {
@@ -240,7 +254,7 @@ func (app *MainApplication) render() {
 }
 
 func (app *MainApplication) unprojectPixel(pixelX, pixelY float32) (x, y float32) {
-	pixelVec := mgl.Vec4{pixelX, pixelY, 0.0, 1.0}
+	pixelVec := mgl.Vec4{pixelX - (float32(app.windowWidth) / 2.0), pixelY - (float32(app.windowHeight) / 2.0), 0.0, 1.0}
 	invertedView := app.view.ViewMatrix().Inv()
 	result := invertedView.Mul4x1(pixelVec)
 

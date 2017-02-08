@@ -23,6 +23,9 @@ type MouseButtonCallback func(buttonMask uint32, modifierMask uint32)
 // Delta values are right-hand oriented: positive values go right/down/far.
 type MouseScrollCallback func(dx float32, dy float32)
 
+// ResizeCallback is called for a change of window dimensions.
+type ResizeCallback func(width int, height int)
+
 // OpenGlWindow represents an OpenGL render surface.
 type OpenGlWindow interface {
 	// OpenGl returns the OpenGL API wrapper for this window.
@@ -30,6 +33,8 @@ type OpenGlWindow interface {
 	// OnRender registers a callback function which shall be called to update the scene.
 	OnRender(callback RenderCallback)
 
+	// OnResize registers a callback function for sizing events.
+	OnResize(callback ResizeCallback)
 	// Size returns the dimensions of the window display area in pixel.
 	Size() (width int, height int)
 

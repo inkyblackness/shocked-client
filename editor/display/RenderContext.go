@@ -14,12 +14,12 @@ type RenderContext struct {
 }
 
 // NewBasicRenderContext returns a render context for the provided parameters.
-func NewBasicRenderContext(width, height int, viewMatrix mgl32.Mat4) *RenderContext {
+func NewBasicRenderContext(width, height int, projectionMatrix mgl32.Mat4, viewMatrix mgl32.Mat4) *RenderContext {
 	return &RenderContext{
 		viewportWidth:    width,
 		viewportHeight:   height,
 		viewMatrix:       viewMatrix,
-		projectionMatrix: mgl32.Ortho2D(0, float32(width), float32(height), 0)}
+		projectionMatrix: projectionMatrix}
 }
 
 // ViewportSize returns the size of the current viewport, in pixel.
