@@ -800,7 +800,13 @@ func (app *MainApplication) onSelectedObjectIndexChanged(string) {
 		}
 
 		objID := res.MakeObjectID(res.ObjectClass(class), res.ObjectSubclass(subclass), res.ObjectType(objType))
-		rootInterpreter := levelobj.ForRealWorld(objID, classDataBytes)
+		var rootInterpreter *interpreters.Instance
+
+		if app.isActiveLevelRealWorld() {
+			rootInterpreter = levelobj.ForRealWorld(objID, classDataBytes)
+		} else {
+			rootInterpreter = levelobj.ForCyberspace(objID, classDataBytes)
+		}
 
 		var listProperties func(path string, interpreter *interpreters.Instance)
 
