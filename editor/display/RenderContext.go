@@ -6,15 +6,14 @@ import (
 
 // RenderContext describes the current render properties
 type RenderContext struct {
-	viewportWidth  int
-	viewportHeight int
+	viewportWidth, viewportHeight float32
 
 	viewMatrix       mgl32.Mat4
 	projectionMatrix mgl32.Mat4
 }
 
 // NewBasicRenderContext returns a render context for the provided parameters.
-func NewBasicRenderContext(width, height int, projectionMatrix mgl32.Mat4, viewMatrix mgl32.Mat4) *RenderContext {
+func NewBasicRenderContext(width, height float32, projectionMatrix mgl32.Mat4, viewMatrix mgl32.Mat4) *RenderContext {
 	return &RenderContext{
 		viewportWidth:    width,
 		viewportHeight:   height,
@@ -23,7 +22,7 @@ func NewBasicRenderContext(width, height int, projectionMatrix mgl32.Mat4, viewM
 }
 
 // ViewportSize returns the size of the current viewport, in pixel.
-func (context *RenderContext) ViewportSize() (width int, height int) {
+func (context *RenderContext) ViewportSize() (width, height float32) {
 	return context.viewportWidth, context.viewportHeight
 }
 

@@ -34,11 +34,10 @@ type MainApplication struct {
 	viewModel         *ViewModel
 	viewModelUpdating bool
 
-	glWindow         env.OpenGlWindow
-	windowWidth      int
-	windowHeight     int
-	gl               opengl.OpenGl
-	projectionMatrix mgl.Mat4
+	glWindow                  env.OpenGlWindow
+	windowWidth, windowHeight float32
+	gl                        opengl.OpenGl
+	projectionMatrix          mgl.Mat4
 
 	mouseX, mouseY   float32
 	mouseDragged     bool
@@ -215,8 +214,9 @@ func (app *MainApplication) updateElapsedNano() {
 }
 
 func (app *MainApplication) onWindowResize(width int, height int) {
-	app.windowWidth, app.windowHeight = width, height
-	app.projectionMatrix = mgl.Ortho2D(float32(width)/-2.0, float32(width)/2.0, float32(height)/2.0, float32(height)/-2.0)
+	app.windowWidth, app.windowHeight = float32(width), float32(height)
+	app.projectionMatrix = mgl.Ortho2D(0.0, app.windowWidth, app.windowHeight, 0.0)
+	app.view.SetViewportSize(app.windowWidth, app.windowHeight)
 	app.gl.Viewport(0, 0, int32(width), int32(height))
 }
 
@@ -254,7 +254,7 @@ func (app *MainApplication) render() {
 }
 
 func (app *MainApplication) unprojectPixel(pixelX, pixelY float32) (x, y float32) {
-	pixelVec := mgl.Vec4{pixelX - (float32(app.windowWidth) / 2.0), pixelY - (float32(app.windowHeight) / 2.0), 0.0, 1.0}
+	pixelVec := mgl.Vec4{pixelX, pixelY, 0.0, 1.0}
 	invertedView := app.view.ViewMatrix().Inv()
 	result := invertedView.Mul4x1(pixelVec)
 
