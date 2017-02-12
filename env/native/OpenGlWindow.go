@@ -52,6 +52,7 @@ func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 			glfwWindow.SetMouseButtonCallback(window.onMouseButton)
 			glfwWindow.SetScrollCallback(window.onMouseScroll)
 			glfwWindow.SetFramebufferSizeCallback(window.onFramebufferResize)
+			glfwWindow.SetCharCallback(window.onChar)
 		}
 	}
 	return
@@ -129,4 +130,8 @@ func (window *OpenGlWindow) onMouseButton(rawWindow *glfw.Window, rawButton glfw
 
 func (window *OpenGlWindow) onMouseScroll(rawWindow *glfw.Window, dx float64, dy float64) {
 	window.CallOnMouseScroll(float32(dx), float32(dy)*-1.0)
+}
+
+func (window *OpenGlWindow) onChar(rawWindow *glfw.Window, char rune) {
+	window.CallCharCallback(char)
 }

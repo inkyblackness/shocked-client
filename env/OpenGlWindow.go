@@ -26,6 +26,9 @@ type MouseScrollCallback func(dx float32, dy float32)
 // ResizeCallback is called for a change of window dimensions.
 type ResizeCallback func(width int, height int)
 
+// CharCallback is called for typing a character.
+type CharCallback func(char rune)
+
 // OpenGlWindow represents an OpenGL render surface.
 type OpenGlWindow interface {
 	// OpenGl returns the OpenGL API wrapper for this window.
@@ -46,4 +49,7 @@ type OpenGlWindow interface {
 	OnMouseButtonUp(callback MouseButtonCallback)
 	// OnMouseScroll registers a callback function for mouse scroll events.
 	OnMouseScroll(callback MouseScrollCallback)
+
+	// OnCharCallback registers a callback function for typed characters.
+	OnCharCallback(callback CharCallback)
 }

@@ -26759,9 +26759,9 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
-	var $pkg = {}, $init, opengl, AbstractOpenGlWindow, RenderCallback, MouseMoveCallback, MouseButtonCallback, MouseScrollCallback, ResizeCallback, OpenGlWindow, ptrType, InitAbstractOpenGlWindow;
+	var $pkg = {}, $init, opengl, AbstractOpenGlWindow, RenderCallback, MouseMoveCallback, MouseButtonCallback, MouseScrollCallback, ResizeCallback, CharCallback, OpenGlWindow, ptrType, InitAbstractOpenGlWindow;
 	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
-	AbstractOpenGlWindow = $pkg.AbstractOpenGlWindow = $newType(0, $kindStruct, "env.AbstractOpenGlWindow", true, "github.com/inkyblackness/shocked-client/env", true, function(CallRender_, CallResize_, CallOnMouseMove_, CallOnMouseButtonUp_, CallOnMouseButtonDown_, CallOnMouseScroll_) {
+	AbstractOpenGlWindow = $pkg.AbstractOpenGlWindow = $newType(0, $kindStruct, "env.AbstractOpenGlWindow", true, "github.com/inkyblackness/shocked-client/env", true, function(CallRender_, CallResize_, CallOnMouseMove_, CallOnMouseButtonUp_, CallOnMouseButtonDown_, CallOnMouseScroll_, CallCharCallback_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.CallRender = $throwNilPointerError;
@@ -26770,6 +26770,7 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 			this.CallOnMouseButtonUp = $throwNilPointerError;
 			this.CallOnMouseButtonDown = $throwNilPointerError;
 			this.CallOnMouseScroll = $throwNilPointerError;
+			this.CallCharCallback = $throwNilPointerError;
 			return;
 		}
 		this.CallRender = CallRender_;
@@ -26778,12 +26779,14 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 		this.CallOnMouseButtonUp = CallOnMouseButtonUp_;
 		this.CallOnMouseButtonDown = CallOnMouseButtonDown_;
 		this.CallOnMouseScroll = CallOnMouseScroll_;
+		this.CallCharCallback = CallCharCallback_;
 	});
 	RenderCallback = $pkg.RenderCallback = $newType(4, $kindFunc, "env.RenderCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	MouseMoveCallback = $pkg.MouseMoveCallback = $newType(4, $kindFunc, "env.MouseMoveCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	MouseButtonCallback = $pkg.MouseButtonCallback = $newType(4, $kindFunc, "env.MouseButtonCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	MouseScrollCallback = $pkg.MouseScrollCallback = $newType(4, $kindFunc, "env.MouseScrollCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	ResizeCallback = $pkg.ResizeCallback = $newType(4, $kindFunc, "env.ResizeCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
+	CharCallback = $pkg.CharCallback = $newType(4, $kindFunc, "env.CharCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	OpenGlWindow = $pkg.OpenGlWindow = $newType(8, $kindInterface, "env.OpenGlWindow", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	ptrType = $ptrType(AbstractOpenGlWindow);
 	InitAbstractOpenGlWindow = function() {
@@ -26798,7 +26801,9 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 			var $ptr, param, param$1;
 		}), (function(param, param$1) {
 			var $ptr, param, param$1;
-		}), $throwNilPointerError);
+		}), $throwNilPointerError, (function(param) {
+			var $ptr, param;
+		}));
 	};
 	$pkg.InitAbstractOpenGlWindow = InitAbstractOpenGlWindow;
 	AbstractOpenGlWindow.ptr.prototype.OnRender = function(callback) {
@@ -26837,14 +26842,21 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 		window.CallOnMouseScroll = callback;
 	};
 	AbstractOpenGlWindow.prototype.OnMouseScroll = function(callback) { return this.$val.OnMouseScroll(callback); };
-	ptrType.methods = [{prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderCallback], [], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([ResizeCallback], [], false)}, {prop: "OnMouseMove", name: "OnMouseMove", pkg: "", typ: $funcType([MouseMoveCallback], [], false)}, {prop: "OnMouseButtonDown", name: "OnMouseButtonDown", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseButtonUp", name: "OnMouseButtonUp", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseScroll", name: "OnMouseScroll", pkg: "", typ: $funcType([MouseScrollCallback], [], false)}];
-	AbstractOpenGlWindow.init("", [{prop: "CallRender", name: "CallRender", exported: true, typ: RenderCallback, tag: ""}, {prop: "CallResize", name: "CallResize", exported: true, typ: ResizeCallback, tag: ""}, {prop: "CallOnMouseMove", name: "CallOnMouseMove", exported: true, typ: MouseMoveCallback, tag: ""}, {prop: "CallOnMouseButtonUp", name: "CallOnMouseButtonUp", exported: true, typ: MouseButtonCallback, tag: ""}, {prop: "CallOnMouseButtonDown", name: "CallOnMouseButtonDown", exported: true, typ: MouseButtonCallback, tag: ""}, {prop: "CallOnMouseScroll", name: "CallOnMouseScroll", exported: true, typ: MouseScrollCallback, tag: ""}]);
+	AbstractOpenGlWindow.ptr.prototype.OnCharCallback = function(callback) {
+		var $ptr, callback, window;
+		window = this;
+		window.CallCharCallback = callback;
+	};
+	AbstractOpenGlWindow.prototype.OnCharCallback = function(callback) { return this.$val.OnCharCallback(callback); };
+	ptrType.methods = [{prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderCallback], [], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([ResizeCallback], [], false)}, {prop: "OnMouseMove", name: "OnMouseMove", pkg: "", typ: $funcType([MouseMoveCallback], [], false)}, {prop: "OnMouseButtonDown", name: "OnMouseButtonDown", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseButtonUp", name: "OnMouseButtonUp", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseScroll", name: "OnMouseScroll", pkg: "", typ: $funcType([MouseScrollCallback], [], false)}, {prop: "OnCharCallback", name: "OnCharCallback", pkg: "", typ: $funcType([CharCallback], [], false)}];
+	AbstractOpenGlWindow.init("", [{prop: "CallRender", name: "CallRender", exported: true, typ: RenderCallback, tag: ""}, {prop: "CallResize", name: "CallResize", exported: true, typ: ResizeCallback, tag: ""}, {prop: "CallOnMouseMove", name: "CallOnMouseMove", exported: true, typ: MouseMoveCallback, tag: ""}, {prop: "CallOnMouseButtonUp", name: "CallOnMouseButtonUp", exported: true, typ: MouseButtonCallback, tag: ""}, {prop: "CallOnMouseButtonDown", name: "CallOnMouseButtonDown", exported: true, typ: MouseButtonCallback, tag: ""}, {prop: "CallOnMouseScroll", name: "CallOnMouseScroll", exported: true, typ: MouseScrollCallback, tag: ""}, {prop: "CallCharCallback", name: "CallCharCallback", exported: true, typ: CharCallback, tag: ""}]);
 	RenderCallback.init([], [], false);
 	MouseMoveCallback.init([$Float32, $Float32], [], false);
 	MouseButtonCallback.init([$Uint32, $Uint32], [], false);
 	MouseScrollCallback.init([$Float32, $Float32], [], false);
 	ResizeCallback.init([$Int, $Int], [], false);
-	OpenGlWindow.init([{prop: "OnMouseButtonDown", name: "OnMouseButtonDown", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseButtonUp", name: "OnMouseButtonUp", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseMove", name: "OnMouseMove", pkg: "", typ: $funcType([MouseMoveCallback], [], false)}, {prop: "OnMouseScroll", name: "OnMouseScroll", pkg: "", typ: $funcType([MouseScrollCallback], [], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderCallback], [], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([ResizeCallback], [], false)}, {prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Int, $Int], false)}]);
+	CharCallback.init([$Int32], [], false);
+	OpenGlWindow.init([{prop: "OnCharCallback", name: "OnCharCallback", pkg: "", typ: $funcType([CharCallback], [], false)}, {prop: "OnMouseButtonDown", name: "OnMouseButtonDown", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseButtonUp", name: "OnMouseButtonUp", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseMove", name: "OnMouseMove", pkg: "", typ: $funcType([MouseMoveCallback], [], false)}, {prop: "OnMouseScroll", name: "OnMouseScroll", pkg: "", typ: $funcType([MouseScrollCallback], [], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderCallback], [], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([ResizeCallback], [], false)}, {prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Int, $Int], false)}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -27463,6 +27475,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = glWindow.OnMouseButtonDown($methodVal(app, "onMouseButtonDown")); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = glWindow.OnMouseButtonUp($methodVal(app, "onMouseButtonUp")); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = glWindow.OnMouseScroll($methodVal(app, "onMouseScroll")); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = glWindow.OnCharCallback($methodVal(app, "onChar")); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.setWindow }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.glWindow = glWindow; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.setWindow = function(glWindow) { return this.$val.setWindow(glWindow); };
@@ -27581,6 +27594,11 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		app = this;
 	};
 	MainApplication.prototype.onMouseClick = function(modifierMask) { return this.$val.onMouseClick(modifierMask); };
+	MainApplication.ptr.prototype.onChar = function(char$1) {
+		var $ptr, app, char$1;
+		app = this;
+	};
+	MainApplication.prototype.onChar = function(char$1) { return this.$val.onChar(char$1); };
 	NewRestDataStore = function(transport) {
 		var $ptr, transport;
 		return new RestDataStore.ptr(transport);
@@ -27921,7 +27939,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: RestDataStore.ptr.prototype.LevelObjects }; } $f.$ptr = $ptr; $f._r = _r; $f.archiveID = archiveID; $f.data = data; $f.levelID = levelID; $f.onFailure = onFailure; $f.onSuccess = onSuccess; $f.projectID = projectID; $f.store = store; $f.url = url; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	RestDataStore.prototype.LevelObjects = function(projectID, archiveID, levelID, onSuccess, onFailure) { return this.$val.LevelObjects(projectID, archiveID, levelID, onSuccess, onFailure); };
-	ptrType$18.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setWindow", name: "setWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setDebugOpenGl", name: "setDebugOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initOpenGl", name: "initOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [FailureFunc], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onWindowResize", name: "onWindowResize", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int, $Int], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseClick", name: "onMouseClick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}];
+	ptrType$18.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setWindow", name: "setWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setDebugOpenGl", name: "setDebugOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initOpenGl", name: "initOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [FailureFunc], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onWindowResize", name: "onWindowResize", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int, $Int], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, $Uint32], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseClick", name: "onMouseClick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32], [], false)}, {prop: "onChar", name: "onChar", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32], [], false)}];
 	ptrType$19.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, funcType$5, FailureFunc], [], false)}, {prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType$5, FailureFunc], [], false)}, {prop: "post", name: "post", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType$5, FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType$5, FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$7, FailureFunc], [], false)}, {prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType, FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$1, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$6, FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$4, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType$4, funcType$3, FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$9, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$1, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$8, FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$8, FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$2, FailureFunc], [], false)}];
 	FailureFunc.init([], [], false);
 	DataStore.init([{prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType, FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$1, FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$2, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$4, FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType$5, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$6, FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$7, FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType$4, funcType$3, FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$8, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$1, FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$9, FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$8, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, FailureFunc], [], false)}]);
@@ -30281,7 +30299,7 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 	WebGlWindow = $pkg.WebGlWindow = $newType(0, $kindStruct, "browser.WebGlWindow", true, "github.com/inkyblackness/shocked-client/env/browser", true, function(AbstractOpenGlWindow_, canvas_, glWrapper_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.AbstractOpenGlWindow = new env.AbstractOpenGlWindow.ptr($throwNilPointerError, $throwNilPointerError, $throwNilPointerError, $throwNilPointerError, $throwNilPointerError, $throwNilPointerError);
+			this.AbstractOpenGlWindow = new env.AbstractOpenGlWindow.ptr($throwNilPointerError, $throwNilPointerError, $throwNilPointerError, $throwNilPointerError, $throwNilPointerError, $throwNilPointerError, $throwNilPointerError);
 			this.canvas = null;
 			this.glWrapper = ptrType$2.nil;
 			return;
@@ -30988,6 +31006,34 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 				$r = window.AbstractOpenGlWindow.CallOnMouseScroll($fround(dx), $fround(dy)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			/* } */ case 3:
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.dx = dx; $f.dy = dy; $f.event = event; $f.inRect = inRect; $f.$s = $s; $f.$r = $r; return $f;
+		}), funcType$2));
+		$global.addEventListener($externalize("keypress", $String), $externalize((function $b(event) {
+			var $ptr, _i, _ref, _rune, char$1, charCode, charMember, chars, event, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _ref = $f._ref; _rune = $f._rune; char$1 = $f.char$1; charCode = $f.charCode; charMember = $f.charMember; chars = $f.chars; event = $f.event; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			charCode = $parseInt(event.charCode) >> 0;
+			charMember = event.char;
+			chars = "";
+			if (!(charMember === undefined)) {
+				chars = $internalize(charMember, $String);
+			}
+			/* */ if (chars.length > 0) { $s = 1; continue; }
+			/* */ if (!((charCode === 0))) { $s = 2; continue; }
+			/* */ $s = 3; continue;
+			/* if (chars.length > 0) { */ case 1:
+				_ref = chars;
+				_i = 0;
+				/* while (true) { */ case 4:
+					/* if (!(_i < _ref.length)) { break; } */ if(!(_i < _ref.length)) { $s = 5; continue; }
+					_rune = $decodeRune(_ref, _i);
+					char$1 = _rune[0];
+					$r = window.AbstractOpenGlWindow.CallCharCallback(char$1); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					_i += _rune[1];
+				/* } */ $s = 4; continue; case 5:
+				$s = 3; continue;
+			/* } else if (!((charCode === 0))) { */ case 2:
+				$r = window.AbstractOpenGlWindow.CallCharCallback((charCode >> 0)); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* } */ case 3:
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._i = _i; $f._ref = _ref; $f._rune = _rune; $f.char$1 = char$1; $f.charCode = charCode; $f.charMember = charMember; $f.chars = chars; $f.event = event; $f.$s = $s; $f.$r = $r; return $f;
 		}), funcType$2));
 	};
 	WebGlWindow.prototype.registerMouseListener = function() { return this.$val.registerMouseListener(); };

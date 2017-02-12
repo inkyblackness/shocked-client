@@ -62,6 +62,7 @@ func (app *MainApplication) setWindow(glWindow env.OpenGlWindow) {
 	glWindow.OnMouseButtonDown(app.onMouseButtonDown)
 	glWindow.OnMouseButtonUp(app.onMouseButtonUp)
 	glWindow.OnMouseScroll(app.onMouseScroll)
+	glWindow.OnCharCallback(app.onChar)
 }
 
 func (app *MainApplication) setDebugOpenGl() {
@@ -152,4 +153,7 @@ func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 }
 
 func (app *MainApplication) onMouseClick(modifierMask uint32) {
+}
+
+func (app *MainApplication) onChar(char rune) {
 }

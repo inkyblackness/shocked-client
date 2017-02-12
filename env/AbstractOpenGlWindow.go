@@ -8,6 +8,7 @@ type AbstractOpenGlWindow struct {
 	CallOnMouseButtonUp   MouseButtonCallback
 	CallOnMouseButtonDown MouseButtonCallback
 	CallOnMouseScroll     MouseScrollCallback
+	CallCharCallback      CharCallback
 }
 
 // InitAbstractOpenGlWindow returns an initialized instance.
@@ -17,7 +18,8 @@ func InitAbstractOpenGlWindow() AbstractOpenGlWindow {
 		CallResize:            func(int, int) {},
 		CallOnMouseMove:       func(float32, float32) {},
 		CallOnMouseButtonUp:   func(uint32, uint32) {},
-		CallOnMouseButtonDown: func(uint32, uint32) {}}
+		CallOnMouseButtonDown: func(uint32, uint32) {},
+		CallCharCallback:      func(rune) {}}
 }
 
 // OnRender implements the OpenGlWindow interface.
@@ -48,4 +50,9 @@ func (window *AbstractOpenGlWindow) OnMouseButtonUp(callback MouseButtonCallback
 // OnMouseScroll implements the OpenGlWindow interface.
 func (window *AbstractOpenGlWindow) OnMouseScroll(callback MouseScrollCallback) {
 	window.CallOnMouseScroll = callback
+}
+
+// OnCharCallback implements the OpenGlWindow interface
+func (window *AbstractOpenGlWindow) OnCharCallback(callback CharCallback) {
+	window.CallCharCallback = callback
 }

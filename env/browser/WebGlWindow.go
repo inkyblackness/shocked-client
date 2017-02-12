@@ -121,6 +121,22 @@ func (window *WebGlWindow) registerMouseListener() {
 			window.CallOnMouseScroll(float32(dx), float32(dy))
 		}
 	})
+	js.Global.Call("addEventListener", "keypress", func(event *js.Object) {
+		charCode := event.Get("charCode").Int()
+		charMember := event.Get("char")
+		chars := ""
+
+		if charMember != js.Undefined {
+			chars = charMember.String()
+		}
+		if len(chars) > 0 {
+			for _, char := range chars {
+				window.CallCharCallback(char)
+			}
+		} else if charCode != 0 {
+			window.CallCharCallback(rune(charCode))
+		}
+	})
 }
 
 func (window *WebGlWindow) startRenderLoop() {
