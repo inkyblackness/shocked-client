@@ -23,6 +23,8 @@ type OpenGlWindow struct {
 // new window instance.
 func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 	if err = glfw.Init(); err == nil {
+		glfw.WindowHint(glfw.Resizable, 1)
+		glfw.WindowHint(glfw.Decorated, 1)
 		glfw.WindowHint(glfw.ClientAPI, glfw.OpenGLAPI)
 		glfw.WindowHint(glfw.ContextVersionMajor, 3)
 		glfw.WindowHint(glfw.ContextVersionMinor, 2)
@@ -45,6 +47,11 @@ func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 		}
 	}
 	return
+}
+
+// ShouldClose returns true if the user requested the window to close.
+func (window *OpenGlWindow) ShouldClose() bool {
+	return window.glfwWindow.ShouldClose()
 }
 
 // Close closes the window and releases its resources.

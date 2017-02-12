@@ -6,7 +6,6 @@ import (
 	"github.com/inkyblackness/shocked-client/app"
 	"github.com/inkyblackness/shocked-client/editor"
 	"github.com/inkyblackness/shocked-client/env/native"
-	"github.com/inkyblackness/shocked-client/env/native/console"
 )
 
 func usage() string {
@@ -40,5 +39,5 @@ func main() {
 	store := editor.NewRestDataStore(transport)
 	app := editor.NewMainApplication(store)
 
-	console.Run(app, deferrer)
+	native.Run(app, deferrer)
 }
