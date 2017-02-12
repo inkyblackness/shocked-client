@@ -45,7 +45,16 @@ func NewMainApplication(store DataStore) *MainApplication {
 
 // Init implements the env.Application interface.
 func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
+	app.setWindow(glWindow)
+	app.setDebugOpenGl()
+	app.initOpenGl()
+
+	app.onWindowResize(glWindow.Size())
+}
+
+func (app *MainApplication) setWindow(glWindow env.OpenGlWindow) {
 	app.glWindow = glWindow
+	app.gl = glWindow.OpenGl()
 
 	glWindow.OnRender(app.render)
 	glWindow.OnResize(app.onWindowResize)
@@ -53,8 +62,10 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	glWindow.OnMouseButtonDown(app.onMouseButtonDown)
 	glWindow.OnMouseButtonUp(app.onMouseButtonUp)
 	glWindow.OnMouseScroll(app.onMouseScroll)
+}
 
-	builder := opengl.NewDebugBuilder(app.glWindow.OpenGl())
+func (app *MainApplication) setDebugOpenGl() {
+	builder := opengl.NewDebugBuilder(app.gl)
 
 	/*
 		builder.OnEntry(func(name string, param ...interface{}) {
@@ -72,15 +83,14 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 		fmt.Fprintf(os.Stderr, "!!: [%-20s] %v -> %v\n", name, errorCodes, errorStrings)
 	})
 
-	//app.gl = app.glWindow.OpenGl()
 	app.gl = builder.Build()
+}
 
+func (app *MainApplication) initOpenGl() {
 	app.gl.Disable(opengl.DEPTH_TEST)
 	app.gl.Enable(opengl.BLEND)
 	app.gl.BlendFunc(opengl.SRC_ALPHA, opengl.ONE_MINUS_SRC_ALPHA)
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
-
-	app.onWindowResize(glWindow.Size())
 }
 
 func (app *MainApplication) simpleStoreFailure(info string) FailureFunc {
