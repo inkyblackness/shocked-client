@@ -75,6 +75,7 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	//app.gl = app.glWindow.OpenGl()
 	app.gl = builder.Build()
 
+	app.gl.Disable(opengl.DEPTH_TEST)
 	app.gl.Enable(opengl.BLEND)
 	app.gl.BlendFunc(opengl.SRC_ALPHA, opengl.ONE_MINUS_SRC_ALPHA)
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
@@ -107,7 +108,7 @@ func (app *MainApplication) onWindowResize(width int, height int) {
 func (app *MainApplication) render() {
 	gl := app.gl
 
-	gl.Clear(opengl.COLOR_BUFFER_BIT | opengl.DEPTH_BUFFER_BIT)
+	gl.Clear(opengl.COLOR_BUFFER_BIT)
 
 	app.updateElapsedNano()
 
