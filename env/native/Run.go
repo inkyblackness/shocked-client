@@ -3,6 +3,7 @@ package native
 import (
 	"log"
 	"runtime"
+	"time"
 
 	"github.com/inkyblackness/shocked-client/env"
 )
@@ -25,10 +26,9 @@ func Run(app env.Application, deferrer <-chan func()) {
 	for !window.ShouldClose() {
 		select {
 		case task := <-deferrer:
-			{
-				task()
-			}
+			task()
 		default:
+			time.Sleep(1)
 		}
 		window.Update()
 	}

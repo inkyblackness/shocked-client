@@ -1,11 +1,16 @@
 package native
 
 import (
+	"time"
+
 	"github.com/go-gl/glfw/v3.1/glfw"
 
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
+
+var framesPerSecond = float64(30.0)
+var frameTime = time.Duration(int64(float64(time.Second) / float64(framesPerSecond)))
 
 var buttonsByIndex = map[glfw.MouseButton]uint32{
 	glfw.MouseButton1: env.MousePrimary,
@@ -17,6 +22,8 @@ type OpenGlWindow struct {
 
 	glfwWindow *glfw.Window
 	glWrapper  *OpenGl
+
+	nextRenderTick time.Time
 }
 
 // NewOpenGlWindow tries to initialize the OpenGL environment and returns a
@@ -38,7 +45,8 @@ func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 			window = &OpenGlWindow{
 				AbstractOpenGlWindow: env.InitAbstractOpenGlWindow(),
 				glfwWindow:           glfwWindow,
-				glWrapper:            NewOpenGl()}
+				glWrapper:            NewOpenGl(),
+				nextRenderTick:       time.Now()}
 
 			glfwWindow.SetCursorPosCallback(window.onCursorPos)
 			glfwWindow.SetMouseButtonCallback(window.onMouseButton)
@@ -64,9 +72,21 @@ func (window *OpenGlWindow) Close() {
 func (window *OpenGlWindow) Update() {
 	glfw.PollEvents()
 
-	window.glfwWindow.MakeContextCurrent()
-	window.CallRender()
-	window.glfwWindow.SwapBuffers()
+	now := time.Now()
+	delta := now.Sub(window.nextRenderTick)
+	if delta.Nanoseconds() < 0 {
+		// detected a change of wallclock time into the past; realign
+		delta = frameTime
+		window.nextRenderTick = now
+	}
+
+	if delta.Nanoseconds() >= frameTime.Nanoseconds() {
+		window.glfwWindow.MakeContextCurrent()
+		window.CallRender()
+		window.glfwWindow.SwapBuffers()
+		framesCovered := delta.Nanoseconds() / frameTime.Nanoseconds()
+		window.nextRenderTick = window.nextRenderTick.Add(time.Duration(framesCovered * frameTime.Nanoseconds()))
+	}
 }
 
 // OpenGl implements the env.OpenGlWindow interface.
