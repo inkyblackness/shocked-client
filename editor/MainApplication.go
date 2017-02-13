@@ -8,6 +8,7 @@ import (
 	mgl "github.com/go-gl/mathgl/mgl32"
 
 	"github.com/inkyblackness/shocked-client/env"
+	"github.com/inkyblackness/shocked-client/env/keys"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
@@ -62,6 +63,8 @@ func (app *MainApplication) setWindow(glWindow env.OpenGlWindow) {
 	glWindow.OnMouseButtonDown(app.onMouseButtonDown)
 	glWindow.OnMouseButtonUp(app.onMouseButtonUp)
 	glWindow.OnMouseScroll(app.onMouseScroll)
+	glWindow.OnKeyDown(app.onKeyDown)
+	glWindow.OnKeyUp(app.onKeyUp)
 	glWindow.OnCharCallback(app.onChar)
 }
 
@@ -133,18 +136,18 @@ func (app *MainApplication) onMouseMove(x float32, y float32) {
 	app.mouseMoveCapture()
 }
 
-func (app *MainApplication) onMouseButtonDown(mouseButton uint32, modifierMask uint32) {
+func (app *MainApplication) onMouseButtonDown(mouseButton uint32, modifier keys.Modifier) {
 	app.mouseDragged = false
 	app.mouseMoveCapture = func() {
 		app.mouseDragged = true
 	}
 }
 
-func (app *MainApplication) onMouseButtonUp(mouseButton uint32, modifierMask uint32) {
+func (app *MainApplication) onMouseButtonUp(mouseButton uint32, modifier keys.Modifier) {
 	if (mouseButton & env.MousePrimary) == env.MousePrimary {
 		app.mouseMoveCapture = func() {}
 		if !app.mouseDragged {
-			app.onMouseClick(modifierMask)
+			app.onMouseClick(modifier)
 		}
 	}
 }
@@ -152,8 +155,17 @@ func (app *MainApplication) onMouseButtonUp(mouseButton uint32, modifierMask uin
 func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 }
 
-func (app *MainApplication) onMouseClick(modifierMask uint32) {
+func (app *MainApplication) onMouseClick(modifierMask keys.Modifier) {
+}
+
+func (app *MainApplication) onKeyDown(key keys.Key, modifier keys.Modifier) {
+	fmt.Printf("down: %v [%v]\n", key, modifier)
+}
+
+func (app *MainApplication) onKeyUp(key keys.Key, modifier keys.Modifier) {
+	fmt.Printf("  up: %v [%v]\n", key, modifier)
 }
 
 func (app *MainApplication) onChar(char rune) {
+	fmt.Printf("char: %v [%v]\n", char)
 }

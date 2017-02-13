@@ -7,6 +7,7 @@ import (
 	"github.com/gopherjs/webgl"
 
 	"github.com/inkyblackness/shocked-client/env"
+	"github.com/inkyblackness/shocked-client/env/keys"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
 
@@ -17,6 +18,8 @@ var buttonsByIndex = map[int]uint32{
 // WebGlWindow represents a WebGL surface.
 type WebGlWindow struct {
 	env.AbstractOpenGlWindow
+
+	keyBuffer *keys.StickyKeyBuffer
 
 	canvas    *js.Object
 	glWrapper *WebGl
@@ -35,6 +38,8 @@ func NewWebGlWindow(canvas *js.Object) (window *WebGlWindow, err error) {
 
 			canvas:    canvas,
 			glWrapper: NewWebGl(glContext)}
+
+		window.keyBuffer = keys.NewStickyKeyBuffer(window.StickyKeyListener())
 
 		window.registerMouseListener()
 		window.startRenderLoop()
@@ -62,14 +67,20 @@ func (window *WebGlWindow) registerMouseListener() {
 
 		return x, y, inRect
 	}
-	getEventModifier := func(event *js.Object) uint32 {
-		modifier := uint32(0)
+	getEventModifier := func(event *js.Object) keys.Modifier {
+		modifier := keys.ModNone
 
 		if event.Get("ctrlKey").Bool() {
-			modifier |= env.ModControl
+			modifier = modifier.With(keys.ModControl)
 		}
 		if event.Get("shiftKey").Bool() {
-			modifier |= env.ModShift
+			modifier = modifier.With(keys.ModShift)
+		}
+		if event.Get("altKey").Bool() {
+			modifier = modifier.With(keys.ModAlt)
+		}
+		if event.Get("metaKey").Bool() {
+			modifier = modifier.With(keys.ModSuper)
 		}
 
 		return modifier
@@ -94,8 +105,8 @@ func (window *WebGlWindow) registerMouseListener() {
 
 			if (inRect || (notifiedMouseButtons != 0)) && ((notifiedMouseButtons & button) != button) {
 				notifiedMouseButtons |= button
-				modifierMask := getEventModifier(event)
-				window.CallOnMouseButtonDown(button, modifierMask)
+				modifier := getEventModifier(event)
+				window.CallOnMouseButtonDown(button, modifier)
 			}
 		}
 	})
@@ -105,8 +116,8 @@ func (window *WebGlWindow) registerMouseListener() {
 		if knownButton {
 			if (notifiedMouseButtons & button) == button {
 				notifiedMouseButtons &= ^button
-				modifierMask := getEventModifier(event)
-				window.CallOnMouseButtonUp(button, modifierMask)
+				modifier := getEventModifier(event)
+				window.CallOnMouseButtonUp(button, modifier)
 			}
 		}
 	})
@@ -120,6 +131,27 @@ func (window *WebGlWindow) registerMouseListener() {
 			event.Call("preventDefault")
 			window.CallOnMouseScroll(float32(dx), float32(dy))
 		}
+	})
+	js.Global.Call("addEventListener", "keydown", func(event *js.Object) {
+		key, knownKey := keyMap[event.Get("key").String()]
+
+		event.Call("preventDefault")
+		if knownKey {
+			modifier := getEventModifier(event)
+			window.keyBuffer.KeyDown(key, modifier)
+		}
+	})
+	js.Global.Call("addEventListener", "keyup", func(event *js.Object) {
+		key, knownKey := keyMap[event.Get("key").String()]
+
+		event.Call("preventDefault")
+		if knownKey {
+			modifier := getEventModifier(event)
+			window.keyBuffer.KeyUp(key, modifier)
+		}
+	})
+	js.Global.Call("addEventListener", "blur", func(event *js.Object) {
+		window.keyBuffer.ReleaseAll()
 	})
 	js.Global.Call("addEventListener", "keypress", func(event *js.Object) {
 		charCode := event.Get("charCode").Int()

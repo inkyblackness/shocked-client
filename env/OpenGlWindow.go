@@ -1,6 +1,7 @@
 package env
 
 import (
+	"github.com/inkyblackness/shocked-client/env/keys"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
 
@@ -17,7 +18,7 @@ type MouseMoveCallback func(x float32, y float32)
 // MouseButtonCallback is the function to receive button up/down events.
 // An Up event is sent for every reported Down event, even if the mouse cursor is outside
 // the client area.
-type MouseButtonCallback func(buttonMask uint32, modifierMask uint32)
+type MouseButtonCallback func(buttonMask uint32, modifier keys.Modifier)
 
 // MouseScrollCallback is the function to receive scroll events.
 // Delta values are right-hand oriented: positive values go right/down/far.
@@ -28,6 +29,9 @@ type ResizeCallback func(width int, height int)
 
 // CharCallback is called for typing a character.
 type CharCallback func(char rune)
+
+// KeyCallback is called for pressing or releasing a key on the keyboard.
+type KeyCallback func(key keys.Key, modifier keys.Modifier)
 
 // OpenGlWindow represents an OpenGL render surface.
 type OpenGlWindow interface {
@@ -50,6 +54,12 @@ type OpenGlWindow interface {
 	// OnMouseScroll registers a callback function for mouse scroll events.
 	OnMouseScroll(callback MouseScrollCallback)
 
+	// OnKeyDown registers a callback function for key down events.
+	// Repetitions are notified by a sequence of Up/Down
+	OnKeyDown(callback KeyCallback)
+	// OnKeyUp registers a callback function for key up events.
+	// Repetitions are notified by a sequence of Up/Down
+	OnKeyUp(callback KeyCallback)
 	// OnCharCallback registers a callback function for typed characters.
 	OnCharCallback(callback CharCallback)
 }

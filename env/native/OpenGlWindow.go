@@ -6,6 +6,7 @@ import (
 	"github.com/go-gl/glfw/v3.1/glfw"
 
 	"github.com/inkyblackness/shocked-client/env"
+	"github.com/inkyblackness/shocked-client/env/keys"
 	"github.com/inkyblackness/shocked-client/opengl"
 )
 
@@ -19,6 +20,8 @@ var buttonsByIndex = map[glfw.MouseButton]uint32{
 // OpenGlWindow represents a native OpenGL surface.
 type OpenGlWindow struct {
 	env.AbstractOpenGlWindow
+
+	keyBuffer *keys.StickyKeyBuffer
 
 	glfwWindow *glfw.Window
 	glWrapper  *OpenGl
@@ -48,10 +51,13 @@ func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 				glWrapper:            NewOpenGl(),
 				nextRenderTick:       time.Now()}
 
+			window.keyBuffer = keys.NewStickyKeyBuffer(window.StickyKeyListener())
+
 			glfwWindow.SetCursorPosCallback(window.onCursorPos)
 			glfwWindow.SetMouseButtonCallback(window.onMouseButton)
 			glfwWindow.SetScrollCallback(window.onMouseScroll)
 			glfwWindow.SetFramebufferSizeCallback(window.onFramebufferResize)
+			glfwWindow.SetKeyCallback(window.onKey)
 			glfwWindow.SetCharCallback(window.onChar)
 		}
 	}
@@ -112,18 +118,12 @@ func (window *OpenGlWindow) onMouseButton(rawWindow *glfw.Window, rawButton glfw
 	button, knownButton := buttonsByIndex[rawButton]
 
 	if knownButton {
-		modifierMask := uint32(0)
+		modifier := window.mapModifier(mods)
 
-		if (mods & glfw.ModControl) != 0 {
-			modifierMask |= env.ModControl
-		}
-		if (mods & glfw.ModShift) != 0 {
-			modifierMask |= env.ModShift
-		}
 		if action == glfw.Press {
-			window.CallOnMouseButtonDown(button, modifierMask)
+			window.CallOnMouseButtonDown(button, modifier)
 		} else if action == glfw.Release {
-			window.CallOnMouseButtonUp(button, modifierMask)
+			window.CallOnMouseButtonUp(button, modifier)
 		}
 	}
 }
@@ -132,6 +132,42 @@ func (window *OpenGlWindow) onMouseScroll(rawWindow *glfw.Window, dx float64, dy
 	window.CallOnMouseScroll(float32(dx), float32(dy)*-1.0)
 }
 
+func (window *OpenGlWindow) onKey(rawWindow *glfw.Window, glfwKey glfw.Key, scanCode int, action glfw.Action, mods glfw.ModifierKey) {
+	key, knownKey := keyMap[glfwKey]
+
+	if knownKey {
+		modifier := window.mapModifier(mods)
+
+		if action == glfw.Press {
+			window.keyBuffer.KeyDown(key, modifier)
+		} else if action == glfw.Repeat {
+			window.keyBuffer.KeyUp(key, modifier)
+			window.keyBuffer.KeyDown(key, modifier)
+		} else if action == glfw.Release {
+			window.keyBuffer.KeyUp(key, modifier)
+		}
+	}
+}
+
 func (window *OpenGlWindow) onChar(rawWindow *glfw.Window, char rune) {
 	window.CallCharCallback(char)
+}
+
+func (window *OpenGlWindow) mapModifier(mods glfw.ModifierKey) keys.Modifier {
+	modifier := keys.ModNone
+
+	if (mods & glfw.ModControl) != 0 {
+		modifier = modifier.With(keys.ModControl)
+	}
+	if (mods & glfw.ModShift) != 0 {
+		modifier = modifier.With(keys.ModShift)
+	}
+	if (mods & glfw.ModAlt) != 0 {
+		modifier = modifier.With(keys.ModAlt)
+	}
+	if (mods & glfw.ModSuper) != 0 {
+		modifier = modifier.With(keys.ModSuper)
+	}
+
+	return modifier
 }
