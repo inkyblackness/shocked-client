@@ -135,8 +135,8 @@ func (window *WebGlWindow) registerMouseListener() {
 	js.Global.Call("addEventListener", "keydown", func(event *js.Object) {
 		key, knownKey := keyMap[event.Get("key").String()]
 
-		event.Call("preventDefault")
 		if knownKey {
+			event.Call("preventDefault")
 			modifier := getEventModifier(event)
 			window.keyBuffer.KeyDown(key, modifier)
 		}
@@ -144,8 +144,8 @@ func (window *WebGlWindow) registerMouseListener() {
 	js.Global.Call("addEventListener", "keyup", func(event *js.Object) {
 		key, knownKey := keyMap[event.Get("key").String()]
 
-		event.Call("preventDefault")
 		if knownKey {
+			event.Call("preventDefault")
 			modifier := getEventModifier(event)
 			window.keyBuffer.KeyUp(key, modifier)
 		}

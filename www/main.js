@@ -31266,10 +31266,10 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 			_tuple = (_entry = keyMap[$String.keyFor($internalize(event.key, $String))], _entry !== undefined ? [_entry.v, true] : [0, false]);
 			key = _tuple[0];
 			knownKey = _tuple[1];
-			event.preventDefault();
 			/* */ if (knownKey) { $s = 1; continue; }
 			/* */ $s = 2; continue;
 			/* if (knownKey) { */ case 1:
+				event.preventDefault();
 				_r = getEventModifier(event); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 				modifier = _r;
 				$r = window.keyBuffer.KeyDown(key, modifier); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -31282,10 +31282,10 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 			_tuple = (_entry = keyMap[$String.keyFor($internalize(event.key, $String))], _entry !== undefined ? [_entry.v, true] : [0, false]);
 			key = _tuple[0];
 			knownKey = _tuple[1];
-			event.preventDefault();
 			/* */ if (knownKey) { $s = 1; continue; }
 			/* */ $s = 2; continue;
 			/* if (knownKey) { */ case 1:
+				event.preventDefault();
 				_r = getEventModifier(event); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 				modifier = _r;
 				$r = window.keyBuffer.KeyUp(key, modifier); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -31422,7 +31422,7 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 		$r = env.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = keys.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = opengl.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		keyMap = $makeMap($String.keyFor, [{ k: "Enter", v: 257 }, { k: "Escape", v: 256 }, { k: "Backspace", v: 259 }, { k: "Tab", v: 258 }, { k: "ArrowDown", v: 264 }, { k: "ArrowLeft", v: 263 }, { k: "ArrowRight", v: 262 }, { k: "ArrowUp", v: 265 }, { k: "Delete", v: 261 }, { k: "End", v: 269 }, { k: "Home", v: 268 }, { k: "Insert", v: 260 }, { k: "PageDown", v: 267 }, { k: "PageUp", v: 266 }, { k: "Alt", v: 342 }, { k: "AltGraph", v: 342 }, { k: "ModeChange", v: 342 }, { k: "Control", v: 341 }, { k: "Shift", v: 340 }, { k: "Super", v: 343 }, { k: "Pause", v: 284 }, { k: "PrintScreen", v: 283 }, { k: "CapsLock", v: 280 }, { k: "ScrollLock", v: 281 }, { k: "F1", v: 290 }, { k: "F10", v: 299 }, { k: "F11", v: 300 }, { k: "F12", v: 301 }, { k: "F13", v: 302 }, { k: "F14", v: 303 }, { k: "F15", v: 304 }, { k: "F16", v: 305 }, { k: "F17", v: 306 }, { k: "F18", v: 307 }, { k: "F19", v: 308 }, { k: "F2", v: 291 }, { k: "F20", v: 309 }, { k: "F21", v: 310 }, { k: "F22", v: 311 }, { k: "F23", v: 312 }, { k: "F24", v: 313 }, { k: "F25", v: 314 }, { k: "F3", v: 292 }, { k: "F4", v: 293 }, { k: "F5", v: 294 }, { k: "F6", v: 295 }, { k: "F7", v: 296 }, { k: "F8", v: 297 }, { k: "F9", v: 298 }]);
+		keyMap = $makeMap($String.keyFor, [{ k: "Enter", v: 257 }, { k: "Esc", v: 256 }, { k: "Escape", v: 256 }, { k: "Backspace", v: 259 }, { k: "Tab", v: 258 }, { k: "ArrowDown", v: 264 }, { k: "ArrowLeft", v: 263 }, { k: "ArrowRight", v: 262 }, { k: "ArrowUp", v: 265 }, { k: "Down", v: 264 }, { k: "Left", v: 263 }, { k: "Right", v: 262 }, { k: "Up", v: 265 }, { k: "Del", v: 261 }, { k: "Delete", v: 261 }, { k: "End", v: 269 }, { k: "Home", v: 268 }, { k: "Insert", v: 260 }, { k: "PageDown", v: 267 }, { k: "PageUp", v: 266 }, { k: "Alt", v: 342 }, { k: "AltGraph", v: 342 }, { k: "ModeChange", v: 342 }, { k: "Control", v: 341 }, { k: "Shift", v: 340 }, { k: "Super", v: 343 }, { k: "Pause", v: 284 }, { k: "PrintScreen", v: 283 }, { k: "CapsLock", v: 280 }, { k: "Scroll", v: 281 }, { k: "ScrollLock", v: 281 }, { k: "F1", v: 290 }, { k: "F10", v: 299 }, { k: "F11", v: 300 }, { k: "F12", v: 301 }, { k: "F13", v: 302 }, { k: "F14", v: 303 }, { k: "F15", v: 304 }, { k: "F16", v: 305 }, { k: "F17", v: 306 }, { k: "F18", v: 307 }, { k: "F19", v: 308 }, { k: "F2", v: 291 }, { k: "F20", v: 309 }, { k: "F21", v: 310 }, { k: "F22", v: 311 }, { k: "F23", v: 312 }, { k: "F24", v: 313 }, { k: "F25", v: 314 }, { k: "F3", v: 292 }, { k: "F4", v: 293 }, { k: "F5", v: 294 }, { k: "F6", v: 295 }, { k: "F7", v: 296 }, { k: "F8", v: 297 }, { k: "F9", v: 298 }]);
 		buttonsByIndex = $makeMap($Int.keyFor, [{ k: 0, v: 1 }, { k: 2, v: 2 }]);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};

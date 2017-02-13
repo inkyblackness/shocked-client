@@ -4,9 +4,12 @@ import (
 	"github.com/inkyblackness/shocked-client/env/keys"
 )
 
+// Mapping of key names to the values.
+// Refer to https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
 var keyMap = map[string]keys.Key{
 
 	"Enter":     keys.KeyEnter,
+	"Esc":       keys.KeyEscape,
 	"Escape":    keys.KeyEscape,
 	"Backspace": keys.KeyBackspace,
 	"Tab":       keys.KeyTab,
@@ -15,7 +18,12 @@ var keyMap = map[string]keys.Key{
 	"ArrowLeft":  keys.KeyLeft,
 	"ArrowRight": keys.KeyRight,
 	"ArrowUp":    keys.KeyUp,
+	"Down":       keys.KeyDown,
+	"Left":       keys.KeyLeft,
+	"Right":      keys.KeyRight,
+	"Up":         keys.KeyUp,
 
+	"Del":      keys.KeyDelete,
 	"Delete":   keys.KeyDelete,
 	"End":      keys.KeyEnd,
 	"Home":     keys.KeyHome,
@@ -34,6 +42,7 @@ var keyMap = map[string]keys.Key{
 	"PrintScreen": keys.KeyPrintScreen,
 
 	"CapsLock":   keys.KeyCapsLock,
+	"Scroll":     keys.KeyScrollLock,
 	"ScrollLock": keys.KeyScrollLock,
 
 	"F1":  keys.KeyF1,
