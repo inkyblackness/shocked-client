@@ -26148,25 +26148,27 @@ $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/env/keys"] = (function() {
-	var $pkg = {}, $init, Key, Modifier, StickyKeyListener, StickyKeyBuffer, sliceType, ptrType, mapType, keyToModifier, NewStickyKeyBuffer;
+	var $pkg = {}, $init, Key, Modifier, StickyKeyListener, StickyKeyBuffer, ptrType, mapType, mapType$1, keyToModifier, NewStickyKeyBuffer;
 	Key = $pkg.Key = $newType(4, $kindInt, "keys.Key", true, "github.com/inkyblackness/shocked-client/env/keys", true, null);
 	Modifier = $pkg.Modifier = $newType(4, $kindUint32, "keys.Modifier", true, "github.com/inkyblackness/shocked-client/env/keys", true, null);
 	StickyKeyListener = $pkg.StickyKeyListener = $newType(8, $kindInterface, "keys.StickyKeyListener", true, "github.com/inkyblackness/shocked-client/env/keys", true, null);
-	StickyKeyBuffer = $pkg.StickyKeyBuffer = $newType(0, $kindStruct, "keys.StickyKeyBuffer", true, "github.com/inkyblackness/shocked-client/env/keys", true, function(pressedKeys_, activeModifier_, listener_) {
+	StickyKeyBuffer = $pkg.StickyKeyBuffer = $newType(0, $kindStruct, "keys.StickyKeyBuffer", true, "github.com/inkyblackness/shocked-client/env/keys", true, function(pressedKeys_, pressedModifier_, activeModifier_, listener_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.pressedKeys = false;
+			this.pressedModifier = false;
 			this.activeModifier = 0;
 			this.listener = $ifaceNil;
 			return;
 		}
 		this.pressedKeys = pressedKeys_;
+		this.pressedModifier = pressedModifier_;
 		this.activeModifier = activeModifier_;
 		this.listener = listener_;
 	});
-	sliceType = $sliceType(Key);
 	ptrType = $ptrType(StickyKeyBuffer);
 	mapType = $mapType(Key, $Int);
+	mapType$1 = $mapType(Modifier, $Int);
 	Key.prototype.AsModifier = function() {
 		var $ptr, _entry, _tuple, isModifier, key, mod;
 		key = this.$val;
@@ -26199,7 +26201,7 @@ $packages["github.com/inkyblackness/shocked-client/env/keys"] = (function() {
 	$ptrType(Modifier).prototype.Has = function(other) { return new Modifier(this.$get()).Has(other); };
 	NewStickyKeyBuffer = function(listener) {
 		var $ptr, buffer, listener;
-		buffer = new StickyKeyBuffer.ptr({}, 0, listener);
+		buffer = new StickyKeyBuffer.ptr({}, {}, 0, listener);
 		return buffer;
 	};
 	$pkg.NewStickyKeyBuffer = NewStickyKeyBuffer;
@@ -26210,90 +26212,101 @@ $packages["github.com/inkyblackness/shocked-client/env/keys"] = (function() {
 	};
 	StickyKeyBuffer.prototype.ActiveModifier = function() { return this.$val.ActiveModifier(); };
 	StickyKeyBuffer.ptr.prototype.KeyDown = function(key, modifier) {
-		var $ptr, _entry, _key, buffer, key, modifier, oldCount, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _key = $f._key; buffer = $f.buffer; key = $f.key; modifier = $f.modifier; oldCount = $f.oldCount; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _entry, _entry$1, _key, _key$1, buffer, key, keyAsModifier, modifier, oldCount, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _entry$1 = $f._entry$1; _key = $f._key; _key$1 = $f._key$1; buffer = $f.buffer; key = $f.key; keyAsModifier = $f.keyAsModifier; modifier = $f.modifier; oldCount = $f.oldCount; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		buffer = this;
-		oldCount = (_entry = buffer.pressedKeys[Key.keyFor(key)], _entry !== undefined ? _entry.v : 0);
-		_key = key; (buffer.pressedKeys || $throwRuntimeError("assignment to entry in nil map"))[Key.keyFor(_key)] = { k: _key, v: oldCount + 1 >> 0 };
-		/* */ if (oldCount === 0) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (oldCount === 0) { */ case 1:
-			buffer.activeModifier = new Modifier(buffer.activeModifier).With(new Key(key).AsModifier());
-			$r = buffer.listener.KeyDown(key, modifier); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* } */ case 2:
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StickyKeyBuffer.ptr.prototype.KeyDown }; } $f.$ptr = $ptr; $f._entry = _entry; $f._key = _key; $f.buffer = buffer; $f.key = key; $f.modifier = modifier; $f.oldCount = oldCount; $f.$s = $s; $f.$r = $r; return $f;
+		keyAsModifier = new Key(key).AsModifier();
+		$r = buffer.setActiveModifier(new Modifier(modifier).With(keyAsModifier)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ if (keyAsModifier === 0) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (keyAsModifier === 0) { */ case 2:
+			oldCount = (_entry = buffer.pressedKeys[Key.keyFor(key)], _entry !== undefined ? _entry.v : 0);
+			_key = key; (buffer.pressedKeys || $throwRuntimeError("assignment to entry in nil map"))[Key.keyFor(_key)] = { k: _key, v: oldCount + 1 >> 0 };
+			/* */ if (oldCount === 0) { $s = 5; continue; }
+			/* */ $s = 6; continue;
+			/* if (oldCount === 0) { */ case 5:
+				$r = buffer.listener.Key(key, modifier); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* } */ case 6:
+			$s = 4; continue;
+		/* } else { */ case 3:
+			_key$1 = keyAsModifier; (buffer.pressedModifier || $throwRuntimeError("assignment to entry in nil map"))[Modifier.keyFor(_key$1)] = { k: _key$1, v: (_entry$1 = buffer.pressedModifier[Modifier.keyFor(keyAsModifier)], _entry$1 !== undefined ? _entry$1.v : 0) + (1) >> 0 };
+		/* } */ case 4:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StickyKeyBuffer.ptr.prototype.KeyDown }; } $f.$ptr = $ptr; $f._entry = _entry; $f._entry$1 = _entry$1; $f._key = _key; $f._key$1 = _key$1; $f.buffer = buffer; $f.key = key; $f.keyAsModifier = keyAsModifier; $f.modifier = modifier; $f.oldCount = oldCount; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	StickyKeyBuffer.prototype.KeyDown = function(key, modifier) { return this.$val.KeyDown(key, modifier); };
 	StickyKeyBuffer.ptr.prototype.KeyUp = function(key, modifier) {
-		var $ptr, _entry, _key, buffer, key, modifier, oldCount, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _key = $f._key; buffer = $f.buffer; key = $f.key; modifier = $f.modifier; oldCount = $f.oldCount; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _entry, _entry$1, _key, _key$1, buffer, key, keyAsModifier, modifier, oldCount, oldCount$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _entry$1 = $f._entry$1; _key = $f._key; _key$1 = $f._key$1; buffer = $f.buffer; key = $f.key; keyAsModifier = $f.keyAsModifier; modifier = $f.modifier; oldCount = $f.oldCount; oldCount$1 = $f.oldCount$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		buffer = this;
-		oldCount = (_entry = buffer.pressedKeys[Key.keyFor(key)], _entry !== undefined ? _entry.v : 0);
-		/* */ if (oldCount > 0) { $s = 1; continue; }
+		keyAsModifier = new Key(key).AsModifier();
+		/* */ if (keyAsModifier === 0) { $s = 1; continue; }
 		/* */ $s = 2; continue;
-		/* if (oldCount > 0) { */ case 1:
-			_key = key; (buffer.pressedKeys || $throwRuntimeError("assignment to entry in nil map"))[Key.keyFor(_key)] = { k: _key, v: oldCount - 1 >> 0 };
-			/* */ if (oldCount === 1) { $s = 3; continue; }
-			/* */ $s = 4; continue;
-			/* if (oldCount === 1) { */ case 3:
-				buffer.activeModifier = new Modifier(buffer.activeModifier).Without(new Key(key).AsModifier());
-				$r = buffer.listener.KeyUp(key, modifier); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			/* } */ case 4:
-		/* } */ case 2:
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StickyKeyBuffer.ptr.prototype.KeyUp }; } $f.$ptr = $ptr; $f._entry = _entry; $f._key = _key; $f.buffer = buffer; $f.key = key; $f.modifier = modifier; $f.oldCount = oldCount; $f.$s = $s; $f.$r = $r; return $f;
+		/* if (keyAsModifier === 0) { */ case 1:
+			oldCount = (_entry = buffer.pressedKeys[Key.keyFor(key)], _entry !== undefined ? _entry.v : 0);
+			$r = buffer.setActiveModifier(modifier); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			if (oldCount > 0) {
+				_key = key; (buffer.pressedKeys || $throwRuntimeError("assignment to entry in nil map"))[Key.keyFor(_key)] = { k: _key, v: oldCount - 1 >> 0 };
+			}
+			$s = 3; continue;
+		/* } else { */ case 2:
+			oldCount$1 = (_entry$1 = buffer.pressedModifier[Modifier.keyFor(keyAsModifier)], _entry$1 !== undefined ? _entry$1.v : 0);
+			/* */ if (oldCount$1 > 0) { $s = 5; continue; }
+			/* */ $s = 6; continue;
+			/* if (oldCount$1 > 0) { */ case 5:
+				_key$1 = keyAsModifier; (buffer.pressedModifier || $throwRuntimeError("assignment to entry in nil map"))[Modifier.keyFor(_key$1)] = { k: _key$1, v: oldCount$1 - 1 >> 0 };
+				/* */ if (oldCount$1 === 1) { $s = 7; continue; }
+				/* */ $s = 8; continue;
+				/* if (oldCount$1 === 1) { */ case 7:
+					$r = buffer.setActiveModifier(new Modifier(modifier).Without(keyAsModifier)); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* } */ case 8:
+			/* } */ case 6:
+		/* } */ case 3:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StickyKeyBuffer.ptr.prototype.KeyUp }; } $f.$ptr = $ptr; $f._entry = _entry; $f._entry$1 = _entry$1; $f._key = _key; $f._key$1 = _key$1; $f.buffer = buffer; $f.key = key; $f.keyAsModifier = keyAsModifier; $f.modifier = modifier; $f.oldCount = oldCount; $f.oldCount$1 = oldCount$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	StickyKeyBuffer.prototype.KeyUp = function(key, modifier) { return this.$val.KeyUp(key, modifier); };
 	StickyKeyBuffer.ptr.prototype.ReleaseAll = function() {
-		var $ptr, _entry, _i, _i$1, _keys, _ref, _ref$1, buffer, count, key, key$1, modifier, pendingModifierKeys, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _i = $f._i; _i$1 = $f._i$1; _keys = $f._keys; _ref = $f._ref; _ref$1 = $f._ref$1; buffer = $f.buffer; count = $f.count; key = $f.key; key$1 = $f.key$1; modifier = $f.modifier; pendingModifierKeys = $f.pendingModifierKeys; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, buffer, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; buffer = $f.buffer; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		buffer = this;
-		pendingModifierKeys = sliceType.nil;
-		_ref = buffer.pressedKeys;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 1:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 1; continue;
-			}
-			key = _entry.k;
-			count = _entry.v;
-			/* */ if (count > 0) { $s = 3; continue; }
-			/* */ $s = 4; continue;
-			/* if (count > 0) { */ case 3:
-				modifier = new Key(key).AsModifier();
-				/* */ if (modifier === 0) { $s = 5; continue; }
-				/* */ $s = 6; continue;
-				/* if (modifier === 0) { */ case 5:
-					$r = buffer.listener.KeyUp(key, buffer.activeModifier); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					$s = 7; continue;
-				/* } else { */ case 6:
-					pendingModifierKeys = $append(pendingModifierKeys, key);
-				/* } */ case 7:
-			/* } */ case 4:
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		_ref$1 = pendingModifierKeys;
-		_i$1 = 0;
-		/* while (true) { */ case 9:
-			/* if (!(_i$1 < _ref$1.$length)) { break; } */ if(!(_i$1 < _ref$1.$length)) { $s = 10; continue; }
-			key$1 = ((_i$1 < 0 || _i$1 >= _ref$1.$length) ? $throwRuntimeError("index out of range") : _ref$1.$array[_ref$1.$offset + _i$1]);
-			$r = buffer.listener.KeyUp(key$1, buffer.activeModifier); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			buffer.activeModifier = new Modifier(buffer.activeModifier).Without(new Key(key$1).AsModifier());
-			_i$1++;
-		/* } */ $s = 9; continue; case 10:
 		buffer.pressedKeys = {};
-		buffer.activeModifier = 0;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StickyKeyBuffer.ptr.prototype.ReleaseAll }; } $f.$ptr = $ptr; $f._entry = _entry; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._ref = _ref; $f._ref$1 = _ref$1; $f.buffer = buffer; $f.count = count; $f.key = key; $f.key$1 = key$1; $f.modifier = modifier; $f.pendingModifierKeys = pendingModifierKeys; $f.$s = $s; $f.$r = $r; return $f;
+		$r = buffer.setActiveModifier(0); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StickyKeyBuffer.ptr.prototype.ReleaseAll }; } $f.$ptr = $ptr; $f.buffer = buffer; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	StickyKeyBuffer.prototype.ReleaseAll = function() { return this.$val.ReleaseAll(); };
+	StickyKeyBuffer.ptr.prototype.setActiveModifier = function(modifier) {
+		var $ptr, _entry, _i, _key, _keys, _ref, buffer, mod, modifier, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _ref = $f._ref; buffer = $f.buffer; mod = $f.mod; modifier = $f.modifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		buffer = this;
+		/* */ if (!((buffer.activeModifier === modifier))) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!((buffer.activeModifier === modifier))) { */ case 1:
+			_ref = buffer.pressedModifier;
+			_i = 0;
+			_keys = $keys(_ref);
+			while (true) {
+				if (!(_i < _keys.length)) { break; }
+				_entry = _ref[_keys[_i]];
+				if (_entry === undefined) {
+					_i++;
+					continue;
+				}
+				mod = _entry.k;
+				if (!new Modifier(modifier).Has(mod)) {
+					_key = mod; (buffer.pressedModifier || $throwRuntimeError("assignment to entry in nil map"))[Modifier.keyFor(_key)] = { k: _key, v: 0 };
+				}
+				_i++;
+			}
+			buffer.activeModifier = modifier;
+			$r = buffer.listener.Modifier(buffer.activeModifier); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: StickyKeyBuffer.ptr.prototype.setActiveModifier }; } $f.$ptr = $ptr; $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._ref = _ref; $f.buffer = buffer; $f.mod = mod; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	StickyKeyBuffer.prototype.setActiveModifier = function(modifier) { return this.$val.setActiveModifier(modifier); };
 	Key.methods = [{prop: "AsModifier", name: "AsModifier", pkg: "", typ: $funcType([], [Modifier], false)}];
 	Modifier.methods = [{prop: "With", name: "With", pkg: "", typ: $funcType([Modifier], [Modifier], false)}, {prop: "Without", name: "Without", pkg: "", typ: $funcType([Modifier], [Modifier], false)}, {prop: "Has", name: "Has", pkg: "", typ: $funcType([Modifier], [$Bool], false)}];
-	ptrType.methods = [{prop: "ActiveModifier", name: "ActiveModifier", pkg: "", typ: $funcType([], [Modifier], false)}, {prop: "KeyDown", name: "KeyDown", pkg: "", typ: $funcType([Key, Modifier], [], false)}, {prop: "KeyUp", name: "KeyUp", pkg: "", typ: $funcType([Key, Modifier], [], false)}, {prop: "ReleaseAll", name: "ReleaseAll", pkg: "", typ: $funcType([], [], false)}];
-	StickyKeyListener.init([{prop: "KeyDown", name: "KeyDown", pkg: "", typ: $funcType([Key, Modifier], [], false)}, {prop: "KeyUp", name: "KeyUp", pkg: "", typ: $funcType([Key, Modifier], [], false)}]);
-	StickyKeyBuffer.init("github.com/inkyblackness/shocked-client/env/keys", [{prop: "pressedKeys", name: "pressedKeys", exported: false, typ: mapType, tag: ""}, {prop: "activeModifier", name: "activeModifier", exported: false, typ: Modifier, tag: ""}, {prop: "listener", name: "listener", exported: false, typ: StickyKeyListener, tag: ""}]);
+	ptrType.methods = [{prop: "ActiveModifier", name: "ActiveModifier", pkg: "", typ: $funcType([], [Modifier], false)}, {prop: "KeyDown", name: "KeyDown", pkg: "", typ: $funcType([Key, Modifier], [], false)}, {prop: "KeyUp", name: "KeyUp", pkg: "", typ: $funcType([Key, Modifier], [], false)}, {prop: "ReleaseAll", name: "ReleaseAll", pkg: "", typ: $funcType([], [], false)}, {prop: "setActiveModifier", name: "setActiveModifier", pkg: "github.com/inkyblackness/shocked-client/env/keys", typ: $funcType([Modifier], [], false)}];
+	StickyKeyListener.init([{prop: "Key", name: "Key", pkg: "", typ: $funcType([Key, Modifier], [], false)}, {prop: "Modifier", name: "Modifier", pkg: "", typ: $funcType([Modifier], [], false)}]);
+	StickyKeyBuffer.init("github.com/inkyblackness/shocked-client/env/keys", [{prop: "pressedKeys", name: "pressedKeys", exported: false, typ: mapType, tag: ""}, {prop: "pressedModifier", name: "pressedModifier", exported: false, typ: mapType$1, tag: ""}, {prop: "activeModifier", name: "activeModifier", exported: false, typ: Modifier, tag: ""}, {prop: "listener", name: "listener", exported: false, typ: StickyKeyListener, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -26915,7 +26928,7 @@ $packages["github.com/inkyblackness/shocked-client/opengl"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
-	var $pkg = {}, $init, keys, opengl, keyDeferrer, AbstractOpenGlWindow, RenderCallback, MouseMoveCallback, MouseButtonCallback, MouseScrollCallback, ResizeCallback, CharCallback, KeyCallback, OpenGlWindow, ptrType, ptrType$1, ptrType$2, InitAbstractOpenGlWindow;
+	var $pkg = {}, $init, keys, opengl, keyDeferrer, AbstractOpenGlWindow, RenderCallback, MouseMoveCallback, MouseButtonCallback, MouseScrollCallback, ResizeCallback, CharCallback, KeyCallback, ModifierCallback, OpenGlWindow, ptrType, ptrType$1, ptrType$2, InitAbstractOpenGlWindow;
 	keys = $packages["github.com/inkyblackness/shocked-client/env/keys"];
 	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
 	keyDeferrer = $pkg.keyDeferrer = $newType(0, $kindStruct, "env.keyDeferrer", true, "github.com/inkyblackness/shocked-client/env", false, function(window_) {
@@ -26926,7 +26939,7 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 		}
 		this.window = window_;
 	});
-	AbstractOpenGlWindow = $pkg.AbstractOpenGlWindow = $newType(0, $kindStruct, "env.AbstractOpenGlWindow", true, "github.com/inkyblackness/shocked-client/env", true, function(keyBuffer_, CallRender_, CallResize_, CallOnMouseMove_, CallOnMouseButtonUp_, CallOnMouseButtonDown_, CallOnMouseScroll_, CallKeyUp_, CallKeyDown_, CallCharCallback_) {
+	AbstractOpenGlWindow = $pkg.AbstractOpenGlWindow = $newType(0, $kindStruct, "env.AbstractOpenGlWindow", true, "github.com/inkyblackness/shocked-client/env", true, function(keyBuffer_, CallRender_, CallResize_, CallOnMouseMove_, CallOnMouseButtonUp_, CallOnMouseButtonDown_, CallOnMouseScroll_, CallModifier_, CallKey_, CallCharCallback_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.keyBuffer = ptrType.nil;
@@ -26936,8 +26949,8 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 			this.CallOnMouseButtonUp = $throwNilPointerError;
 			this.CallOnMouseButtonDown = $throwNilPointerError;
 			this.CallOnMouseScroll = $throwNilPointerError;
-			this.CallKeyUp = $throwNilPointerError;
-			this.CallKeyDown = $throwNilPointerError;
+			this.CallModifier = $throwNilPointerError;
+			this.CallKey = $throwNilPointerError;
 			this.CallCharCallback = $throwNilPointerError;
 			return;
 		}
@@ -26948,8 +26961,8 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 		this.CallOnMouseButtonUp = CallOnMouseButtonUp_;
 		this.CallOnMouseButtonDown = CallOnMouseButtonDown_;
 		this.CallOnMouseScroll = CallOnMouseScroll_;
-		this.CallKeyUp = CallKeyUp_;
-		this.CallKeyDown = CallKeyDown_;
+		this.CallModifier = CallModifier_;
+		this.CallKey = CallKey_;
 		this.CallCharCallback = CallCharCallback_;
 	});
 	RenderCallback = $pkg.RenderCallback = $newType(4, $kindFunc, "env.RenderCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
@@ -26959,26 +26972,27 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 	ResizeCallback = $pkg.ResizeCallback = $newType(4, $kindFunc, "env.ResizeCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	CharCallback = $pkg.CharCallback = $newType(4, $kindFunc, "env.CharCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	KeyCallback = $pkg.KeyCallback = $newType(4, $kindFunc, "env.KeyCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
+	ModifierCallback = $pkg.ModifierCallback = $newType(4, $kindFunc, "env.ModifierCallback", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	OpenGlWindow = $pkg.OpenGlWindow = $newType(8, $kindInterface, "env.OpenGlWindow", true, "github.com/inkyblackness/shocked-client/env", true, null);
 	ptrType = $ptrType(keys.StickyKeyBuffer);
 	ptrType$1 = $ptrType(AbstractOpenGlWindow);
 	ptrType$2 = $ptrType(keyDeferrer);
-	keyDeferrer.ptr.prototype.KeyDown = function(key, modifier) {
+	keyDeferrer.ptr.prototype.Key = function(key, modifier) {
 		var $ptr, def, key, modifier, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; def = $f.def; key = $f.key; modifier = $f.modifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		def = this;
-		$r = def.window.CallKeyDown(key, modifier); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: keyDeferrer.ptr.prototype.KeyDown }; } $f.$ptr = $ptr; $f.def = def; $f.key = key; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
+		$r = def.window.CallKey(key, modifier); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: keyDeferrer.ptr.prototype.Key }; } $f.$ptr = $ptr; $f.def = def; $f.key = key; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	keyDeferrer.prototype.KeyDown = function(key, modifier) { return this.$val.KeyDown(key, modifier); };
-	keyDeferrer.ptr.prototype.KeyUp = function(key, modifier) {
-		var $ptr, def, key, modifier, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; def = $f.def; key = $f.key; modifier = $f.modifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+	keyDeferrer.prototype.Key = function(key, modifier) { return this.$val.Key(key, modifier); };
+	keyDeferrer.ptr.prototype.Modifier = function(modifier) {
+		var $ptr, def, modifier, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; def = $f.def; modifier = $f.modifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		def = this;
-		$r = def.window.CallKeyUp(key, modifier); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: keyDeferrer.ptr.prototype.KeyUp }; } $f.$ptr = $ptr; $f.def = def; $f.key = key; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
+		$r = def.window.CallModifier(modifier); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: keyDeferrer.ptr.prototype.Modifier }; } $f.$ptr = $ptr; $f.def = def; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	keyDeferrer.prototype.KeyUp = function(key, modifier) { return this.$val.KeyUp(key, modifier); };
+	keyDeferrer.prototype.Modifier = function(modifier) { return this.$val.Modifier(modifier); };
 	InitAbstractOpenGlWindow = function() {
 		var $ptr;
 		return new AbstractOpenGlWindow.ptr(ptrType.nil, (function() {
@@ -26991,8 +27005,8 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 			var $ptr, param, param$1;
 		}), (function(param, param$1) {
 			var $ptr, param, param$1;
-		}), $throwNilPointerError, (function(param, param$1) {
-			var $ptr, param, param$1;
+		}), $throwNilPointerError, (function(param) {
+			var $ptr, param;
 		}), (function(param, param$1) {
 			var $ptr, param, param$1;
 		}), (function(param) {
@@ -27042,28 +27056,28 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 		window.CallOnMouseScroll = callback;
 	};
 	AbstractOpenGlWindow.prototype.OnMouseScroll = function(callback) { return this.$val.OnMouseScroll(callback); };
-	AbstractOpenGlWindow.ptr.prototype.OnKeyDown = function(callback) {
+	AbstractOpenGlWindow.ptr.prototype.OnKey = function(callback) {
 		var $ptr, callback, window;
 		window = this;
-		window.CallKeyDown = callback;
+		window.CallKey = callback;
 	};
-	AbstractOpenGlWindow.prototype.OnKeyDown = function(callback) { return this.$val.OnKeyDown(callback); };
-	AbstractOpenGlWindow.ptr.prototype.OnKeyUp = function(callback) {
+	AbstractOpenGlWindow.prototype.OnKey = function(callback) { return this.$val.OnKey(callback); };
+	AbstractOpenGlWindow.ptr.prototype.OnModifier = function(callback) {
 		var $ptr, callback, window;
 		window = this;
-		window.CallKeyUp = callback;
+		window.CallModifier = callback;
 	};
-	AbstractOpenGlWindow.prototype.OnKeyUp = function(callback) { return this.$val.OnKeyUp(callback); };
+	AbstractOpenGlWindow.prototype.OnModifier = function(callback) { return this.$val.OnModifier(callback); };
 	AbstractOpenGlWindow.ptr.prototype.OnCharCallback = function(callback) {
 		var $ptr, callback, window;
 		window = this;
 		window.CallCharCallback = callback;
 	};
 	AbstractOpenGlWindow.prototype.OnCharCallback = function(callback) { return this.$val.OnCharCallback(callback); };
-	ptrType$2.methods = [{prop: "KeyDown", name: "KeyDown", pkg: "", typ: $funcType([keys.Key, keys.Modifier], [], false)}, {prop: "KeyUp", name: "KeyUp", pkg: "", typ: $funcType([keys.Key, keys.Modifier], [], false)}];
-	ptrType$1.methods = [{prop: "StickyKeyListener", name: "StickyKeyListener", pkg: "", typ: $funcType([], [keys.StickyKeyListener], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderCallback], [], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([ResizeCallback], [], false)}, {prop: "OnMouseMove", name: "OnMouseMove", pkg: "", typ: $funcType([MouseMoveCallback], [], false)}, {prop: "OnMouseButtonDown", name: "OnMouseButtonDown", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseButtonUp", name: "OnMouseButtonUp", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseScroll", name: "OnMouseScroll", pkg: "", typ: $funcType([MouseScrollCallback], [], false)}, {prop: "OnKeyDown", name: "OnKeyDown", pkg: "", typ: $funcType([KeyCallback], [], false)}, {prop: "OnKeyUp", name: "OnKeyUp", pkg: "", typ: $funcType([KeyCallback], [], false)}, {prop: "OnCharCallback", name: "OnCharCallback", pkg: "", typ: $funcType([CharCallback], [], false)}];
+	ptrType$2.methods = [{prop: "Key", name: "Key", pkg: "", typ: $funcType([keys.Key, keys.Modifier], [], false)}, {prop: "Modifier", name: "Modifier", pkg: "", typ: $funcType([keys.Modifier], [], false)}];
+	ptrType$1.methods = [{prop: "StickyKeyListener", name: "StickyKeyListener", pkg: "", typ: $funcType([], [keys.StickyKeyListener], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderCallback], [], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([ResizeCallback], [], false)}, {prop: "OnMouseMove", name: "OnMouseMove", pkg: "", typ: $funcType([MouseMoveCallback], [], false)}, {prop: "OnMouseButtonDown", name: "OnMouseButtonDown", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseButtonUp", name: "OnMouseButtonUp", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseScroll", name: "OnMouseScroll", pkg: "", typ: $funcType([MouseScrollCallback], [], false)}, {prop: "OnKey", name: "OnKey", pkg: "", typ: $funcType([KeyCallback], [], false)}, {prop: "OnModifier", name: "OnModifier", pkg: "", typ: $funcType([ModifierCallback], [], false)}, {prop: "OnCharCallback", name: "OnCharCallback", pkg: "", typ: $funcType([CharCallback], [], false)}];
 	keyDeferrer.init("github.com/inkyblackness/shocked-client/env", [{prop: "window", name: "window", exported: false, typ: ptrType$1, tag: ""}]);
-	AbstractOpenGlWindow.init("github.com/inkyblackness/shocked-client/env", [{prop: "keyBuffer", name: "keyBuffer", exported: false, typ: ptrType, tag: ""}, {prop: "CallRender", name: "CallRender", exported: true, typ: RenderCallback, tag: ""}, {prop: "CallResize", name: "CallResize", exported: true, typ: ResizeCallback, tag: ""}, {prop: "CallOnMouseMove", name: "CallOnMouseMove", exported: true, typ: MouseMoveCallback, tag: ""}, {prop: "CallOnMouseButtonUp", name: "CallOnMouseButtonUp", exported: true, typ: MouseButtonCallback, tag: ""}, {prop: "CallOnMouseButtonDown", name: "CallOnMouseButtonDown", exported: true, typ: MouseButtonCallback, tag: ""}, {prop: "CallOnMouseScroll", name: "CallOnMouseScroll", exported: true, typ: MouseScrollCallback, tag: ""}, {prop: "CallKeyUp", name: "CallKeyUp", exported: true, typ: KeyCallback, tag: ""}, {prop: "CallKeyDown", name: "CallKeyDown", exported: true, typ: KeyCallback, tag: ""}, {prop: "CallCharCallback", name: "CallCharCallback", exported: true, typ: CharCallback, tag: ""}]);
+	AbstractOpenGlWindow.init("github.com/inkyblackness/shocked-client/env", [{prop: "keyBuffer", name: "keyBuffer", exported: false, typ: ptrType, tag: ""}, {prop: "CallRender", name: "CallRender", exported: true, typ: RenderCallback, tag: ""}, {prop: "CallResize", name: "CallResize", exported: true, typ: ResizeCallback, tag: ""}, {prop: "CallOnMouseMove", name: "CallOnMouseMove", exported: true, typ: MouseMoveCallback, tag: ""}, {prop: "CallOnMouseButtonUp", name: "CallOnMouseButtonUp", exported: true, typ: MouseButtonCallback, tag: ""}, {prop: "CallOnMouseButtonDown", name: "CallOnMouseButtonDown", exported: true, typ: MouseButtonCallback, tag: ""}, {prop: "CallOnMouseScroll", name: "CallOnMouseScroll", exported: true, typ: MouseScrollCallback, tag: ""}, {prop: "CallModifier", name: "CallModifier", exported: true, typ: ModifierCallback, tag: ""}, {prop: "CallKey", name: "CallKey", exported: true, typ: KeyCallback, tag: ""}, {prop: "CallCharCallback", name: "CallCharCallback", exported: true, typ: CharCallback, tag: ""}]);
 	RenderCallback.init([], [], false);
 	MouseMoveCallback.init([$Float32, $Float32], [], false);
 	MouseButtonCallback.init([$Uint32, keys.Modifier], [], false);
@@ -27071,7 +27085,8 @@ $packages["github.com/inkyblackness/shocked-client/env"] = (function() {
 	ResizeCallback.init([$Int, $Int], [], false);
 	CharCallback.init([$Int32], [], false);
 	KeyCallback.init([keys.Key, keys.Modifier], [], false);
-	OpenGlWindow.init([{prop: "OnCharCallback", name: "OnCharCallback", pkg: "", typ: $funcType([CharCallback], [], false)}, {prop: "OnKeyDown", name: "OnKeyDown", pkg: "", typ: $funcType([KeyCallback], [], false)}, {prop: "OnKeyUp", name: "OnKeyUp", pkg: "", typ: $funcType([KeyCallback], [], false)}, {prop: "OnMouseButtonDown", name: "OnMouseButtonDown", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseButtonUp", name: "OnMouseButtonUp", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseMove", name: "OnMouseMove", pkg: "", typ: $funcType([MouseMoveCallback], [], false)}, {prop: "OnMouseScroll", name: "OnMouseScroll", pkg: "", typ: $funcType([MouseScrollCallback], [], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderCallback], [], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([ResizeCallback], [], false)}, {prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Int, $Int], false)}]);
+	ModifierCallback.init([keys.Modifier], [], false);
+	OpenGlWindow.init([{prop: "OnCharCallback", name: "OnCharCallback", pkg: "", typ: $funcType([CharCallback], [], false)}, {prop: "OnKey", name: "OnKey", pkg: "", typ: $funcType([KeyCallback], [], false)}, {prop: "OnModifier", name: "OnModifier", pkg: "", typ: $funcType([ModifierCallback], [], false)}, {prop: "OnMouseButtonDown", name: "OnMouseButtonDown", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseButtonUp", name: "OnMouseButtonUp", pkg: "", typ: $funcType([MouseButtonCallback], [], false)}, {prop: "OnMouseMove", name: "OnMouseMove", pkg: "", typ: $funcType([MouseMoveCallback], [], false)}, {prop: "OnMouseScroll", name: "OnMouseScroll", pkg: "", typ: $funcType([MouseScrollCallback], [], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderCallback], [], false)}, {prop: "OnResize", name: "OnResize", pkg: "", typ: $funcType([ResizeCallback], [], false)}, {prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Int, $Int], false)}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -27692,8 +27707,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = glWindow.OnMouseButtonDown($methodVal(app, "onMouseButtonDown")); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = glWindow.OnMouseButtonUp($methodVal(app, "onMouseButtonUp")); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = glWindow.OnMouseScroll($methodVal(app, "onMouseScroll")); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = glWindow.OnKeyDown($methodVal(app, "onKeyDown")); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = glWindow.OnKeyUp($methodVal(app, "onKeyUp")); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = glWindow.OnKey($methodVal(app, "onKey")); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = glWindow.OnModifier($methodVal(app, "onModifier")); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = glWindow.OnCharCallback($methodVal(app, "onChar")); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.setWindow }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.glWindow = glWindow; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -27813,29 +27828,29 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		app = this;
 	};
 	MainApplication.prototype.onMouseClick = function(modifierMask) { return this.$val.onMouseClick(modifierMask); };
-	MainApplication.ptr.prototype.onKeyDown = function(key, modifier) {
+	MainApplication.ptr.prototype.onKey = function(key, modifier) {
 		var $ptr, _r, app, key, modifier, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; key = $f.key; modifier = $f.modifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
 		_r = fmt.Printf("down: %v [%v]\n", new sliceType$1([new keys.Key(key), new keys.Modifier(modifier)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onKeyDown }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.key = key; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onKey }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.key = key; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	MainApplication.prototype.onKeyDown = function(key, modifier) { return this.$val.onKeyDown(key, modifier); };
-	MainApplication.ptr.prototype.onKeyUp = function(key, modifier) {
-		var $ptr, _r, app, key, modifier, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; key = $f.key; modifier = $f.modifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+	MainApplication.prototype.onKey = function(key, modifier) { return this.$val.onKey(key, modifier); };
+	MainApplication.ptr.prototype.onModifier = function(modifier) {
+		var $ptr, _r, app, modifier, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; modifier = $f.modifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
-		_r = fmt.Printf("  up: %v [%v]\n", new sliceType$1([new keys.Key(key), new keys.Modifier(modifier)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = fmt.Printf(" mod: [%v]\n", new sliceType$1([new keys.Modifier(modifier)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onKeyUp }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.key = key; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onModifier }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	MainApplication.prototype.onKeyUp = function(key, modifier) { return this.$val.onKeyUp(key, modifier); };
+	MainApplication.prototype.onModifier = function(modifier) { return this.$val.onModifier(modifier); };
 	MainApplication.ptr.prototype.onChar = function(char$1) {
 		var $ptr, _r, app, char$1, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; char$1 = $f.char$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
-		_r = fmt.Printf("char: %v [%v]\n", new sliceType$1([new $Int32(char$1)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = fmt.Printf("char: %v\n", new sliceType$1([new $String($encodeRune(char$1))])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onChar }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.char$1 = char$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -28180,7 +28195,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: RestDataStore.ptr.prototype.LevelObjects }; } $f.$ptr = $ptr; $f._r = _r; $f.archiveID = archiveID; $f.data = data; $f.levelID = levelID; $f.onFailure = onFailure; $f.onSuccess = onSuccess; $f.projectID = projectID; $f.store = store; $f.url = url; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	RestDataStore.prototype.LevelObjects = function(projectID, archiveID, levelID, onSuccess, onFailure) { return this.$val.LevelObjects(projectID, archiveID, levelID, onSuccess, onFailure); };
-	ptrType$18.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setWindow", name: "setWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setDebugOpenGl", name: "setDebugOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initOpenGl", name: "initOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [FailureFunc], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onWindowResize", name: "onWindowResize", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int, $Int], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseClick", name: "onMouseClick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onKeyDown", name: "onKeyDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Key, keys.Modifier], [], false)}, {prop: "onKeyUp", name: "onKeyUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Key, keys.Modifier], [], false)}, {prop: "onChar", name: "onChar", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32], [], false)}];
+	ptrType$18.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setWindow", name: "setWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setDebugOpenGl", name: "setDebugOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initOpenGl", name: "initOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String], [FailureFunc], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onWindowResize", name: "onWindowResize", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int, $Int], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseClick", name: "onMouseClick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onKey", name: "onKey", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Key, keys.Modifier], [], false)}, {prop: "onModifier", name: "onModifier", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onChar", name: "onChar", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32], [], false)}];
 	ptrType$19.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, funcType$5, FailureFunc], [], false)}, {prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType$5, FailureFunc], [], false)}, {prop: "post", name: "post", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType$5, FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType$5, FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$7, FailureFunc], [], false)}, {prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType, FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$1, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$6, FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$4, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType$4, funcType$3, FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$9, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$1, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$8, FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$8, FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$2, FailureFunc], [], false)}];
 	FailureFunc.init([], [], false);
 	DataStore.init([{prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType, FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$1, FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$2, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$4, FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType$5, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$6, FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$7, FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType$4, funcType$3, FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$8, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$1, FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$9, FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$8, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, FailureFunc], [], false)}]);

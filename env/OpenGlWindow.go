@@ -33,6 +33,9 @@ type CharCallback func(char rune)
 // KeyCallback is called for pressing or releasing a key on the keyboard.
 type KeyCallback func(key keys.Key, modifier keys.Modifier)
 
+// ModifierCallback is called when the currently active modifier changed.
+type ModifierCallback func(modifier keys.Modifier)
+
 // OpenGlWindow represents an OpenGL render surface.
 type OpenGlWindow interface {
 	// OpenGl returns the OpenGL API wrapper for this window.
@@ -54,12 +57,10 @@ type OpenGlWindow interface {
 	// OnMouseScroll registers a callback function for mouse scroll events.
 	OnMouseScroll(callback MouseScrollCallback)
 
-	// OnKeyDown registers a callback function for key down events.
-	// Repetitions are notified by a sequence of Up/Down
-	OnKeyDown(callback KeyCallback)
-	// OnKeyUp registers a callback function for key up events.
-	// Repetitions are notified by a sequence of Up/Down
-	OnKeyUp(callback KeyCallback)
+	// OnKey registers a callback function for key events.
+	OnKey(callback KeyCallback)
+	// OnModifier registers a callback function for change of modifier events.
+	OnModifier(callback ModifierCallback)
 	// OnCharCallback registers a callback function for typed characters.
 	OnCharCallback(callback CharCallback)
 }

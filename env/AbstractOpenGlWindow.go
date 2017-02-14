@@ -8,12 +8,12 @@ type keyDeferrer struct {
 	window *AbstractOpenGlWindow
 }
 
-func (def *keyDeferrer) KeyDown(key keys.Key, modifier keys.Modifier) {
-	def.window.CallKeyDown(key, modifier)
+func (def *keyDeferrer) Key(key keys.Key, modifier keys.Modifier) {
+	def.window.CallKey(key, modifier)
 }
 
-func (def *keyDeferrer) KeyUp(key keys.Key, modifier keys.Modifier) {
-	def.window.CallKeyUp(key, modifier)
+func (def *keyDeferrer) Modifier(modifier keys.Modifier) {
+	def.window.CallModifier(modifier)
 }
 
 // AbstractOpenGlWindow implements the common, basic functionality of OpenGlWindow
@@ -26,8 +26,8 @@ type AbstractOpenGlWindow struct {
 	CallOnMouseButtonUp   MouseButtonCallback
 	CallOnMouseButtonDown MouseButtonCallback
 	CallOnMouseScroll     MouseScrollCallback
-	CallKeyUp             KeyCallback
-	CallKeyDown           KeyCallback
+	CallModifier          ModifierCallback
+	CallKey               KeyCallback
 	CallCharCallback      CharCallback
 }
 
@@ -39,8 +39,8 @@ func InitAbstractOpenGlWindow() AbstractOpenGlWindow {
 		CallOnMouseMove:       func(float32, float32) {},
 		CallOnMouseButtonUp:   func(uint32, keys.Modifier) {},
 		CallOnMouseButtonDown: func(uint32, keys.Modifier) {},
-		CallKeyDown:           func(keys.Key, keys.Modifier) {},
-		CallKeyUp:             func(keys.Key, keys.Modifier) {},
+		CallKey:               func(keys.Key, keys.Modifier) {},
+		CallModifier:          func(keys.Modifier) {},
 		CallCharCallback:      func(rune) {}}
 }
 
@@ -80,14 +80,14 @@ func (window *AbstractOpenGlWindow) OnMouseScroll(callback MouseScrollCallback) 
 	window.CallOnMouseScroll = callback
 }
 
-// OnKeyDown implements the OpenGlWindow interface
-func (window *AbstractOpenGlWindow) OnKeyDown(callback KeyCallback) {
-	window.CallKeyDown = callback
+// OnKey implements the OpenGlWindow interface
+func (window *AbstractOpenGlWindow) OnKey(callback KeyCallback) {
+	window.CallKey = callback
 }
 
-// OnKeyUp implements the OpenGlWindow interface
-func (window *AbstractOpenGlWindow) OnKeyUp(callback KeyCallback) {
-	window.CallKeyUp = callback
+// OnModifier implements the OpenGlWindow interface
+func (window *AbstractOpenGlWindow) OnModifier(callback ModifierCallback) {
+	window.CallModifier = callback
 }
 
 // OnCharCallback implements the OpenGlWindow interface

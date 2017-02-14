@@ -3,7 +3,7 @@ package native
 import (
 	"time"
 
-	"github.com/go-gl/glfw/v3.1/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/env/keys"
@@ -132,14 +132,18 @@ func (window *OpenGlWindow) onMouseScroll(rawWindow *glfw.Window, dx float64, dy
 	window.CallOnMouseScroll(float32(dx), float32(dy)*-1.0)
 }
 
-func (window *OpenGlWindow) onKey(rawWindow *glfw.Window, glfwKey glfw.Key, scanCode int, action glfw.Action, mods glfw.ModifierKey) {
+func (window *OpenGlWindow) onKey(rawWindow *glfw.Window, glfwKey glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
 	key, knownKey := keyMap[glfwKey]
+
+	//name := glfw.GetKeyName(glfwKey, scancode)
+	//fmt.Printf("name: [%v]\n", name)
 
 	if knownKey {
 		modifier := window.mapModifier(mods)
 
 		if action == glfw.Press {
 			window.keyBuffer.KeyDown(key, modifier)
+
 		} else if action == glfw.Repeat {
 			window.keyBuffer.KeyUp(key, modifier)
 			window.keyBuffer.KeyDown(key, modifier)

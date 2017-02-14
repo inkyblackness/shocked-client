@@ -63,8 +63,8 @@ func (app *MainApplication) setWindow(glWindow env.OpenGlWindow) {
 	glWindow.OnMouseButtonDown(app.onMouseButtonDown)
 	glWindow.OnMouseButtonUp(app.onMouseButtonUp)
 	glWindow.OnMouseScroll(app.onMouseScroll)
-	glWindow.OnKeyDown(app.onKeyDown)
-	glWindow.OnKeyUp(app.onKeyUp)
+	glWindow.OnKey(app.onKey)
+	glWindow.OnModifier(app.onModifier)
 	glWindow.OnCharCallback(app.onChar)
 }
 
@@ -158,14 +158,14 @@ func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 func (app *MainApplication) onMouseClick(modifierMask keys.Modifier) {
 }
 
-func (app *MainApplication) onKeyDown(key keys.Key, modifier keys.Modifier) {
+func (app *MainApplication) onKey(key keys.Key, modifier keys.Modifier) {
 	fmt.Printf("down: %v [%v]\n", key, modifier)
 }
 
-func (app *MainApplication) onKeyUp(key keys.Key, modifier keys.Modifier) {
-	fmt.Printf("  up: %v [%v]\n", key, modifier)
+func (app *MainApplication) onModifier(modifier keys.Modifier) {
+	fmt.Printf(" mod: [%v]\n", modifier)
 }
 
 func (app *MainApplication) onChar(char rune) {
-	fmt.Printf("char: %v [%v]\n", char)
+	fmt.Printf("char: %v\n", string(char))
 }

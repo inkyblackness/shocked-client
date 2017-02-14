@@ -1,7 +1,7 @@
 package native
 
 import (
-	"github.com/go-gl/glfw/v3.1/glfw"
+	"github.com/go-gl/glfw/v3.2/glfw"
 
 	"github.com/inkyblackness/shocked-client/env/keys"
 )
