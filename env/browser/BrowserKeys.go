@@ -69,4 +69,11 @@ var keyMap = map[string]keys.Key{
 	"F6":  keys.KeyF6,
 	"F7":  keys.KeyF7,
 	"F8":  keys.KeyF8,
-	"F9":  keys.KeyF9}
+	"F9":  keys.KeyF9,
+
+	"Copy":  keys.KeyCopy,
+	"Cut":   keys.KeyCut,
+	"Paste": keys.KeyPaste,
+
+	"Undo": keys.KeyUndo,
+	"Redo": keys.KeyRedo}

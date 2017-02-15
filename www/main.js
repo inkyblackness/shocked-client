@@ -26148,9 +26148,21 @@ $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/env/keys"] = (function() {
-	var $pkg = {}, $init, Key, Modifier, StickyKeyListener, StickyKeyBuffer, ptrType, mapType, mapType$1, keyToModifier, NewStickyKeyBuffer;
+	var $pkg = {}, $init, Key, Modifier, shortcut, StickyKeyListener, StickyKeyBuffer, sliceType, ptrType, mapType, mapType$1, keyToModifier, shortcuts, ResolveShortcut, NewStickyKeyBuffer;
 	Key = $pkg.Key = $newType(4, $kindInt, "keys.Key", true, "github.com/inkyblackness/shocked-client/env/keys", true, null);
 	Modifier = $pkg.Modifier = $newType(4, $kindUint32, "keys.Modifier", true, "github.com/inkyblackness/shocked-client/env/keys", true, null);
+	shortcut = $pkg.shortcut = $newType(0, $kindStruct, "keys.shortcut", true, "github.com/inkyblackness/shocked-client/env/keys", false, function(keyName_, modifier_, key_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.keyName = "";
+			this.modifier = 0;
+			this.key = 0;
+			return;
+		}
+		this.keyName = keyName_;
+		this.modifier = modifier_;
+		this.key = key_;
+	});
 	StickyKeyListener = $pkg.StickyKeyListener = $newType(8, $kindInterface, "keys.StickyKeyListener", true, "github.com/inkyblackness/shocked-client/env/keys", true, null);
 	StickyKeyBuffer = $pkg.StickyKeyBuffer = $newType(0, $kindStruct, "keys.StickyKeyBuffer", true, "github.com/inkyblackness/shocked-client/env/keys", true, function(pressedKeys_, pressedModifier_, activeModifier_, listener_) {
 		this.$val = this;
@@ -26166,6 +26178,7 @@ $packages["github.com/inkyblackness/shocked-client/env/keys"] = (function() {
 		this.activeModifier = activeModifier_;
 		this.listener = listener_;
 	});
+	sliceType = $sliceType(shortcut);
 	ptrType = $ptrType(StickyKeyBuffer);
 	mapType = $mapType(Key, $Int);
 	mapType$1 = $mapType(Modifier, $Int);
@@ -26199,6 +26212,24 @@ $packages["github.com/inkyblackness/shocked-client/env/keys"] = (function() {
 		return ((((mod >>> 0) | (other >>> 0)) >>> 0)) === (mod >>> 0);
 	};
 	$ptrType(Modifier).prototype.Has = function(other) { return new Modifier(this.$get()).Has(other); };
+	ResolveShortcut = function(keyName, modifier) {
+		var $ptr, _i, _ref, entry, key, keyName, knownKey, modifier;
+		key = 0;
+		knownKey = false;
+		_ref = shortcuts;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			entry = $clone(((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]), shortcut);
+			if ((entry.keyName === keyName) && ((entry.modifier === modifier))) {
+				knownKey = true;
+				key = entry.key;
+			}
+			_i++;
+		}
+		return [key, knownKey];
+	};
+	$pkg.ResolveShortcut = ResolveShortcut;
 	NewStickyKeyBuffer = function(listener) {
 		var $ptr, buffer, listener;
 		buffer = new StickyKeyBuffer.ptr({}, {}, 0, listener);
@@ -26305,12 +26336,14 @@ $packages["github.com/inkyblackness/shocked-client/env/keys"] = (function() {
 	Key.methods = [{prop: "AsModifier", name: "AsModifier", pkg: "", typ: $funcType([], [Modifier], false)}];
 	Modifier.methods = [{prop: "With", name: "With", pkg: "", typ: $funcType([Modifier], [Modifier], false)}, {prop: "Without", name: "Without", pkg: "", typ: $funcType([Modifier], [Modifier], false)}, {prop: "Has", name: "Has", pkg: "", typ: $funcType([Modifier], [$Bool], false)}];
 	ptrType.methods = [{prop: "ActiveModifier", name: "ActiveModifier", pkg: "", typ: $funcType([], [Modifier], false)}, {prop: "KeyDown", name: "KeyDown", pkg: "", typ: $funcType([Key, Modifier], [], false)}, {prop: "KeyUp", name: "KeyUp", pkg: "", typ: $funcType([Key, Modifier], [], false)}, {prop: "ReleaseAll", name: "ReleaseAll", pkg: "", typ: $funcType([], [], false)}, {prop: "setActiveModifier", name: "setActiveModifier", pkg: "github.com/inkyblackness/shocked-client/env/keys", typ: $funcType([Modifier], [], false)}];
+	shortcut.init("github.com/inkyblackness/shocked-client/env/keys", [{prop: "keyName", name: "keyName", exported: false, typ: $String, tag: ""}, {prop: "modifier", name: "modifier", exported: false, typ: Modifier, tag: ""}, {prop: "key", name: "key", exported: false, typ: Key, tag: ""}]);
 	StickyKeyListener.init([{prop: "Key", name: "Key", pkg: "", typ: $funcType([Key, Modifier], [], false)}, {prop: "Modifier", name: "Modifier", pkg: "", typ: $funcType([Modifier], [], false)}]);
 	StickyKeyBuffer.init("github.com/inkyblackness/shocked-client/env/keys", [{prop: "pressedKeys", name: "pressedKeys", exported: false, typ: mapType, tag: ""}, {prop: "pressedModifier", name: "pressedModifier", exported: false, typ: mapType$1, tag: ""}, {prop: "activeModifier", name: "activeModifier", exported: false, typ: Modifier, tag: ""}, {prop: "listener", name: "listener", exported: false, typ: StickyKeyListener, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		keyToModifier = $makeMap(Key.keyFor, [{ k: 340, v: 1 }, { k: 341, v: 2 }, { k: 342, v: 4 }, { k: 343, v: 8 }]);
+		keyToModifier = $makeMap(Key.keyFor, [{ k: 332, v: 1 }, { k: 331, v: 2 }, { k: 330, v: 4 }, { k: 333, v: 8 }]);
+		shortcuts = new sliceType([new shortcut.ptr("c", 2, 380), new shortcut.ptr("x", 2, 381), new shortcut.ptr("v", 2, 382), new shortcut.ptr("z", 2, 390), new shortcut.ptr("Z", new Modifier(2).With(1), 391), new shortcut.ptr("z", new Modifier(2).With(1), 391), new shortcut.ptr("y", 2, 391)]);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -31276,20 +31309,33 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.dx = dx; $f.dy = dy; $f.event = event; $f.inRect = inRect; $f.$s = $s; $f.$r = $r; return $f;
 		}), funcType$2));
 		$global.addEventListener($externalize("keydown", $String), $externalize((function $b(event) {
-			var $ptr, _entry, _r, _tuple, event, key, knownKey, modifier, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; event = $f.event; key = $f.key; knownKey = $f.knownKey; modifier = $f.modifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			_tuple = (_entry = keyMap[$String.keyFor($internalize(event.key, $String))], _entry !== undefined ? [_entry.v, true] : [0, false]);
+			var $ptr, _entry, _r, _tuple, _tuple$1, event, key, keyName, knownKey, modifier, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; event = $f.event; key = $f.key; keyName = $f.keyName; knownKey = $f.knownKey; modifier = $f.modifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_r = getEventModifier(event); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			modifier = _r;
+			keyName = $internalize(event.key, $String);
+			_tuple = (_entry = keyMap[$String.keyFor(keyName)], _entry !== undefined ? [_entry.v, true] : [0, false]);
 			key = _tuple[0];
 			knownKey = _tuple[1];
-			/* */ if (knownKey) { $s = 1; continue; }
-			/* */ $s = 2; continue;
-			/* if (knownKey) { */ case 1:
+			/* */ if (knownKey) { $s = 2; continue; }
+			/* */ $s = 3; continue;
+			/* if (knownKey) { */ case 2:
+				$r = window.keyBuffer.KeyDown(key, modifier); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				$s = 4; continue;
+			/* } else { */ case 3:
+				_tuple$1 = keys.ResolveShortcut(keyName, modifier);
+				key = _tuple$1[0];
+				knownKey = _tuple$1[1];
+				/* */ if (knownKey) { $s = 6; continue; }
+				/* */ $s = 7; continue;
+				/* if (knownKey) { */ case 6:
+					$r = window.AbstractOpenGlWindow.CallKey(key, modifier); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* } */ case 7:
+			/* } */ case 4:
+			if (knownKey) {
 				event.preventDefault();
-				_r = getEventModifier(event); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-				modifier = _r;
-				$r = window.keyBuffer.KeyDown(key, modifier); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			/* } */ case 2:
-			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f.event = event; $f.key = key; $f.knownKey = knownKey; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
+			}
+			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.event = event; $f.key = key; $f.keyName = keyName; $f.knownKey = knownKey; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
 		}), funcType$2));
 		$global.addEventListener($externalize("keyup", $String), $externalize((function $b(event) {
 			var $ptr, _entry, _r, _tuple, event, key, knownKey, modifier, $s, $r;
@@ -31307,7 +31353,7 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 			/* } */ case 2:
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f.event = event; $f.key = key; $f.knownKey = knownKey; $f.modifier = modifier; $f.$s = $s; $f.$r = $r; return $f;
 		}), funcType$2));
-		$global.addEventListener($externalize("blur", $String), $externalize((function $b(event) {
+		window.canvas.addEventListener($externalize("blur", $String), $externalize((function $b(event) {
 			var $ptr, event, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; event = $f.event; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			$r = window.keyBuffer.ReleaseAll(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -31437,7 +31483,7 @@ $packages["github.com/inkyblackness/shocked-client/env/browser"] = (function() {
 		$r = env.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = keys.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = opengl.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		keyMap = $makeMap($String.keyFor, [{ k: "Enter", v: 257 }, { k: "Esc", v: 256 }, { k: "Escape", v: 256 }, { k: "Backspace", v: 259 }, { k: "Tab", v: 258 }, { k: "ArrowDown", v: 264 }, { k: "ArrowLeft", v: 263 }, { k: "ArrowRight", v: 262 }, { k: "ArrowUp", v: 265 }, { k: "Down", v: 264 }, { k: "Left", v: 263 }, { k: "Right", v: 262 }, { k: "Up", v: 265 }, { k: "Del", v: 261 }, { k: "Delete", v: 261 }, { k: "End", v: 269 }, { k: "Home", v: 268 }, { k: "Insert", v: 260 }, { k: "PageDown", v: 267 }, { k: "PageUp", v: 266 }, { k: "Alt", v: 342 }, { k: "AltGraph", v: 342 }, { k: "ModeChange", v: 342 }, { k: "Control", v: 341 }, { k: "Shift", v: 340 }, { k: "Super", v: 343 }, { k: "Pause", v: 284 }, { k: "PrintScreen", v: 283 }, { k: "CapsLock", v: 280 }, { k: "Scroll", v: 281 }, { k: "ScrollLock", v: 281 }, { k: "F1", v: 290 }, { k: "F10", v: 299 }, { k: "F11", v: 300 }, { k: "F12", v: 301 }, { k: "F13", v: 302 }, { k: "F14", v: 303 }, { k: "F15", v: 304 }, { k: "F16", v: 305 }, { k: "F17", v: 306 }, { k: "F18", v: 307 }, { k: "F19", v: 308 }, { k: "F2", v: 291 }, { k: "F20", v: 309 }, { k: "F21", v: 310 }, { k: "F22", v: 311 }, { k: "F23", v: 312 }, { k: "F24", v: 313 }, { k: "F25", v: 314 }, { k: "F3", v: 292 }, { k: "F4", v: 293 }, { k: "F5", v: 294 }, { k: "F6", v: 295 }, { k: "F7", v: 296 }, { k: "F8", v: 297 }, { k: "F9", v: 298 }]);
+		keyMap = $makeMap($String.keyFor, [{ k: "Enter", v: 300 }, { k: "Esc", v: 301 }, { k: "Escape", v: 301 }, { k: "Backspace", v: 302 }, { k: "Tab", v: 303 }, { k: "ArrowDown", v: 310 }, { k: "ArrowLeft", v: 311 }, { k: "ArrowRight", v: 312 }, { k: "ArrowUp", v: 313 }, { k: "Down", v: 310 }, { k: "Left", v: 311 }, { k: "Right", v: 312 }, { k: "Up", v: 313 }, { k: "Del", v: 320 }, { k: "Delete", v: 320 }, { k: "End", v: 321 }, { k: "Home", v: 322 }, { k: "Insert", v: 323 }, { k: "PageDown", v: 324 }, { k: "PageUp", v: 325 }, { k: "Alt", v: 330 }, { k: "AltGraph", v: 330 }, { k: "ModeChange", v: 330 }, { k: "Control", v: 331 }, { k: "Shift", v: 332 }, { k: "Super", v: 333 }, { k: "Pause", v: 340 }, { k: "PrintScreen", v: 341 }, { k: "CapsLock", v: 342 }, { k: "Scroll", v: 343 }, { k: "ScrollLock", v: 343 }, { k: "F1", v: 351 }, { k: "F10", v: 360 }, { k: "F11", v: 361 }, { k: "F12", v: 362 }, { k: "F13", v: 363 }, { k: "F14", v: 364 }, { k: "F15", v: 365 }, { k: "F16", v: 366 }, { k: "F17", v: 367 }, { k: "F18", v: 368 }, { k: "F19", v: 369 }, { k: "F2", v: 352 }, { k: "F20", v: 370 }, { k: "F21", v: 371 }, { k: "F22", v: 372 }, { k: "F23", v: 373 }, { k: "F24", v: 374 }, { k: "F25", v: 375 }, { k: "F3", v: 353 }, { k: "F4", v: 354 }, { k: "F5", v: 355 }, { k: "F6", v: 356 }, { k: "F7", v: 357 }, { k: "F8", v: 358 }, { k: "F9", v: 359 }, { k: "Copy", v: 380 }, { k: "Cut", v: 381 }, { k: "Paste", v: 382 }, { k: "Undo", v: 390 }, { k: "Redo", v: 391 }]);
 		buttonsByIndex = $makeMap($Int.keyFor, [{ k: 0, v: 1 }, { k: 2, v: 2 }]);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};

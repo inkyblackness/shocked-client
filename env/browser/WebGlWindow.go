@@ -133,12 +133,19 @@ func (window *WebGlWindow) registerMouseListener() {
 		}
 	})
 	js.Global.Call("addEventListener", "keydown", func(event *js.Object) {
-		key, knownKey := keyMap[event.Get("key").String()]
+		modifier := getEventModifier(event)
+		keyName := event.Get("key").String()
+		key, knownKey := keyMap[keyName]
 
 		if knownKey {
-			event.Call("preventDefault")
-			modifier := getEventModifier(event)
 			window.keyBuffer.KeyDown(key, modifier)
+		} else {
+			if key, knownKey = keys.ResolveShortcut(keyName, modifier); knownKey {
+				window.CallKey(key, modifier)
+			}
+		}
+		if knownKey {
+			event.Call("preventDefault")
 		}
 	})
 	js.Global.Call("addEventListener", "keyup", func(event *js.Object) {
@@ -150,7 +157,7 @@ func (window *WebGlWindow) registerMouseListener() {
 			window.keyBuffer.KeyUp(key, modifier)
 		}
 	})
-	js.Global.Call("addEventListener", "blur", func(event *js.Object) {
+	window.canvas.Call("addEventListener", "blur", func(event *js.Object) {
 		window.keyBuffer.ReleaseAll()
 	})
 	js.Global.Call("addEventListener", "keypress", func(event *js.Object) {

@@ -133,22 +133,22 @@ func (window *OpenGlWindow) onMouseScroll(rawWindow *glfw.Window, dx float64, dy
 }
 
 func (window *OpenGlWindow) onKey(rawWindow *glfw.Window, glfwKey glfw.Key, scancode int, action glfw.Action, mods glfw.ModifierKey) {
+	modifier := window.mapModifier(mods)
 	key, knownKey := keyMap[glfwKey]
 
-	//name := glfw.GetKeyName(glfwKey, scancode)
-	//fmt.Printf("name: [%v]\n", name)
-
 	if knownKey {
-		modifier := window.mapModifier(mods)
-
 		if action == glfw.Press {
 			window.keyBuffer.KeyDown(key, modifier)
-
 		} else if action == glfw.Repeat {
 			window.keyBuffer.KeyUp(key, modifier)
 			window.keyBuffer.KeyDown(key, modifier)
 		} else if action == glfw.Release {
 			window.keyBuffer.KeyUp(key, modifier)
+		}
+	} else if action != glfw.Release {
+		keyName := glfw.GetKeyName(glfwKey, scancode)
+		if key, knownKey = keys.ResolveShortcut(keyName, modifier); knownKey {
+			window.CallKey(key, modifier)
 		}
 	}
 }
