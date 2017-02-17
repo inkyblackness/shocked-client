@@ -39,4 +39,7 @@ func (area *Area) Bottom() Anchor {
 // Render first renders this area, then sequentially all children.
 func (area *Area) Render(renderer Renderer) {
 	area.onRender(area, renderer)
+	for _, child := range area.children {
+		child.Render(renderer)
+	}
 }
