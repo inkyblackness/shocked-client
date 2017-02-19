@@ -1,5 +1,9 @@
 package ui
 
+import (
+	"github.com/inkyblackness/shocked-client/ui/events"
+)
+
 // AreaBuilder is used to create a new user-interface area.
 type AreaBuilder struct {
 	parent *Area
@@ -9,17 +13,20 @@ type AreaBuilder struct {
 	right  Anchor
 	bottom Anchor
 
-	onRender RenderFunction
+	onRender     RenderFunction
+	eventHandler map[events.EventType]EventHandler
 }
 
 // NewAreaBuilder returns a new instance of a builder for creating areas.
 func NewAreaBuilder() *AreaBuilder {
 	builder := &AreaBuilder{
-		left:     ZeroAnchor(),
-		top:      ZeroAnchor(),
-		right:    ZeroAnchor(),
-		bottom:   ZeroAnchor(),
-		onRender: func(*Area, Renderer) {}}
+		left:   ZeroAnchor(),
+		top:    ZeroAnchor(),
+		right:  ZeroAnchor(),
+		bottom: ZeroAnchor(),
+
+		onRender:     func(*Area, Renderer) {},
+		eventHandler: make(map[events.EventType]EventHandler)}
 
 	return builder
 }
@@ -34,8 +41,12 @@ func (builder *AreaBuilder) Build() *Area {
 		right:  builder.right,
 		bottom: builder.bottom,
 
-		onRender: builder.onRender}
+		onRender:     builder.onRender,
+		eventHandler: make(map[events.EventType]EventHandler)}
 
+	for key, handler := range builder.eventHandler {
+		area.eventHandler[key] = handler
+	}
 	if area.parent != nil {
 		area.parent.children = append(area.parent.children, area)
 	}
@@ -78,5 +89,11 @@ func (builder *AreaBuilder) SetBottom(value Anchor) *AreaBuilder {
 // By default, an area has no own presentation.
 func (builder *AreaBuilder) OnRender(render RenderFunction) *AreaBuilder {
 	builder.onRender = render
+	return builder
+}
+
+// OnEvent sets an event handler for given event type.
+func (builder *AreaBuilder) OnEvent(eventType events.EventType, handler EventHandler) *AreaBuilder {
+	builder.eventHandler[eventType] = handler
 	return builder
 }
