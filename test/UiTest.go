@@ -9,10 +9,12 @@ import (
 	mgl "github.com/go-gl/mathgl/mgl32"
 
 	"github.com/inkyblackness/shocked-client/env"
+	"github.com/inkyblackness/shocked-client/env/keys"
 	"github.com/inkyblackness/shocked-client/env/native"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/opengl"
 	"github.com/inkyblackness/shocked-client/ui"
+	"github.com/inkyblackness/shocked-client/ui/events"
 )
 
 func main() {
@@ -38,6 +40,9 @@ type uiTestApplication struct {
 	gl       opengl.OpenGl
 
 	projectionMatrix mgl.Mat4
+
+	mouseX, mouseY float32
+	mouseButtons   uint32
 
 	rootArea   *ui.Area
 	uiRenderer *graphics.OpenGlRenderer
@@ -65,6 +70,10 @@ func (app *uiTestApplication) setWindow(glWindow env.OpenGlWindow) {
 
 	glWindow.OnRender(app.render)
 	glWindow.OnResize(app.onWindowResize)
+
+	glWindow.OnMouseMove(app.onMouseMove)
+	glWindow.OnMouseButtonDown(app.onMouseButtonDown)
+	glWindow.OnMouseButtonUp(app.onMouseButtonUp)
 }
 
 func (app *uiTestApplication) initOpenGl() {
@@ -163,6 +172,54 @@ func (app *uiTestApplication) initInterface() {
 			color.RGBA{0x00, 0x60, 0x40, 0xC0})
 	})
 	sidePanelBuilder.Build()
+
+	{
+		windowBuilder := ui.NewAreaBuilder()
+		windowBuilder.SetParent(app.rootArea)
+
+		windowHorizontalCenter := ui.NewOffsetAnchor(app.rootArea.Left(), 200.0)
+		windowVerticalCenter := ui.NewRelativeAnchor(app.rootArea.Top(), app.rootArea.Bottom(), 0.5)
+
+		windowBuilder.SetLeft(ui.NewOffsetAnchor(windowHorizontalCenter, -50.0))
+		windowBuilder.SetRight(ui.NewOffsetAnchor(windowHorizontalCenter, 50.0))
+		windowBuilder.SetTop(ui.NewOffsetAnchor(windowVerticalCenter, -50.0))
+		windowBuilder.SetBottom(ui.NewOffsetAnchor(windowVerticalCenter, 50.0))
+
+		grabbed := false
+		lastGrabX, lastGrabY := float32(0.0), float32(0.0)
+
+		windowBuilder.OnEvent(events.MouseButtonDownEventType, func(area *ui.Area, event events.Event) bool {
+			buttonEvent := event.(*events.MouseButtonEvent)
+			if buttonEvent.Buttons() == env.MousePrimary {
+				grabbed = true
+				lastGrabX, lastGrabY = buttonEvent.Position()
+			}
+			return true
+		})
+		windowBuilder.OnEvent(events.MouseButtonUpEventType, func(area *ui.Area, event events.Event) bool {
+			buttonEvent := event.(*events.MouseButtonEvent)
+			if buttonEvent.AffectedButtons() == env.MousePrimary {
+				grabbed = false
+			}
+			return true
+		})
+		windowBuilder.OnEvent(events.MouseMoveEventType, func(area *ui.Area, event events.Event) bool {
+			moveEvent := event.(*events.MouseMoveEvent)
+			if grabbed {
+				newX, newY := moveEvent.Position()
+				windowHorizontalCenter.RequestValue(windowHorizontalCenter.Value() + (newX - lastGrabX))
+				windowVerticalCenter.RequestValue(windowVerticalCenter.Value() + (newY - lastGrabY))
+				lastGrabX, lastGrabY = newX, newY
+			}
+			return true
+		})
+		windowBuilder.OnRender(func(area *ui.Area, renderer ui.Renderer) {
+			renderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+				color.RGBA{0xFF, 0xFF, 0xFF, 0xD0})
+		})
+
+		windowBuilder.Build()
+	}
 }
 
 func (app *uiTestApplication) onWindowResize(width int, height int) {
@@ -178,4 +235,21 @@ func (app *uiTestApplication) render() {
 
 	gl.Clear(opengl.COLOR_BUFFER_BIT)
 	app.rootArea.Render(app.uiRenderer)
+}
+
+func (app *uiTestApplication) onMouseMove(x float32, y float32) {
+	app.mouseX, app.mouseY = x, y
+	app.rootArea.DispatchPositionalEvent(events.NewMouseMoveEvent(x, y, 0, 0))
+}
+
+func (app *uiTestApplication) onMouseButtonDown(mouseButton uint32, modifier keys.Modifier) {
+	app.mouseButtons |= mouseButton
+	app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent(events.MouseButtonDownEventType,
+		app.mouseX, app.mouseY, 0, app.mouseButtons, mouseButton))
+}
+
+func (app *uiTestApplication) onMouseButtonUp(mouseButton uint32, modifier keys.Modifier) {
+	app.mouseButtons &= ^mouseButton
+	app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent(events.MouseButtonUpEventType,
+		app.mouseX, app.mouseY, 0, app.mouseButtons, mouseButton))
 }
