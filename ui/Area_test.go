@@ -154,3 +154,141 @@ func (suite *AreaSuite) TestDispatchPositionalEventCallsChildrenAtPositionHighes
 
 	c.Check(handleSequence, check.DeepEquals, []int{2, 1, 0})
 }
+
+func (suite *AreaSuite) TestHasFocusReturnsTrueForRoot(c *check.C) {
+	area := suite.builder.Build()
+
+	c.Check(area.HasFocus(), check.Equals, true)
+}
+
+func (suite *AreaSuite) TestHasFocusReturnsFalseForNonFocusedArea(c *check.C) {
+	area := suite.builder.Build()
+	var subArea *Area
+
+	{
+		subAreaBuilder := NewAreaBuilder()
+		subAreaBuilder.SetParent(area)
+		subArea = subAreaBuilder.Build()
+	}
+
+	c.Check(subArea.HasFocus(), check.Equals, false)
+}
+
+func (suite *AreaSuite) TestRequestFocusSetsFocusForAreaRecursively(c *check.C) {
+	area := suite.builder.Build()
+	var subArea *Area
+	var subSubArea *Area
+
+	{
+		subAreaBuilder := NewAreaBuilder()
+		subAreaBuilder.SetParent(area)
+		subArea = subAreaBuilder.Build()
+	}
+	{
+		subSubAreaBuilder := NewAreaBuilder()
+		subSubAreaBuilder.SetParent(subArea)
+		subSubArea = subSubAreaBuilder.Build()
+	}
+
+	subSubArea.RequestFocus()
+
+	c.Check(subArea.HasFocus(), check.Equals, true)
+	c.Check(subSubArea.HasFocus(), check.Equals, true)
+}
+
+func (suite *AreaSuite) TestReleaseFocusClearsFocusForAreaRecursively(c *check.C) {
+	area := suite.builder.Build()
+	var subArea *Area
+	var subSubArea *Area
+
+	{
+		subAreaBuilder := NewAreaBuilder()
+		subAreaBuilder.SetParent(area)
+		subArea = subAreaBuilder.Build()
+	}
+	{
+		subSubAreaBuilder := NewAreaBuilder()
+		subSubAreaBuilder.SetParent(subArea)
+		subSubArea = subSubAreaBuilder.Build()
+	}
+
+	subSubArea.RequestFocus()
+	subSubArea.ReleaseFocus()
+
+	c.Check(subArea.HasFocus(), check.Equals, false)
+	c.Check(subSubArea.HasFocus(), check.Equals, false)
+}
+
+func (suite *AreaSuite) TestRequestFocusClearsFocusForLostBranch(c *check.C) {
+	area := suite.builder.Build()
+	var subArea *Area
+	var leftArea *Area
+	var leftChildArea *Area
+	var rightArea *Area
+	var rightChildArea *Area
+
+	{
+		subAreaBuilder := NewAreaBuilder()
+		subAreaBuilder.SetParent(area)
+		subArea = subAreaBuilder.Build()
+	}
+	{
+		leftAreaBuilder := NewAreaBuilder()
+		leftAreaBuilder.SetParent(subArea)
+		leftArea = leftAreaBuilder.Build()
+	}
+	{
+		leftChildAreaBuilder := NewAreaBuilder()
+		leftChildAreaBuilder.SetParent(leftArea)
+		leftChildArea = leftChildAreaBuilder.Build()
+	}
+	{
+		rightAreaBuilder := NewAreaBuilder()
+		rightAreaBuilder.SetParent(subArea)
+		rightArea = rightAreaBuilder.Build()
+	}
+	{
+		rightChildAreaBuilder := NewAreaBuilder()
+		rightChildAreaBuilder.SetParent(rightArea)
+		rightChildArea = rightChildAreaBuilder.Build()
+	}
+
+	leftChildArea.RequestFocus()
+	rightChildArea.RequestFocus()
+
+	c.Check(subArea.HasFocus(), check.Equals, true)
+	c.Check(leftArea.HasFocus(), check.Equals, false)
+	c.Check(leftChildArea.HasFocus(), check.Equals, false)
+	c.Check(rightArea.HasFocus(), check.Equals, true)
+	c.Check(rightChildArea.HasFocus(), check.Equals, true)
+}
+
+func (suite *AreaSuite) TestRequestFocusClearsFocusForPreviouslyFocusedDescendant(c *check.C) {
+	area := suite.builder.Build()
+	var subArea *Area
+	var leftArea *Area
+	var leftChildArea *Area
+
+	{
+		subAreaBuilder := NewAreaBuilder()
+		subAreaBuilder.SetParent(area)
+		subArea = subAreaBuilder.Build()
+	}
+	{
+		leftAreaBuilder := NewAreaBuilder()
+		leftAreaBuilder.SetParent(subArea)
+		leftArea = leftAreaBuilder.Build()
+	}
+	{
+		leftChildAreaBuilder := NewAreaBuilder()
+		leftChildAreaBuilder.SetParent(leftArea)
+		leftChildArea = leftChildAreaBuilder.Build()
+	}
+
+	leftChildArea.RequestFocus()
+	leftArea.RequestFocus()
+
+	c.Check(subArea.HasFocus(), check.Equals, true)
+	c.Check(leftArea.HasFocus(), check.Equals, true)
+	c.Check(leftChildArea.HasFocus(), check.Equals, false)
+}

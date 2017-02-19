@@ -15,6 +15,8 @@ type Area struct {
 	parent   *Area
 	children []*Area
 
+	focusedArea *Area
+
 	left   Anchor
 	top    Anchor
 	right  Anchor
@@ -22,6 +24,10 @@ type Area struct {
 
 	onRender     RenderFunction
 	eventHandler map[events.EventType]EventHandler
+}
+
+func (area *Area) isRoot() bool {
+	return area.parent == nil
 }
 
 // Left returns the left anchor.
@@ -84,4 +90,46 @@ func (area *Area) DispatchPositionalEvent(event events.PositionalEvent) bool {
 	}
 
 	return result
+}
+
+// HasFocus returns true if this area (or any child) currently has the focus.
+// The root area always has focus.
+func (area *Area) HasFocus() bool {
+	return area.isRoot() || area.parent.hasAreaFocus(area)
+}
+
+func (area *Area) hasAreaFocus(child *Area) bool {
+	return area.focusedArea == child
+}
+
+// RequestFocus sets this area (and all of its parents) first in receiving events.
+// Any previously focused area not in the parent list of this area will lose its focus.
+func (area *Area) RequestFocus() {
+	area.loseFocus()
+	if area.parent != nil {
+		area.parent.requestFocusFor(area)
+	}
+}
+
+func (area *Area) requestFocusFor(child *Area) {
+	area.RequestFocus()
+	if (area.focusedArea != child) && (area.focusedArea != nil) {
+		area.focusedArea.loseFocus()
+	}
+	area.focusedArea = child
+}
+
+// ReleaseFocus lets this area (and any of its children) lose focus.
+func (area *Area) ReleaseFocus() {
+	area.loseFocus()
+	if area.HasFocus() && (area.parent != nil) {
+		area.parent.ReleaseFocus()
+	}
+}
+
+func (area *Area) loseFocus() {
+	if area.focusedArea != nil {
+		area.focusedArea.loseFocus()
+		area.focusedArea = nil
+	}
 }
