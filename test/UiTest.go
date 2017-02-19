@@ -185,13 +185,12 @@ func (app *uiTestApplication) initInterface() {
 		windowBuilder.SetTop(ui.NewOffsetAnchor(windowVerticalCenter, -50.0))
 		windowBuilder.SetBottom(ui.NewOffsetAnchor(windowVerticalCenter, 50.0))
 
-		grabbed := false
 		lastGrabX, lastGrabY := float32(0.0), float32(0.0)
 
 		windowBuilder.OnEvent(events.MouseButtonDownEventType, func(area *ui.Area, event events.Event) bool {
 			buttonEvent := event.(*events.MouseButtonEvent)
 			if buttonEvent.Buttons() == env.MousePrimary {
-				grabbed = true
+				area.RequestFocus()
 				lastGrabX, lastGrabY = buttonEvent.Position()
 			}
 			return true
@@ -199,13 +198,13 @@ func (app *uiTestApplication) initInterface() {
 		windowBuilder.OnEvent(events.MouseButtonUpEventType, func(area *ui.Area, event events.Event) bool {
 			buttonEvent := event.(*events.MouseButtonEvent)
 			if buttonEvent.AffectedButtons() == env.MousePrimary {
-				grabbed = false
+				area.ReleaseFocus()
 			}
 			return true
 		})
 		windowBuilder.OnEvent(events.MouseMoveEventType, func(area *ui.Area, event events.Event) bool {
 			moveEvent := event.(*events.MouseMoveEvent)
-			if grabbed {
+			if area.HasFocus() {
 				newX, newY := moveEvent.Position()
 				windowHorizontalCenter.RequestValue(windowHorizontalCenter.Value() + (newX - lastGrabX))
 				windowVerticalCenter.RequestValue(windowVerticalCenter.Value() + (newY - lastGrabY))
