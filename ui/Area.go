@@ -64,3 +64,24 @@ func (area *Area) HandleEvent(event events.Event) bool {
 
 	return result
 }
+
+// DispatchPositionalEvent tries to find an event handler in this areas
+// UI tree at the position of the event. The event is tried depth-first,
+// before trying to handle it within this area.
+func (area *Area) DispatchPositionalEvent(event *events.MouseEvent) bool {
+	x, y := event.Position()
+	result := false
+
+	for childIndex := len(area.children) - 1; !result && (childIndex >= 0); childIndex-- {
+		child := area.children[childIndex]
+		if (x >= child.Left().Value()) && (x < child.Right().Value()) &&
+			(y >= child.Top().Value()) && (y < child.Bottom().Value()) {
+			result = child.DispatchPositionalEvent(event)
+		}
+	}
+	if !result {
+		result = area.HandleEvent(event)
+	}
+
+	return result
+}
