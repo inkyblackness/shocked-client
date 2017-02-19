@@ -60,36 +60,51 @@ func (area *Area) Render(renderer Renderer) {
 
 // HandleEvent tries to process the given event.
 // It returns true if the area consumed the event.
-func (area *Area) HandleEvent(event events.Event) bool {
-	handler, existing := area.eventHandler[event.EventType()]
-	result := false
-
-	if existing {
-		result = handler(area, event)
+func (area *Area) HandleEvent(event events.Event) (consumed bool) {
+	if area.focusedArea != nil {
+		consumed = area.focusedArea.HandleEvent(event)
+	}
+	if !consumed {
+		consumed = area.tryEventHandlerFor(event)
 	}
 
-	return result
+	return
 }
 
 // DispatchPositionalEvent tries to find an event handler in this areas
 // UI tree at the position of the event. The event is tried depth-first,
 // before trying to handle it within this area.
-func (area *Area) DispatchPositionalEvent(event events.PositionalEvent) bool {
-	x, y := event.Position()
-	result := false
+func (area *Area) DispatchPositionalEvent(event events.PositionalEvent) (consumed bool) {
+	if area.focusedArea != nil {
+		consumed = area.focusedArea.DispatchPositionalEvent(event)
+	}
+	if !consumed {
+		x, y := event.Position()
 
-	for childIndex := len(area.children) - 1; !result && (childIndex >= 0); childIndex-- {
-		child := area.children[childIndex]
-		if (x >= child.Left().Value()) && (x < child.Right().Value()) &&
-			(y >= child.Top().Value()) && (y < child.Bottom().Value()) {
-			result = child.DispatchPositionalEvent(event)
+		for childIndex := len(area.children) - 1; !consumed && (childIndex >= 0); childIndex-- {
+			child := area.children[childIndex]
+			if (child != area.focusedArea) &&
+				(x >= child.Left().Value()) && (x < child.Right().Value()) &&
+				(y >= child.Top().Value()) && (y < child.Bottom().Value()) {
+				consumed = child.DispatchPositionalEvent(event)
+			}
 		}
 	}
-	if !result {
-		result = area.HandleEvent(event)
+	if !consumed {
+		consumed = area.tryEventHandlerFor(event)
 	}
 
-	return result
+	return
+}
+
+func (area *Area) tryEventHandlerFor(event events.Event) (consumed bool) {
+	handler, existing := area.eventHandler[event.EventType()]
+
+	if existing {
+		consumed = handler(area, event)
+	}
+
+	return
 }
 
 // HasFocus returns true if this area (or any child) currently has the focus.
