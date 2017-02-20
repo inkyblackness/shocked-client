@@ -30,18 +30,20 @@ type MainApplication struct {
 	mouseX, mouseY float32
 	mouseButtons   uint32
 
-	rootArea     *ui.Area
-	defaultFont  graphics.TextRenderer
-	rectRenderer *graphics.RectangleRenderer
+	rootArea           *ui.Area
+	defaultFontPainter graphics.TextPainter
+	uiTextPalette      *graphics.PaletteTexture
+	rectRenderer       *graphics.RectangleRenderer
+	uiTextRenderer     *graphics.BitmapTextureRenderer
 }
 
 // NewMainApplication returns a new instance of MainApplication.
 func NewMainApplication(store DataStore) *MainApplication {
 	app := &MainApplication{
-		projectionMatrix: mgl.Ident4(),
-		lastElapsedTick:  time.Now(),
-		store:            store,
-		defaultFont:      graphics.NewBitmapTextRenderer(defaultFont)}
+		projectionMatrix:   mgl.Ident4(),
+		lastElapsedTick:    time.Now(),
+		store:              store,
+		defaultFontPainter: graphics.NewBitmapTextPainter(defaultFont)}
 
 	return app
 }
@@ -53,6 +55,22 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.initOpenGl()
 
 	app.rectRenderer = graphics.NewRectangleRenderer(app.gl, &app.projectionMatrix)
+
+	uiTextPalette := [][4]byte{
+		{0x00, 0x00, 0x00, 0x00},
+		{0xFF, 0x00, 0x00, 0xFF},
+		{0x80, 0x00, 0x00, 0x40}}
+	app.uiTextPalette = graphics.NewPaletteTexture(app.gl, func(index int) (byte, byte, byte, byte) {
+		fetchIndex := index
+		if fetchIndex >= len(uiTextPalette) {
+			fetchIndex = 0
+		}
+		entry := uiTextPalette[fetchIndex]
+		return entry[0], entry[1], entry[2], entry[3]
+	})
+	viewMatrix := mgl.Ident4()
+	uiRenderContext := graphics.NewBasicRenderContext(app.gl, &app.projectionMatrix, &viewMatrix)
+	app.uiTextRenderer = graphics.NewBitmapTextureRenderer(uiRenderContext, app.uiTextPalette)
 	app.initInterface()
 
 	app.onWindowResize(glWindow.Size())
@@ -170,9 +188,20 @@ func (app *MainApplication) initInterface() {
 			}
 			return true
 		})
+
+		testTextBitmap := app.defaultFontPainter.Paint("Hello, World!")
+		textTexture := graphics.NewBitmapTexture(app.gl, testTextBitmap.Width, testTextBitmap.Height, testTextBitmap.Pixels)
+
 		windowBuilder.OnRender(func(area *ui.Area) {
 			app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 				graphics.RGBA(1.0, 1.0, 1.0, 0.75))
+
+			u, v := textTexture.UV()
+			textWidth, textHeight := textTexture.Size()
+			app.uiTextRenderer.Render(graphics.RectByCoord(area.Left().Value(), area.Top().Value(),
+				area.Left().Value()+textWidth*2, area.Top().Value()+textHeight*2),
+				textTexture,
+				graphics.RectByCoord(0.0, 0.0, u, v))
 		})
 
 		windowBuilder.Build()
