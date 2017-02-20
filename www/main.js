@@ -28029,7 +28029,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics"] = (function() {
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: RectangleRenderer.ptr.prototype.Dispose }; } $f.$ptr = $ptr; $f.renderer = renderer; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	RectangleRenderer.prototype.Dispose = function() { return this.$val.Dispose(); };
-	RectangleRenderer.ptr.prototype.FillRectangle = function(left, top, right, bottom, fillColor) {
+	RectangleRenderer.ptr.prototype.Fill = function(left, top, right, bottom, fillColor) {
 		var $ptr, bottom, fillColor, gl, left, renderer, right, top, vertices, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; bottom = $f.bottom; fillColor = $f.fillColor; gl = $f.gl; left = $f.left; renderer = $f.renderer; right = $f.right; top = $f.top; vertices = $f.vertices; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		fillColor = [fillColor];
@@ -28052,12 +28052,12 @@ $packages["github.com/inkyblackness/shocked-client/graphics"] = (function() {
 			$r = gl[0].DrawArrays(4, 0, 6); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(fillColor, gl, renderer)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: RectangleRenderer.ptr.prototype.FillRectangle }; } $f.$ptr = $ptr; $f.bottom = bottom; $f.fillColor = fillColor; $f.gl = gl; $f.left = left; $f.renderer = renderer; $f.right = right; $f.top = top; $f.vertices = vertices; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: RectangleRenderer.ptr.prototype.Fill }; } $f.$ptr = $ptr; $f.bottom = bottom; $f.fillColor = fillColor; $f.gl = gl; $f.left = left; $f.renderer = renderer; $f.right = right; $f.top = top; $f.vertices = vertices; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	RectangleRenderer.prototype.FillRectangle = function(left, top, right, bottom, fillColor) { return this.$val.FillRectangle(left, top, right, bottom, fillColor); };
+	RectangleRenderer.prototype.Fill = function(left, top, right, bottom, fillColor) { return this.$val.Fill(left, top, right, bottom, fillColor); };
 	ptrType$4.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([$String], [Bitmap], false)}, {prop: "mapCharactersToIndex", name: "mapCharactersToIndex", pkg: "github.com/inkyblackness/shocked-client/graphics", typ: $funcType([$String], [sliceType$2], false)}, {prop: "outline", name: "outline", pkg: "github.com/inkyblackness/shocked-client/graphics", typ: $funcType([Bitmap], [], false)}];
 	ptrType.methods = [{prop: "AsVector", name: "AsVector", pkg: "", typ: $funcType([], [ptrType$6], false)}];
-	ptrType$3.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "FillRectangle", name: "FillRectangle", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32, Color], [], false)}];
+	ptrType$3.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "Fill", name: "Fill", pkg: "", typ: $funcType([$Float32, $Float32, $Float32, $Float32, Color], [], false)}];
 	Bitmap.init("", [{prop: "Width", name: "Width", exported: true, typ: $Int, tag: ""}, {prop: "Height", name: "Height", exported: true, typ: $Int, tag: ""}, {prop: "Pixels", name: "Pixels", exported: true, typ: sliceType, tag: ""}]);
 	bitmapTextRenderer.init("github.com/inkyblackness/shocked-client/graphics", [{prop: "cp", name: "cp", exported: false, typ: text.Codepage, tag: ""}, {prop: "font", name: "font", exported: false, typ: model.Font, tag: ""}, {prop: "bitmap", name: "bitmap", exported: false, typ: Bitmap, tag: ""}, {prop: "lastCharacterIndex", name: "lastCharacterIndex", exported: false, typ: $Int, tag: ""}]);
 	Color.init([{prop: "AsVector", name: "AsVector", pkg: "", typ: $funcType([], [ptrType$6], false)}]);
@@ -28882,7 +28882,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			_r$3 = area.Bottom().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 			_arg$3 = _r$3;
 			_arg$4 = graphics.RGBA(0.25, 0, 0.25, 0.75);
-			$r = app.rectRenderer.FillRectangle(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = app.rectRenderer.Fill(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.area = area; $f.$s = $s; $f.$r = $r; return $f;
 		}));
 		centerPanelBuilder.Build();
@@ -28951,7 +28951,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			_r$3 = area.Bottom().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 			_arg$3 = _r$3;
 			_arg$4 = graphics.RGBA(1, 1, 1, 0.75);
-			$r = app.rectRenderer.FillRectangle(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = app.rectRenderer.Fill(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.area = area; $f.$s = $s; $f.$r = $r; return $f;
 		}));
 		windowBuilder.Build();

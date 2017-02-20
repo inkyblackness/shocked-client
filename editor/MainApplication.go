@@ -125,7 +125,7 @@ func (app *MainApplication) initInterface() {
 		centerPanelBuilder.SetBottom(ui.NewOffsetAnchor(verticalCenter, minPanelHeight/2.0))
 
 		centerPanelBuilder.OnRender(func(area *ui.Area) {
-			app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+			app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 				graphics.RGBA(0.25, 0, 0.25, 0.75))
 		})
 		centerPanelBuilder.Build()
@@ -171,7 +171,7 @@ func (app *MainApplication) initInterface() {
 			return true
 		})
 		windowBuilder.OnRender(func(area *ui.Area) {
-			app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+			app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 				graphics.RGBA(1.0, 1.0, 1.0, 0.75))
 		})
 

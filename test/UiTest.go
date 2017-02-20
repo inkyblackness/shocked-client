@@ -110,7 +110,7 @@ func (app *uiTestApplication) initInterface() {
 	rootBuilder.SetRight(ui.NewAbsoluteAnchor(0.0))
 	rootBuilder.SetBottom(ui.NewAbsoluteAnchor(0.0))
 	rootBuilder.OnRender(func(area *ui.Area) {
-		app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+		app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 			graphics.RGBA(0.125, 0.25, 0.45, 1.0))
 	})
 
@@ -127,7 +127,7 @@ func (app *uiTestApplication) initInterface() {
 	mainPanelBuilder.SetTop(mainPanelTop)
 	mainPanelBuilder.SetBottom(app.rootArea.Bottom())
 	mainPanelBuilder.OnRender(func(area *ui.Area) {
-		app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+		app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 			graphics.RGBA(0.45, 0.06, 0.25, 0.5))
 	})
 	mainPanelBuilder.Build()
@@ -148,7 +148,7 @@ func (app *uiTestApplication) initInterface() {
 	centerPanelBuilder.SetBottom(ui.NewOffsetAnchor(verticalCenter, minPanelHeight/2.0))
 
 	centerPanelBuilder.OnRender(func(area *ui.Area) {
-		app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+		app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 			graphics.RGBA(0.25, 0.0, 0.25, 0.75))
 	})
 	centerPanelBuilder.Build()
@@ -167,7 +167,7 @@ func (app *uiTestApplication) initInterface() {
 	sidePanelBuilder.SetRight(ui.NewLimitedAnchor(minRight, maxRight, ui.NewRelativeAnchor(app.rootArea.Left(), app.rootArea.Right(), 0.4)))
 
 	sidePanelBuilder.OnRender(func(area *ui.Area) {
-		app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+		app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 			graphics.RGBA(0.0, 0.33, 0.25, 0.75))
 	})
 	sidePanelBuilder.Build()
@@ -212,7 +212,7 @@ func (app *uiTestApplication) initInterface() {
 			return true
 		})
 		windowBuilder.OnRender(func(area *ui.Area) {
-			app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+			app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 				graphics.RGBA(1.0, 1.0, 1.0, 0.8))
 		})
 

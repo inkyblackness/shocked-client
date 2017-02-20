@@ -77,8 +77,8 @@ func (renderer *RectangleRenderer) Dispose() {
 	renderer.gl.DeleteBuffers([]uint32{renderer.vertexPositionBuffer})
 }
 
-// FillRectangle implements the ui.Renderer interface
-func (renderer *RectangleRenderer) FillRectangle(left, top, right, bottom float32, fillColor Color) {
+// Fill renders a rectangle filled with a solid color.
+func (renderer *RectangleRenderer) Fill(left, top, right, bottom float32, fillColor Color) {
 	gl := renderer.gl
 
 	{
