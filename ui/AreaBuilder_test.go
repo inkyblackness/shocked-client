@@ -50,11 +50,11 @@ func (suite *AreaBuilderSuite) TestDefaultRenderFunctionIsSet(c *check.C) {
 
 func (suite *AreaBuilderSuite) TestOnRenderSetsRenderFunction(c *check.C) {
 	called := false
-	onRender := func(*Area, Renderer) { called = true }
+	onRender := func(*Area) { called = true }
 	suite.builder.OnRender(onRender)
 	area := suite.builder.Build()
 
-	area.Render(nil)
+	area.Render()
 
 	c.Check(called, check.Equals, true)
 }

@@ -110,8 +110,8 @@ func (app *uiTestApplication) initInterface() {
 
 	rootBuilder.SetRight(ui.NewAbsoluteAnchor(0.0))
 	rootBuilder.SetBottom(ui.NewAbsoluteAnchor(0.0))
-	rootBuilder.OnRender(func(area *ui.Area, renderer ui.Renderer) {
-		renderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+	rootBuilder.OnRender(func(area *ui.Area) {
+		app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 			color.RGBA{0x20, 0x40, 0x70, 0xFF})
 	})
 
@@ -127,8 +127,8 @@ func (app *uiTestApplication) initInterface() {
 	mainPanelTop := ui.NewRelativeAnchor(app.rootArea.Top(), app.rootArea.Bottom(), 0.1)
 	mainPanelBuilder.SetTop(mainPanelTop)
 	mainPanelBuilder.SetBottom(app.rootArea.Bottom())
-	mainPanelBuilder.OnRender(func(area *ui.Area, renderer ui.Renderer) {
-		renderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+	mainPanelBuilder.OnRender(func(area *ui.Area) {
+		app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 			color.RGBA{0x70, 0x10, 0x40, 0x80})
 	})
 	mainPanelBuilder.Build()
@@ -148,8 +148,8 @@ func (app *uiTestApplication) initInterface() {
 	centerPanelBuilder.SetTop(ui.NewOffsetAnchor(verticalCenter, minPanelHeight/-2.0))
 	centerPanelBuilder.SetBottom(ui.NewOffsetAnchor(verticalCenter, minPanelHeight/2.0))
 
-	centerPanelBuilder.OnRender(func(area *ui.Area, renderer ui.Renderer) {
-		renderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+	centerPanelBuilder.OnRender(func(area *ui.Area) {
+		app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 			color.RGBA{0x40, 0x00, 0x40, 0xC0})
 	})
 	centerPanelBuilder.Build()
@@ -167,8 +167,8 @@ func (app *uiTestApplication) initInterface() {
 	maxRight := ui.NewOffsetAnchor(sidePanelLeft, 400.0)
 	sidePanelBuilder.SetRight(ui.NewLimitedAnchor(minRight, maxRight, ui.NewRelativeAnchor(app.rootArea.Left(), app.rootArea.Right(), 0.4)))
 
-	sidePanelBuilder.OnRender(func(area *ui.Area, renderer ui.Renderer) {
-		renderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+	sidePanelBuilder.OnRender(func(area *ui.Area) {
+		app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 			color.RGBA{0x00, 0x60, 0x40, 0xC0})
 	})
 	sidePanelBuilder.Build()
@@ -212,8 +212,8 @@ func (app *uiTestApplication) initInterface() {
 			}
 			return true
 		})
-		windowBuilder.OnRender(func(area *ui.Area, renderer ui.Renderer) {
-			renderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+		windowBuilder.OnRender(func(area *ui.Area) {
+			app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 				color.RGBA{0xFF, 0xFF, 0xFF, 0xD0})
 		})
 
@@ -233,7 +233,7 @@ func (app *uiTestApplication) render() {
 	gl := app.gl
 
 	gl.Clear(opengl.COLOR_BUFFER_BIT)
-	app.rootArea.Render(app.uiRenderer)
+	app.rootArea.Render()
 }
 
 func (app *uiTestApplication) onMouseMove(x float32, y float32) {

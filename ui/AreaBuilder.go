@@ -25,7 +25,7 @@ func NewAreaBuilder() *AreaBuilder {
 		right:  ZeroAnchor(),
 		bottom: ZeroAnchor(),
 
-		onRender:     func(*Area, Renderer) {},
+		onRender:     func(*Area) {},
 		eventHandler: make(map[events.EventType]EventHandler)}
 
 	return builder

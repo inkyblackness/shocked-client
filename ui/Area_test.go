@@ -35,8 +35,8 @@ func (suite *AreaSuite) SetUpTest(c *check.C) {
 func (suite *AreaSuite) TestRenderCallsOtherAreas(c *check.C) {
 	renderCounter := 0
 	renderCalls := make(map[int]int)
-	renderFunc := func(index int) func(*Area, Renderer) {
-		return func(*Area, Renderer) {
+	renderFunc := func(index int) func(*Area) {
+		return func(*Area) {
 			renderCalls[index] = renderCounter
 			renderCounter++
 		}
@@ -45,7 +45,7 @@ func (suite *AreaSuite) TestRenderCallsOtherAreas(c *check.C) {
 	NewAreaBuilder().SetParent(parent).OnRender(renderFunc(0)).Build()
 	NewAreaBuilder().SetParent(parent).OnRender(renderFunc(1)).Build()
 
-	parent.Render(nil)
+	parent.Render()
 
 	c.Check(renderCalls, check.DeepEquals, map[int]int{0: 0, 1: 1})
 }

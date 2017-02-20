@@ -5,7 +5,7 @@ import (
 )
 
 // RenderFunction is called when an area wants to render its content.
-type RenderFunction func(*Area, Renderer)
+type RenderFunction func(*Area)
 
 // EventHandler is called for events dispatched to the area.
 type EventHandler func(*Area, events.Event) bool
@@ -51,10 +51,10 @@ func (area *Area) Bottom() Anchor {
 }
 
 // Render first renders this area, then sequentially all children.
-func (area *Area) Render(renderer Renderer) {
-	area.onRender(area, renderer)
+func (area *Area) Render() {
+	area.onRender(area)
 	for _, child := range area.children {
-		child.Render(renderer)
+		child.Render()
 	}
 }
 
