@@ -11,6 +11,8 @@ import (
 	"github.com/inkyblackness/shocked-client/env/keys"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/opengl"
+	"github.com/inkyblackness/shocked-client/ui"
+	"github.com/inkyblackness/shocked-client/ui/events"
 )
 
 // MainApplication represents the core intelligence of the editor.
@@ -25,12 +27,12 @@ type MainApplication struct {
 	gl                        opengl.OpenGl
 	projectionMatrix          mgl.Mat4
 
-	mouseX, mouseY   float32
-	mouseDragged     bool
-	mouseMoveCapture func()
+	mouseX, mouseY float32
+	mouseButtons   uint32
 
-	defaultFont graphics.TextRenderer
-	defaultIcon *graphics.BitmapTexture
+	rootArea     *ui.Area
+	defaultFont  graphics.TextRenderer
+	rectRenderer *graphics.RectangleRenderer
 }
 
 // NewMainApplication returns a new instance of MainApplication.
@@ -39,7 +41,7 @@ func NewMainApplication(store DataStore) *MainApplication {
 		projectionMatrix: mgl.Ident4(),
 		lastElapsedTick:  time.Now(),
 		store:            store,
-		mouseMoveCapture: func() {}}
+		defaultFont:      graphics.NewBitmapTextRenderer(defaultFont)}
 
 	return app
 }
@@ -49,6 +51,9 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.setWindow(glWindow)
 	app.setDebugOpenGl()
 	app.initOpenGl()
+
+	app.rectRenderer = graphics.NewRectangleRenderer(app.gl, &app.projectionMatrix)
+	app.initInterface()
 
 	app.onWindowResize(glWindow.Size())
 }
@@ -97,6 +102,83 @@ func (app *MainApplication) initOpenGl() {
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
 }
 
+func (app *MainApplication) initInterface() {
+	rootBuilder := ui.NewAreaBuilder()
+
+	rootBuilder.SetRight(ui.NewAbsoluteAnchor(0.0))
+	rootBuilder.SetBottom(ui.NewAbsoluteAnchor(0.0))
+	app.rootArea = rootBuilder.Build()
+
+	{
+		horizontalCenter := ui.NewRelativeAnchor(app.rootArea.Left(), app.rootArea.Right(), 0.5)
+		verticalCenter := ui.NewRelativeAnchor(app.rootArea.Top(), app.rootArea.Bottom(), 0.5)
+
+		minPanelWidth := float32(50.0)
+		minPanelHeight := float32(30.0)
+
+		centerPanelBuilder := ui.NewAreaBuilder()
+		centerPanelBuilder.SetParent(app.rootArea)
+
+		centerPanelBuilder.SetLeft(ui.NewOffsetAnchor(horizontalCenter, minPanelWidth/-2.0))
+		centerPanelBuilder.SetRight(ui.NewOffsetAnchor(horizontalCenter, minPanelWidth/2.0))
+		centerPanelBuilder.SetTop(ui.NewOffsetAnchor(verticalCenter, minPanelHeight/-2.0))
+		centerPanelBuilder.SetBottom(ui.NewOffsetAnchor(verticalCenter, minPanelHeight/2.0))
+
+		centerPanelBuilder.OnRender(func(area *ui.Area) {
+			app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+				graphics.RGBA(0.25, 0, 0.25, 0.75))
+		})
+		centerPanelBuilder.Build()
+	}
+
+	{
+		windowBuilder := ui.NewAreaBuilder()
+		windowBuilder.SetParent(app.rootArea)
+
+		windowHorizontalCenter := ui.NewOffsetAnchor(app.rootArea.Left(), 200.0)
+		windowVerticalCenter := ui.NewRelativeAnchor(app.rootArea.Top(), app.rootArea.Bottom(), 0.5)
+
+		windowBuilder.SetLeft(ui.NewOffsetAnchor(windowHorizontalCenter, -50.0))
+		windowBuilder.SetRight(ui.NewOffsetAnchor(windowHorizontalCenter, 50.0))
+		windowBuilder.SetTop(ui.NewOffsetAnchor(windowVerticalCenter, -50.0))
+		windowBuilder.SetBottom(ui.NewOffsetAnchor(windowVerticalCenter, 50.0))
+
+		lastGrabX, lastGrabY := float32(0.0), float32(0.0)
+
+		windowBuilder.OnEvent(events.MouseButtonDownEventType, func(area *ui.Area, event events.Event) bool {
+			buttonEvent := event.(*events.MouseButtonEvent)
+			if buttonEvent.Buttons() == env.MousePrimary {
+				area.RequestFocus()
+				lastGrabX, lastGrabY = buttonEvent.Position()
+			}
+			return true
+		})
+		windowBuilder.OnEvent(events.MouseButtonUpEventType, func(area *ui.Area, event events.Event) bool {
+			buttonEvent := event.(*events.MouseButtonEvent)
+			if buttonEvent.AffectedButtons() == env.MousePrimary {
+				area.ReleaseFocus()
+			}
+			return true
+		})
+		windowBuilder.OnEvent(events.MouseMoveEventType, func(area *ui.Area, event events.Event) bool {
+			moveEvent := event.(*events.MouseMoveEvent)
+			if area.HasFocus() {
+				newX, newY := moveEvent.Position()
+				windowHorizontalCenter.RequestValue(windowHorizontalCenter.Value() + (newX - lastGrabX))
+				windowVerticalCenter.RequestValue(windowVerticalCenter.Value() + (newY - lastGrabY))
+				lastGrabX, lastGrabY = newX, newY
+			}
+			return true
+		})
+		windowBuilder.OnRender(func(area *ui.Area) {
+			app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+				graphics.RGBA(1.0, 1.0, 1.0, 0.75))
+		})
+
+		windowBuilder.Build()
+	}
+}
+
 func (app *MainApplication) simpleStoreFailure(info string) FailureFunc {
 	return func() {
 		fmt.Fprintf(os.Stderr, "Failed to process store query <%s>\n", info)
@@ -108,15 +190,17 @@ func (app *MainApplication) updateElapsedNano() {
 	diff := now.Sub(app.lastElapsedTick).Nanoseconds()
 
 	if diff > 0 {
-		app.elapsedMSec += diff / 1000000
+		app.elapsedMSec += diff / time.Millisecond.Nanoseconds()
 	}
 	app.lastElapsedTick = now
 }
 
 func (app *MainApplication) onWindowResize(width int, height int) {
-	app.windowWidth, app.windowHeight = float32(width), float32(height)
-	app.projectionMatrix = mgl.Ortho2D(0.0, app.windowWidth, app.windowHeight, 0.0)
+	app.projectionMatrix = mgl.Ortho2D(0.0, float32(width), float32(height), 0.0)
 	app.gl.Viewport(0, 0, int32(width), int32(height))
+
+	app.rootArea.Right().RequestValue(float32(width))
+	app.rootArea.Bottom().RequestValue(float32(height))
 }
 
 func (app *MainApplication) render() {
@@ -125,31 +209,24 @@ func (app *MainApplication) render() {
 	gl.Clear(opengl.COLOR_BUFFER_BIT)
 
 	app.updateElapsedNano()
-
-	//viewMatrix := mgl.Ident4()
-	//context := display.NewBasicRenderContext(app.windowWidth, app.windowHeight, app.projectionMatrix, viewMatrix)
+	app.rootArea.Render()
 }
 
 func (app *MainApplication) onMouseMove(x float32, y float32) {
 	app.mouseX, app.mouseY = x, y
-
-	app.mouseMoveCapture()
+	app.rootArea.DispatchPositionalEvent(events.NewMouseMoveEvent(x, y, 0, 0))
 }
 
 func (app *MainApplication) onMouseButtonDown(mouseButton uint32, modifier keys.Modifier) {
-	app.mouseDragged = false
-	app.mouseMoveCapture = func() {
-		app.mouseDragged = true
-	}
+	app.mouseButtons |= mouseButton
+	app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent(events.MouseButtonDownEventType,
+		app.mouseX, app.mouseY, 0, app.mouseButtons, mouseButton))
 }
 
 func (app *MainApplication) onMouseButtonUp(mouseButton uint32, modifier keys.Modifier) {
-	if (mouseButton & env.MousePrimary) == env.MousePrimary {
-		app.mouseMoveCapture = func() {}
-		if !app.mouseDragged {
-			app.onMouseClick(modifier)
-		}
-	}
+	app.mouseButtons &= ^mouseButton
+	app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent(events.MouseButtonUpEventType,
+		app.mouseX, app.mouseY, 0, app.mouseButtons, mouseButton))
 }
 
 func (app *MainApplication) onMouseScroll(dx float32, dy float32) {

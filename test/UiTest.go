@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"image/color"
 	"os"
 	//"runtime/pprof"
 
@@ -44,8 +43,8 @@ type uiTestApplication struct {
 	mouseX, mouseY float32
 	mouseButtons   uint32
 
-	rootArea   *ui.Area
-	uiRenderer *graphics.OpenGlRenderer
+	rootArea     *ui.Area
+	rectRenderer *graphics.RectangleRenderer
 }
 
 func newUITestApplication() *uiTestApplication {
@@ -57,7 +56,7 @@ func (app *uiTestApplication) Init(glWindow env.OpenGlWindow) {
 	app.initOpenGl()
 	app.setDebugOpenGl()
 
-	app.uiRenderer = graphics.NewOpenGlRenderer(app.gl, &app.projectionMatrix)
+	app.rectRenderer = graphics.NewRectangleRenderer(app.gl, &app.projectionMatrix)
 
 	app.initInterface()
 
@@ -111,8 +110,8 @@ func (app *uiTestApplication) initInterface() {
 	rootBuilder.SetRight(ui.NewAbsoluteAnchor(0.0))
 	rootBuilder.SetBottom(ui.NewAbsoluteAnchor(0.0))
 	rootBuilder.OnRender(func(area *ui.Area) {
-		app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-			color.RGBA{0x20, 0x40, 0x70, 0xFF})
+		app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+			graphics.RGBA(0.125, 0.25, 0.45, 1.0))
 	})
 
 	app.rootArea = rootBuilder.Build()
@@ -128,8 +127,8 @@ func (app *uiTestApplication) initInterface() {
 	mainPanelBuilder.SetTop(mainPanelTop)
 	mainPanelBuilder.SetBottom(app.rootArea.Bottom())
 	mainPanelBuilder.OnRender(func(area *ui.Area) {
-		app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-			color.RGBA{0x70, 0x10, 0x40, 0x80})
+		app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+			graphics.RGBA(0.45, 0.06, 0.25, 0.5))
 	})
 	mainPanelBuilder.Build()
 
@@ -149,8 +148,8 @@ func (app *uiTestApplication) initInterface() {
 	centerPanelBuilder.SetBottom(ui.NewOffsetAnchor(verticalCenter, minPanelHeight/2.0))
 
 	centerPanelBuilder.OnRender(func(area *ui.Area) {
-		app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-			color.RGBA{0x40, 0x00, 0x40, 0xC0})
+		app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+			graphics.RGBA(0.25, 0.0, 0.25, 0.75))
 	})
 	centerPanelBuilder.Build()
 
@@ -168,8 +167,8 @@ func (app *uiTestApplication) initInterface() {
 	sidePanelBuilder.SetRight(ui.NewLimitedAnchor(minRight, maxRight, ui.NewRelativeAnchor(app.rootArea.Left(), app.rootArea.Right(), 0.4)))
 
 	sidePanelBuilder.OnRender(func(area *ui.Area) {
-		app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-			color.RGBA{0x00, 0x60, 0x40, 0xC0})
+		app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+			graphics.RGBA(0.0, 0.33, 0.25, 0.75))
 	})
 	sidePanelBuilder.Build()
 
@@ -213,8 +212,8 @@ func (app *uiTestApplication) initInterface() {
 			return true
 		})
 		windowBuilder.OnRender(func(area *ui.Area) {
-			app.uiRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-				color.RGBA{0xFF, 0xFF, 0xFF, 0xD0})
+			app.rectRenderer.FillRectangle(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+				graphics.RGBA(1.0, 1.0, 1.0, 0.8))
 		})
 
 		windowBuilder.Build()

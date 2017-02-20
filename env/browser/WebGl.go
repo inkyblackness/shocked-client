@@ -184,10 +184,10 @@ func (web *WebGl) GenTextures(n int32) []uint32 {
 
 // GenVertexArrays implements the opengl.OpenGl interface.
 func (web *WebGl) GenVertexArrays(n int32) []uint32 {
-	// Not supported in WebGL, can be ignored; Creating dummy IDs
-	ids := []uint32{}
+	// Not supported in WebGL, can be ignored; Returning zeroes.
+	ids := make([]uint32, n)
 	for i := int32(0); i < n; i++ {
-		ids = append(ids, uint32(i+1))
+		ids[i] = 0
 	}
 	return ids
 }
