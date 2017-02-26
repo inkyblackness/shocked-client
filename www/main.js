@@ -30106,13 +30106,37 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		var $ptr, builder, parent;
 		builder = this;
 		builder.areaBuilder.SetParent(parent);
-		builder.areaBuilder.SetLeft(parent.Left());
-		builder.areaBuilder.SetTop(parent.Top());
-		builder.areaBuilder.SetRight(parent.Right());
-		builder.areaBuilder.SetBottom(parent.Bottom());
 		return builder;
 	};
 	LabelBuilder.prototype.SetParent = function(parent) { return this.$val.SetParent(parent); };
+	LabelBuilder.ptr.prototype.SetLeft = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetLeft(value);
+		return builder;
+	};
+	LabelBuilder.prototype.SetLeft = function(value) { return this.$val.SetLeft(value); };
+	LabelBuilder.ptr.prototype.SetTop = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetTop(value);
+		return builder;
+	};
+	LabelBuilder.prototype.SetTop = function(value) { return this.$val.SetTop(value); };
+	LabelBuilder.ptr.prototype.SetRight = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetRight(value);
+		return builder;
+	};
+	LabelBuilder.prototype.SetRight = function(value) { return this.$val.SetRight(value); };
+	LabelBuilder.ptr.prototype.SetBottom = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetBottom(value);
+		return builder;
+	};
+	LabelBuilder.prototype.SetBottom = function(value) { return this.$val.SetBottom(value); };
 	LabelBuilder.ptr.prototype.SetScale = function(value) {
 		var $ptr, builder, value;
 		builder = this;
@@ -30135,7 +30159,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 	};
 	LabelBuilder.prototype.AlignedVerticallyBy = function(aligner) { return this.$val.AlignedVerticallyBy(aligner); };
 	ptrType$5.methods = [{prop: "SetText", name: "SetText", pkg: "", typ: $funcType([$String], [], false)}, {prop: "onRender", name: "onRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3], [], false)}];
-	ptrType$6.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$5], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$3], [ptrType$6], false)}, {prop: "SetScale", name: "SetScale", pkg: "", typ: $funcType([$Float32], [ptrType$6], false)}, {prop: "AlignedHorizontallyBy", name: "AlignedHorizontallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}, {prop: "AlignedVerticallyBy", name: "AlignedVerticallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}];
+	ptrType$6.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$5], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$3], [ptrType$6], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetScale", name: "SetScale", pkg: "", typ: $funcType([$Float32], [ptrType$6], false)}, {prop: "AlignedHorizontallyBy", name: "AlignedHorizontallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}, {prop: "AlignedVerticallyBy", name: "AlignedVerticallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}];
 	Aligner.init([$Float32, $Float32], [$Float32], false);
 	BitmapTexturizer.init([ptrType$4], [ptrType], false);
 	Label.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "area", name: "area", exported: false, typ: ptrType$3, tag: ""}, {prop: "textPainter", name: "textPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "texturizer", name: "texturizer", exported: false, typ: BitmapTexturizer, tag: ""}, {prop: "textureRenderer", name: "textureRenderer", exported: false, typ: ptrType$2, tag: ""}, {prop: "scale", name: "scale", exported: false, typ: $Float32, tag: ""}, {prop: "horizontalAligner", name: "horizontalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "verticalAligner", name: "verticalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "bitmap", name: "bitmap", exported: false, typ: graphics.TextBitmap, tag: ""}, {prop: "texture", name: "texture", exported: false, typ: ptrType, tag: ""}]);
@@ -30516,6 +30540,10 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		windowArea = windowBuilder.Build();
 		labelBuilder = controls.NewLabelBuilder(app[0].defaultFontPainter, $methodVal(app[0], "texturize"), app[0].uiTextRenderer);
 		labelBuilder.SetParent(windowArea);
+		labelBuilder.SetLeft(ui.NewOffsetAnchor(windowArea.Left(), 0));
+		labelBuilder.SetTop(ui.NewOffsetAnchor(windowArea.Top(), 0));
+		labelBuilder.SetRight(ui.NewOffsetAnchor(windowArea.Right(), 0));
+		labelBuilder.SetBottom(ui.NewOffsetAnchor(windowArea.Bottom(), 0));
 		_r$2 = labelBuilder.Build(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		label = _r$2;
 		$r = label.SetText("I'm centered and a really long text that should be clipped"); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }

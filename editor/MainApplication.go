@@ -221,6 +221,10 @@ func (app *MainApplication) initInterface() {
 
 		labelBuilder := controls.NewLabelBuilder(app.defaultFontPainter, app.texturize, app.uiTextRenderer)
 		labelBuilder.SetParent(windowArea)
+		labelBuilder.SetLeft(ui.NewOffsetAnchor(windowArea.Left(), 0))
+		labelBuilder.SetTop(ui.NewOffsetAnchor(windowArea.Top(), 0))
+		labelBuilder.SetRight(ui.NewOffsetAnchor(windowArea.Right(), 0))
+		labelBuilder.SetBottom(ui.NewOffsetAnchor(windowArea.Bottom(), 0))
 		label := labelBuilder.Build()
 		label.SetText("I'm centered and a really long text that should be clipped")
 	}

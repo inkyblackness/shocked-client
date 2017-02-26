@@ -53,10 +53,30 @@ func (builder *LabelBuilder) Build() *Label {
 // SetParent sets the parent area.
 func (builder *LabelBuilder) SetParent(parent *ui.Area) *LabelBuilder {
 	builder.areaBuilder.SetParent(parent)
-	builder.areaBuilder.SetLeft(parent.Left())
-	builder.areaBuilder.SetTop(parent.Top())
-	builder.areaBuilder.SetRight(parent.Right())
-	builder.areaBuilder.SetBottom(parent.Bottom())
+	return builder
+}
+
+// SetLeft sets the left anchor. Default: ZeroAnchor
+func (builder *LabelBuilder) SetLeft(value ui.Anchor) *LabelBuilder {
+	builder.areaBuilder.SetLeft(value)
+	return builder
+}
+
+// SetTop sets the top anchor. Default: ZeroAnchor
+func (builder *LabelBuilder) SetTop(value ui.Anchor) *LabelBuilder {
+	builder.areaBuilder.SetTop(value)
+	return builder
+}
+
+// SetRight sets the right anchor. Default: ZeroAnchor
+func (builder *LabelBuilder) SetRight(value ui.Anchor) *LabelBuilder {
+	builder.areaBuilder.SetRight(value)
+	return builder
+}
+
+// SetBottom sets the bottom anchor. Default: ZeroAnchor
+func (builder *LabelBuilder) SetBottom(value ui.Anchor) *LabelBuilder {
+	builder.areaBuilder.SetBottom(value)
 	return builder
 }
 
