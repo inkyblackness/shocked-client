@@ -10,6 +10,7 @@ import (
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/env/keys"
 	"github.com/inkyblackness/shocked-client/graphics"
+	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/opengl"
 	"github.com/inkyblackness/shocked-client/ui"
 	"github.com/inkyblackness/shocked-client/ui/events"
@@ -189,8 +190,13 @@ func (app *MainApplication) initInterface() {
 			return true
 		})
 
-		testTextBitmap := app.defaultFontPainter.Paint("Hello, World!")
+		testTextBitmap := app.defaultFontPainter.Paint("Hello, World!\nSecond Line")
 		textTexture := graphics.NewBitmapTexture(app.gl, testTextBitmap.Width, testTextBitmap.Height, testTextBitmap.Pixels)
+
+		lineHeight := testTextBitmap.LineHeight()
+		cursorLine := 1
+		charOffset := testTextBitmap.CharOffset(cursorLine, 4)
+		textScale := 2
 
 		windowBuilder.OnRender(func(area *ui.Area) {
 			app.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
@@ -198,14 +204,30 @@ func (app *MainApplication) initInterface() {
 
 			u, v := textTexture.UV()
 			textWidth, textHeight := textTexture.Size()
-			app.uiTextRenderer.Render(graphics.RectByCoord(area.Left().Value(), area.Top().Value(),
-				area.Left().Value()+textWidth*2, area.Top().Value()+textHeight*2),
+			// graphics.RectByCoord(area.Left().Value(), area.Top().Value(), area.Left().Value()+textWidth*2, area.Top().Value()+textHeight*2)
+			modelMatrix := mgl.Ident4().Mul4(mgl.Translate3D(area.Left().Value(), area.Top().Value(), 0.0)).
+				Mul4(mgl.Scale3D(textWidth*float32(textScale), textHeight*float32(textScale), 1.0))
+			app.uiTextRenderer.Render(&modelMatrix,
 				textTexture,
 				graphics.RectByCoord(0.0, 0.0, u, v))
+
+			cursorTop := area.Top().Value() + float32(lineHeight*textScale*cursorLine)
+			app.rectRenderer.Fill(area.Left().Value()+float32(charOffset*textScale), cursorTop,
+				area.Left().Value()+float32(charOffset*textScale+2), cursorTop+float32(lineHeight*textScale),
+				graphics.RGBA(0.0, 1.0, 0.0, 0.9))
 		})
 
-		windowBuilder.Build()
+		windowArea := windowBuilder.Build()
+
+		labelBuilder := controls.NewLabelBuilder(app.defaultFontPainter, app.texturize, app.uiTextRenderer)
+		labelBuilder.SetParent(windowArea)
+		label := labelBuilder.Build()
+		label.SetText("I'm centered and a really long text that should be clipped")
 	}
+}
+
+func (app *MainApplication) texturize(bmp *graphics.Bitmap) *graphics.BitmapTexture {
+	return graphics.NewBitmapTexture(app.gl, bmp.Width, bmp.Height, bmp.Pixels)
 }
 
 func (app *MainApplication) simpleStoreFailure(info string) FailureFunc {

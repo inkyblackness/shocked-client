@@ -9,9 +9,12 @@ func NewNullTextPainter() TextPainter {
 	return &nullTextPainter{}
 }
 
-func (painter *nullTextPainter) Paint(text string) Bitmap {
-	return Bitmap{
-		Width:  2,
-		Height: 2,
-		Pixels: []byte{0x00, 0x00, 0x00, 0x00}}
+func (painter *nullTextPainter) Paint(text string) TextBitmap {
+	return TextBitmap{
+		Bitmap: Bitmap{
+			Width:  2,
+			Height: 2,
+			Pixels: []byte{0x00, 0x00, 0x00, 0x00}},
+		lineHeight: 2,
+		offsets:    [][]int{[]int{0}}}
 }

@@ -113,26 +113,26 @@ func (renderer *BitmapTextureRenderer) Dispose() {
 }
 
 // Render implements the TextureRenderer interface.
-func (renderer *BitmapTextureRenderer) Render(displayRect Rectangle, texture Texture, textureRect Rectangle) {
+func (renderer *BitmapTextureRenderer) Render(modelMatrix *mgl.Mat4, texture Texture, textureRect Rectangle) {
 	gl := renderer.renderContext.OpenGl()
 
 	{
+		baseRect := RectByCoord(0, 0, 1.0, 1.0)
 		var vertices = []float32{
-			displayRect.Left(), displayRect.Top(), textureRect.Left(), textureRect.Top(),
-			displayRect.Left(), displayRect.Bottom(), textureRect.Left(), textureRect.Bottom(),
-			displayRect.Right(), displayRect.Top(), textureRect.Right(), textureRect.Top(),
+			baseRect.Left(), baseRect.Top(), textureRect.Left(), textureRect.Top(),
+			baseRect.Left(), baseRect.Bottom(), textureRect.Left(), textureRect.Bottom(),
+			baseRect.Right(), baseRect.Top(), textureRect.Right(), textureRect.Top(),
 
-			displayRect.Right(), displayRect.Top(), textureRect.Right(), textureRect.Top(),
-			displayRect.Left(), displayRect.Bottom(), textureRect.Left(), textureRect.Bottom(),
-			displayRect.Right(), displayRect.Bottom(), textureRect.Right(), textureRect.Bottom()}
+			baseRect.Right(), baseRect.Top(), textureRect.Right(), textureRect.Top(),
+			baseRect.Left(), baseRect.Bottom(), textureRect.Left(), textureRect.Bottom(),
+			baseRect.Right(), baseRect.Bottom(), textureRect.Right(), textureRect.Bottom()}
 		gl.BindBuffer(opengl.ARRAY_BUFFER, renderer.vertexPositionBuffer)
 		gl.BufferData(opengl.ARRAY_BUFFER, len(vertices)*4, vertices, opengl.STATIC_DRAW)
 		gl.BindBuffer(opengl.ARRAY_BUFFER, 0)
 	}
 
 	renderer.vao.OnShader(func() {
-		modelMatrix := mgl.Ident4()
-		renderer.modelMatrixUniform.Set(gl, &modelMatrix)
+		renderer.modelMatrixUniform.Set(gl, modelMatrix)
 		renderer.viewMatrixUniform.Set(gl, renderer.renderContext.ViewMatrix())
 		renderer.projectionMatrixUniform.Set(gl, renderer.renderContext.ProjectionMatrix())
 

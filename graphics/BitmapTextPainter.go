@@ -21,16 +21,20 @@ func NewBitmapTextPainter(font model.Font) TextPainter {
 		lastCharacterIndex: font.FirstCharacter + len(font.GlyphXOffsets) - 1}
 }
 
-func (painter *bitmapTextPainter) Paint(text string) Bitmap {
-	var bmp Bitmap
+func (painter *bitmapTextPainter) Paint(text string) TextBitmap {
+	var bmp TextBitmap
 	indexLines := painter.mapCharactersToIndex(text)
 
+	bmp.lineHeight = painter.bitmap.Height + 1
 	for _, line := range indexLines {
 		lineWidth := 2
-		for _, characterIndex := range line {
+		lineOffsets := []int{0}
+		for characterOffset, characterIndex := range line {
 			charWidth := painter.font.GlyphXOffsets[characterIndex+1] - painter.font.GlyphXOffsets[characterIndex]
 			lineWidth += charWidth
+			lineOffsets = append(lineOffsets, lineOffsets[characterOffset]+charWidth)
 		}
+		bmp.offsets = append(bmp.offsets, lineOffsets)
 		if bmp.Width < lineWidth {
 			bmp.Width = lineWidth
 		}
@@ -52,7 +56,7 @@ func (painter *bitmapTextPainter) Paint(text string) Bitmap {
 		}
 	}
 	if painter.font.Monochrome {
-		painter.outline(bmp)
+		painter.outline(bmp.Bitmap)
 	}
 
 	return bmp
