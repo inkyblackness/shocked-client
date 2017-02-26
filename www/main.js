@@ -30033,34 +30033,55 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 	};
 	Label.prototype.SetText = function(text) { return this.$val.SetText(text); };
 	Label.ptr.prototype.onRender = function(area) {
-		var $ptr, _arg, _arg$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _tuple, _tuple$1, area, areaHeight, areaLeft, areaTop, areaWidth, label, modelMatrix, textHeight, textWidth, u, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; area = $f.area; areaHeight = $f.areaHeight; areaLeft = $f.areaLeft; areaTop = $f.areaTop; areaWidth = $f.areaWidth; label = $f.label; modelMatrix = $f.modelMatrix; textHeight = $f.textHeight; textWidth = $f.textWidth; u = $f.u; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _tuple, _tuple$1, area, areaBottom, areaHeight, areaLeft, areaRight, areaTop, areaWidth, fromBottom, fromLeft, fromRight, fromTop, label, modelMatrix, textHeight, textWidth, toBottom, toLeft, toRight, toTop, u, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; area = $f.area; areaBottom = $f.areaBottom; areaHeight = $f.areaHeight; areaLeft = $f.areaLeft; areaRight = $f.areaRight; areaTop = $f.areaTop; areaWidth = $f.areaWidth; fromBottom = $f.fromBottom; fromLeft = $f.fromLeft; fromRight = $f.fromRight; fromTop = $f.fromTop; label = $f.label; modelMatrix = $f.modelMatrix; textHeight = $f.textHeight; textWidth = $f.textWidth; toBottom = $f.toBottom; toLeft = $f.toLeft; toRight = $f.toRight; toTop = $f.toTop; u = $f.u; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		modelMatrix = [modelMatrix];
 		label = this;
 		_tuple = label.texture.UV();
 		u = _tuple[0];
 		v = _tuple[1];
+		fromLeft = 0;
+		fromTop = 0;
+		fromRight = u;
+		fromBottom = v;
 		_tuple$1 = label.texture.Size();
 		textWidth = _tuple$1[0];
 		textHeight = _tuple$1[1];
 		_r = area.Left().Value(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		areaLeft = _r;
 		_r$1 = area.Right().Value(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		areaWidth = $fround(_r$1 - areaLeft);
+		areaRight = _r$1;
+		areaWidth = $fround(areaRight - areaLeft);
 		_r$2 = area.Top().Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		areaTop = _r$2;
 		_r$3 = area.Bottom().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		areaHeight = $fround(_r$3 - areaTop);
+		areaBottom = _r$3;
+		areaHeight = $fround(areaBottom - areaTop);
 		_r$4 = label.horizontalAligner(areaWidth, textWidth); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-		_arg = $fround(areaLeft + _r$4);
+		toLeft = $fround(areaLeft + _r$4);
 		_r$5 = label.verticalAligner(areaHeight, textHeight); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-		_arg$1 = $fround(areaTop + _r$5);
-		_r$6 = mgl32.Translate3D(_arg, _arg$1, 0); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		_r$7 = new mgl32.Mat4(mgl32.Ident4()).Mul4(_r$6); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-		_r$8 = new mgl32.Mat4(_r$7).Mul4(mgl32.Scale3D($fround(textWidth * label.scale), $fround(textHeight * label.scale), 1)); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-		modelMatrix[0] = $clone(_r$8, mgl32.Mat4);
-		$r = label.textureRenderer.Render(modelMatrix[0], label.texture, graphics.RectByCoord(0, 0, u, v)); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Label.ptr.prototype.onRender }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.area = area; $f.areaHeight = areaHeight; $f.areaLeft = areaLeft; $f.areaTop = areaTop; $f.areaWidth = areaWidth; $f.label = label; $f.modelMatrix = modelMatrix; $f.textHeight = textHeight; $f.textWidth = textWidth; $f.u = u; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+		toTop = $fround(areaTop + _r$5);
+		toRight = $fround(toLeft + ($fround(textWidth * label.scale)));
+		toBottom = $fround(toTop + ($fround(textHeight * label.scale)));
+		if (toLeft < areaLeft) {
+			fromLeft = $fround(fromLeft + ($fround(($fround(u / textWidth)) * ($fround(areaLeft - toLeft)))));
+			toLeft = areaLeft;
+		}
+		if (toRight > areaRight) {
+			fromRight = $fround(fromRight - ($fround(($fround(u / textWidth)) * ($fround(toRight - areaRight)))));
+			toRight = areaRight;
+		}
+		if (toTop < areaTop) {
+			fromTop = $fround(fromTop + ($fround(($fround(v / textHeight)) * ($fround(areaTop - toTop)))));
+			toTop = areaTop;
+		}
+		if (toBottom > areaBottom) {
+			fromBottom = $fround(fromBottom - ($fround(($fround(v / textHeight)) * ($fround(toBottom - areaBottom)))));
+			toBottom = areaBottom;
+		}
+		modelMatrix[0] = $clone(new mgl32.Mat4(new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Translate3D(toLeft, toTop, 0))).Mul4(mgl32.Scale3D($fround(toRight - toLeft), $fround(toBottom - toTop), 1)), mgl32.Mat4);
+		$r = label.textureRenderer.Render(modelMatrix[0], label.texture, graphics.RectByCoord(fromLeft, fromTop, fromRight, fromBottom)); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Label.ptr.prototype.onRender }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.area = area; $f.areaBottom = areaBottom; $f.areaHeight = areaHeight; $f.areaLeft = areaLeft; $f.areaRight = areaRight; $f.areaTop = areaTop; $f.areaWidth = areaWidth; $f.fromBottom = fromBottom; $f.fromLeft = fromLeft; $f.fromRight = fromRight; $f.fromTop = fromTop; $f.label = label; $f.modelMatrix = modelMatrix; $f.textHeight = textHeight; $f.textWidth = textWidth; $f.toBottom = toBottom; $f.toLeft = toLeft; $f.toRight = toRight; $f.toTop = toTop; $f.u = u; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	Label.prototype.onRender = function(area) { return this.$val.onRender(area); };
 	NewLabelBuilder = function(textPainter, texturizer, textureRenderer) {

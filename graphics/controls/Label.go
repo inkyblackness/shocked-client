@@ -39,15 +39,41 @@ func (label *Label) SetText(text string) {
 
 func (label *Label) onRender(area *ui.Area) {
 	u, v := label.texture.UV()
+	fromLeft := float32(0.0)
+	fromTop := float32(0.0)
+	fromRight := u
+	fromBottom := v
 	textWidth, textHeight := label.texture.Size()
 	areaLeft := area.Left().Value()
-	areaWidth := area.Right().Value() - areaLeft
+	areaRight := area.Right().Value()
+	areaWidth := areaRight - areaLeft
 	areaTop := area.Top().Value()
-	areaHeight := area.Bottom().Value() - areaTop
-	modelMatrix := mgl.Ident4().Mul4(mgl.Translate3D(
-		areaLeft+label.horizontalAligner(areaWidth, textWidth),
-		areaTop+label.verticalAligner(areaHeight, textHeight), 0.0)).
-		Mul4(mgl.Scale3D(textWidth*label.scale, textHeight*label.scale, 1.0))
+	areaBottom := area.Bottom().Value()
+	areaHeight := areaBottom - areaTop
 
-	label.textureRenderer.Render(&modelMatrix, label.texture, graphics.RectByCoord(0.0, 0.0, u, v))
+	toLeft := areaLeft + label.horizontalAligner(areaWidth, textWidth)
+	toTop := areaTop + label.verticalAligner(areaHeight, textHeight)
+	toRight := toLeft + (textWidth * label.scale)
+	toBottom := toTop + (textHeight * label.scale)
+
+	if toLeft < areaLeft {
+		fromLeft += (u / textWidth) * (areaLeft - toLeft)
+		toLeft = areaLeft
+	}
+	if toRight > areaRight {
+		fromRight -= (u / textWidth) * (toRight - areaRight)
+		toRight = areaRight
+	}
+	if toTop < areaTop {
+		fromTop += (v / textHeight) * (areaTop - toTop)
+		toTop = areaTop
+	}
+	if toBottom > areaBottom {
+		fromBottom -= (v / textHeight) * (toBottom - areaBottom)
+		toBottom = areaBottom
+	}
+
+	modelMatrix := mgl.Ident4().Mul4(mgl.Translate3D(toLeft, toTop, 0.0)).Mul4(mgl.Scale3D(toRight-toLeft, toBottom-toTop, 1.0))
+
+	label.textureRenderer.Render(&modelMatrix, label.texture, graphics.RectByCoord(fromLeft, fromTop, fromRight, fromBottom))
 }
