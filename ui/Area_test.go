@@ -115,7 +115,7 @@ func (suite *AreaSuite) TestDispatchPositionalEventCallsHandleEventIfNoChildMatc
 func (suite *AreaSuite) TestDispatchPositionalEventCallsChildrenAtPositionHighestFirst(c *check.C) {
 	testEvent := suite.aPositionalEvent(50.0, 50.0)
 	handleSequence := []int{}
-	aHandler := func(index int) func(*Area, events.Event) bool {
+	aHandler := func(index int) EventHandler {
 		return func(*Area, events.Event) bool {
 			handleSequence = append(handleSequence, index)
 			return false
@@ -299,7 +299,7 @@ func (suite *AreaSuite) TestHandleEventForwardsEventToAreaWithFocusBeforeHandlin
 	var leftArea *Area
 	handleCounter := 0
 	handleCalls := make(map[string]int)
-	aHandler := func(id string, consume bool) func(*Area, events.Event) bool {
+	aHandler := func(id string, consume bool) EventHandler {
 		return func(*Area, events.Event) bool {
 			handleCalls[id] = handleCounter
 			handleCounter++
@@ -339,7 +339,7 @@ func (suite *AreaSuite) TestDispatchPositionalEventCallsFocusedItemBeforeChildre
 	testEvent := suite.aPositionalEvent(50.0, 50.0)
 	handleCounter := 0
 	handleCalls := make(map[string]int)
-	aHandler := func(id string, consume bool) func(*Area, events.Event) bool {
+	aHandler := func(id string, consume bool) EventHandler {
 		return func(*Area, events.Event) bool {
 			handleCalls[id] = handleCounter
 			handleCounter++
@@ -386,7 +386,7 @@ func (suite *AreaSuite) TestDispatchPositionalEventCallsFocusedItemOnlyOnce(c *c
 	testEvent := suite.aPositionalEvent(50.0, 50.0)
 	handleCounter := 0
 	handleCalls := make(map[string]int)
-	aHandler := func(id string, consume bool) func(*Area, events.Event) bool {
+	aHandler := func(id string, consume bool) EventHandler {
 		return func(*Area, events.Event) bool {
 			handleCalls[id] = handleCounter
 			handleCounter++
@@ -411,4 +411,61 @@ func (suite *AreaSuite) TestDispatchPositionalEventCallsFocusedItemOnlyOnce(c *c
 	area.DispatchPositionalEvent(testEvent)
 
 	c.Check(handleCalls, check.DeepEquals, map[string]int{"area3": 0, "root": 1})
+}
+
+func (suite *AreaSuite) TestRemoveDisassociatesAreaFromParent(c *check.C) {
+	var testedArea *Area
+
+	area := suite.builder.Build()
+
+	{
+		subAreaBuilder := NewAreaBuilder()
+		subAreaBuilder.SetParent(area)
+		testedArea = subAreaBuilder.Build()
+	}
+
+	testedArea.RequestFocus()
+	testedArea.Remove()
+
+	c.Check(testedArea.parent, check.IsNil)
+	c.Check(area.focusedArea, check.IsNil)
+	c.Check(area.children, check.DeepEquals, []*Area{})
+}
+
+func (suite *AreaSuite) TestDispatchPositionalEventCallsOnlySurvivingChildren(c *check.C) {
+	testEvent := suite.aPositionalEvent(50.0, 50.0)
+	aSubArea := func(parent *Area, handler EventHandler) *Area {
+		subAreaBuilder := NewAreaBuilder()
+		if handler != nil {
+			subAreaBuilder.OnEvent(testEvent.EventType(), handler)
+		}
+		subAreaBuilder.SetRight(NewAbsoluteAnchor(100.0))
+		subAreaBuilder.SetBottom(NewAbsoluteAnchor(100.0))
+		subAreaBuilder.SetParent(parent)
+		return subAreaBuilder.Build()
+	}
+	sub1Called := false
+	sub2Called := false
+
+	area := suite.builder.Build()
+
+	aSubArea(area, func(area *Area, event events.Event) bool {
+		sub2Called = true
+		return false
+	})
+	sub2 := aSubArea(area, func(area *Area, event events.Event) bool {
+		sub2Called = true
+		return false
+	})
+	var sub3 *Area
+	sub3 = aSubArea(area, func(area *Area, event events.Event) bool {
+		sub2.Remove()
+		sub3.Remove()
+		return false
+	})
+
+	area.DispatchPositionalEvent(testEvent)
+
+	c.Check(sub1Called, check.Equals, true)
+	c.Check(sub2Called, check.Equals, false)
 }

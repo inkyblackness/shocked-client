@@ -26,6 +26,15 @@ type Label struct {
 	texture *graphics.BitmapTexture
 }
 
+// Dispose releases all resources and removes the area from the tree.
+func (label *Label) Dispose() {
+	label.area.Remove()
+	if label.texture != nil {
+		label.texture.Dispose()
+		label.texture = nil
+	}
+}
+
 // SetText updates the current label text.
 func (label *Label) SetText(text string) {
 	if label.texture != nil {

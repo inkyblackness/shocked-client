@@ -26,6 +26,41 @@ type Area struct {
 	eventHandler map[events.EventType]EventHandler
 }
 
+// Remove removes the area from the parent.
+func (area *Area) Remove() {
+	area.ReleaseFocus()
+	if area.parent != nil {
+		area.parent.removeChild(area)
+		area.parent = nil
+	}
+}
+
+func (area *Area) isChild(other *Area) (result bool) {
+	for _, child := range area.children {
+		if child == other {
+			result = true
+		}
+	}
+	return
+}
+
+func (area *Area) removeChild(child *Area) {
+	newChildren := []*Area{}
+
+	for _, other := range area.children {
+		if other != child {
+			newChildren = append(newChildren, other)
+		}
+	}
+	area.children = newChildren
+}
+
+func (area *Area) currentChildren() []*Area {
+	children := make([]*Area, len(area.children))
+	copy(children[:], area.children[:])
+	return children
+}
+
 func (area *Area) isRoot() bool {
 	return area.parent == nil
 }
@@ -79,11 +114,12 @@ func (area *Area) DispatchPositionalEvent(event events.PositionalEvent) (consume
 		consumed = area.focusedArea.DispatchPositionalEvent(event)
 	}
 	if !consumed {
+		children := area.currentChildren()
 		x, y := event.Position()
 
-		for childIndex := len(area.children) - 1; !consumed && (childIndex >= 0); childIndex-- {
-			child := area.children[childIndex]
-			if (child != area.focusedArea) &&
+		for childIndex := len(children) - 1; !consumed && (childIndex >= 0); childIndex-- {
+			child := children[childIndex]
+			if area.isChild(child) && (child != area.focusedArea) &&
 				(x >= child.Left().Value()) && (x < child.Right().Value()) &&
 				(y >= child.Top().Value()) && (y < child.Bottom().Value()) {
 				consumed = child.DispatchPositionalEvent(event)
