@@ -53,6 +53,7 @@ func (label *Label) onRender(area *ui.Area) {
 	fromRight := u
 	fromBottom := v
 	textWidth, textHeight := label.texture.Size()
+	scaledWidth, scaledHeight := textWidth*label.scale, textHeight*label.scale
 	areaLeft := area.Left().Value()
 	areaRight := area.Right().Value()
 	areaWidth := areaRight - areaLeft
@@ -60,10 +61,10 @@ func (label *Label) onRender(area *ui.Area) {
 	areaBottom := area.Bottom().Value()
 	areaHeight := areaBottom - areaTop
 
-	toLeft := areaLeft + label.horizontalAligner(areaWidth, textWidth)
-	toTop := areaTop + label.verticalAligner(areaHeight, textHeight)
-	toRight := toLeft + (textWidth * label.scale)
-	toBottom := toTop + (textHeight * label.scale)
+	toLeft := areaLeft + label.horizontalAligner(areaWidth, scaledWidth)
+	toTop := areaTop + label.verticalAligner(areaHeight, scaledHeight)
+	toRight := toLeft + scaledWidth
+	toBottom := toTop + scaledHeight
 
 	if toLeft < areaLeft {
 		fromLeft += (u / textWidth) * (areaLeft - toLeft)

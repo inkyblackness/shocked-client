@@ -30003,10 +30003,12 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (function() {
-	var $pkg = {}, $init, mgl32, graphics, ui, Aligner, BitmapTexturizer, Label, LabelBuilder, ptrType, ptrType$1, ptrType$2, ptrType$3, sliceType, sliceType$1, sliceType$2, ptrType$4, ptrType$5, ptrType$6, CenterAligner, NewLabelBuilder;
+	var $pkg = {}, $init, mgl32, env, graphics, ui, events, Aligner, BitmapTexturizer, Label, LabelBuilder, ActionHandler, TextButton, TextButtonBuilder, ptrType, ptrType$1, ptrType$2, ptrType$3, sliceType, sliceType$1, sliceType$2, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, CenterAligner, NewLabelBuilder, NewTextButtonBuilder;
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
+	env = $packages["github.com/inkyblackness/shocked-client/env"];
 	graphics = $packages["github.com/inkyblackness/shocked-client/graphics"];
 	ui = $packages["github.com/inkyblackness/shocked-client/ui"];
+	events = $packages["github.com/inkyblackness/shocked-client/ui/events"];
 	Aligner = $pkg.Aligner = $newType(4, $kindFunc, "controls.Aligner", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, null);
 	BitmapTexturizer = $pkg.BitmapTexturizer = $newType(4, $kindFunc, "controls.BitmapTexturizer", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, null);
 	Label = $pkg.Label = $newType(0, $kindStruct, "controls.Label", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, function(area_, textPainter_, texturizer_, textureRenderer_, scale_, horizontalAligner_, verticalAligner_, bitmap_, texture_) {
@@ -30053,6 +30055,53 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		this.horizontalAligner = horizontalAligner_;
 		this.verticalAligner = verticalAligner_;
 	});
+	ActionHandler = $pkg.ActionHandler = $newType(4, $kindFunc, "controls.ActionHandler", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, null);
+	TextButton = $pkg.TextButton = $newType(0, $kindStruct, "controls.TextButton", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, function(area_, rectRenderer_, label_, labelLeft_, labelTop_, actionHandler_, idleColor_, preparedColor_, prepared_, color_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.area = ptrType$3.nil;
+			this.rectRenderer = ptrType$5.nil;
+			this.label = ptrType$7.nil;
+			this.labelLeft = $ifaceNil;
+			this.labelTop = $ifaceNil;
+			this.actionHandler = $throwNilPointerError;
+			this.idleColor = $ifaceNil;
+			this.preparedColor = $ifaceNil;
+			this.prepared = false;
+			this.color = $ifaceNil;
+			return;
+		}
+		this.area = area_;
+		this.rectRenderer = rectRenderer_;
+		this.label = label_;
+		this.labelLeft = labelLeft_;
+		this.labelTop = labelTop_;
+		this.actionHandler = actionHandler_;
+		this.idleColor = idleColor_;
+		this.preparedColor = preparedColor_;
+		this.prepared = prepared_;
+		this.color = color_;
+	});
+	TextButtonBuilder = $pkg.TextButtonBuilder = $newType(0, $kindStruct, "controls.TextButtonBuilder", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, function(areaBuilder_, rectRenderer_, idleColor_, preparedColor_, labelBuilder_, text_, actionHandler_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.areaBuilder = ptrType$1.nil;
+			this.rectRenderer = ptrType$5.nil;
+			this.idleColor = $ifaceNil;
+			this.preparedColor = $ifaceNil;
+			this.labelBuilder = ptrType$6.nil;
+			this.text = "";
+			this.actionHandler = $throwNilPointerError;
+			return;
+		}
+		this.areaBuilder = areaBuilder_;
+		this.rectRenderer = rectRenderer_;
+		this.idleColor = idleColor_;
+		this.preparedColor = preparedColor_;
+		this.labelBuilder = labelBuilder_;
+		this.text = text_;
+		this.actionHandler = actionHandler_;
+	});
 	ptrType = $ptrType(graphics.BitmapTexture);
 	ptrType$1 = $ptrType(ui.AreaBuilder);
 	ptrType$2 = $ptrType(graphics.BitmapTextureRenderer);
@@ -30060,9 +30109,13 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 	sliceType = $sliceType($Uint8);
 	sliceType$1 = $sliceType($Int);
 	sliceType$2 = $sliceType(sliceType$1);
-	ptrType$4 = $ptrType(graphics.Bitmap);
-	ptrType$5 = $ptrType(Label);
+	ptrType$4 = $ptrType(events.MouseButtonEvent);
+	ptrType$5 = $ptrType(graphics.RectangleRenderer);
 	ptrType$6 = $ptrType(LabelBuilder);
+	ptrType$7 = $ptrType(Label);
+	ptrType$8 = $ptrType(graphics.Bitmap);
+	ptrType$9 = $ptrType(TextButton);
+	ptrType$10 = $ptrType(TextButtonBuilder);
 	CenterAligner = function(containerSize, elementSize) {
 		var $ptr, containerSize, elementSize;
 		return $fround(($fround(containerSize / 2)) - ($fround(elementSize / 2)));
@@ -30100,8 +30153,8 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 	};
 	Label.prototype.SetText = function(text) { return this.$val.SetText(text); };
 	Label.ptr.prototype.onRender = function(area) {
-		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _tuple, _tuple$1, area, areaBottom, areaHeight, areaLeft, areaRight, areaTop, areaWidth, fromBottom, fromLeft, fromRight, fromTop, label, modelMatrix, textHeight, textWidth, toBottom, toLeft, toRight, toTop, u, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; area = $f.area; areaBottom = $f.areaBottom; areaHeight = $f.areaHeight; areaLeft = $f.areaLeft; areaRight = $f.areaRight; areaTop = $f.areaTop; areaWidth = $f.areaWidth; fromBottom = $f.fromBottom; fromLeft = $f.fromLeft; fromRight = $f.fromRight; fromTop = $f.fromTop; label = $f.label; modelMatrix = $f.modelMatrix; textHeight = $f.textHeight; textWidth = $f.textWidth; toBottom = $f.toBottom; toLeft = $f.toLeft; toRight = $f.toRight; toTop = $f.toTop; u = $f.u; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _tmp, _tmp$1, _tuple, _tuple$1, area, areaBottom, areaHeight, areaLeft, areaRight, areaTop, areaWidth, fromBottom, fromLeft, fromRight, fromTop, label, modelMatrix, scaledHeight, scaledWidth, textHeight, textWidth, toBottom, toLeft, toRight, toTop, u, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; area = $f.area; areaBottom = $f.areaBottom; areaHeight = $f.areaHeight; areaLeft = $f.areaLeft; areaRight = $f.areaRight; areaTop = $f.areaTop; areaWidth = $f.areaWidth; fromBottom = $f.fromBottom; fromLeft = $f.fromLeft; fromRight = $f.fromRight; fromTop = $f.fromTop; label = $f.label; modelMatrix = $f.modelMatrix; scaledHeight = $f.scaledHeight; scaledWidth = $f.scaledWidth; textHeight = $f.textHeight; textWidth = $f.textWidth; toBottom = $f.toBottom; toLeft = $f.toLeft; toRight = $f.toRight; toTop = $f.toTop; u = $f.u; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		modelMatrix = [modelMatrix];
 		label = this;
 		_tuple = label.texture.UV();
@@ -30114,6 +30167,10 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		_tuple$1 = label.texture.Size();
 		textWidth = _tuple$1[0];
 		textHeight = _tuple$1[1];
+		_tmp = $fround(textWidth * label.scale);
+		_tmp$1 = $fround(textHeight * label.scale);
+		scaledWidth = _tmp;
+		scaledHeight = _tmp$1;
 		_r = area.Left().Value(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		areaLeft = _r;
 		_r$1 = area.Right().Value(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
@@ -30124,12 +30181,12 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		_r$3 = area.Bottom().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		areaBottom = _r$3;
 		areaHeight = $fround(areaBottom - areaTop);
-		_r$4 = label.horizontalAligner(areaWidth, textWidth); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_r$4 = label.horizontalAligner(areaWidth, scaledWidth); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 		toLeft = $fround(areaLeft + _r$4);
-		_r$5 = label.verticalAligner(areaHeight, textHeight); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_r$5 = label.verticalAligner(areaHeight, scaledHeight); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 		toTop = $fround(areaTop + _r$5);
-		toRight = $fround(toLeft + ($fround(textWidth * label.scale)));
-		toBottom = $fround(toTop + ($fround(textHeight * label.scale)));
+		toRight = $fround(toLeft + scaledWidth);
+		toBottom = $fround(toTop + scaledHeight);
 		if (toLeft < areaLeft) {
 			fromLeft = $fround(fromLeft + ($fround(($fround(u / textWidth)) * ($fround(areaLeft - toLeft)))));
 			toLeft = areaLeft;
@@ -30148,7 +30205,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		}
 		modelMatrix[0] = $clone(new mgl32.Mat4(new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Translate3D(toLeft, toTop, 0))).Mul4(mgl32.Scale3D($fround(toRight - toLeft), $fround(toBottom - toTop), 1)), mgl32.Mat4);
 		$r = label.textureRenderer.Render(modelMatrix[0], label.texture, graphics.RectByCoord(fromLeft, fromTop, fromRight, fromBottom)); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Label.ptr.prototype.onRender }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.area = area; $f.areaBottom = areaBottom; $f.areaHeight = areaHeight; $f.areaLeft = areaLeft; $f.areaRight = areaRight; $f.areaTop = areaTop; $f.areaWidth = areaWidth; $f.fromBottom = fromBottom; $f.fromLeft = fromLeft; $f.fromRight = fromRight; $f.fromTop = fromTop; $f.label = label; $f.modelMatrix = modelMatrix; $f.textHeight = textHeight; $f.textWidth = textWidth; $f.toBottom = toBottom; $f.toLeft = toLeft; $f.toRight = toRight; $f.toTop = toTop; $f.u = u; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Label.ptr.prototype.onRender }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.area = area; $f.areaBottom = areaBottom; $f.areaHeight = areaHeight; $f.areaLeft = areaLeft; $f.areaRight = areaRight; $f.areaTop = areaTop; $f.areaWidth = areaWidth; $f.fromBottom = fromBottom; $f.fromLeft = fromLeft; $f.fromRight = fromRight; $f.fromTop = fromTop; $f.label = label; $f.modelMatrix = modelMatrix; $f.scaledHeight = scaledHeight; $f.scaledWidth = scaledWidth; $f.textHeight = textHeight; $f.textWidth = textWidth; $f.toBottom = toBottom; $f.toLeft = toLeft; $f.toRight = toRight; $f.toTop = toTop; $f.u = u; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	Label.prototype.onRender = function(area) { return this.$val.onRender(area); };
 	NewLabelBuilder = function(textPainter, texturizer, textureRenderer) {
@@ -30225,18 +30282,199 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		return builder;
 	};
 	LabelBuilder.prototype.AlignedVerticallyBy = function(aligner) { return this.$val.AlignedVerticallyBy(aligner); };
-	ptrType$5.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "SetText", name: "SetText", pkg: "", typ: $funcType([$String], [], false)}, {prop: "onRender", name: "onRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3], [], false)}];
-	ptrType$6.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$5], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$3], [ptrType$6], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetScale", name: "SetScale", pkg: "", typ: $funcType([$Float32], [ptrType$6], false)}, {prop: "AlignedHorizontallyBy", name: "AlignedHorizontallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}, {prop: "AlignedVerticallyBy", name: "AlignedVerticallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}];
+	TextButton.ptr.prototype.Dispose = function() {
+		var $ptr, button, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; button = $f.button; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		button = this;
+		$r = button.label.Dispose(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		button.area.Remove();
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TextButton.ptr.prototype.Dispose }; } $f.$ptr = $ptr; $f.button = button; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TextButton.prototype.Dispose = function() { return this.$val.Dispose(); };
+	TextButton.ptr.prototype.onRender = function(area) {
+		var $ptr, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _r, _r$1, _r$2, _r$3, area, button, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; area = $f.area; button = $f.button; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		button = this;
+		_r = area.Left().Value(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg = _r;
+		_r$1 = area.Top().Value(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_arg$1 = _r$1;
+		_r$2 = area.Right().Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_arg$2 = _r$2;
+		_r$3 = area.Bottom().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_arg$3 = _r$3;
+		_arg$4 = button.color;
+		$r = button.rectRenderer.Fill(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TextButton.ptr.prototype.onRender }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.area = area; $f.button = button; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TextButton.prototype.onRender = function(area) { return this.$val.onRender(area); };
+	TextButton.ptr.prototype.onMouseDown = function(area, event) {
+		var $ptr, area, button, consumed, event, mouseEvent, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; area = $f.area; button = $f.button; consumed = $f.consumed; event = $f.event; mouseEvent = $f.mouseEvent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		consumed = false;
+		button = this;
+		mouseEvent = $assertType(event, ptrType$4);
+		/* */ if (mouseEvent.MouseEvent.Buttons() === 1) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (mouseEvent.MouseEvent.Buttons() === 1) { */ case 1:
+			area.RequestFocus();
+			$r = button.prepare(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			consumed = true;
+		/* } */ case 2:
+		return consumed;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TextButton.ptr.prototype.onMouseDown }; } $f.$ptr = $ptr; $f.area = area; $f.button = button; $f.consumed = consumed; $f.event = event; $f.mouseEvent = mouseEvent; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TextButton.prototype.onMouseDown = function(area, event) { return this.$val.onMouseDown(area, event); };
+	TextButton.ptr.prototype.onMouseUp = function(area, event) {
+		var $ptr, area, button, consumed, event, mouseEvent, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; area = $f.area; button = $f.button; consumed = $f.consumed; event = $f.event; mouseEvent = $f.mouseEvent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		consumed = false;
+		button = this;
+		mouseEvent = $assertType(event, ptrType$4);
+		/* */ if (button.area.HasFocus() && (mouseEvent.AffectedButtons() === 1)) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (button.area.HasFocus() && (mouseEvent.AffectedButtons() === 1)) { */ case 1:
+			area.ReleaseFocus();
+			$r = button.unprepare(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			consumed = true;
+		/* } */ case 2:
+		return consumed;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TextButton.ptr.prototype.onMouseUp }; } $f.$ptr = $ptr; $f.area = area; $f.button = button; $f.consumed = consumed; $f.event = event; $f.mouseEvent = mouseEvent; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TextButton.prototype.onMouseUp = function(area, event) { return this.$val.onMouseUp(area, event); };
+	TextButton.ptr.prototype.prepare = function() {
+		var $ptr, _r, _r$1, button, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; button = $f.button; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		button = this;
+		/* */ if (!button.prepared) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!button.prepared) { */ case 1:
+			button.color = button.preparedColor;
+			_r = button.labelLeft.Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$r = button.labelLeft.RequestValue($fround(_r + 5)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$1 = button.labelTop.Value(); /* */ $s = 5; case 5: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$r = button.labelTop.RequestValue($fround(_r$1 + 2)); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			button.prepared = true;
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TextButton.ptr.prototype.prepare }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.button = button; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TextButton.prototype.prepare = function() { return this.$val.prepare(); };
+	TextButton.ptr.prototype.unprepare = function() {
+		var $ptr, _r, _r$1, button, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; button = $f.button; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		button = this;
+		/* */ if (button.prepared) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (button.prepared) { */ case 1:
+			button.color = button.idleColor;
+			_r = button.labelLeft.Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$r = button.labelLeft.RequestValue($fround(_r - 5)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r$1 = button.labelTop.Value(); /* */ $s = 5; case 5: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$r = button.labelTop.RequestValue($fround(_r$1 - 2)); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			button.prepared = false;
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: TextButton.ptr.prototype.unprepare }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.button = button; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TextButton.prototype.unprepare = function() { return this.$val.unprepare(); };
+	NewTextButtonBuilder = function(labelBuilder, rectRenderer) {
+		var $ptr, builder, labelBuilder, rectRenderer;
+		builder = new TextButtonBuilder.ptr(ui.NewAreaBuilder(), rectRenderer, graphics.RGBA(0, 0.6000000238418579, 0, 0.800000011920929), graphics.RGBA(0, 0.699999988079071, 0, 0.949999988079071), labelBuilder, "", (function() {
+			var $ptr;
+		}));
+		return builder;
+	};
+	$pkg.NewTextButtonBuilder = NewTextButtonBuilder;
+	TextButtonBuilder.ptr.prototype.Build = function() {
+		var $ptr, _r, builder, button, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; builder = $f.builder; button = $f.button; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		builder = this;
+		button = new TextButton.ptr(ptrType$3.nil, builder.rectRenderer, ptrType$7.nil, $ifaceNil, $ifaceNil, $throwNilPointerError, builder.idleColor, builder.preparedColor, false, builder.idleColor);
+		builder.areaBuilder.OnRender($methodVal(button, "onRender"));
+		builder.areaBuilder.OnEvent("mouse.button.down", $methodVal(button, "onMouseDown"));
+		builder.areaBuilder.OnEvent("mouse.button.up", $methodVal(button, "onMouseUp"));
+		button.area = builder.areaBuilder.Build();
+		button.labelLeft = ui.NewOffsetAnchor(button.area.Left(), 0);
+		button.labelTop = ui.NewOffsetAnchor(button.area.Top(), 0);
+		builder.labelBuilder.SetParent(button.area);
+		builder.labelBuilder.SetLeft(button.labelLeft);
+		builder.labelBuilder.SetTop(button.labelTop);
+		builder.labelBuilder.SetRight(ui.NewOffsetAnchor(button.area.Right(), 0));
+		builder.labelBuilder.SetBottom(ui.NewOffsetAnchor(button.area.Bottom(), 0));
+		_r = builder.labelBuilder.Build(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		button.label = _r;
+		$r = button.label.SetText(builder.text); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		return button;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TextButtonBuilder.ptr.prototype.Build }; } $f.$ptr = $ptr; $f._r = _r; $f.builder = builder; $f.button = button; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TextButtonBuilder.prototype.Build = function() { return this.$val.Build(); };
+	TextButtonBuilder.ptr.prototype.SetParent = function(parent) {
+		var $ptr, builder, parent;
+		builder = this;
+		builder.areaBuilder.SetParent(parent);
+		return builder;
+	};
+	TextButtonBuilder.prototype.SetParent = function(parent) { return this.$val.SetParent(parent); };
+	TextButtonBuilder.ptr.prototype.SetLeft = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetLeft(value);
+		return builder;
+	};
+	TextButtonBuilder.prototype.SetLeft = function(value) { return this.$val.SetLeft(value); };
+	TextButtonBuilder.ptr.prototype.SetTop = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetTop(value);
+		return builder;
+	};
+	TextButtonBuilder.prototype.SetTop = function(value) { return this.$val.SetTop(value); };
+	TextButtonBuilder.ptr.prototype.SetRight = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetRight(value);
+		return builder;
+	};
+	TextButtonBuilder.prototype.SetRight = function(value) { return this.$val.SetRight(value); };
+	TextButtonBuilder.ptr.prototype.SetBottom = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetBottom(value);
+		return builder;
+	};
+	TextButtonBuilder.prototype.SetBottom = function(value) { return this.$val.SetBottom(value); };
+	TextButtonBuilder.ptr.prototype.WithText = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.text = value;
+		return builder;
+	};
+	TextButtonBuilder.prototype.WithText = function(value) { return this.$val.WithText(value); };
+	TextButtonBuilder.ptr.prototype.OnAction = function(handler) {
+		var $ptr, builder, handler;
+		builder = this;
+		builder.actionHandler = handler;
+		return builder;
+	};
+	TextButtonBuilder.prototype.OnAction = function(handler) { return this.$val.OnAction(handler); };
+	ptrType$7.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "SetText", name: "SetText", pkg: "", typ: $funcType([$String], [], false)}, {prop: "onRender", name: "onRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3], [], false)}];
+	ptrType$6.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$7], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$3], [ptrType$6], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetScale", name: "SetScale", pkg: "", typ: $funcType([$Float32], [ptrType$6], false)}, {prop: "AlignedHorizontallyBy", name: "AlignedHorizontallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}, {prop: "AlignedVerticallyBy", name: "AlignedVerticallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}];
+	ptrType$9.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "onRender", name: "onRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3], [], false)}, {prop: "onMouseDown", name: "onMouseDown", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3, events.Event], [$Bool], false)}, {prop: "onMouseUp", name: "onMouseUp", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3, events.Event], [$Bool], false)}, {prop: "prepare", name: "prepare", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}, {prop: "unprepare", name: "unprepare", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}];
+	ptrType$10.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$9], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$3], [ptrType$10], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "WithText", name: "WithText", pkg: "", typ: $funcType([$String], [ptrType$10], false)}, {prop: "OnAction", name: "OnAction", pkg: "", typ: $funcType([ActionHandler], [ptrType$10], false)}];
 	Aligner.init([$Float32, $Float32], [$Float32], false);
-	BitmapTexturizer.init([ptrType$4], [ptrType], false);
+	BitmapTexturizer.init([ptrType$8], [ptrType], false);
 	Label.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "area", name: "area", exported: false, typ: ptrType$3, tag: ""}, {prop: "textPainter", name: "textPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "texturizer", name: "texturizer", exported: false, typ: BitmapTexturizer, tag: ""}, {prop: "textureRenderer", name: "textureRenderer", exported: false, typ: ptrType$2, tag: ""}, {prop: "scale", name: "scale", exported: false, typ: $Float32, tag: ""}, {prop: "horizontalAligner", name: "horizontalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "verticalAligner", name: "verticalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "bitmap", name: "bitmap", exported: false, typ: graphics.TextBitmap, tag: ""}, {prop: "texture", name: "texture", exported: false, typ: ptrType, tag: ""}]);
 	LabelBuilder.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "areaBuilder", name: "areaBuilder", exported: false, typ: ptrType$1, tag: ""}, {prop: "textPainter", name: "textPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "texturizer", name: "texturizer", exported: false, typ: BitmapTexturizer, tag: ""}, {prop: "textureRenderer", name: "textureRenderer", exported: false, typ: ptrType$2, tag: ""}, {prop: "scale", name: "scale", exported: false, typ: $Float32, tag: ""}, {prop: "horizontalAligner", name: "horizontalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "verticalAligner", name: "verticalAligner", exported: false, typ: Aligner, tag: ""}]);
+	ActionHandler.init([], [], false);
+	TextButton.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "area", name: "area", exported: false, typ: ptrType$3, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "label", name: "label", exported: false, typ: ptrType$7, tag: ""}, {prop: "labelLeft", name: "labelLeft", exported: false, typ: ui.Anchor, tag: ""}, {prop: "labelTop", name: "labelTop", exported: false, typ: ui.Anchor, tag: ""}, {prop: "actionHandler", name: "actionHandler", exported: false, typ: ActionHandler, tag: ""}, {prop: "idleColor", name: "idleColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "preparedColor", name: "preparedColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "prepared", name: "prepared", exported: false, typ: $Bool, tag: ""}, {prop: "color", name: "color", exported: false, typ: graphics.Color, tag: ""}]);
+	TextButtonBuilder.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "areaBuilder", name: "areaBuilder", exported: false, typ: ptrType$1, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "idleColor", name: "idleColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "preparedColor", name: "preparedColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "labelBuilder", name: "labelBuilder", exported: false, typ: ptrType$6, tag: ""}, {prop: "text", name: "text", exported: false, typ: $String, tag: ""}, {prop: "actionHandler", name: "actionHandler", exported: false, typ: ActionHandler, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = mgl32.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = graphics.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = ui.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = env.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = graphics.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = ui.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = events.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -30459,8 +30697,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	MainApplication.prototype.initOpenGl = function() { return this.$val.initOpenGl(); };
 	MainApplication.ptr.prototype.initInterface = function() {
-		var $ptr, _r, _r$1, _r$2, _tmp, _tmp$1, app, centerPanelBuilder, charOffset, cursorLine, horizontalCenter, label, labelBuilder, lastGrabX, lastGrabY, lineHeight, minPanelHeight, minPanelWidth, rootBuilder, testTextBitmap, textScale, textTexture, verticalCenter, windowArea, windowBuilder, windowHorizontalCenter, windowVerticalCenter, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; app = $f.app; centerPanelBuilder = $f.centerPanelBuilder; charOffset = $f.charOffset; cursorLine = $f.cursorLine; horizontalCenter = $f.horizontalCenter; label = $f.label; labelBuilder = $f.labelBuilder; lastGrabX = $f.lastGrabX; lastGrabY = $f.lastGrabY; lineHeight = $f.lineHeight; minPanelHeight = $f.minPanelHeight; minPanelWidth = $f.minPanelWidth; rootBuilder = $f.rootBuilder; testTextBitmap = $f.testTextBitmap; textScale = $f.textScale; textTexture = $f.textTexture; verticalCenter = $f.verticalCenter; windowArea = $f.windowArea; windowBuilder = $f.windowBuilder; windowHorizontalCenter = $f.windowHorizontalCenter; windowVerticalCenter = $f.windowVerticalCenter; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, _r$2, _r$3, _tmp, _tmp$1, app, buttonBuilder, buttonLabelBuilder, buttonLeft, buttonTop, centerPanelBuilder, charOffset, cursorLine, horizontalCenter, label, labelBuilder, lastGrabX, lastGrabY, lineHeight, minPanelHeight, minPanelWidth, rootBuilder, testTextBitmap, textScale, textTexture, verticalCenter, windowArea, windowBuilder, windowHorizontalCenter, windowVerticalCenter, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; app = $f.app; buttonBuilder = $f.buttonBuilder; buttonLabelBuilder = $f.buttonLabelBuilder; buttonLeft = $f.buttonLeft; buttonTop = $f.buttonTop; centerPanelBuilder = $f.centerPanelBuilder; charOffset = $f.charOffset; cursorLine = $f.cursorLine; horizontalCenter = $f.horizontalCenter; label = $f.label; labelBuilder = $f.labelBuilder; lastGrabX = $f.lastGrabX; lastGrabY = $f.lastGrabY; lineHeight = $f.lineHeight; minPanelHeight = $f.minPanelHeight; minPanelWidth = $f.minPanelWidth; rootBuilder = $f.rootBuilder; testTextBitmap = $f.testTextBitmap; textScale = $f.textScale; textTexture = $f.textTexture; verticalCenter = $f.verticalCenter; windowArea = $f.windowArea; windowBuilder = $f.windowBuilder; windowHorizontalCenter = $f.windowHorizontalCenter; windowVerticalCenter = $f.windowVerticalCenter; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = [app];
 		charOffset = [charOffset];
 		cursorLine = [cursorLine];
@@ -30614,7 +30852,20 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		_r$2 = labelBuilder.Build(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		label = _r$2;
 		$r = label.SetText("I'm centered and a really long text that should be clipped"); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initInterface }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f.app = app; $f.centerPanelBuilder = centerPanelBuilder; $f.charOffset = charOffset; $f.cursorLine = cursorLine; $f.horizontalCenter = horizontalCenter; $f.label = label; $f.labelBuilder = labelBuilder; $f.lastGrabX = lastGrabX; $f.lastGrabY = lastGrabY; $f.lineHeight = lineHeight; $f.minPanelHeight = minPanelHeight; $f.minPanelWidth = minPanelWidth; $f.rootBuilder = rootBuilder; $f.testTextBitmap = testTextBitmap; $f.textScale = textScale; $f.textTexture = textTexture; $f.verticalCenter = verticalCenter; $f.windowArea = windowArea; $f.windowBuilder = windowBuilder; $f.windowHorizontalCenter = windowHorizontalCenter; $f.windowVerticalCenter = windowVerticalCenter; $f.$s = $s; $f.$r = $r; return $f;
+		buttonLabelBuilder = controls.NewLabelBuilder(app[0].defaultFontPainter, $methodVal(app[0], "texturize"), app[0].uiTextRenderer);
+		buttonLabelBuilder.SetScale(2);
+		buttonBuilder = controls.NewTextButtonBuilder(buttonLabelBuilder, app[0].rectRenderer);
+		buttonLeft = ui.NewOffsetAnchor(app[0].rootArea.Left(), 50);
+		buttonTop = ui.NewOffsetAnchor(app[0].rootArea.Top(), 50);
+		buttonBuilder.SetParent(app[0].rootArea);
+		buttonBuilder.SetLeft(buttonLeft);
+		buttonBuilder.SetTop(buttonTop);
+		buttonBuilder.SetRight(ui.NewOffsetAnchor(buttonLeft, 100));
+		buttonBuilder.SetBottom(ui.NewOffsetAnchor(buttonTop, 25));
+		buttonBuilder.WithText("Click Me!");
+		_r$3 = buttonBuilder.Build(); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$3;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initInterface }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f.app = app; $f.buttonBuilder = buttonBuilder; $f.buttonLabelBuilder = buttonLabelBuilder; $f.buttonLeft = buttonLeft; $f.buttonTop = buttonTop; $f.centerPanelBuilder = centerPanelBuilder; $f.charOffset = charOffset; $f.cursorLine = cursorLine; $f.horizontalCenter = horizontalCenter; $f.label = label; $f.labelBuilder = labelBuilder; $f.lastGrabX = lastGrabX; $f.lastGrabY = lastGrabY; $f.lineHeight = lineHeight; $f.minPanelHeight = minPanelHeight; $f.minPanelWidth = minPanelWidth; $f.rootBuilder = rootBuilder; $f.testTextBitmap = testTextBitmap; $f.textScale = textScale; $f.textTexture = textTexture; $f.verticalCenter = verticalCenter; $f.windowArea = windowArea; $f.windowBuilder = windowBuilder; $f.windowHorizontalCenter = windowHorizontalCenter; $f.windowVerticalCenter = windowVerticalCenter; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.initInterface = function() { return this.$val.initInterface(); };
 	MainApplication.ptr.prototype.texturize = function(bmp) {

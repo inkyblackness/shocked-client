@@ -228,6 +228,20 @@ func (app *MainApplication) initInterface() {
 		label := labelBuilder.Build()
 		label.SetText("I'm centered and a really long text that should be clipped")
 	}
+	{
+		buttonLabelBuilder := controls.NewLabelBuilder(app.defaultFontPainter, app.texturize, app.uiTextRenderer)
+		buttonLabelBuilder.SetScale(2.0)
+		buttonBuilder := controls.NewTextButtonBuilder(buttonLabelBuilder, app.rectRenderer)
+		buttonLeft := ui.NewOffsetAnchor(app.rootArea.Left(), 50)
+		buttonTop := ui.NewOffsetAnchor(app.rootArea.Top(), 50)
+		buttonBuilder.SetParent(app.rootArea)
+		buttonBuilder.SetLeft(buttonLeft)
+		buttonBuilder.SetTop(buttonTop)
+		buttonBuilder.SetRight(ui.NewOffsetAnchor(buttonLeft, 100))
+		buttonBuilder.SetBottom(ui.NewOffsetAnchor(buttonTop, 25))
+		buttonBuilder.WithText("Click Me!")
+		buttonBuilder.Build()
+	}
 }
 
 func (app *MainApplication) texturize(bmp *graphics.Bitmap) *graphics.BitmapTexture {
