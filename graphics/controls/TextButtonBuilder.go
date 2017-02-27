@@ -40,7 +40,8 @@ func (builder *TextButtonBuilder) Build() *TextButton {
 		rectRenderer:  builder.rectRenderer,
 		idleColor:     builder.idleColor,
 		preparedColor: builder.preparedColor,
-		color:         builder.idleColor}
+		color:         builder.idleColor,
+		actionHandler: builder.actionHandler}
 
 	builder.areaBuilder.OnRender(button.onRender)
 	builder.areaBuilder.OnEvent(events.MouseButtonDownEventType, button.onMouseDown)
@@ -101,5 +102,17 @@ func (builder *TextButtonBuilder) WithText(value string) *TextButtonBuilder {
 // OnAction sets the action handler of the new button.
 func (builder *TextButtonBuilder) OnAction(handler ActionHandler) *TextButtonBuilder {
 	builder.actionHandler = handler
+	return builder
+}
+
+// WithIdleColor sets the idle background color.
+func (builder *TextButtonBuilder) WithIdleColor(color graphics.Color) *TextButtonBuilder {
+	builder.idleColor = color
+	return builder
+}
+
+// WithPreparedColor sets the background color for the prepared state.
+func (builder *TextButtonBuilder) WithPreparedColor(color graphics.Color) *TextButtonBuilder {
+	builder.preparedColor = color
 	return builder
 }

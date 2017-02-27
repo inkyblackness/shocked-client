@@ -240,6 +240,7 @@ func (app *MainApplication) initInterface() {
 		buttonBuilder.SetRight(ui.NewOffsetAnchor(buttonLeft, 100))
 		buttonBuilder.SetBottom(ui.NewOffsetAnchor(buttonTop, 25))
 		buttonBuilder.WithText("Click Me!")
+		buttonBuilder.OnAction(func() { fmt.Printf("Button clicked\n") })
 		buttonBuilder.Build()
 	}
 }

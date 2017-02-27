@@ -56,6 +56,9 @@ func (button *TextButton) onMouseUp(area *ui.Area, event events.Event) (consumed
 	if button.area.HasFocus() && mouseEvent.AffectedButtons() == env.MousePrimary {
 		area.ReleaseFocus()
 		button.unprepare()
+		if button.contains(mouseEvent) {
+			button.callHandler()
+		}
 		consumed = true
 	}
 
@@ -78,4 +81,15 @@ func (button *TextButton) unprepare() {
 		button.labelTop.RequestValue(button.labelTop.Value() - 2)
 		button.prepared = false
 	}
+}
+
+func (button *TextButton) contains(event events.PositionalEvent) bool {
+	x, y := event.Position()
+
+	return (x >= button.area.Left().Value()) && (x < button.area.Right().Value()) &&
+		(y >= button.area.Top().Value()) && (y < button.area.Bottom().Value())
+}
+
+func (button *TextButton) callHandler() {
+	button.actionHandler()
 }
