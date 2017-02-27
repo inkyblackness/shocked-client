@@ -35,6 +35,15 @@ func (area *Area) Remove() {
 	}
 }
 
+// Root returns the area at the base of the UI tree.
+func (area *Area) Root() (root *Area) {
+	root = area
+	if root.parent != nil {
+		root = root.parent.Root()
+	}
+	return
+}
+
 func (area *Area) isChild(other *Area) (result bool) {
 	for _, child := range area.children {
 		if child == other {

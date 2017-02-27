@@ -155,6 +155,27 @@ func (suite *AreaSuite) TestDispatchPositionalEventCallsChildrenAtPositionHighes
 	c.Check(handleSequence, check.DeepEquals, []int{2, 1, 0})
 }
 
+func (suite *AreaSuite) TestRootReturnsRootArea(c *check.C) {
+	area := suite.builder.Build()
+	var subArea *Area
+	var subSubArea *Area
+
+	{
+		subAreaBuilder := NewAreaBuilder()
+		subAreaBuilder.SetParent(area)
+		subArea = subAreaBuilder.Build()
+	}
+	{
+		subAreaBuilder := NewAreaBuilder()
+		subAreaBuilder.SetParent(subArea)
+		subSubArea = subAreaBuilder.Build()
+	}
+
+	c.Check(area.Root(), check.Equals, area)
+	c.Check(subArea.Root(), check.Equals, area)
+	c.Check(subSubArea.Root(), check.Equals, area)
+}
+
 func (suite *AreaSuite) TestHasFocusReturnsTrueForRoot(c *check.C) {
 	area := suite.builder.Build()
 
@@ -450,7 +471,7 @@ func (suite *AreaSuite) TestDispatchPositionalEventCallsOnlySurvivingChildren(c 
 	area := suite.builder.Build()
 
 	aSubArea(area, func(area *Area, event events.Event) bool {
-		sub2Called = true
+		sub1Called = true
 		return false
 	})
 	sub2 := aSubArea(area, func(area *Area, event events.Event) bool {
