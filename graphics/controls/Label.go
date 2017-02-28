@@ -67,19 +67,19 @@ func (label *Label) onRender(area *ui.Area) {
 	toBottom := toTop + scaledHeight
 
 	if toLeft < areaLeft {
-		fromLeft += (u / textWidth) * (areaLeft - toLeft)
+		fromLeft += (u / textWidth) * (areaLeft - toLeft) / label.scale
 		toLeft = areaLeft
 	}
 	if toRight > areaRight {
-		fromRight -= (u / textWidth) * (toRight - areaRight)
+		fromRight -= (u / textWidth) * (toRight - areaRight) / label.scale
 		toRight = areaRight
 	}
 	if toTop < areaTop {
-		fromTop += (v / textHeight) * (areaTop - toTop)
+		fromTop += (v / textHeight) * (areaTop - toTop) / label.scale
 		toTop = areaTop
 	}
 	if toBottom > areaBottom {
-		fromBottom -= (v / textHeight) * (toBottom - areaBottom)
+		fromBottom -= (v / textHeight) * (toBottom - areaBottom) / label.scale
 		toBottom = areaBottom
 	}
 

@@ -243,6 +243,23 @@ func (app *MainApplication) initInterface() {
 		buttonBuilder.OnAction(func() { fmt.Printf("Button clicked\n") })
 		buttonBuilder.Build()
 	}
+
+	{
+		comboBoxLabelBuilder := controls.NewLabelBuilder(app.defaultFontPainter, app.texturize, app.uiTextRenderer)
+		comboBoxLabelBuilder.SetScale(2.0)
+		comboBoxBuilder := controls.NewComboBoxBuilder(comboBoxLabelBuilder, app.rectRenderer)
+		comboBoxLeft := ui.NewOffsetAnchor(app.rootArea.Left(), 50)
+		comboBoxTop := ui.NewOffsetAnchor(app.rootArea.Top(), 80)
+		comboBoxBuilder.SetParent(app.rootArea)
+		comboBoxBuilder.SetLeft(comboBoxLeft)
+		comboBoxBuilder.SetTop(comboBoxTop)
+		comboBoxBuilder.SetRight(ui.NewOffsetAnchor(comboBoxLeft, 150))
+		comboBoxBuilder.SetBottom(ui.NewOffsetAnchor(comboBoxTop, 25))
+		comboBoxBuilder.WithItems([]controls.ComboBoxItem{"a", "b", "c", "d", "e", "f", "g", "some very long text that shouldn't fit",
+			"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"})
+		box := comboBoxBuilder.Build()
+		box.SetSelectedItem("c")
+	}
 }
 
 func (app *MainApplication) texturize(bmp *graphics.Bitmap) *graphics.BitmapTexture {
@@ -300,6 +317,7 @@ func (app *MainApplication) onMouseButtonUp(mouseButton uint32, modifier keys.Mo
 }
 
 func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
+	app.rootArea.DispatchPositionalEvent(events.NewMouseScrollEvent(app.mouseX, app.mouseY, 0, app.mouseButtons, dx, dy))
 }
 
 func (app *MainApplication) onMouseClick(modifierMask keys.Modifier) {
