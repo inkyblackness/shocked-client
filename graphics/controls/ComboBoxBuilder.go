@@ -12,15 +12,18 @@ type ComboBoxBuilder struct {
 	rectRenderer *graphics.RectangleRenderer
 	labelBuilder *LabelBuilder
 
+	selectionChangeHandler SelectionChangeHandler
+
 	items []ComboBoxItem
 }
 
 // NewComboBoxBuilder returns a new ComboBoxBuilder instance.
 func NewComboBoxBuilder(labelBuilder *LabelBuilder, rectRenderer *graphics.RectangleRenderer) *ComboBoxBuilder {
 	builder := &ComboBoxBuilder{
-		areaBuilder:  ui.NewAreaBuilder(),
-		rectRenderer: rectRenderer,
-		labelBuilder: labelBuilder}
+		areaBuilder:            ui.NewAreaBuilder(),
+		rectRenderer:           rectRenderer,
+		labelBuilder:           labelBuilder,
+		selectionChangeHandler: func(ComboBoxItem) {}}
 
 	return builder
 }
@@ -28,13 +31,13 @@ func NewComboBoxBuilder(labelBuilder *LabelBuilder, rectRenderer *graphics.Recta
 // Build creates a new ComboBox instance from the current parameters.
 func (builder *ComboBoxBuilder) Build() *ComboBox {
 	box := &ComboBox{
-		labelBuilder: builder.labelBuilder,
-		rectRenderer: builder.rectRenderer,
-		items:        builder.items}
+		labelBuilder:           builder.labelBuilder,
+		rectRenderer:           builder.rectRenderer,
+		selectionChangeHandler: builder.selectionChangeHandler,
+		items: builder.items}
 
 	builder.areaBuilder.OnRender(box.onRender)
 	builder.areaBuilder.OnEvent(events.MouseButtonDownEventType, box.onMouseDown)
-	builder.areaBuilder.OnEvent(events.MouseButtonUpEventType, box.onMouseUp)
 	box.area = builder.areaBuilder.Build()
 
 	builder.labelBuilder.SetParent(box.area)
@@ -48,8 +51,8 @@ func (builder *ComboBoxBuilder) Build() *ComboBox {
 	box.hintLabel = builder.labelBuilder.Build()
 	box.hintLabel.SetText("...")
 
-	builder.labelBuilder.SetLeft(ui.NewOffsetAnchor(box.area.Left(), 0))
-	builder.labelBuilder.SetRight(hintLeft)
+	builder.labelBuilder.SetLeft(ui.NewOffsetAnchor(box.area.Left(), 4))
+	builder.labelBuilder.SetRight(ui.NewOffsetAnchor(hintLeft, -4))
 	builder.labelBuilder.AlignedHorizontallyBy(LeftAligner)
 	box.selectedLabel = builder.labelBuilder.Build()
 

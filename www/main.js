@@ -29364,7 +29364,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/ui/events"] = (function() {
-	var $pkg = {}, $init, EventType, Event, MouseButtonEvent, MouseEvent, MouseMoveEvent, PositionalEvent, ptrType, ptrType$1, NewMouseButtonEvent, InitMouseEvent, NewMouseMoveEvent;
+	var $pkg = {}, $init, EventType, Event, MouseButtonEvent, MouseEvent, MouseMoveEvent, MouseScrollEvent, PositionalEvent, ptrType, ptrType$1, ptrType$2, NewMouseButtonEvent, InitMouseEvent, NewMouseMoveEvent, NewMouseScrollEvent;
 	EventType = $pkg.EventType = $newType(8, $kindString, "events.EventType", true, "github.com/inkyblackness/shocked-client/ui/events", true, null);
 	Event = $pkg.Event = $newType(8, $kindInterface, "events.Event", true, "github.com/inkyblackness/shocked-client/ui/events", true, null);
 	MouseButtonEvent = $pkg.MouseButtonEvent = $newType(0, $kindStruct, "events.MouseButtonEvent", true, "github.com/inkyblackness/shocked-client/ui/events", true, function(MouseEvent_, affectedButtons_) {
@@ -29401,9 +29401,22 @@ $packages["github.com/inkyblackness/shocked-client/ui/events"] = (function() {
 		}
 		this.MouseEvent = MouseEvent_;
 	});
+	MouseScrollEvent = $pkg.MouseScrollEvent = $newType(0, $kindStruct, "events.MouseScrollEvent", true, "github.com/inkyblackness/shocked-client/ui/events", true, function(MouseEvent_, dx_, dy_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.MouseEvent = new MouseEvent.ptr("", 0, 0, 0, 0);
+			this.dx = 0;
+			this.dy = 0;
+			return;
+		}
+		this.MouseEvent = MouseEvent_;
+		this.dx = dx_;
+		this.dy = dy_;
+	});
 	PositionalEvent = $pkg.PositionalEvent = $newType(8, $kindInterface, "events.PositionalEvent", true, "github.com/inkyblackness/shocked-client/ui/events", true, null);
 	ptrType = $ptrType(MouseButtonEvent);
 	ptrType$1 = $ptrType(MouseEvent);
+	ptrType$2 = $ptrType(MouseScrollEvent);
 	NewMouseButtonEvent = function(eventType, x, y, modifier, buttons, affectedButtons) {
 		var $ptr, affectedButtons, buttons, event, eventType, modifier, x, y;
 		event = new MouseButtonEvent.ptr($clone(InitMouseEvent(eventType, x, y, modifier, buttons), MouseEvent), affectedButtons);
@@ -29458,12 +29471,32 @@ $packages["github.com/inkyblackness/shocked-client/ui/events"] = (function() {
 		return event;
 	};
 	$pkg.NewMouseMoveEvent = NewMouseMoveEvent;
+	NewMouseScrollEvent = function(x, y, modifier, buttons, dx, dy) {
+		var $ptr, buttons, dx, dy, event, modifier, x, y;
+		event = new MouseScrollEvent.ptr($clone(InitMouseEvent("mouse.scroll", x, y, modifier, buttons), MouseEvent), dx, dy);
+		return event;
+	};
+	$pkg.NewMouseScrollEvent = NewMouseScrollEvent;
+	MouseScrollEvent.ptr.prototype.Deltas = function() {
+		var $ptr, _tmp, _tmp$1, dx, dy, event;
+		dx = 0;
+		dy = 0;
+		event = this;
+		_tmp = event.dx;
+		_tmp$1 = event.dy;
+		dx = _tmp;
+		dy = _tmp$1;
+		return [dx, dy];
+	};
+	MouseScrollEvent.prototype.Deltas = function() { return this.$val.Deltas(); };
 	ptrType.methods = [{prop: "AffectedButtons", name: "AffectedButtons", pkg: "", typ: $funcType([], [$Uint32], false)}];
 	ptrType$1.methods = [{prop: "EventType", name: "EventType", pkg: "", typ: $funcType([], [EventType], false)}, {prop: "Position", name: "Position", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}, {prop: "Modifier", name: "Modifier", pkg: "", typ: $funcType([], [$Uint32], false)}, {prop: "Buttons", name: "Buttons", pkg: "", typ: $funcType([], [$Uint32], false)}];
+	ptrType$2.methods = [{prop: "Deltas", name: "Deltas", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}];
 	Event.init([{prop: "EventType", name: "EventType", pkg: "", typ: $funcType([], [EventType], false)}]);
 	MouseButtonEvent.init("github.com/inkyblackness/shocked-client/ui/events", [{prop: "MouseEvent", name: "", exported: true, typ: MouseEvent, tag: ""}, {prop: "affectedButtons", name: "affectedButtons", exported: false, typ: $Uint32, tag: ""}]);
 	MouseEvent.init("github.com/inkyblackness/shocked-client/ui/events", [{prop: "eventType", name: "eventType", exported: false, typ: EventType, tag: ""}, {prop: "x", name: "x", exported: false, typ: $Float32, tag: ""}, {prop: "y", name: "y", exported: false, typ: $Float32, tag: ""}, {prop: "modifier", name: "modifier", exported: false, typ: $Uint32, tag: ""}, {prop: "buttons", name: "buttons", exported: false, typ: $Uint32, tag: ""}]);
 	MouseMoveEvent.init("", [{prop: "MouseEvent", name: "", exported: true, typ: MouseEvent, tag: ""}]);
+	MouseScrollEvent.init("github.com/inkyblackness/shocked-client/ui/events", [{prop: "MouseEvent", name: "", exported: true, typ: MouseEvent, tag: ""}, {prop: "dx", name: "dx", exported: false, typ: $Float32, tag: ""}, {prop: "dy", name: "dy", exported: false, typ: $Float32, tag: ""}]);
 	PositionalEvent.init([{prop: "EventType", name: "EventType", pkg: "", typ: $funcType([], [EventType], false)}, {prop: "Position", name: "Position", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}]);
 	$init = function() {
 		$pkg.$init = function() {};
@@ -29594,6 +29627,17 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 		}
 	};
 	Area.prototype.Remove = function() { return this.$val.Remove(); };
+	Area.ptr.prototype.Root = function() {
+		var $ptr, area, root;
+		root = ptrType.nil;
+		area = this;
+		root = area;
+		if (!(root.parent === ptrType.nil)) {
+			root = root.parent.Root();
+		}
+		return root;
+	};
+	Area.prototype.Root = function() { return this.$val.Root(); };
 	Area.ptr.prototype.isChild = function(other) {
 		var $ptr, _i, _ref, area, child, other, result;
 		result = false;
@@ -29979,7 +30023,7 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 	};
 	zeroAnchor.prototype.RequestValue = function(newValue) { return this.$val.RequestValue(newValue); };
 	ptrType$1.methods = [{prop: "Value", name: "Value", pkg: "", typ: $funcType([], [$Float32], false)}, {prop: "RequestValue", name: "RequestValue", pkg: "", typ: $funcType([$Float32], [], false)}];
-	ptrType.methods = [{prop: "Remove", name: "Remove", pkg: "", typ: $funcType([], [], false)}, {prop: "isChild", name: "isChild", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [$Bool], false)}, {prop: "removeChild", name: "removeChild", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [], false)}, {prop: "currentChildren", name: "currentChildren", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([], [sliceType], false)}, {prop: "isRoot", name: "isRoot", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([], [$Bool], false)}, {prop: "Left", name: "Left", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Top", name: "Top", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Right", name: "Right", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Bottom", name: "Bottom", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}, {prop: "HandleEvent", name: "HandleEvent", pkg: "", typ: $funcType([events.Event], [$Bool], false)}, {prop: "DispatchPositionalEvent", name: "DispatchPositionalEvent", pkg: "", typ: $funcType([events.PositionalEvent], [$Bool], false)}, {prop: "tryEventHandlerFor", name: "tryEventHandlerFor", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([events.Event], [$Bool], false)}, {prop: "HasFocus", name: "HasFocus", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "hasAreaFocus", name: "hasAreaFocus", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [$Bool], false)}, {prop: "RequestFocus", name: "RequestFocus", pkg: "", typ: $funcType([], [], false)}, {prop: "requestFocusFor", name: "requestFocusFor", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [], false)}, {prop: "ReleaseFocus", name: "ReleaseFocus", pkg: "", typ: $funcType([], [], false)}, {prop: "loseFocus", name: "loseFocus", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([], [], false)}];
+	ptrType.methods = [{prop: "Remove", name: "Remove", pkg: "", typ: $funcType([], [], false)}, {prop: "Root", name: "Root", pkg: "", typ: $funcType([], [ptrType], false)}, {prop: "isChild", name: "isChild", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [$Bool], false)}, {prop: "removeChild", name: "removeChild", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [], false)}, {prop: "currentChildren", name: "currentChildren", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([], [sliceType], false)}, {prop: "isRoot", name: "isRoot", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([], [$Bool], false)}, {prop: "Left", name: "Left", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Top", name: "Top", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Right", name: "Right", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Bottom", name: "Bottom", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}, {prop: "HandleEvent", name: "HandleEvent", pkg: "", typ: $funcType([events.Event], [$Bool], false)}, {prop: "DispatchPositionalEvent", name: "DispatchPositionalEvent", pkg: "", typ: $funcType([events.PositionalEvent], [$Bool], false)}, {prop: "tryEventHandlerFor", name: "tryEventHandlerFor", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([events.Event], [$Bool], false)}, {prop: "HasFocus", name: "HasFocus", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "hasAreaFocus", name: "hasAreaFocus", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [$Bool], false)}, {prop: "RequestFocus", name: "RequestFocus", pkg: "", typ: $funcType([], [], false)}, {prop: "requestFocusFor", name: "requestFocusFor", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [], false)}, {prop: "ReleaseFocus", name: "ReleaseFocus", pkg: "", typ: $funcType([], [], false)}, {prop: "loseFocus", name: "loseFocus", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([], [], false)}];
 	ptrType$2.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType], [ptrType$2], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([Anchor], [ptrType$2], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([Anchor], [ptrType$2], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([Anchor], [ptrType$2], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([Anchor], [ptrType$2], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderFunction], [ptrType$2], false)}, {prop: "OnEvent", name: "OnEvent", pkg: "", typ: $funcType([events.EventType, EventHandler], [ptrType$2], false)}];
 	ptrType$4.methods = [{prop: "Value", name: "Value", pkg: "", typ: $funcType([], [$Float32], false)}, {prop: "RequestValue", name: "RequestValue", pkg: "", typ: $funcType([$Float32], [], false)}];
 	ptrType$5.methods = [{prop: "Value", name: "Value", pkg: "", typ: $funcType([], [$Float32], false)}, {prop: "RequestValue", name: "RequestValue", pkg: "", typ: $funcType([$Float32], [], false)}];
@@ -30003,26 +30047,75 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (function() {
-	var $pkg = {}, $init, mgl32, env, graphics, ui, events, Aligner, BitmapTexturizer, Label, LabelBuilder, ActionHandler, TextButton, TextButtonBuilder, ptrType, ptrType$1, ptrType$2, ptrType$3, sliceType, sliceType$1, sliceType$2, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, CenterAligner, NewLabelBuilder, NewTextButtonBuilder;
+	var $pkg = {}, $init, fmt, mgl32, env, graphics, ui, events, Aligner, ComboBoxItem, SelectionChangeHandler, ComboBox, ComboBoxBuilder, BitmapTexturizer, Label, LabelBuilder, ActionHandler, TextButton, TextButtonBuilder, sliceType, ptrType, ptrType$1, ptrType$2, sliceType$1, ptrType$3, ptrType$4, ptrType$5, ptrType$6, sliceType$2, ptrType$7, ptrType$8, sliceType$3, sliceType$4, sliceType$5, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, LeftAligner, CenterAligner, NewComboBoxBuilder, NewLabelBuilder, NewTextButtonBuilder;
+	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
 	env = $packages["github.com/inkyblackness/shocked-client/env"];
 	graphics = $packages["github.com/inkyblackness/shocked-client/graphics"];
 	ui = $packages["github.com/inkyblackness/shocked-client/ui"];
 	events = $packages["github.com/inkyblackness/shocked-client/ui/events"];
 	Aligner = $pkg.Aligner = $newType(4, $kindFunc, "controls.Aligner", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, null);
+	ComboBoxItem = $pkg.ComboBoxItem = $newType(8, $kindInterface, "controls.ComboBoxItem", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, null);
+	SelectionChangeHandler = $pkg.SelectionChangeHandler = $newType(4, $kindFunc, "controls.SelectionChangeHandler", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, null);
+	ComboBox = $pkg.ComboBox = $newType(0, $kindStruct, "controls.ComboBox", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, function(labelBuilder_, area_, rectRenderer_, selectedLabel_, hintLabel_, selectionChangeHandler_, items_, selectedItem_, listArea_, listItemCount_, listItemLabels_, listStartIndex_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.labelBuilder = ptrType$6.nil;
+			this.area = ptrType$1.nil;
+			this.rectRenderer = ptrType$5.nil;
+			this.selectedLabel = ptrType$2.nil;
+			this.hintLabel = ptrType$2.nil;
+			this.selectionChangeHandler = $throwNilPointerError;
+			this.items = sliceType$2.nil;
+			this.selectedItem = $ifaceNil;
+			this.listArea = ptrType$1.nil;
+			this.listItemCount = 0;
+			this.listItemLabels = sliceType$1.nil;
+			this.listStartIndex = 0;
+			return;
+		}
+		this.labelBuilder = labelBuilder_;
+		this.area = area_;
+		this.rectRenderer = rectRenderer_;
+		this.selectedLabel = selectedLabel_;
+		this.hintLabel = hintLabel_;
+		this.selectionChangeHandler = selectionChangeHandler_;
+		this.items = items_;
+		this.selectedItem = selectedItem_;
+		this.listArea = listArea_;
+		this.listItemCount = listItemCount_;
+		this.listItemLabels = listItemLabels_;
+		this.listStartIndex = listStartIndex_;
+	});
+	ComboBoxBuilder = $pkg.ComboBoxBuilder = $newType(0, $kindStruct, "controls.ComboBoxBuilder", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, function(areaBuilder_, rectRenderer_, labelBuilder_, selectionChangeHandler_, items_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.areaBuilder = ptrType$4.nil;
+			this.rectRenderer = ptrType$5.nil;
+			this.labelBuilder = ptrType$6.nil;
+			this.selectionChangeHandler = $throwNilPointerError;
+			this.items = sliceType$2.nil;
+			return;
+		}
+		this.areaBuilder = areaBuilder_;
+		this.rectRenderer = rectRenderer_;
+		this.labelBuilder = labelBuilder_;
+		this.selectionChangeHandler = selectionChangeHandler_;
+		this.items = items_;
+	});
 	BitmapTexturizer = $pkg.BitmapTexturizer = $newType(4, $kindFunc, "controls.BitmapTexturizer", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, null);
 	Label = $pkg.Label = $newType(0, $kindStruct, "controls.Label", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, function(area_, textPainter_, texturizer_, textureRenderer_, scale_, horizontalAligner_, verticalAligner_, bitmap_, texture_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.area = ptrType$3.nil;
+			this.area = ptrType$1.nil;
 			this.textPainter = $ifaceNil;
 			this.texturizer = $throwNilPointerError;
-			this.textureRenderer = ptrType$2.nil;
+			this.textureRenderer = ptrType$8.nil;
 			this.scale = 0;
 			this.horizontalAligner = $throwNilPointerError;
 			this.verticalAligner = $throwNilPointerError;
-			this.bitmap = new graphics.TextBitmap.ptr(new graphics.Bitmap.ptr(0, 0, sliceType.nil), 0, sliceType$2.nil);
-			this.texture = ptrType.nil;
+			this.bitmap = new graphics.TextBitmap.ptr(new graphics.Bitmap.ptr(0, 0, sliceType$3.nil), 0, sliceType$5.nil);
+			this.texture = ptrType$7.nil;
 			return;
 		}
 		this.area = area_;
@@ -30038,10 +30131,10 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 	LabelBuilder = $pkg.LabelBuilder = $newType(0, $kindStruct, "controls.LabelBuilder", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, function(areaBuilder_, textPainter_, texturizer_, textureRenderer_, scale_, horizontalAligner_, verticalAligner_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.areaBuilder = ptrType$1.nil;
+			this.areaBuilder = ptrType$4.nil;
 			this.textPainter = $ifaceNil;
 			this.texturizer = $throwNilPointerError;
-			this.textureRenderer = ptrType$2.nil;
+			this.textureRenderer = ptrType$8.nil;
 			this.scale = 0;
 			this.horizontalAligner = $throwNilPointerError;
 			this.verticalAligner = $throwNilPointerError;
@@ -30059,9 +30152,9 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 	TextButton = $pkg.TextButton = $newType(0, $kindStruct, "controls.TextButton", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, function(area_, rectRenderer_, label_, labelLeft_, labelTop_, actionHandler_, idleColor_, preparedColor_, prepared_, color_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.area = ptrType$3.nil;
+			this.area = ptrType$1.nil;
 			this.rectRenderer = ptrType$5.nil;
-			this.label = ptrType$7.nil;
+			this.label = ptrType$2.nil;
 			this.labelLeft = $ifaceNil;
 			this.labelTop = $ifaceNil;
 			this.actionHandler = $throwNilPointerError;
@@ -30085,7 +30178,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 	TextButtonBuilder = $pkg.TextButtonBuilder = $newType(0, $kindStruct, "controls.TextButtonBuilder", true, "github.com/inkyblackness/shocked-client/graphics/controls", true, function(areaBuilder_, rectRenderer_, idleColor_, preparedColor_, labelBuilder_, text_, actionHandler_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.areaBuilder = ptrType$1.nil;
+			this.areaBuilder = ptrType$4.nil;
 			this.rectRenderer = ptrType$5.nil;
 			this.idleColor = $ifaceNil;
 			this.preparedColor = $ifaceNil;
@@ -30102,35 +30195,435 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		this.text = text_;
 		this.actionHandler = actionHandler_;
 	});
-	ptrType = $ptrType(graphics.BitmapTexture);
-	ptrType$1 = $ptrType(ui.AreaBuilder);
-	ptrType$2 = $ptrType(graphics.BitmapTextureRenderer);
-	ptrType$3 = $ptrType(ui.Area);
-	sliceType = $sliceType($Uint8);
-	sliceType$1 = $sliceType($Int);
-	sliceType$2 = $sliceType(sliceType$1);
-	ptrType$4 = $ptrType(events.MouseButtonEvent);
+	sliceType = $sliceType($emptyInterface);
+	ptrType = $ptrType(events.MouseButtonEvent);
+	ptrType$1 = $ptrType(ui.Area);
+	ptrType$2 = $ptrType(Label);
+	sliceType$1 = $sliceType(ptrType$2);
+	ptrType$3 = $ptrType(events.MouseScrollEvent);
+	ptrType$4 = $ptrType(ui.AreaBuilder);
 	ptrType$5 = $ptrType(graphics.RectangleRenderer);
 	ptrType$6 = $ptrType(LabelBuilder);
-	ptrType$7 = $ptrType(Label);
-	ptrType$8 = $ptrType(graphics.Bitmap);
-	ptrType$9 = $ptrType(TextButton);
-	ptrType$10 = $ptrType(TextButtonBuilder);
+	sliceType$2 = $sliceType(ComboBoxItem);
+	ptrType$7 = $ptrType(graphics.BitmapTexture);
+	ptrType$8 = $ptrType(graphics.BitmapTextureRenderer);
+	sliceType$3 = $sliceType($Uint8);
+	sliceType$4 = $sliceType($Int);
+	sliceType$5 = $sliceType(sliceType$4);
+	ptrType$9 = $ptrType(ComboBox);
+	ptrType$10 = $ptrType(ComboBoxBuilder);
+	ptrType$11 = $ptrType(graphics.Bitmap);
+	ptrType$12 = $ptrType(TextButton);
+	ptrType$13 = $ptrType(TextButtonBuilder);
+	LeftAligner = function(containerSize, elementSize) {
+		var $ptr, containerSize, elementSize;
+		return 0;
+	};
+	$pkg.LeftAligner = LeftAligner;
 	CenterAligner = function(containerSize, elementSize) {
 		var $ptr, containerSize, elementSize;
 		return $fround(($fround(containerSize / 2)) - ($fround(elementSize / 2)));
 	};
 	$pkg.CenterAligner = CenterAligner;
+	ComboBox.ptr.prototype.Dispose = function() {
+		var $ptr, box, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; box = $f.box; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		box = this;
+		$r = box.hideList(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = box.selectedLabel.Dispose(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = box.hintLabel.Dispose(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		box.area.Remove();
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.Dispose }; } $f.$ptr = $ptr; $f.box = box; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.Dispose = function() { return this.$val.Dispose(); };
+	ComboBox.ptr.prototype.SetSelectedItem = function(item) {
+		var $ptr, _r, box, item, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; box = $f.box; item = $f.item; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		box = this;
+		/* */ if (!($interfaceIsEqual(box.selectedItem, item))) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!($interfaceIsEqual(box.selectedItem, item))) { */ case 1:
+			box.selectedItem = item;
+			/* */ if (!($interfaceIsEqual(box.selectedItem, $ifaceNil))) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!($interfaceIsEqual(box.selectedItem, $ifaceNil))) { */ case 3:
+				_r = fmt.Sprintf("%v", new sliceType([item])); /* */ $s = 6; case 6: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				$r = box.selectedLabel.SetText(_r); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				$s = 5; continue;
+			/* } else { */ case 4:
+				$r = box.selectedLabel.SetText(""); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* } */ case 5:
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.SetSelectedItem }; } $f.$ptr = $ptr; $f._r = _r; $f.box = box; $f.item = item; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.SetSelectedItem = function(item) { return this.$val.SetSelectedItem(item); };
+	ComboBox.ptr.prototype.onRender = function(area) {
+		var $ptr, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _r, _r$1, _r$2, _r$3, area, box, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; area = $f.area; box = $f.box; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		box = this;
+		_r = area.Left().Value(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg = _r;
+		_r$1 = area.Top().Value(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_arg$1 = _r$1;
+		_r$2 = area.Right().Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_arg$2 = _r$2;
+		_r$3 = area.Bottom().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_arg$3 = _r$3;
+		_arg$4 = graphics.RGBA(0.3100000023841858, 0.5600000023841858, 0.3400000035762787, 0.800000011920929);
+		$r = box.rectRenderer.Fill(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.onRender }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.area = area; $f.box = box; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.onRender = function(area) { return this.$val.onRender(area); };
+	ComboBox.ptr.prototype.onMouseDown = function(area, event) {
+		var $ptr, area, box, consumed, event, mouseEvent, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; area = $f.area; box = $f.box; consumed = $f.consumed; event = $f.event; mouseEvent = $f.mouseEvent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		consumed = false;
+		box = this;
+		mouseEvent = $assertType(event, ptrType);
+		/* */ if (mouseEvent.MouseEvent.Buttons() === 1) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (mouseEvent.MouseEvent.Buttons() === 1) { */ case 1:
+			/* */ if (box.listArea === ptrType$1.nil) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (box.listArea === ptrType$1.nil) { */ case 3:
+				$r = box.showList(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				$s = 5; continue;
+			/* } else { */ case 4:
+				$r = box.hideList(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* } */ case 5:
+			consumed = true;
+		/* } */ case 2:
+		return consumed;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.onMouseDown }; } $f.$ptr = $ptr; $f.area = area; $f.box = box; $f.consumed = consumed; $f.event = event; $f.mouseEvent = mouseEvent; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.onMouseDown = function(area, event) { return this.$val.onMouseDown(area, event); };
+	ComboBox.ptr.prototype.contains = function(area, event) {
+		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _tuple, _v, _v$1, _v$2, area, box, event, x, y, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tuple = $f._tuple; _v = $f._v; _v$1 = $f._v$1; _v$2 = $f._v$2; area = $f.area; box = $f.box; event = $f.event; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		box = this;
+		_r = event.Position(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		x = _tuple[0];
+		y = _tuple[1];
+		_r$1 = area.Left().Value(); /* */ $s = 5; case 5: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		if (!(x >= _r$1)) { _v$2 = false; $s = 4; continue s; }
+		_r$2 = area.Right().Value(); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_v$2 = x < _r$2; case 4:
+		if (!(_v$2)) { _v$1 = false; $s = 3; continue s; }
+		_r$3 = area.Top().Value(); /* */ $s = 7; case 7: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_v$1 = y >= _r$3; case 3:
+		if (!(_v$1)) { _v = false; $s = 2; continue s; }
+		_r$4 = area.Bottom().Value(); /* */ $s = 8; case 8: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_v = y < _r$4; case 2:
+		/* */ $s = 9; case 9:
+		return _v;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.contains }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple = _tuple; $f._v = _v; $f._v$1 = _v$1; $f._v$2 = _v$2; $f.area = area; $f.box = box; $f.event = event; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.contains = function(area, event) { return this.$val.contains(area, event); };
+	ComboBox.ptr.prototype.showList = function() {
+		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _v, box, boxBottom, boxHeight, boxTop, lastBottom, listAreaBuilder, listHeight, listIndex, listTop, nextBottom, root, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _v = $f._v; box = $f.box; boxBottom = $f.boxBottom; boxHeight = $f.boxHeight; boxTop = $f.boxTop; lastBottom = $f.lastBottom; listAreaBuilder = $f.listAreaBuilder; listHeight = $f.listHeight; listIndex = $f.listIndex; listTop = $f.listTop; nextBottom = $f.nextBottom; root = $f.root; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		box = this;
+		/* */ if (box.listArea === ptrType$1.nil) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (box.listArea === ptrType$1.nil) { */ case 1:
+			listAreaBuilder = ui.NewAreaBuilder();
+			root = box.area.Root();
+			_r = box.area.Top().Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			boxTop = _r;
+			_r$1 = box.area.Bottom().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			boxBottom = _r$1;
+			boxHeight = $fround(boxBottom - boxTop);
+			box.listItemCount = box.items.$length;
+			if (box.listItemCount > 6) {
+				box.listItemCount = 6;
+			}
+			listHeight = $fround(boxHeight * box.listItemCount);
+			listTop = $ifaceNil;
+			_r$2 = root.Bottom().Value(); /* */ $s = 9; case 9: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			if (!(listHeight > ($fround(_r$2 - boxBottom)))) { _v = false; $s = 8; continue s; }
+			_r$3 = root.Top().Value(); /* */ $s = 10; case 10: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_v = listHeight <= ($fround(boxTop - _r$3)); case 8:
+			/* */ if (_v) { $s = 5; continue; }
+			/* */ $s = 6; continue;
+			/* if (_v) { */ case 5:
+				listTop = ui.NewOffsetAnchor(box.area.Top(), -listHeight);
+				$s = 7; continue;
+			/* } else { */ case 6:
+				listTop = ui.NewOffsetAnchor(box.area.Bottom(), 0);
+			/* } */ case 7:
+			listAreaBuilder.SetParent(root);
+			listAreaBuilder.SetLeft(box.area.Left());
+			listAreaBuilder.SetRight(box.area.Right());
+			listAreaBuilder.SetTop(listTop);
+			listAreaBuilder.SetBottom(ui.NewOffsetAnchor(listTop, listHeight));
+			listAreaBuilder.OnRender($methodVal(box, "onListRender"));
+			listAreaBuilder.OnEvent("mouse.button.down", $methodVal(box, "onListMouseDown"));
+			listAreaBuilder.OnEvent("mouse.button.up", $methodVal(box, "onListMouseUp"));
+			listAreaBuilder.OnEvent("mouse.scroll", $methodVal(box, "onListScroll"));
+			box.listArea = listAreaBuilder.Build();
+			box.listArea.RequestFocus();
+			box.listItemLabels = $makeSlice(sliceType$1, box.listItemCount);
+			lastBottom = listTop;
+			box.labelBuilder.SetParent(box.listArea);
+			box.labelBuilder.AlignedHorizontallyBy(LeftAligner);
+			box.labelBuilder.SetLeft(ui.NewOffsetAnchor(box.area.Left(), 4));
+			box.labelBuilder.SetRight(ui.NewOffsetAnchor(box.area.Right(), -4));
+			listIndex = 0;
+			/* while (true) { */ case 11:
+				/* if (!(listIndex < box.listItemCount)) { break; } */ if(!(listIndex < box.listItemCount)) { $s = 12; continue; }
+				nextBottom = ui.NewOffsetAnchor(lastBottom, boxHeight);
+				box.labelBuilder.SetTop(lastBottom);
+				box.labelBuilder.SetBottom(nextBottom);
+				_r$4 = box.labelBuilder.Build(); /* */ $s = 13; case 13: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				(x = box.listItemLabels, ((listIndex < 0 || listIndex >= x.$length) ? $throwRuntimeError("index out of range") : x.$array[x.$offset + listIndex] = _r$4));
+				lastBottom = nextBottom;
+				listIndex = listIndex + (1) >> 0;
+			/* } */ $s = 11; continue; case 12:
+			$r = box.updateListItemLabels(); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.showList }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._v = _v; $f.box = box; $f.boxBottom = boxBottom; $f.boxHeight = boxHeight; $f.boxTop = boxTop; $f.lastBottom = lastBottom; $f.listAreaBuilder = listAreaBuilder; $f.listHeight = listHeight; $f.listIndex = listIndex; $f.listTop = listTop; $f.nextBottom = nextBottom; $f.root = root; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.showList = function() { return this.$val.showList(); };
+	ComboBox.ptr.prototype.hideList = function() {
+		var $ptr, _i, _ref, box, label, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _ref = $f._ref; box = $f.box; label = $f.label; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		box = this;
+		/* */ if (!(box.listArea === ptrType$1.nil)) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!(box.listArea === ptrType$1.nil)) { */ case 1:
+			box.listArea.Remove();
+			box.listArea = ptrType$1.nil;
+			_ref = box.listItemLabels;
+			_i = 0;
+			/* while (true) { */ case 3:
+				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 4; continue; }
+				label = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+				$r = label.Dispose(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				_i++;
+			/* } */ $s = 3; continue; case 4:
+			box.listItemLabels = sliceType$1.nil;
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.hideList }; } $f.$ptr = $ptr; $f._i = _i; $f._ref = _ref; $f.box = box; $f.label = label; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.hideList = function() { return this.$val.hideList(); };
+	ComboBox.ptr.prototype.updateListItemLabels = function() {
+		var $ptr, _i, _r, _ref, box, label, listIndex, x, x$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _ref = $f._ref; box = $f.box; label = $f.label; listIndex = $f.listIndex; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		box = this;
+		_ref = box.listItemLabels;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			listIndex = _i;
+			label = ((_i < 0 || _i >= _ref.$length) ? $throwRuntimeError("index out of range") : _ref.$array[_ref.$offset + _i]);
+			_r = fmt.Sprintf("%v", new sliceType([(x = box.items, x$1 = box.listStartIndex + listIndex >> 0, ((x$1 < 0 || x$1 >= x.$length) ? $throwRuntimeError("index out of range") : x.$array[x.$offset + x$1]))])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$r = label.SetText(_r); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.updateListItemLabels }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.box = box; $f.label = label; $f.listIndex = listIndex; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.updateListItemLabels = function() { return this.$val.updateListItemLabels(); };
+	ComboBox.ptr.prototype.onListRender = function(area) {
+		var $ptr, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _r, _r$1, _r$2, _r$3, area, box, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; area = $f.area; box = $f.box; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		box = this;
+		_r = area.Left().Value(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg = _r;
+		_r$1 = area.Top().Value(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_arg$1 = _r$1;
+		_r$2 = area.Right().Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_arg$2 = _r$2;
+		_r$3 = area.Bottom().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_arg$3 = _r$3;
+		_arg$4 = graphics.RGBA(0.3100000023841858, 0.5600000023841858, 0.3400000035762787, 0.699999988079071);
+		$r = box.rectRenderer.Fill(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.onListRender }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.area = area; $f.box = box; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.onListRender = function(area) { return this.$val.onListRender(area); };
+	ComboBox.ptr.prototype.onListMouseDown = function(area, event) {
+		var $ptr, area, box, consumed, event, mouseEvent;
+		consumed = false;
+		box = this;
+		mouseEvent = $assertType(event, ptrType);
+		if (mouseEvent.MouseEvent.Buttons() === 1) {
+			box.listArea.RequestFocus();
+			consumed = true;
+		}
+		return consumed;
+	};
+	ComboBox.prototype.onListMouseDown = function(area, event) { return this.$val.onListMouseDown(area, event); };
+	ComboBox.ptr.prototype.onListMouseUp = function(area, event) {
+		var $ptr, _r, _r$1, _r$2, _r$3, _tuple, area, box, chosenItem, consumed, event, mouseEvent, mouseY, x, x$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; area = $f.area; box = $f.box; chosenItem = $f.chosenItem; consumed = $f.consumed; event = $f.event; mouseEvent = $f.mouseEvent; mouseY = $f.mouseY; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		consumed = false;
+		box = this;
+		mouseEvent = $assertType(event, ptrType);
+		/* */ if (mouseEvent.AffectedButtons() === 1) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (mouseEvent.AffectedButtons() === 1) { */ case 1:
+			/* */ if (!(box.listArea === ptrType$1.nil)) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!(box.listArea === ptrType$1.nil)) { */ case 3:
+				if (box.listArea.HasFocus()) {
+					box.listArea.ReleaseFocus();
+				}
+				_r = box.contains(box.listArea, mouseEvent); /* */ $s = 7; case 7: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				/* */ if (_r) { $s = 5; continue; }
+				/* */ $s = 6; continue;
+				/* if (_r) { */ case 5:
+					_tuple = mouseEvent.MouseEvent.Position();
+					mouseY = _tuple[1];
+					_r$1 = box.listArea.Top().Value(); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+					_r$2 = box.listArea.Bottom().Value(); /* */ $s = 9; case 9: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+					_r$3 = box.listArea.Top().Value(); /* */ $s = 10; case 10: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					chosenItem = $fround(($fround(($fround(mouseY - _r$1)) * box.listItemCount)) / ($fround(_r$2 - _r$3)));
+					$r = box.hideList(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$r = box.onItemChosen((x = box.items, x$1 = box.listStartIndex + (chosenItem >> 0) >> 0, ((x$1 < 0 || x$1 >= x.$length) ? $throwRuntimeError("index out of range") : x.$array[x.$offset + x$1]))); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* } */ case 6:
+			/* } */ case 4:
+			consumed = true;
+		/* } */ case 2:
+		return consumed;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.onListMouseUp }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.area = area; $f.box = box; $f.chosenItem = chosenItem; $f.consumed = consumed; $f.event = event; $f.mouseEvent = mouseEvent; $f.mouseY = mouseY; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.onListMouseUp = function(area, event) { return this.$val.onListMouseUp(area, event); };
+	ComboBox.ptr.prototype.onItemChosen = function(item) {
+		var $ptr, box, item, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; box = $f.box; item = $f.item; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		box = this;
+		/* */ if (!($interfaceIsEqual(item, box.selectedItem))) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!($interfaceIsEqual(item, box.selectedItem))) { */ case 1:
+			$r = box.SetSelectedItem(item); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = box.selectionChangeHandler(item); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 2:
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.onItemChosen }; } $f.$ptr = $ptr; $f.box = box; $f.item = item; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.onItemChosen = function(item) { return this.$val.onItemChosen(item); };
+	ComboBox.ptr.prototype.onListScroll = function(area, event) {
+		var $ptr, _r, _r$1, _tuple, area, available, available$1, box, consumed, dy, event, mouseEvent, toScroll, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; area = $f.area; available = $f.available; available$1 = $f.available$1; box = $f.box; consumed = $f.consumed; dy = $f.dy; event = $f.event; mouseEvent = $f.mouseEvent; toScroll = $f.toScroll; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		consumed = false;
+		box = this;
+		mouseEvent = $assertType(event, ptrType$3);
+		_tuple = mouseEvent.Deltas();
+		dy = _tuple[1];
+		toScroll = (function(available) {
+			var $ptr, available, result;
+			result = 1;
+			if (result > available) {
+				result = available;
+			}
+			return result;
+		});
+		/* */ if (dy < 0) { $s = 1; continue; }
+		/* */ if (dy > 0) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (dy < 0) { */ case 1:
+			available = box.listStartIndex;
+			_r = toScroll(available); /* */ $s = 4; case 4: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			box.listStartIndex = box.listStartIndex - (_r) >> 0;
+			$s = 3; continue;
+		/* } else if (dy > 0) { */ case 2:
+			available$1 = box.items.$length - ((box.listStartIndex + box.listItemCount >> 0)) >> 0;
+			_r$1 = toScroll(available$1); /* */ $s = 5; case 5: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			box.listStartIndex = box.listStartIndex + (_r$1) >> 0;
+		/* } */ case 3:
+		$r = box.updateListItemLabels(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		consumed = true;
+		return consumed;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ComboBox.ptr.prototype.onListScroll }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.area = area; $f.available = available; $f.available$1 = available$1; $f.box = box; $f.consumed = consumed; $f.dy = dy; $f.event = event; $f.mouseEvent = mouseEvent; $f.toScroll = toScroll; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBox.prototype.onListScroll = function(area, event) { return this.$val.onListScroll(area, event); };
+	NewComboBoxBuilder = function(labelBuilder, rectRenderer) {
+		var $ptr, builder, labelBuilder, rectRenderer;
+		builder = new ComboBoxBuilder.ptr(ui.NewAreaBuilder(), rectRenderer, labelBuilder, (function(param) {
+			var $ptr, param;
+		}), sliceType$2.nil);
+		return builder;
+	};
+	$pkg.NewComboBoxBuilder = NewComboBoxBuilder;
+	ComboBoxBuilder.ptr.prototype.Build = function() {
+		var $ptr, _r, _r$1, box, builder, hintLeft, hintRight, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; box = $f.box; builder = $f.builder; hintLeft = $f.hintLeft; hintRight = $f.hintRight; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		builder = this;
+		box = new ComboBox.ptr(builder.labelBuilder, ptrType$1.nil, builder.rectRenderer, ptrType$2.nil, ptrType$2.nil, builder.selectionChangeHandler, builder.items, $ifaceNil, ptrType$1.nil, 0, sliceType$1.nil, 0);
+		builder.areaBuilder.OnRender($methodVal(box, "onRender"));
+		builder.areaBuilder.OnEvent("mouse.button.down", $methodVal(box, "onMouseDown"));
+		box.area = builder.areaBuilder.Build();
+		builder.labelBuilder.SetParent(box.area);
+		builder.labelBuilder.SetTop(ui.NewOffsetAnchor(box.area.Top(), 0));
+		builder.labelBuilder.SetBottom(ui.NewOffsetAnchor(box.area.Bottom(), 0));
+		hintRight = ui.NewOffsetAnchor(box.area.Right(), 0);
+		hintLeft = ui.NewOffsetAnchor(hintRight, -25);
+		builder.labelBuilder.SetLeft(hintLeft);
+		builder.labelBuilder.SetRight(hintRight);
+		_r = builder.labelBuilder.Build(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		box.hintLabel = _r;
+		$r = box.hintLabel.SetText("..."); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		builder.labelBuilder.SetLeft(ui.NewOffsetAnchor(box.area.Left(), 4));
+		builder.labelBuilder.SetRight(ui.NewOffsetAnchor(hintLeft, -4));
+		builder.labelBuilder.AlignedHorizontallyBy(LeftAligner);
+		_r$1 = builder.labelBuilder.Build(); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		box.selectedLabel = _r$1;
+		return box;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ComboBoxBuilder.ptr.prototype.Build }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.box = box; $f.builder = builder; $f.hintLeft = hintLeft; $f.hintRight = hintRight; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	ComboBoxBuilder.prototype.Build = function() { return this.$val.Build(); };
+	ComboBoxBuilder.ptr.prototype.SetParent = function(parent) {
+		var $ptr, builder, parent;
+		builder = this;
+		builder.areaBuilder.SetParent(parent);
+		return builder;
+	};
+	ComboBoxBuilder.prototype.SetParent = function(parent) { return this.$val.SetParent(parent); };
+	ComboBoxBuilder.ptr.prototype.SetLeft = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetLeft(value);
+		return builder;
+	};
+	ComboBoxBuilder.prototype.SetLeft = function(value) { return this.$val.SetLeft(value); };
+	ComboBoxBuilder.ptr.prototype.SetTop = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetTop(value);
+		return builder;
+	};
+	ComboBoxBuilder.prototype.SetTop = function(value) { return this.$val.SetTop(value); };
+	ComboBoxBuilder.ptr.prototype.SetRight = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetRight(value);
+		return builder;
+	};
+	ComboBoxBuilder.prototype.SetRight = function(value) { return this.$val.SetRight(value); };
+	ComboBoxBuilder.ptr.prototype.SetBottom = function(value) {
+		var $ptr, builder, value;
+		builder = this;
+		builder.areaBuilder.SetBottom(value);
+		return builder;
+	};
+	ComboBoxBuilder.prototype.SetBottom = function(value) { return this.$val.SetBottom(value); };
+	ComboBoxBuilder.ptr.prototype.WithItems = function(items) {
+		var $ptr, builder, items;
+		builder = this;
+		builder.items = $makeSlice(sliceType$2, items.$length);
+		$copySlice(builder.items, items);
+		return builder;
+	};
+	ComboBoxBuilder.prototype.WithItems = function(items) { return this.$val.WithItems(items); };
 	Label.ptr.prototype.Dispose = function() {
 		var $ptr, label, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; label = $f.label; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		label = this;
 		label.area.Remove();
-		/* */ if (!(label.texture === ptrType.nil)) { $s = 1; continue; }
+		/* */ if (!(label.texture === ptrType$7.nil)) { $s = 1; continue; }
 		/* */ $s = 2; continue;
-		/* if (!(label.texture === ptrType.nil)) { */ case 1:
+		/* if (!(label.texture === ptrType$7.nil)) { */ case 1:
 			$r = label.texture.Dispose(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			label.texture = ptrType.nil;
+			label.texture = ptrType$7.nil;
 		/* } */ case 2:
 		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: Label.ptr.prototype.Dispose }; } $f.$ptr = $ptr; $f.label = label; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -30139,11 +30632,11 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		var $ptr, _r, _r$1, label, text, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; label = $f.label; text = $f.text; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		label = this;
-		/* */ if (!(label.texture === ptrType.nil)) { $s = 1; continue; }
+		/* */ if (!(label.texture === ptrType$7.nil)) { $s = 1; continue; }
 		/* */ $s = 2; continue;
-		/* if (!(label.texture === ptrType.nil)) { */ case 1:
+		/* if (!(label.texture === ptrType$7.nil)) { */ case 1:
 			$r = label.texture.Dispose(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			label.texture = ptrType.nil;
+			label.texture = ptrType$7.nil;
 		/* } */ case 2:
 		_r = label.textPainter.Paint(text); /* */ $s = 4; case 4: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		graphics.TextBitmap.copy(label.bitmap, _r);
@@ -30188,19 +30681,19 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		toRight = $fround(toLeft + scaledWidth);
 		toBottom = $fround(toTop + scaledHeight);
 		if (toLeft < areaLeft) {
-			fromLeft = $fround(fromLeft + ($fround(($fround(u / textWidth)) * ($fround(areaLeft - toLeft)))));
+			fromLeft = $fround(fromLeft + ($fround($fround(($fround(u / textWidth)) * ($fround(areaLeft - toLeft))) / label.scale)));
 			toLeft = areaLeft;
 		}
 		if (toRight > areaRight) {
-			fromRight = $fround(fromRight - ($fround(($fround(u / textWidth)) * ($fround(toRight - areaRight)))));
+			fromRight = $fround(fromRight - ($fround($fround(($fround(u / textWidth)) * ($fround(toRight - areaRight))) / label.scale)));
 			toRight = areaRight;
 		}
 		if (toTop < areaTop) {
-			fromTop = $fround(fromTop + ($fround(($fround(v / textHeight)) * ($fround(areaTop - toTop)))));
+			fromTop = $fround(fromTop + ($fround($fround(($fround(v / textHeight)) * ($fround(areaTop - toTop))) / label.scale)));
 			toTop = areaTop;
 		}
 		if (toBottom > areaBottom) {
-			fromBottom = $fround(fromBottom - ($fround(($fround(v / textHeight)) * ($fround(toBottom - areaBottom)))));
+			fromBottom = $fround(fromBottom - ($fround($fround(($fround(v / textHeight)) * ($fround(toBottom - areaBottom))) / label.scale)));
 			toBottom = areaBottom;
 		}
 		modelMatrix[0] = $clone(new mgl32.Mat4(new mgl32.Mat4(mgl32.Ident4()).Mul4(mgl32.Translate3D(toLeft, toTop, 0))).Mul4(mgl32.Scale3D($fround(toRight - toLeft), $fround(toBottom - toTop), 1)), mgl32.Mat4);
@@ -30218,7 +30711,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		var $ptr, builder, label, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; builder = $f.builder; label = $f.label; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		builder = this;
-		label = new Label.ptr(ptrType$3.nil, builder.textPainter, builder.texturizer, builder.textureRenderer, builder.scale, builder.horizontalAligner, builder.verticalAligner, new graphics.TextBitmap.ptr(new graphics.Bitmap.ptr(0, 0, sliceType.nil), 0, sliceType$2.nil), ptrType.nil);
+		label = new Label.ptr(ptrType$1.nil, builder.textPainter, builder.texturizer, builder.textureRenderer, builder.scale, builder.horizontalAligner, builder.verticalAligner, new graphics.TextBitmap.ptr(new graphics.Bitmap.ptr(0, 0, sliceType$3.nil), 0, sliceType$5.nil), ptrType$7.nil);
 		builder.areaBuilder.OnRender($methodVal(label, "onRender"));
 		label.area = builder.areaBuilder.Build();
 		$r = label.SetText(""); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -30313,7 +30806,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; area = $f.area; button = $f.button; consumed = $f.consumed; event = $f.event; mouseEvent = $f.mouseEvent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		consumed = false;
 		button = this;
-		mouseEvent = $assertType(event, ptrType$4);
+		mouseEvent = $assertType(event, ptrType);
 		/* */ if (mouseEvent.MouseEvent.Buttons() === 1) { $s = 1; continue; }
 		/* */ $s = 2; continue;
 		/* if (mouseEvent.MouseEvent.Buttons() === 1) { */ case 1:
@@ -30330,7 +30823,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; area = $f.area; button = $f.button; consumed = $f.consumed; event = $f.event; mouseEvent = $f.mouseEvent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		consumed = false;
 		button = this;
-		mouseEvent = $assertType(event, ptrType$4);
+		mouseEvent = $assertType(event, ptrType);
 		/* */ if (button.area.HasFocus() && (mouseEvent.AffectedButtons() === 1)) { $s = 1; continue; }
 		/* */ $s = 2; continue;
 		/* if (button.area.HasFocus() && (mouseEvent.AffectedButtons() === 1)) { */ case 1:
@@ -30415,7 +30908,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 	TextButton.prototype.callHandler = function() { return this.$val.callHandler(); };
 	NewTextButtonBuilder = function(labelBuilder, rectRenderer) {
 		var $ptr, builder, labelBuilder, rectRenderer;
-		builder = new TextButtonBuilder.ptr(ui.NewAreaBuilder(), rectRenderer, graphics.RGBA(0, 0.6000000238418579, 0, 0.800000011920929), graphics.RGBA(0, 0.699999988079071, 0, 0.949999988079071), labelBuilder, "", (function() {
+		builder = new TextButtonBuilder.ptr(ui.NewAreaBuilder(), rectRenderer, graphics.RGBA(0.3100000023841858, 0.5600000023841858, 0.3400000035762787, 0.800000011920929), graphics.RGBA(0.3100000023841858, 0.5600000023841858, 0.3400000035762787, 0.949999988079071), labelBuilder, "", (function() {
 			var $ptr;
 		}));
 		return builder;
@@ -30425,7 +30918,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		var $ptr, _r, builder, button, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; builder = $f.builder; button = $f.button; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		builder = this;
-		button = new TextButton.ptr(ptrType$3.nil, builder.rectRenderer, ptrType$7.nil, $ifaceNil, $ifaceNil, builder.actionHandler, builder.idleColor, builder.preparedColor, false, builder.idleColor);
+		button = new TextButton.ptr(ptrType$1.nil, builder.rectRenderer, ptrType$2.nil, $ifaceNil, $ifaceNil, builder.actionHandler, builder.idleColor, builder.preparedColor, false, builder.idleColor);
 		builder.areaBuilder.OnRender($methodVal(button, "onRender"));
 		builder.areaBuilder.OnEvent("mouse.button.down", $methodVal(button, "onMouseDown"));
 		builder.areaBuilder.OnEvent("mouse.button.up", $methodVal(button, "onMouseUp"));
@@ -30507,25 +31000,32 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		return builder;
 	};
 	TextButtonBuilder.prototype.WithPreparedColor = function(color) { return this.$val.WithPreparedColor(color); };
-	ptrType$7.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "SetText", name: "SetText", pkg: "", typ: $funcType([$String], [], false)}, {prop: "onRender", name: "onRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3], [], false)}];
-	ptrType$6.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$7], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$3], [ptrType$6], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetScale", name: "SetScale", pkg: "", typ: $funcType([$Float32], [ptrType$6], false)}, {prop: "AlignedHorizontallyBy", name: "AlignedHorizontallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}, {prop: "AlignedVerticallyBy", name: "AlignedVerticallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}];
-	ptrType$9.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "onRender", name: "onRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3], [], false)}, {prop: "onMouseDown", name: "onMouseDown", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3, events.Event], [$Bool], false)}, {prop: "onMouseUp", name: "onMouseUp", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$3, events.Event], [$Bool], false)}, {prop: "prepare", name: "prepare", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}, {prop: "unprepare", name: "unprepare", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}, {prop: "contains", name: "contains", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([events.PositionalEvent], [$Bool], false)}, {prop: "callHandler", name: "callHandler", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}];
-	ptrType$10.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$9], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$3], [ptrType$10], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "WithText", name: "WithText", pkg: "", typ: $funcType([$String], [ptrType$10], false)}, {prop: "OnAction", name: "OnAction", pkg: "", typ: $funcType([ActionHandler], [ptrType$10], false)}, {prop: "WithIdleColor", name: "WithIdleColor", pkg: "", typ: $funcType([graphics.Color], [ptrType$10], false)}, {prop: "WithPreparedColor", name: "WithPreparedColor", pkg: "", typ: $funcType([graphics.Color], [ptrType$10], false)}];
+	ptrType$9.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "SetSelectedItem", name: "SetSelectedItem", pkg: "", typ: $funcType([ComboBoxItem], [], false)}, {prop: "onRender", name: "onRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1], [], false)}, {prop: "onMouseDown", name: "onMouseDown", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1, events.Event], [$Bool], false)}, {prop: "contains", name: "contains", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1, events.PositionalEvent], [$Bool], false)}, {prop: "showList", name: "showList", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}, {prop: "hideList", name: "hideList", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}, {prop: "updateListItemLabels", name: "updateListItemLabels", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}, {prop: "onListRender", name: "onListRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1], [], false)}, {prop: "onListMouseDown", name: "onListMouseDown", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1, events.Event], [$Bool], false)}, {prop: "onListMouseUp", name: "onListMouseUp", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1, events.Event], [$Bool], false)}, {prop: "onItemChosen", name: "onItemChosen", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ComboBoxItem], [], false)}, {prop: "onListScroll", name: "onListScroll", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1, events.Event], [$Bool], false)}];
+	ptrType$10.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$9], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$1], [ptrType$10], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([ui.Anchor], [ptrType$10], false)}, {prop: "WithItems", name: "WithItems", pkg: "", typ: $funcType([sliceType$2], [ptrType$10], false)}];
+	ptrType$2.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "SetText", name: "SetText", pkg: "", typ: $funcType([$String], [], false)}, {prop: "onRender", name: "onRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1], [], false)}];
+	ptrType$6.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$2], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$1], [ptrType$6], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([ui.Anchor], [ptrType$6], false)}, {prop: "SetScale", name: "SetScale", pkg: "", typ: $funcType([$Float32], [ptrType$6], false)}, {prop: "AlignedHorizontallyBy", name: "AlignedHorizontallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}, {prop: "AlignedVerticallyBy", name: "AlignedVerticallyBy", pkg: "", typ: $funcType([Aligner], [ptrType$6], false)}];
+	ptrType$12.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "onRender", name: "onRender", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1], [], false)}, {prop: "onMouseDown", name: "onMouseDown", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1, events.Event], [$Bool], false)}, {prop: "onMouseUp", name: "onMouseUp", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([ptrType$1, events.Event], [$Bool], false)}, {prop: "prepare", name: "prepare", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}, {prop: "unprepare", name: "unprepare", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}, {prop: "contains", name: "contains", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([events.PositionalEvent], [$Bool], false)}, {prop: "callHandler", name: "callHandler", pkg: "github.com/inkyblackness/shocked-client/graphics/controls", typ: $funcType([], [], false)}];
+	ptrType$13.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType$12], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType$1], [ptrType$13], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([ui.Anchor], [ptrType$13], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([ui.Anchor], [ptrType$13], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([ui.Anchor], [ptrType$13], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([ui.Anchor], [ptrType$13], false)}, {prop: "WithText", name: "WithText", pkg: "", typ: $funcType([$String], [ptrType$13], false)}, {prop: "OnAction", name: "OnAction", pkg: "", typ: $funcType([ActionHandler], [ptrType$13], false)}, {prop: "WithIdleColor", name: "WithIdleColor", pkg: "", typ: $funcType([graphics.Color], [ptrType$13], false)}, {prop: "WithPreparedColor", name: "WithPreparedColor", pkg: "", typ: $funcType([graphics.Color], [ptrType$13], false)}];
 	Aligner.init([$Float32, $Float32], [$Float32], false);
-	BitmapTexturizer.init([ptrType$8], [ptrType], false);
-	Label.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "area", name: "area", exported: false, typ: ptrType$3, tag: ""}, {prop: "textPainter", name: "textPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "texturizer", name: "texturizer", exported: false, typ: BitmapTexturizer, tag: ""}, {prop: "textureRenderer", name: "textureRenderer", exported: false, typ: ptrType$2, tag: ""}, {prop: "scale", name: "scale", exported: false, typ: $Float32, tag: ""}, {prop: "horizontalAligner", name: "horizontalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "verticalAligner", name: "verticalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "bitmap", name: "bitmap", exported: false, typ: graphics.TextBitmap, tag: ""}, {prop: "texture", name: "texture", exported: false, typ: ptrType, tag: ""}]);
-	LabelBuilder.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "areaBuilder", name: "areaBuilder", exported: false, typ: ptrType$1, tag: ""}, {prop: "textPainter", name: "textPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "texturizer", name: "texturizer", exported: false, typ: BitmapTexturizer, tag: ""}, {prop: "textureRenderer", name: "textureRenderer", exported: false, typ: ptrType$2, tag: ""}, {prop: "scale", name: "scale", exported: false, typ: $Float32, tag: ""}, {prop: "horizontalAligner", name: "horizontalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "verticalAligner", name: "verticalAligner", exported: false, typ: Aligner, tag: ""}]);
+	ComboBoxItem.init([]);
+	SelectionChangeHandler.init([ComboBoxItem], [], false);
+	ComboBox.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "labelBuilder", name: "labelBuilder", exported: false, typ: ptrType$6, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType$1, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "selectedLabel", name: "selectedLabel", exported: false, typ: ptrType$2, tag: ""}, {prop: "hintLabel", name: "hintLabel", exported: false, typ: ptrType$2, tag: ""}, {prop: "selectionChangeHandler", name: "selectionChangeHandler", exported: false, typ: SelectionChangeHandler, tag: ""}, {prop: "items", name: "items", exported: false, typ: sliceType$2, tag: ""}, {prop: "selectedItem", name: "selectedItem", exported: false, typ: ComboBoxItem, tag: ""}, {prop: "listArea", name: "listArea", exported: false, typ: ptrType$1, tag: ""}, {prop: "listItemCount", name: "listItemCount", exported: false, typ: $Int, tag: ""}, {prop: "listItemLabels", name: "listItemLabels", exported: false, typ: sliceType$1, tag: ""}, {prop: "listStartIndex", name: "listStartIndex", exported: false, typ: $Int, tag: ""}]);
+	ComboBoxBuilder.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "areaBuilder", name: "areaBuilder", exported: false, typ: ptrType$4, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "labelBuilder", name: "labelBuilder", exported: false, typ: ptrType$6, tag: ""}, {prop: "selectionChangeHandler", name: "selectionChangeHandler", exported: false, typ: SelectionChangeHandler, tag: ""}, {prop: "items", name: "items", exported: false, typ: sliceType$2, tag: ""}]);
+	BitmapTexturizer.init([ptrType$11], [ptrType$7], false);
+	Label.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "area", name: "area", exported: false, typ: ptrType$1, tag: ""}, {prop: "textPainter", name: "textPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "texturizer", name: "texturizer", exported: false, typ: BitmapTexturizer, tag: ""}, {prop: "textureRenderer", name: "textureRenderer", exported: false, typ: ptrType$8, tag: ""}, {prop: "scale", name: "scale", exported: false, typ: $Float32, tag: ""}, {prop: "horizontalAligner", name: "horizontalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "verticalAligner", name: "verticalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "bitmap", name: "bitmap", exported: false, typ: graphics.TextBitmap, tag: ""}, {prop: "texture", name: "texture", exported: false, typ: ptrType$7, tag: ""}]);
+	LabelBuilder.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "areaBuilder", name: "areaBuilder", exported: false, typ: ptrType$4, tag: ""}, {prop: "textPainter", name: "textPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "texturizer", name: "texturizer", exported: false, typ: BitmapTexturizer, tag: ""}, {prop: "textureRenderer", name: "textureRenderer", exported: false, typ: ptrType$8, tag: ""}, {prop: "scale", name: "scale", exported: false, typ: $Float32, tag: ""}, {prop: "horizontalAligner", name: "horizontalAligner", exported: false, typ: Aligner, tag: ""}, {prop: "verticalAligner", name: "verticalAligner", exported: false, typ: Aligner, tag: ""}]);
 	ActionHandler.init([], [], false);
-	TextButton.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "area", name: "area", exported: false, typ: ptrType$3, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "label", name: "label", exported: false, typ: ptrType$7, tag: ""}, {prop: "labelLeft", name: "labelLeft", exported: false, typ: ui.Anchor, tag: ""}, {prop: "labelTop", name: "labelTop", exported: false, typ: ui.Anchor, tag: ""}, {prop: "actionHandler", name: "actionHandler", exported: false, typ: ActionHandler, tag: ""}, {prop: "idleColor", name: "idleColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "preparedColor", name: "preparedColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "prepared", name: "prepared", exported: false, typ: $Bool, tag: ""}, {prop: "color", name: "color", exported: false, typ: graphics.Color, tag: ""}]);
-	TextButtonBuilder.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "areaBuilder", name: "areaBuilder", exported: false, typ: ptrType$1, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "idleColor", name: "idleColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "preparedColor", name: "preparedColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "labelBuilder", name: "labelBuilder", exported: false, typ: ptrType$6, tag: ""}, {prop: "text", name: "text", exported: false, typ: $String, tag: ""}, {prop: "actionHandler", name: "actionHandler", exported: false, typ: ActionHandler, tag: ""}]);
+	TextButton.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "area", name: "area", exported: false, typ: ptrType$1, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "label", name: "label", exported: false, typ: ptrType$2, tag: ""}, {prop: "labelLeft", name: "labelLeft", exported: false, typ: ui.Anchor, tag: ""}, {prop: "labelTop", name: "labelTop", exported: false, typ: ui.Anchor, tag: ""}, {prop: "actionHandler", name: "actionHandler", exported: false, typ: ActionHandler, tag: ""}, {prop: "idleColor", name: "idleColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "preparedColor", name: "preparedColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "prepared", name: "prepared", exported: false, typ: $Bool, tag: ""}, {prop: "color", name: "color", exported: false, typ: graphics.Color, tag: ""}]);
+	TextButtonBuilder.init("github.com/inkyblackness/shocked-client/graphics/controls", [{prop: "areaBuilder", name: "areaBuilder", exported: false, typ: ptrType$4, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "idleColor", name: "idleColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "preparedColor", name: "preparedColor", exported: false, typ: graphics.Color, tag: ""}, {prop: "labelBuilder", name: "labelBuilder", exported: false, typ: ptrType$6, tag: ""}, {prop: "text", name: "text", exported: false, typ: $String, tag: ""}, {prop: "actionHandler", name: "actionHandler", exported: false, typ: ActionHandler, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = mgl32.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = env.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = graphics.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = ui.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = events.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mgl32.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = env.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = graphics.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = ui.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = events.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -30542,7 +31042,7 @@ $packages["github.com/inkyblackness/shocked-client/viewmodel"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
-	var $pkg = {}, $init, bytes, json, fmt, mgl32, env, keys, graphics, controls, opengl, ui, events, viewmodel, model, os, strconv, time, FailureFunc, DataStore, MainApplication, RestDataStore, RestTransport, sliceType, ptrType, arrayType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, arrayType$1, sliceType$1, sliceType$2, sliceType$3, ptrType$5, ptrType$6, sliceType$5, arrayType$2, sliceType$6, sliceType$7, sliceType$8, sliceType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, sliceType$10, ptrType$20, funcType, ptrType$21, funcType$1, ptrType$22, funcType$2, funcType$3, funcType$4, funcType$5, funcType$6, funcType$7, funcType$8, funcType$9, funcType$10, ptrType$23, ptrType$24, ptrType$25, ptrType$26, funcType$11, sliceType$11, defaultFont, NewMainApplication, NewRestDataStore;
+	var $pkg = {}, $init, bytes, json, fmt, mgl32, env, keys, graphics, controls, opengl, ui, events, viewmodel, model, os, strconv, time, FailureFunc, DataStore, MainApplication, RestDataStore, RestTransport, sliceType, ptrType, arrayType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, arrayType$1, sliceType$1, sliceType$2, sliceType$3, ptrType$5, ptrType$6, sliceType$4, sliceType$6, arrayType$2, sliceType$7, sliceType$8, sliceType$9, sliceType$10, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, sliceType$11, ptrType$20, funcType, ptrType$21, funcType$1, ptrType$22, funcType$2, funcType$3, funcType$4, funcType$5, funcType$6, funcType$7, funcType$8, funcType$9, funcType$10, ptrType$23, ptrType$24, ptrType$25, ptrType$26, funcType$11, sliceType$12, defaultFont, NewMainApplication, NewRestDataStore;
 	bytes = $packages["bytes"];
 	json = $packages["encoding/json"];
 	fmt = $packages["fmt"];
@@ -30621,18 +31121,19 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	sliceType$3 = $sliceType($emptyInterface);
 	ptrType$5 = $ptrType(events.MouseButtonEvent);
 	ptrType$6 = $ptrType(events.MouseMoveEvent);
-	sliceType$5 = $sliceType(model.Identifiable);
+	sliceType$4 = $sliceType(controls.ComboBoxItem);
+	sliceType$6 = $sliceType(model.Identifiable);
 	arrayType$2 = $arrayType(model.Color, 256);
-	sliceType$6 = $sliceType(model.Level);
-	sliceType$7 = $sliceType(model.Texture);
-	sliceType$8 = $sliceType(model.Tile);
-	sliceType$9 = $sliceType(sliceType$8);
+	sliceType$7 = $sliceType(model.Level);
+	sliceType$8 = $sliceType(model.Texture);
+	sliceType$9 = $sliceType(model.Tile);
+	sliceType$10 = $sliceType(sliceType$9);
 	ptrType$10 = $ptrType(model.TileType);
 	ptrType$11 = $ptrType(model.HeightUnit);
 	ptrType$12 = $ptrType(model.SlopeControl);
 	ptrType$13 = $ptrType(model.CalculatedWallHeights);
 	ptrType$14 = $ptrType(model.RealWorldTileProperties);
-	sliceType$10 = $sliceType(model.LevelObject);
+	sliceType$11 = $sliceType(model.LevelObject);
 	ptrType$20 = $ptrType(model.Font);
 	funcType = $funcType([ptrType$20], [], false);
 	ptrType$21 = $ptrType(model.RawBitmap);
@@ -30640,19 +31141,19 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	ptrType$22 = $ptrType(model.LevelObjects);
 	funcType$2 = $funcType([ptrType$22], [], false);
 	funcType$3 = $funcType([sliceType], [], false);
-	funcType$4 = $funcType([sliceType$6], [], false);
+	funcType$4 = $funcType([sliceType$7], [], false);
 	funcType$5 = $funcType([], [], false);
 	funcType$6 = $funcType([arrayType$2], [], false);
 	funcType$7 = $funcType([sliceType$2], [], false);
 	funcType$8 = $funcType([model.TileProperties], [], false);
-	funcType$9 = $funcType([sliceType$7], [], false);
+	funcType$9 = $funcType([sliceType$8], [], false);
 	funcType$10 = $funcType([model.Tiles], [], false);
 	ptrType$23 = $ptrType(graphics.Bitmap);
 	ptrType$24 = $ptrType(graphics.BitmapTexture);
 	ptrType$25 = $ptrType(MainApplication);
 	ptrType$26 = $ptrType(RestDataStore);
 	funcType$11 = $funcType([$String], [], false);
-	sliceType$11 = $sliceType($Uint8);
+	sliceType$12 = $sliceType($Uint8);
 	NewMainApplication = function(store) {
 		var $ptr, app, store;
 		app = new MainApplication.ptr($clone(time.Now(), time.Time), new $Int64(0, 0), store, $ifaceNil, 0, 0, $ifaceNil, $clone(mgl32.Ident4(), mgl32.Mat4), 0, 0, 0, ptrType$1.nil, graphics.NewBitmapTextPainter(defaultFont), ptrType$2.nil, ptrType$3.nil, ptrType$4.nil);
@@ -30670,7 +31171,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = app.initOpenGl(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = graphics.NewRectangleRenderer(app.gl, app.projectionMatrix); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		app.rectRenderer = _r;
-		uiTextPalette[0] = new sliceType$1([$toNativeArray($kindUint8, [0, 0, 0, 0]), $toNativeArray($kindUint8, [255, 0, 0, 255]), $toNativeArray($kindUint8, [128, 0, 0, 64])]);
+		uiTextPalette[0] = new sliceType$1([$toNativeArray($kindUint8, [0, 0, 0, 0]), $toNativeArray($kindUint8, [128, 148, 84, 255]), $toNativeArray($kindUint8, [0, 0, 0, 192])]);
 		_r$1 = graphics.NewPaletteTexture(app.gl, (function(uiTextPalette, viewMatrix) { return function(index) {
 			var $ptr, entry, fetchIndex, index;
 			fetchIndex = index;
@@ -30748,8 +31249,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	MainApplication.prototype.initOpenGl = function() { return this.$val.initOpenGl(); };
 	MainApplication.ptr.prototype.initInterface = function() {
-		var $ptr, _r, _r$1, _r$2, _r$3, _tmp, _tmp$1, app, buttonBuilder, buttonLabelBuilder, buttonLeft, buttonTop, centerPanelBuilder, charOffset, cursorLine, horizontalCenter, label, labelBuilder, lastGrabX, lastGrabY, lineHeight, minPanelHeight, minPanelWidth, rootBuilder, testTextBitmap, textScale, textTexture, verticalCenter, windowArea, windowBuilder, windowHorizontalCenter, windowVerticalCenter, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; app = $f.app; buttonBuilder = $f.buttonBuilder; buttonLabelBuilder = $f.buttonLabelBuilder; buttonLeft = $f.buttonLeft; buttonTop = $f.buttonTop; centerPanelBuilder = $f.centerPanelBuilder; charOffset = $f.charOffset; cursorLine = $f.cursorLine; horizontalCenter = $f.horizontalCenter; label = $f.label; labelBuilder = $f.labelBuilder; lastGrabX = $f.lastGrabX; lastGrabY = $f.lastGrabY; lineHeight = $f.lineHeight; minPanelHeight = $f.minPanelHeight; minPanelWidth = $f.minPanelWidth; rootBuilder = $f.rootBuilder; testTextBitmap = $f.testTextBitmap; textScale = $f.textScale; textTexture = $f.textTexture; verticalCenter = $f.verticalCenter; windowArea = $f.windowArea; windowBuilder = $f.windowBuilder; windowHorizontalCenter = $f.windowHorizontalCenter; windowVerticalCenter = $f.windowVerticalCenter; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _tmp, _tmp$1, app, box, buttonBuilder, buttonLabelBuilder, buttonLeft, buttonTop, centerPanelBuilder, charOffset, comboBoxBuilder, comboBoxLabelBuilder, comboBoxLeft, comboBoxTop, cursorLine, horizontalCenter, label, labelBuilder, lastGrabX, lastGrabY, lineHeight, minPanelHeight, minPanelWidth, rootBuilder, testTextBitmap, textScale, textTexture, verticalCenter, windowArea, windowBuilder, windowHorizontalCenter, windowVerticalCenter, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; app = $f.app; box = $f.box; buttonBuilder = $f.buttonBuilder; buttonLabelBuilder = $f.buttonLabelBuilder; buttonLeft = $f.buttonLeft; buttonTop = $f.buttonTop; centerPanelBuilder = $f.centerPanelBuilder; charOffset = $f.charOffset; comboBoxBuilder = $f.comboBoxBuilder; comboBoxLabelBuilder = $f.comboBoxLabelBuilder; comboBoxLeft = $f.comboBoxLeft; comboBoxTop = $f.comboBoxTop; cursorLine = $f.cursorLine; horizontalCenter = $f.horizontalCenter; label = $f.label; labelBuilder = $f.labelBuilder; lastGrabX = $f.lastGrabX; lastGrabY = $f.lastGrabY; lineHeight = $f.lineHeight; minPanelHeight = $f.minPanelHeight; minPanelWidth = $f.minPanelWidth; rootBuilder = $f.rootBuilder; testTextBitmap = $f.testTextBitmap; textScale = $f.textScale; textTexture = $f.textTexture; verticalCenter = $f.verticalCenter; windowArea = $f.windowArea; windowBuilder = $f.windowBuilder; windowHorizontalCenter = $f.windowHorizontalCenter; windowVerticalCenter = $f.windowVerticalCenter; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = [app];
 		charOffset = [charOffset];
 		cursorLine = [cursorLine];
@@ -30923,7 +31424,21 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		}; })(app, charOffset, cursorLine, lastGrabX, lastGrabY, lineHeight, textScale, textTexture, windowHorizontalCenter, windowVerticalCenter));
 		_r$3 = buttonBuilder.Build(); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_r$3;
-		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initInterface }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f.app = app; $f.buttonBuilder = buttonBuilder; $f.buttonLabelBuilder = buttonLabelBuilder; $f.buttonLeft = buttonLeft; $f.buttonTop = buttonTop; $f.centerPanelBuilder = centerPanelBuilder; $f.charOffset = charOffset; $f.cursorLine = cursorLine; $f.horizontalCenter = horizontalCenter; $f.label = label; $f.labelBuilder = labelBuilder; $f.lastGrabX = lastGrabX; $f.lastGrabY = lastGrabY; $f.lineHeight = lineHeight; $f.minPanelHeight = minPanelHeight; $f.minPanelWidth = minPanelWidth; $f.rootBuilder = rootBuilder; $f.testTextBitmap = testTextBitmap; $f.textScale = textScale; $f.textTexture = textTexture; $f.verticalCenter = verticalCenter; $f.windowArea = windowArea; $f.windowBuilder = windowBuilder; $f.windowHorizontalCenter = windowHorizontalCenter; $f.windowVerticalCenter = windowVerticalCenter; $f.$s = $s; $f.$r = $r; return $f;
+		comboBoxLabelBuilder = controls.NewLabelBuilder(app[0].defaultFontPainter, $methodVal(app[0], "texturize"), app[0].uiTextRenderer);
+		comboBoxLabelBuilder.SetScale(2);
+		comboBoxBuilder = controls.NewComboBoxBuilder(comboBoxLabelBuilder, app[0].rectRenderer);
+		comboBoxLeft = ui.NewOffsetAnchor(app[0].rootArea.Left(), 50);
+		comboBoxTop = ui.NewOffsetAnchor(app[0].rootArea.Top(), 80);
+		comboBoxBuilder.SetParent(app[0].rootArea);
+		comboBoxBuilder.SetLeft(comboBoxLeft);
+		comboBoxBuilder.SetTop(comboBoxTop);
+		comboBoxBuilder.SetRight(ui.NewOffsetAnchor(comboBoxLeft, 150));
+		comboBoxBuilder.SetBottom(ui.NewOffsetAnchor(comboBoxTop, 25));
+		comboBoxBuilder.WithItems(new sliceType$4([new $String("a"), new $String("b"), new $String("c"), new $String("d"), new $String("e"), new $String("f"), new $String("g"), new $String("some very long text that shouldn't fit"), new $String("1"), new $String("2"), new $String("3"), new $String("4"), new $String("5"), new $String("6"), new $String("7"), new $String("8"), new $String("9"), new $String("10"), new $String("11"), new $String("12"), new $String("13"), new $String("14"), new $String("15"), new $String("16"), new $String("17"), new $String("18"), new $String("19"), new $String("20")]));
+		_r$4 = comboBoxBuilder.Build(); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		box = _r$4;
+		$r = box.SetSelectedItem(new $String("c")); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.initInterface }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f.app = app; $f.box = box; $f.buttonBuilder = buttonBuilder; $f.buttonLabelBuilder = buttonLabelBuilder; $f.buttonLeft = buttonLeft; $f.buttonTop = buttonTop; $f.centerPanelBuilder = centerPanelBuilder; $f.charOffset = charOffset; $f.comboBoxBuilder = comboBoxBuilder; $f.comboBoxLabelBuilder = comboBoxLabelBuilder; $f.comboBoxLeft = comboBoxLeft; $f.comboBoxTop = comboBoxTop; $f.cursorLine = cursorLine; $f.horizontalCenter = horizontalCenter; $f.label = label; $f.labelBuilder = labelBuilder; $f.lastGrabX = lastGrabX; $f.lastGrabY = lastGrabY; $f.lineHeight = lineHeight; $f.minPanelHeight = minPanelHeight; $f.minPanelWidth = minPanelWidth; $f.rootBuilder = rootBuilder; $f.testTextBitmap = testTextBitmap; $f.textScale = textScale; $f.textTexture = textTexture; $f.verticalCenter = verticalCenter; $f.windowArea = windowArea; $f.windowBuilder = windowBuilder; $f.windowHorizontalCenter = windowHorizontalCenter; $f.windowVerticalCenter = windowVerticalCenter; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.initInterface = function() { return this.$val.initInterface(); };
 	MainApplication.ptr.prototype.texturize = function(bmp) {
@@ -31003,8 +31518,12 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	MainApplication.prototype.onMouseButtonUp = function(mouseButton, modifier) { return this.$val.onMouseButtonUp(mouseButton, modifier); };
 	MainApplication.ptr.prototype.onMouseScroll = function(dx, dy) {
-		var $ptr, app, dx, dy;
+		var $ptr, _r, app, dx, dy, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; dx = $f.dx; dy = $f.dy; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
+		_r = app.rootArea.DispatchPositionalEvent(events.NewMouseScrollEvent(app.mouseX, app.mouseY, 0, app.mouseButtons, dx, dy)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r;
+		/* */ $s = -1; case -1: } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseScroll }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.dx = dx; $f.dy = dy; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.onMouseScroll = function(dx, dy) { return this.$val.onMouseScroll(dx, dy); };
 	MainApplication.ptr.prototype.onKey = function(key, modifier) {
@@ -31136,7 +31655,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		onSuccess = [onSuccess];
 		store = this;
 		url = "/projects";
-		data[0] = new model.Projects.ptr(new model.Referable.ptr(""), sliceType$5.nil);
+		data[0] = new model.Projects.ptr(new model.Referable.ptr(""), sliceType$6.nil);
 		$r = store.get(url, data[0], (function(data, onSuccess) { return function $b() {
 			var $ptr, _i, _ref, index, item, projectIDs, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _ref = $f._ref; index = $f.index; item = $f.item; projectIDs = $f.projectIDs; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -31218,7 +31737,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		store = this;
 		_r = fmt.Sprintf("/projects/%s/%s/levels", new sliceType$3([new $String(projectID), new $String(archiveID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		url = _r;
-		data[0] = new model.Levels.ptr(new model.Referable.ptr(""), sliceType$6.nil);
+		data[0] = new model.Levels.ptr(new model.Referable.ptr(""), sliceType$7.nil);
 		$r = store.get(url, data[0], (function(data, onSuccess) { return function $b() {
 			var $ptr, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -31272,7 +31791,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		store = this;
 		_r = fmt.Sprintf("/projects/%s/textures", new sliceType$3([new $String(projectID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		url = _r;
-		data[0] = new model.Textures.ptr(sliceType$7.nil);
+		data[0] = new model.Textures.ptr(sliceType$8.nil);
 		$r = store.get(url, data[0], (function(data, onSuccess) { return function $b() {
 			var $ptr, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -31308,7 +31827,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		store = this;
 		_r = fmt.Sprintf("/projects/%s/%s/levels/%d/tiles", new sliceType$3([new $String(projectID), new $String(archiveID), new $Int(levelID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		url = _r;
-		data[0] = new model.Tiles.ptr(sliceType$9.nil);
+		data[0] = new model.Tiles.ptr(sliceType$10.nil);
 		$r = store.get(url, data[0], (function(data, onSuccess) { return function $b() {
 			var $ptr, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -31364,7 +31883,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		store = this;
 		_r = fmt.Sprintf("/projects/%s/%s/levels/%d/objects", new sliceType$3([new $String(projectID), new $String(archiveID), new $Int(levelID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		url = _r;
-		data[0] = new model.LevelObjects.ptr(sliceType$10.nil);
+		data[0] = new model.LevelObjects.ptr(sliceType$11.nil);
 		$r = store.get(url, data[0], (function(data, onSuccess) { return function $b() {
 			var $ptr, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -31380,7 +31899,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	DataStore.init([{prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType, FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$1, FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$2, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$4, FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType$5, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$6, FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$7, FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType, funcType$3, FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$8, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$1, FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$9, FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$8, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, FailureFunc], [], false)}]);
 	MainApplication.init("github.com/inkyblackness/shocked-client/editor", [{prop: "lastElapsedTick", name: "lastElapsedTick", exported: false, typ: time.Time, tag: ""}, {prop: "elapsedMSec", name: "elapsedMSec", exported: false, typ: $Int64, tag: ""}, {prop: "store", name: "store", exported: false, typ: DataStore, tag: ""}, {prop: "glWindow", name: "glWindow", exported: false, typ: env.OpenGlWindow, tag: ""}, {prop: "windowWidth", name: "windowWidth", exported: false, typ: $Float32, tag: ""}, {prop: "windowHeight", name: "windowHeight", exported: false, typ: $Float32, tag: ""}, {prop: "gl", name: "gl", exported: false, typ: opengl.OpenGl, tag: ""}, {prop: "projectionMatrix", name: "projectionMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "mouseX", name: "mouseX", exported: false, typ: $Float32, tag: ""}, {prop: "mouseY", name: "mouseY", exported: false, typ: $Float32, tag: ""}, {prop: "mouseButtons", name: "mouseButtons", exported: false, typ: $Uint32, tag: ""}, {prop: "rootArea", name: "rootArea", exported: false, typ: ptrType$1, tag: ""}, {prop: "defaultFontPainter", name: "defaultFontPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "uiTextPalette", name: "uiTextPalette", exported: false, typ: ptrType$2, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$3, tag: ""}, {prop: "uiTextRenderer", name: "uiTextRenderer", exported: false, typ: ptrType$4, tag: ""}]);
 	RestDataStore.init("github.com/inkyblackness/shocked-client/editor", [{prop: "transport", name: "transport", exported: false, typ: RestTransport, tag: ""}]);
-	RestTransport.init([{prop: "Get", name: "Get", pkg: "", typ: $funcType([$String, funcType$11, funcType$5], [], false)}, {prop: "Post", name: "Post", pkg: "", typ: $funcType([$String, sliceType$11, funcType$11, funcType$5], [], false)}, {prop: "Put", name: "Put", pkg: "", typ: $funcType([$String, sliceType$11, funcType$11, funcType$5], [], false)}]);
+	RestTransport.init([{prop: "Get", name: "Get", pkg: "", typ: $funcType([$String, funcType$11, funcType$5], [], false)}, {prop: "Post", name: "Post", pkg: "", typ: $funcType([$String, sliceType$12, funcType$11, funcType$5], [], false)}, {prop: "Put", name: "Put", pkg: "", typ: $funcType([$String, sliceType$12, funcType$11, funcType$5], [], false)}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:

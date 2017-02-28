@@ -41,6 +41,7 @@ func (box *ComboBox) Dispose() {
 	box.hideList()
 	box.selectedLabel.Dispose()
 	box.hintLabel.Dispose()
+	box.area.Remove()
 }
 
 // SetSelectedItem changes what is currently selected. Does not fire change handler.
@@ -57,7 +58,7 @@ func (box *ComboBox) SetSelectedItem(item ComboBoxItem) {
 
 func (box *ComboBox) onRender(area *ui.Area) {
 	box.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-		graphics.RGBA(0.8, 0.8, 0.8, 0.8))
+		graphics.RGBA(0.31, 0.56, 0.34, 0.8))
 }
 
 func (box *ComboBox) onMouseDown(area *ui.Area, event events.Event) (consumed bool) {
@@ -69,16 +70,6 @@ func (box *ComboBox) onMouseDown(area *ui.Area, event events.Event) (consumed bo
 		} else {
 			box.hideList()
 		}
-		consumed = true
-	}
-
-	return
-}
-
-func (box *ComboBox) onMouseUp(area *ui.Area, event events.Event) (consumed bool) {
-	mouseEvent := event.(*events.MouseButtonEvent)
-
-	if mouseEvent.AffectedButtons() == env.MousePrimary {
 		consumed = true
 	}
 
@@ -130,8 +121,8 @@ func (box *ComboBox) showList() {
 
 		box.labelBuilder.SetParent(box.listArea)
 		box.labelBuilder.AlignedHorizontallyBy(LeftAligner)
-		box.labelBuilder.SetLeft(box.area.Left())
-		box.labelBuilder.SetRight(box.area.Right())
+		box.labelBuilder.SetLeft(ui.NewOffsetAnchor(box.area.Left(), 4))
+		box.labelBuilder.SetRight(ui.NewOffsetAnchor(box.area.Right(), -4))
 		for listIndex := 0; listIndex < box.listItemCount; listIndex++ {
 			nextBottom := ui.NewOffsetAnchor(lastBottom, boxHeight)
 			box.labelBuilder.SetTop(lastBottom)
@@ -162,7 +153,7 @@ func (box *ComboBox) updateListItemLabels() {
 
 func (box *ComboBox) onListRender(area *ui.Area) {
 	box.rectRenderer.Fill(area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-		graphics.RGBA(0.8, 0.8, 0.8, 0.7))
+		graphics.RGBA(0.31, 0.56, 0.34, 0.7))
 }
 
 func (box *ComboBox) onListMouseDown(area *ui.Area, event events.Event) (consumed bool) {
@@ -186,11 +177,10 @@ func (box *ComboBox) onListMouseUp(area *ui.Area, event events.Event) (consumed 
 			}
 			if box.contains(box.listArea, mouseEvent) {
 				_, mouseY := mouseEvent.Position()
-				selectedItem := ((mouseY - box.listArea.Top().Value()) * float32(box.listItemCount)) /
+				chosenItem := ((mouseY - box.listArea.Top().Value()) * float32(box.listItemCount)) /
 					(box.listArea.Bottom().Value() - box.listArea.Top().Value())
 				box.hideList()
-				box.SetSelectedItem(box.items[box.listStartIndex+int(selectedItem)])
-				// TODO: fire changed event
+				box.onItemChosen(box.items[box.listStartIndex+int(chosenItem)])
 			}
 		}
 		consumed = true
@@ -199,26 +189,30 @@ func (box *ComboBox) onListMouseUp(area *ui.Area, event events.Event) (consumed 
 	return
 }
 
+func (box *ComboBox) onItemChosen(item ComboBoxItem) {
+	if item != box.selectedItem {
+		box.SetSelectedItem(item)
+		box.selectionChangeHandler(item)
+	}
+}
+
 func (box *ComboBox) onListScroll(area *ui.Area, event events.Event) (consumed bool) {
 	mouseEvent := event.(*events.MouseScrollEvent)
-
 	_, dy := mouseEvent.Deltas()
-	scrollStep := 1
+	toScroll := func(available int) int {
+		result := 1
+		if result > available {
+			result = available
+		}
+		return result
+	}
 
 	if dy < 0 {
 		available := box.listStartIndex
-		toScroll := scrollStep
-		if toScroll > available {
-			toScroll = available
-		}
-		box.listStartIndex -= toScroll
+		box.listStartIndex -= toScroll(available)
 	} else if dy > 0 {
 		available := len(box.items) - (box.listStartIndex + box.listItemCount)
-		toScroll := scrollStep
-		if toScroll > available {
-			toScroll = available
-		}
-		box.listStartIndex += toScroll
+		box.listStartIndex += toScroll(available)
 	}
 	box.updateListItemLabels()
 	consumed = true

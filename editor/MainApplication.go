@@ -59,8 +59,8 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 
 	uiTextPalette := [][4]byte{
 		{0x00, 0x00, 0x00, 0x00},
-		{0xFF, 0x00, 0x00, 0xFF},
-		{0x80, 0x00, 0x00, 0x40}}
+		{0x80, 0x94, 0x54, 0xFF},
+		{0x00, 0x00, 0x00, 0xC0}}
 	app.uiTextPalette = graphics.NewPaletteTexture(app.gl, func(index int) (byte, byte, byte, byte) {
 		fetchIndex := index
 		if fetchIndex >= len(uiTextPalette) {

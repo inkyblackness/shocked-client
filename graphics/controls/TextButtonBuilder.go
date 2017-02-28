@@ -25,8 +25,8 @@ func NewTextButtonBuilder(labelBuilder *LabelBuilder, rectRenderer *graphics.Rec
 	builder := &TextButtonBuilder{
 		areaBuilder:   ui.NewAreaBuilder(),
 		rectRenderer:  rectRenderer,
-		idleColor:     graphics.RGBA(0.0, 0.6, 0.0, 0.8),
-		preparedColor: graphics.RGBA(0.0, 0.7, 0.0, 0.95),
+		idleColor:     graphics.RGBA(0.31, 0.56, 0.34, 0.8),
+		preparedColor: graphics.RGBA(0.31, 0.56, 0.34, 0.95),
 		labelBuilder:  labelBuilder,
 		text:          "",
 		actionHandler: func() {}}
