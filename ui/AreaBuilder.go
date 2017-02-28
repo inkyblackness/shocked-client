@@ -13,6 +13,8 @@ type AreaBuilder struct {
 	right  Anchor
 	bottom Anchor
 
+	visible bool
+
 	onRender     RenderFunction
 	eventHandler map[events.EventType]EventHandler
 }
@@ -24,6 +26,8 @@ func NewAreaBuilder() *AreaBuilder {
 		top:    ZeroAnchor(),
 		right:  ZeroAnchor(),
 		bottom: ZeroAnchor(),
+
+		visible: true,
 
 		onRender:     func(*Area) {},
 		eventHandler: make(map[events.EventType]EventHandler)}
@@ -40,6 +44,8 @@ func (builder *AreaBuilder) Build() *Area {
 		top:    builder.top,
 		right:  builder.right,
 		bottom: builder.bottom,
+
+		visible: builder.visible,
 
 		onRender:     builder.onRender,
 		eventHandler: make(map[events.EventType]EventHandler)}
@@ -82,6 +88,12 @@ func (builder *AreaBuilder) SetRight(value Anchor) *AreaBuilder {
 // SetBottom sets the bottom anchor. Default: ZeroAnchor
 func (builder *AreaBuilder) SetBottom(value Anchor) *AreaBuilder {
 	builder.bottom = value
+	return builder
+}
+
+// SetVisible sets the initial visibility.
+func (builder *AreaBuilder) SetVisible(value bool) *AreaBuilder {
+	builder.visible = value
 	return builder
 }
 
