@@ -95,3 +95,9 @@ func (builder *ComboBoxBuilder) WithItems(items []ComboBoxItem) *ComboBoxBuilder
 	copy(builder.items, items)
 	return builder
 }
+
+// WithSelectionChangeHandler sets the handler for a selection change.
+func (builder *ComboBoxBuilder) WithSelectionChangeHandler(handler SelectionChangeHandler) *ComboBoxBuilder {
+	builder.selectionChangeHandler = handler
+	return builder
+}

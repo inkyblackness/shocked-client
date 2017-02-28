@@ -30,6 +30,7 @@ type MainApplication struct {
 
 	mouseX, mouseY float32
 	mouseButtons   uint32
+	keyModifier    keys.Modifier
 
 	rootArea           *ui.Area
 	defaultFontPainter graphics.TextPainter
@@ -307,30 +308,30 @@ func (app *MainApplication) onMouseMove(x float32, y float32) {
 func (app *MainApplication) onMouseButtonDown(mouseButton uint32, modifier keys.Modifier) {
 	app.mouseButtons |= mouseButton
 	app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent(events.MouseButtonDownEventType,
-		app.mouseX, app.mouseY, 0, app.mouseButtons, mouseButton))
+		app.mouseX, app.mouseY, uint32(app.keyModifier), app.mouseButtons, mouseButton))
 }
 
 func (app *MainApplication) onMouseButtonUp(mouseButton uint32, modifier keys.Modifier) {
 	app.mouseButtons &= ^mouseButton
 	app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent(events.MouseButtonUpEventType,
-		app.mouseX, app.mouseY, 0, app.mouseButtons, mouseButton))
+		app.mouseX, app.mouseY, uint32(app.keyModifier), app.mouseButtons, mouseButton))
 }
 
 func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
-	app.rootArea.DispatchPositionalEvent(events.NewMouseScrollEvent(app.mouseX, app.mouseY, 0, app.mouseButtons, dx, dy))
+	app.rootArea.DispatchPositionalEvent(events.NewMouseScrollEvent(
+		app.mouseX, app.mouseY, uint32(app.keyModifier), app.mouseButtons, dx, dy))
 }
 
 func (app *MainApplication) onMouseClick(modifierMask keys.Modifier) {
 }
 
 func (app *MainApplication) onKey(key keys.Key, modifier keys.Modifier) {
-	fmt.Printf("down: %v [%v]\n", key, modifier)
+	app.keyModifier = modifier
 }
 
 func (app *MainApplication) onModifier(modifier keys.Modifier) {
-	fmt.Printf(" mod: [%v]\n", modifier)
+	app.keyModifier = modifier
 }
 
 func (app *MainApplication) onChar(char rune) {
-	fmt.Printf("char: %v\n", string(char))
 }
