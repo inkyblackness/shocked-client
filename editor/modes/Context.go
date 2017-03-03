@@ -1,4 +1,4 @@
-package editor
+package modes
 
 import (
 	"github.com/inkyblackness/shocked-client/editor/model"

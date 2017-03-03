@@ -20,7 +20,7 @@ func (adapter *LevelAdapter) clear(levelID string) {
 
 // ID returns the ID of the level.
 func (adapter *LevelAdapter) ID() string {
-	return adapter.id.get().(string)
+	return adapter.id.orDefault("").(string)
 }
 
 // OnIDChanged registers a callback for changed IDs.

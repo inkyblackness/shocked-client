@@ -17,6 +17,14 @@ func (obj *observable) get() interface{} {
 	return obj.value
 }
 
+func (obj *observable) orDefault(alt interface{}) interface{} {
+	result := obj.value
+	if result == nil {
+		result = alt
+	}
+	return result
+}
+
 func (obj *observable) set(value interface{}) {
 	if obj.value != value {
 		obj.value = value

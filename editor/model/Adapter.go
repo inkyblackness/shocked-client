@@ -53,7 +53,7 @@ func (adapter *Adapter) SetMessage(message string) {
 
 // Message returns the current global message.
 func (adapter *Adapter) Message() string {
-	return adapter.message.get().(string)
+	return adapter.message.orDefault("").(string)
 }
 
 // OnMessageChanged registers a callback for the global message.
@@ -63,7 +63,7 @@ func (adapter *Adapter) OnMessageChanged(callback func()) {
 
 // ActiveProjectID returns the identifier of the current project.
 func (adapter *Adapter) ActiveProjectID() string {
-	return adapter.activeProjectID.get().(string)
+	return adapter.activeProjectID.orDefault("").(string)
 }
 
 // RequestProject sets the project to work on.
@@ -80,7 +80,7 @@ func (adapter *Adapter) RequestProject(projectID string) {
 
 // ActiveArchiveID returns the identifier of the current archive.
 func (adapter *Adapter) ActiveArchiveID() string {
-	return adapter.activeArchiveID.get().(string)
+	return adapter.activeArchiveID.orDefault("").(string)
 }
 
 func (adapter *Adapter) requestArchive(archiveID string) {
@@ -107,6 +107,11 @@ func (adapter *Adapter) onLevels(levels []model.Level) {
 	adapter.availableLevelIDs.set(availableLevelIDs)
 }
 
+// ActiveLevel returns the adapter for the currently active level.
+func (adapter *Adapter) ActiveLevel() *LevelAdapter {
+	return adapter.activeLevel
+}
+
 // RequestActiveLevel requests to set the specified level as the active one.
 func (adapter *Adapter) RequestActiveLevel(levelID string) {
 	adapter.activeLevel.clear(levelID)
@@ -124,7 +129,3 @@ func (adapter *Adapter) AvailableLevelIDs() []string {
 func (adapter *Adapter) OnAvailableLevelsChanged(callback func()) {
 	adapter.availableLevelIDs.addObserver(callback)
 }
-
-// introduce Observable type with change callback
-// alt: use bus?
-//

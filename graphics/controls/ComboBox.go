@@ -44,6 +44,12 @@ func (box *ComboBox) Dispose() {
 	box.area.Remove()
 }
 
+// SetItems sets the lits of available items.
+func (box *ComboBox) SetItems(items []ComboBoxItem) {
+	box.hideList()
+	box.items = items
+}
+
 // SetSelectedItem changes what is currently selected. Does not fire change handler.
 func (box *ComboBox) SetSelectedItem(item ComboBoxItem) {
 	if box.selectedItem != item {
