@@ -56,7 +56,7 @@ func (rest *RestTransport) handle(request *http.Request, onSuccess func(jsonStri
 			defer response.Body.Close()
 		}
 
-		if (err == nil) && (response.StatusCode == http.StatusOK) || (response.StatusCode == http.StatusCreated) {
+		if (err == nil) && ((response.StatusCode == http.StatusOK) || (response.StatusCode == http.StatusCreated)) {
 			var bodyData []byte
 
 			bodyData, err = ioutil.ReadAll(response.Body)
