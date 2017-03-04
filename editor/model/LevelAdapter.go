@@ -9,11 +9,13 @@ func newLevelAdapter() *LevelAdapter {
 	adapter := &LevelAdapter{
 		id: newObservable()}
 
+	adapter.id.set("")
+
 	return adapter
 }
 
 func (adapter *LevelAdapter) clear(levelID string) {
-	adapter.id.set(nil)
+	adapter.id.set("")
 
 	adapter.id.set(levelID)
 }
