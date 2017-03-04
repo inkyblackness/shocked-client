@@ -4,6 +4,7 @@ import (
 	mgl "github.com/go-gl/mathgl/mgl32"
 
 	"github.com/inkyblackness/shocked-client/editor/camera"
+	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/ui"
@@ -12,19 +13,23 @@ import (
 
 // MapDisplay is a display for a level map
 type MapDisplay struct {
+	levelAdapter *model.LevelAdapter
+
 	area *ui.Area
 
 	camera        *camera.LimitedCamera
 	viewMatrix    mgl.Mat4
 	renderContext *graphics.RenderContext
 
-	grid *GridRenderable
+	background *GridRenderable
+	mapGrid    *TileGridMapRenderable
 
 	moveCapture func(pixelX, pixelY float32)
 }
 
 // NewMapDisplay returns a new instance.
-func NewMapDisplay(parent *ui.Area, renderContextFactory func(*mgl.Mat4) *graphics.RenderContext) *MapDisplay {
+func NewMapDisplay(levelAdapter *model.LevelAdapter, parent *ui.Area,
+	renderContextFactory func(*mgl.Mat4) *graphics.RenderContext) *MapDisplay {
 	tileBaseLength := float32(32)
 	tilesPerMapSide := float32(64.0)
 	tileBaseHalf := tileBaseLength / 2.0
@@ -33,8 +38,11 @@ func NewMapDisplay(parent *ui.Area, renderContextFactory func(*mgl.Mat4) *graphi
 	zoomLevelMax := float32(4)
 
 	display := &MapDisplay{
-		camera:      camera.NewLimited(zoomLevelMin, zoomLevelMax, -tileBaseHalf, camLimit),
-		moveCapture: func(float32, float32) {}}
+		levelAdapter: levelAdapter,
+		camera:       camera.NewLimited(zoomLevelMin, zoomLevelMax, -tileBaseHalf, camLimit),
+		moveCapture:  func(float32, float32) {}}
+
+	display.camera.MoveTo(float32(tilesPerMapSide*tileBaseLength)/-2.0, float32(tilesPerMapSide*tileBaseLength)/-2.0)
 
 	{
 		builder := ui.NewAreaBuilder()
@@ -53,7 +61,22 @@ func NewMapDisplay(parent *ui.Area, renderContextFactory func(*mgl.Mat4) *graphi
 	}
 
 	display.renderContext = renderContextFactory(display.camera.ViewMatrix())
-	display.grid = NewGridRenderable(display.renderContext)
+	display.background = NewGridRenderable(display.renderContext)
+	display.mapGrid = NewTileGridMapRenderable(display.renderContext)
+
+	linkTileProperties := func(coord model.TileCoordinate) {
+		tile := display.levelAdapter.TileMap().Tile(coord)
+		tile.OnPropertiesChanged(func() {
+			x, y := coord.XY()
+			display.mapGrid.SetTile(x, 63-y, tile.Properties())
+		})
+	}
+
+	for y := 0; y < 64; y++ {
+		for x := 0; x < 64; x++ {
+			linkTileProperties(model.TileCoordinateOf(x, y))
+		}
+	}
 
 	return display
 }
@@ -66,7 +89,8 @@ func (display *MapDisplay) SetVisible(visible bool) {
 func (display *MapDisplay) render() {
 	root := display.area.Root()
 	display.camera.SetViewportSize(root.Right().Value(), root.Bottom().Value())
-	display.grid.Render()
+	display.background.Render()
+	display.mapGrid.Render()
 }
 
 func (display *MapDisplay) unprojectPixel(pixelX, pixelY float32) (x, y float32) {
