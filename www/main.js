@@ -30595,7 +30595,7 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function() {
-	var $pkg = {}, $init, fmt, mgl32, mgl64, camera, model, env, graphics, opengl, ui, events, model$1, math, os, GridRenderable, MapDisplay, TileGridMapRenderable, sliceType, sliceType$1, sliceType$2, arrayType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$14, sliceType$3, sliceType$4, ptrType$20, funcType$1, gridVertexShaderSource, gridFragmentShaderSource, mapTileGridVertexShaderSource, mapTileGridFragmentShaderSource, uvRotations, NewGridRenderable, NewMapDisplay, NewTileGridMapRenderable, init;
+	var $pkg = {}, $init, fmt, mgl32, mgl64, camera, model, env, graphics, opengl, ui, events, model$1, math, os, Context, GridRenderable, MapDisplay, TileGridMapRenderable, sliceType, sliceType$1, sliceType$2, arrayType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$14, sliceType$3, sliceType$4, ptrType$18, ptrType$20, ptrType$21, funcType$1, gridVertexShaderSource, gridFragmentShaderSource, mapTileGridVertexShaderSource, mapTileGridFragmentShaderSource, uvRotations, NewGridRenderable, NewMapDisplay, NewTileGridMapRenderable, init;
 	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
 	mgl64 = $packages["github.com/go-gl/mathgl/mgl64"];
@@ -30609,6 +30609,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 	model$1 = $packages["github.com/inkyblackness/shocked-model"];
 	math = $packages["math"];
 	os = $packages["os"];
+	Context = $pkg.Context = $newType(8, $kindInterface, "display.Context", true, "github.com/inkyblackness/shocked-client/editor/display", true, null);
 	GridRenderable = $pkg.GridRenderable = $newType(0, $kindStruct, "display.GridRenderable", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(context_, program_, vao_, vertexPositionBuffer_, vertexPositionAttrib_, viewMatrixUniform_, projectionMatrixUniform_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -30629,9 +30630,10 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		this.viewMatrixUniform = viewMatrixUniform_;
 		this.projectionMatrixUniform = projectionMatrixUniform_;
 	});
-	MapDisplay = $pkg.MapDisplay = $newType(0, $kindStruct, "display.MapDisplay", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(levelAdapter_, area_, camera_, viewMatrix_, renderContext_, background_, mapGrid_, moveCapture_) {
+	MapDisplay = $pkg.MapDisplay = $newType(0, $kindStruct, "display.MapDisplay", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(context_, levelAdapter_, area_, camera_, viewMatrix_, renderContext_, background_, mapGrid_, moveCapture_) {
 		this.$val = this;
 		if (arguments.length === 0) {
+			this.context = $ifaceNil;
 			this.levelAdapter = ptrType$4.nil;
 			this.area = ptrType$5.nil;
 			this.camera = ptrType$6.nil;
@@ -30642,6 +30644,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 			this.moveCapture = $throwNilPointerError;
 			return;
 		}
+		this.context = context_;
 		this.levelAdapter = levelAdapter_;
 		this.area = area_;
 		this.camera = camera_;
@@ -30690,7 +30693,9 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 	ptrType$14 = $ptrType(model$1.TileProperties);
 	sliceType$3 = $sliceType(ptrType$14);
 	sliceType$4 = $sliceType(sliceType$3);
-	ptrType$20 = $ptrType(MapDisplay);
+	ptrType$18 = $ptrType(mgl32.Mat4);
+	ptrType$20 = $ptrType(model.Adapter);
+	ptrType$21 = $ptrType(MapDisplay);
 	funcType$1 = $funcType([$Float32, $Float32], [], false);
 	NewGridRenderable = function(context) {
 		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, context, err1, err2, fragmentShader, gl, half, limit, program, renderable, vertexShader, vertices, x, $s, $deferred, $r;
@@ -30768,9 +30773,9 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		/* */ } return; } if ($f === undefined) { $f = { $blk: GridRenderable.ptr.prototype.Render }; } $f.$ptr = $ptr; $f.gl = gl; $f.renderable = renderable; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	GridRenderable.prototype.Render = function() { return this.$val.Render(); };
-	NewMapDisplay = function(levelAdapter, parent, renderContextFactory) {
-		var $ptr, _r, _r$1, _r$2, builder, camLimit, display, levelAdapter, linkTileProperties, parent, renderContextFactory, tileBaseHalf, tileBaseLength, tilesPerMapSide, x, y, zoomLevelMax, zoomLevelMin, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; builder = $f.builder; camLimit = $f.camLimit; display = $f.display; levelAdapter = $f.levelAdapter; linkTileProperties = $f.linkTileProperties; parent = $f.parent; renderContextFactory = $f.renderContextFactory; tileBaseHalf = $f.tileBaseHalf; tileBaseLength = $f.tileBaseLength; tilesPerMapSide = $f.tilesPerMapSide; x = $f.x; y = $f.y; zoomLevelMax = $f.zoomLevelMax; zoomLevelMin = $f.zoomLevelMin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+	NewMapDisplay = function(context, parent) {
+		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, builder, camLimit, context, display, linkTileProperties, parent, tileBaseHalf, tileBaseLength, tilesPerMapSide, x, y, zoomLevelMax, zoomLevelMin, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; builder = $f.builder; camLimit = $f.camLimit; context = $f.context; display = $f.display; linkTileProperties = $f.linkTileProperties; parent = $f.parent; tileBaseHalf = $f.tileBaseHalf; tileBaseLength = $f.tileBaseLength; tilesPerMapSide = $f.tilesPerMapSide; x = $f.x; y = $f.y; zoomLevelMax = $f.zoomLevelMax; zoomLevelMin = $f.zoomLevelMin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		display = [display];
 		tileBaseLength = 32;
 		tilesPerMapSide = 64;
@@ -30778,7 +30783,9 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		camLimit = $fround($fround(tilesPerMapSide * tileBaseLength) - tileBaseHalf);
 		zoomLevelMin = -2;
 		zoomLevelMax = 4;
-		display[0] = new MapDisplay.ptr(levelAdapter, ptrType$5.nil, camera.NewLimited(zoomLevelMin, zoomLevelMax, -tileBaseHalf, camLimit), arrayType.zero(), ptrType$1.nil, ptrType$3.nil, ptrType$7.nil, (function(display) { return function(param, param$1) {
+		_r = context.ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = _r.ActiveLevel(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		display[0] = new MapDisplay.ptr(context, _r$1, ptrType$5.nil, camera.NewLimited(zoomLevelMin, zoomLevelMax, -tileBaseHalf, camLimit), arrayType.zero(), ptrType$1.nil, ptrType$3.nil, ptrType$7.nil, (function(display) { return function(param, param$1) {
 			var $ptr, param, param$1;
 		}; })(display));
 		display[0].camera.MoveTo($fround($fround(tilesPerMapSide * tileBaseLength) / -2), $fround($fround(tilesPerMapSide * tileBaseLength) / -2));
@@ -30801,12 +30808,12 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		builder.OnEvent("mouse.button.down", $methodVal(display[0], "onMouseButtonDown"));
 		builder.OnEvent("mouse.button.up", $methodVal(display[0], "onMouseButtonUp"));
 		display[0].area = builder.Build();
-		_r = renderContextFactory(display[0].camera.ViewMatrix()); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		display[0].renderContext = _r;
-		_r$1 = NewGridRenderable(display[0].renderContext); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		display[0].background = _r$1;
-		_r$2 = NewTileGridMapRenderable(display[0].renderContext); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		display[0].mapGrid = _r$2;
+		_r$2 = context.NewRenderContext(display[0].camera.ViewMatrix()); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		display[0].renderContext = _r$2;
+		_r$3 = NewGridRenderable(display[0].renderContext); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		display[0].background = _r$3;
+		_r$4 = NewTileGridMapRenderable(display[0].renderContext); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		display[0].mapGrid = _r$4;
 		linkTileProperties = (function(display) { return function(coord) {
 			var $ptr, coord, tile;
 			tile = display[0].levelAdapter.TileMap().Tile($clone(coord, model.TileCoordinate));
@@ -30819,18 +30826,18 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 			}; })(display));
 		}; })(display);
 		y = 0;
-		/* while (true) { */ case 4:
-			/* if (!(y < 64)) { break; } */ if(!(y < 64)) { $s = 5; continue; }
+		/* while (true) { */ case 6:
+			/* if (!(y < 64)) { break; } */ if(!(y < 64)) { $s = 7; continue; }
 			x = 0;
-			/* while (true) { */ case 6:
-				/* if (!(x < 64)) { break; } */ if(!(x < 64)) { $s = 7; continue; }
-				$r = linkTileProperties($clone(model.TileCoordinateOf(x, y), model.TileCoordinate)); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* while (true) { */ case 8:
+				/* if (!(x < 64)) { break; } */ if(!(x < 64)) { $s = 9; continue; }
+				$r = linkTileProperties($clone(model.TileCoordinateOf(x, y), model.TileCoordinate)); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 				x = x + (1) >> 0;
-			/* } */ $s = 6; continue; case 7:
+			/* } */ $s = 8; continue; case 9:
 			y = y + (1) >> 0;
-		/* } */ $s = 4; continue; case 5:
+		/* } */ $s = 6; continue; case 7:
 		$s = -1; return display[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewMapDisplay }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.builder = builder; $f.camLimit = camLimit; $f.display = display; $f.levelAdapter = levelAdapter; $f.linkTileProperties = linkTileProperties; $f.parent = parent; $f.renderContextFactory = renderContextFactory; $f.tileBaseHalf = tileBaseHalf; $f.tileBaseLength = tileBaseLength; $f.tilesPerMapSide = tilesPerMapSide; $f.x = x; $f.y = y; $f.zoomLevelMax = zoomLevelMax; $f.zoomLevelMin = zoomLevelMin; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewMapDisplay }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f.builder = builder; $f.camLimit = camLimit; $f.context = context; $f.display = display; $f.linkTileProperties = linkTileProperties; $f.parent = parent; $f.tileBaseHalf = tileBaseHalf; $f.tileBaseLength = tileBaseLength; $f.tilesPerMapSide = tilesPerMapSide; $f.x = x; $f.y = y; $f.zoomLevelMax = zoomLevelMax; $f.zoomLevelMin = zoomLevelMin; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewMapDisplay = NewMapDisplay;
 	MapDisplay.ptr.prototype.SetVisible = function(visible) {
@@ -31119,10 +31126,11 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		}
 	};
 	ptrType$3.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}];
-	ptrType$20.methods = [{prop: "SetVisible", name: "SetVisible", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([], [], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}];
+	ptrType$21.methods = [{prop: "SetVisible", name: "SetVisible", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([], [], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}];
 	ptrType$7.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$Int, $Int, ptrType$14], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([], [], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}];
+	Context.init([{prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$20], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$18], [ptrType$1], false)}]);
 	GridRenderable.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: ptrType$1, tag: ""}, {prop: "program", name: "program", exported: false, typ: $Uint32, tag: ""}, {prop: "vao", name: "vao", exported: false, typ: ptrType$2, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", exported: false, typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", exported: false, typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}]);
-	MapDisplay.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$4, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType$5, tag: ""}, {prop: "camera", name: "camera", exported: false, typ: ptrType$6, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "renderContext", name: "renderContext", exported: false, typ: ptrType$1, tag: ""}, {prop: "background", name: "background", exported: false, typ: ptrType$3, tag: ""}, {prop: "mapGrid", name: "mapGrid", exported: false, typ: ptrType$7, tag: ""}, {prop: "moveCapture", name: "moveCapture", exported: false, typ: funcType$1, tag: ""}]);
+	MapDisplay.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$4, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType$5, tag: ""}, {prop: "camera", name: "camera", exported: false, typ: ptrType$6, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "renderContext", name: "renderContext", exported: false, typ: ptrType$1, tag: ""}, {prop: "background", name: "background", exported: false, typ: ptrType$3, tag: ""}, {prop: "mapGrid", name: "mapGrid", exported: false, typ: ptrType$7, tag: ""}, {prop: "moveCapture", name: "moveCapture", exported: false, typ: funcType$1, tag: ""}]);
 	TileGridMapRenderable.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: ptrType$1, tag: ""}, {prop: "program", name: "program", exported: false, typ: $Uint32, tag: ""}, {prop: "vao", name: "vao", exported: false, typ: ptrType$2, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", exported: false, typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", exported: false, typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "tiles", name: "tiles", exported: false, typ: sliceType$4, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
@@ -33354,8 +33362,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	modeSelector.prototype.String = function() { return this.$val.String(); };
 	newRootArea = function(context) {
-		var $ptr, _i, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, areaBuilder, boxMessageSeparator, builder, builder$1, builder$2, builder$3, context, index, items, mapDisplay, root, selector, topLine, topLineBottom, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; areaBuilder = $f.areaBuilder; boxMessageSeparator = $f.boxMessageSeparator; builder = $f.builder; builder$1 = $f.builder$1; builder$2 = $f.builder$2; builder$3 = $f.builder$3; context = $f.context; index = $f.index; items = $f.items; mapDisplay = $f.mapDisplay; root = $f.root; selector = $f.selector; topLine = $f.topLine; topLineBottom = $f.topLineBottom; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _i, _r, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, areaBuilder, boxMessageSeparator, builder, builder$1, builder$2, builder$3, context, index, items, mapDisplay, root, selector, topLine, topLineBottom, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; areaBuilder = $f.areaBuilder; boxMessageSeparator = $f.boxMessageSeparator; builder = $f.builder; builder$1 = $f.builder$1; builder$2 = $f.builder$2; builder$3 = $f.builder$3; context = $f.context; index = $f.index; items = $f.items; mapDisplay = $f.mapDisplay; root = $f.root; selector = $f.selector; topLine = $f.topLine; topLineBottom = $f.topLineBottom; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		context = [context];
 		root = [root];
 		root[0] = new rootArea.ptr(context[0], ptrType$2.nil, ptrType$2.nil, ptrType$14.nil, ptrType$15.nil, ptrType$16.nil, ptrType$16.nil, ptrType$16.nil, sliceType$11.nil);
@@ -33364,10 +33372,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		areaBuilder.SetBottom(ui.NewAbsoluteAnchor(0));
 		root[0].area = areaBuilder.Build();
 		topLine = ptrType$2.nil;
-		_r = context[0].ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r$1 = _r.ActiveLevel(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_r$2 = display.NewMapDisplay(_r$1, root[0].area, $methodVal(context[0], "NewRenderContext")); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		mapDisplay = _r$2;
+		_r = display.NewMapDisplay(context[0], root[0].area); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		mapDisplay = _r;
 		topLineBottom = ui.NewOffsetAnchor(root[0].area.Top(), 29);
 		builder = ui.NewAreaBuilder();
 		builder.SetParent(root[0].area);
@@ -33383,12 +33389,12 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		builder$1.SetRight(ui.NewOffsetAnchor(root[0].area.Right(), 0));
 		builder$1.SetBottom(topLineBottom);
 		topLine = builder$1.Build();
-		_r$3 = modes.NewWelcomeMode(context[0], root[0].modeArea); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_r$4 = root[0].addMode(_r$3, "Welcome"); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-		root[0].welcomeMode = _r$4;
-		_r$5 = modes.NewLevelControlMode(context[0], root[0].modeArea); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-		_r$6 = root[0].addMode(_r$5, "Level Control"); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		root[0].levelControlMode = _r$6;
+		_r$1 = modes.NewWelcomeMode(context[0], root[0].modeArea); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = root[0].addMode(_r$1, "Welcome"); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		root[0].welcomeMode = _r$2;
+		_r$3 = modes.NewLevelControlMode(context[0], root[0].modeArea); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$4 = root[0].addMode(_r$3, "Level Control"); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		root[0].levelControlMode = _r$4;
 		root[0].levelMapMode = root[0].addMode(modes.NewLevelMapMode(context[0], root[0].modeArea, mapDisplay), "Level Map");
 		boxMessageSeparator = ui.NewOffsetAnchor(topLine.Left(), 250);
 		items = $makeSlice(sliceType$12, root[0].allModes.$length);
@@ -33401,9 +33407,9 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			((index < 0 || index >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + index] = selector);
 			_i++;
 		}
-		_r$7 = context[0].ControlFactory(); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-		_r$8 = _r$7.ForComboBox(); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-		builder$2 = _r$8;
+		_r$5 = context[0].ControlFactory(); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_r$6 = _r$5.ForComboBox(); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		builder$2 = _r$6;
 		builder$2.SetParent(topLine);
 		builder$2.SetLeft(ui.NewOffsetAnchor(topLine.Left(), 2));
 		builder$2.SetTop(ui.NewOffsetAnchor(topLine.Top(), 2));
@@ -33417,32 +33423,32 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			$s = -1; return;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.item = item; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(context, root));
-		_r$9 = builder$2.Build(); /* */ $s = 10; case 10: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-		root[0].modeBox = _r$9;
-		_r$10 = context[0].ControlFactory(); /* */ $s = 11; case 11: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-		_r$11 = _r$10.ForLabel(); /* */ $s = 12; case 12: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
-		builder$3 = _r$11;
+		_r$7 = builder$2.Build(); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		root[0].modeBox = _r$7;
+		_r$8 = context[0].ControlFactory(); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_r$9 = _r$8.ForLabel(); /* */ $s = 10; case 10: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		builder$3 = _r$9;
 		builder$3.SetParent(topLine);
 		builder$3.SetLeft(ui.NewOffsetAnchor(boxMessageSeparator, 2));
 		builder$3.SetTop(ui.NewOffsetAnchor(topLine.Top(), 2));
 		builder$3.SetRight(ui.NewOffsetAnchor(root[0].area.Right(), -2));
 		builder$3.SetBottom(ui.NewOffsetAnchor(topLine.Bottom(), -2));
 		builder$3.AlignedHorizontallyBy(controls.LeftAligner);
-		_r$12 = builder$3.Build(); /* */ $s = 13; case 13: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-		root[0].messageLabel = _r$12;
-		_r$13 = context[0].ModelAdapter(); /* */ $s = 14; case 14: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-		$r = _r$13.OnMessageChanged((function(context, root) { return function $b() {
-			var $ptr, _r$14, _r$15, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$14 = $f._r$14; _r$15 = $f._r$15; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			_r$14 = context[0].ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
-			_r$15 = _r$14.Message(); /* */ $s = 2; case 2: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
-			$r = root[0].messageLabel.SetText(_r$15); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$10 = builder$3.Build(); /* */ $s = 11; case 11: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		root[0].messageLabel = _r$10;
+		_r$11 = context[0].ModelAdapter(); /* */ $s = 12; case 12: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+		$r = _r$11.OnMessageChanged((function(context, root) { return function $b() {
+			var $ptr, _r$12, _r$13, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; _r$13 = $f._r$13; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_r$12 = context[0].ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+			_r$13 = _r$12.Message(); /* */ $s = 2; case 2: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+			$r = root[0].messageLabel.SetText(_r$13); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$s = -1; return;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$14 = _r$14; $f._r$15 = _r$15; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(context, root)); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = root[0].setActiveMode(root[0].welcomeMode); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f._r$13 = _r$13; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(context, root)); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = root[0].setActiveMode(root[0].welcomeMode); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return root[0].area;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: newRootArea }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f.areaBuilder = areaBuilder; $f.boxMessageSeparator = boxMessageSeparator; $f.builder = builder; $f.builder$1 = builder$1; $f.builder$2 = builder$2; $f.builder$3 = builder$3; $f.context = context; $f.index = index; $f.items = items; $f.mapDisplay = mapDisplay; $f.root = root; $f.selector = selector; $f.topLine = topLine; $f.topLineBottom = topLineBottom; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: newRootArea }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f.areaBuilder = areaBuilder; $f.boxMessageSeparator = boxMessageSeparator; $f.builder = builder; $f.builder$1 = builder$1; $f.builder$2 = builder$2; $f.builder$3 = builder$3; $f.context = context; $f.index = index; $f.items = items; $f.mapDisplay = mapDisplay; $f.root = root; $f.selector = selector; $f.topLine = topLine; $f.topLineBottom = topLineBottom; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	rootArea.ptr.prototype.addMode = function(mode, name) {
 		var $ptr, mode, name, root, selector;

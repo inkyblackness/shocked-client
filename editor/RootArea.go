@@ -41,7 +41,7 @@ func newRootArea(context modes.Context) *ui.Area {
 
 	var topLine *ui.Area
 
-	mapDisplay := display.NewMapDisplay(context.ModelAdapter().ActiveLevel(), root.area, context.NewRenderContext)
+	mapDisplay := display.NewMapDisplay(context, root.area)
 
 	topLineBottom := ui.NewOffsetAnchor(root.area.Top(), 25+4)
 	{

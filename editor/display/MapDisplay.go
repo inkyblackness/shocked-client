@@ -13,6 +13,7 @@ import (
 
 // MapDisplay is a display for a level map
 type MapDisplay struct {
+	context      Context
 	levelAdapter *model.LevelAdapter
 
 	area *ui.Area
@@ -28,8 +29,7 @@ type MapDisplay struct {
 }
 
 // NewMapDisplay returns a new instance.
-func NewMapDisplay(levelAdapter *model.LevelAdapter, parent *ui.Area,
-	renderContextFactory func(*mgl.Mat4) *graphics.RenderContext) *MapDisplay {
+func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 	tileBaseLength := float32(32)
 	tilesPerMapSide := float32(64.0)
 	tileBaseHalf := tileBaseLength / 2.0
@@ -38,7 +38,8 @@ func NewMapDisplay(levelAdapter *model.LevelAdapter, parent *ui.Area,
 	zoomLevelMax := float32(4)
 
 	display := &MapDisplay{
-		levelAdapter: levelAdapter,
+		context:      context,
+		levelAdapter: context.ModelAdapter().ActiveLevel(),
 		camera:       camera.NewLimited(zoomLevelMin, zoomLevelMax, -tileBaseHalf, camLimit),
 		moveCapture:  func(float32, float32) {}}
 
@@ -60,7 +61,7 @@ func NewMapDisplay(levelAdapter *model.LevelAdapter, parent *ui.Area,
 		display.area = builder.Build()
 	}
 
-	display.renderContext = renderContextFactory(display.camera.ViewMatrix())
+	display.renderContext = context.NewRenderContext(display.camera.ViewMatrix())
 	display.background = NewGridRenderable(display.renderContext)
 	display.mapGrid = NewTileGridMapRenderable(display.renderContext)
 
