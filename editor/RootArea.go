@@ -41,6 +41,8 @@ func newRootArea(context modes.Context) *ui.Area {
 
 	var topLine *ui.Area
 
+	mapDisplay := display.NewMapDisplay(root.area, context.NewRenderContext)
+
 	topLineBottom := ui.NewOffsetAnchor(root.area.Top(), 25+4)
 	{
 		builder := ui.NewAreaBuilder()
@@ -61,7 +63,6 @@ func newRootArea(context modes.Context) *ui.Area {
 		topLine = builder.Build()
 	}
 
-	mapDisplay := display.NewMapDisplay(context.NewRenderContext)
 	root.welcomeMode = root.addMode(modes.NewWelcomeMode(context, root.modeArea), "Welcome")
 	root.levelControlMode = root.addMode(modes.NewLevelControlMode(context, root.modeArea), "Level Control")
 	root.levelMapMode = root.addMode(modes.NewLevelMapMode(context, root.modeArea, mapDisplay), "Level Map")

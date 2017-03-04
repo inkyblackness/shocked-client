@@ -4201,7 +4201,7 @@ $packages["encoding"] = (function() {
 	return $pkg;
 })();
 $packages["math"] = (function() {
-	var $pkg = {}, $init, js, arrayType, arrayType$1, arrayType$2, structType, arrayType$3, math, zero, posInf, negInf, nan, buf, pow10tab, Cos, Hypot, Inf, IsInf, IsNaN, NaN, Sin, Sqrt, init, Float32bits, Float32frombits, Float64bits, Float64frombits, Abs, hypot, init$1;
+	var $pkg = {}, $init, js, arrayType, arrayType$1, arrayType$2, structType, arrayType$3, math, zero, posInf, negInf, nan, buf, pow10tab, Cos, Hypot, Inf, IsInf, IsNaN, NaN, Pow, Sin, Sqrt, init, Float32bits, Float32frombits, Float64bits, Float64frombits, Abs, hypot, init$1;
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	arrayType = $arrayType($Uint32, 2);
 	arrayType$1 = $arrayType($Float32, 2);
@@ -4250,6 +4250,14 @@ $packages["math"] = (function() {
 		return nan;
 	};
 	$pkg.NaN = NaN;
+	Pow = function(x, y) {
+		var $ptr, x, y;
+		if ((x === 1) || ((x === -1) && ((y === posInf) || (y === negInf)))) {
+			return 1;
+		}
+		return $parseFloat(math.pow(x, y));
+	};
+	$pkg.Pow = Pow;
 	Sin = function(x) {
 		var $ptr, x;
 		return $parseFloat(math.sin(x));
@@ -26593,6 +26601,127 @@ $packages["github.com/go-gl/mathgl/mgl64"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
+$packages["github.com/inkyblackness/shocked-client/editor/camera"] = (function() {
+	var $pkg = {}, $init, mgl32, math, LimitedCamera, arrayType, ptrType, ptrType$1, NewLimited;
+	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
+	math = $packages["math"];
+	LimitedCamera = $pkg.LimitedCamera = $newType(0, $kindStruct, "camera.LimitedCamera", true, "github.com/inkyblackness/shocked-client/editor/camera", true, function(viewportWidth_, viewportHeight_, minZoom_, maxZoom_, minPos_, maxPos_, requestedZoomLevel_, viewOffsetX_, viewOffsetY_, viewMatrix_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.viewportWidth = 0;
+			this.viewportHeight = 0;
+			this.minZoom = 0;
+			this.maxZoom = 0;
+			this.minPos = 0;
+			this.maxPos = 0;
+			this.requestedZoomLevel = 0;
+			this.viewOffsetX = 0;
+			this.viewOffsetY = 0;
+			this.viewMatrix = arrayType.zero();
+			return;
+		}
+		this.viewportWidth = viewportWidth_;
+		this.viewportHeight = viewportHeight_;
+		this.minZoom = minZoom_;
+		this.maxZoom = maxZoom_;
+		this.minPos = minPos_;
+		this.maxPos = maxPos_;
+		this.requestedZoomLevel = requestedZoomLevel_;
+		this.viewOffsetX = viewOffsetX_;
+		this.viewOffsetY = viewOffsetY_;
+		this.viewMatrix = viewMatrix_;
+	});
+	arrayType = $arrayType($Float32, 16);
+	ptrType = $ptrType(mgl32.Mat4);
+	ptrType$1 = $ptrType(LimitedCamera);
+	NewLimited = function(minZoom, maxZoom, minPos, maxPos) {
+		var $ptr, cam, maxPos, maxZoom, minPos, minZoom;
+		cam = new LimitedCamera.ptr(1, 1, minZoom, maxZoom, minPos, maxPos, 0, 0, 0, $clone(mgl32.Ident4(), mgl32.Mat4));
+		return cam;
+	};
+	$pkg.NewLimited = NewLimited;
+	LimitedCamera.ptr.prototype.SetViewportSize = function(width, height) {
+		var $ptr, _tmp, _tmp$1, cam, height, width;
+		cam = this;
+		if ((!((cam.viewportWidth === width))) || (!((cam.viewportHeight === height)))) {
+			_tmp = width;
+			_tmp$1 = height;
+			cam.viewportWidth = _tmp;
+			cam.viewportHeight = _tmp$1;
+			cam.updateViewMatrix();
+		}
+	};
+	LimitedCamera.prototype.SetViewportSize = function(width, height) { return this.$val.SetViewportSize(width, height); };
+	LimitedCamera.ptr.prototype.ViewMatrix = function() {
+		var $ptr, cam;
+		cam = this;
+		return cam.viewMatrix;
+	};
+	LimitedCamera.prototype.ViewMatrix = function() { return this.$val.ViewMatrix(); };
+	LimitedCamera.ptr.prototype.MoveBy = function(dx, dy) {
+		var $ptr, cam, dx, dy;
+		cam = this;
+		cam.MoveTo($fround(cam.viewOffsetX + dx), $fround(cam.viewOffsetY + dy));
+	};
+	LimitedCamera.prototype.MoveBy = function(dx, dy) { return this.$val.MoveBy(dx, dy); };
+	LimitedCamera.ptr.prototype.MoveTo = function(worldX, worldY) {
+		var $ptr, cam, worldX, worldY;
+		cam = this;
+		cam.viewOffsetX = cam.limitValue(worldX, -cam.maxPos, cam.minPos);
+		cam.viewOffsetY = cam.limitValue(worldY, -cam.maxPos, cam.minPos);
+		cam.updateViewMatrix();
+	};
+	LimitedCamera.prototype.MoveTo = function(worldX, worldY) { return this.$val.MoveTo(worldX, worldY); };
+	LimitedCamera.ptr.prototype.ZoomAt = function(levelDelta, x, y) {
+		var $ptr, cam, focusPoint, levelDelta, newPixel, oldPixel, scaleFactor, x, y;
+		cam = this;
+		cam.requestedZoomLevel = cam.limitValue($fround(cam.requestedZoomLevel + levelDelta), cam.minZoom, cam.maxZoom);
+		focusPoint = $toNativeArray($kindFloat32, [x, y, 0, 1]);
+		oldPixel = $clone(new mgl32.Mat4($clone(cam.viewMatrix, mgl32.Mat4)).Mul4x1($clone(focusPoint, mgl32.Vec4)), mgl32.Vec4);
+		cam.updateViewMatrix();
+		newPixel = $clone(new mgl32.Mat4($clone(cam.viewMatrix, mgl32.Mat4)).Mul4x1($clone(focusPoint, mgl32.Vec4)), mgl32.Vec4);
+		scaleFactor = cam.scaleFactor();
+		cam.MoveBy($fround(-($fround(newPixel[0] - oldPixel[0])) / scaleFactor), $fround(-($fround(newPixel[1] - oldPixel[1])) / scaleFactor));
+	};
+	LimitedCamera.prototype.ZoomAt = function(levelDelta, x, y) { return this.$val.ZoomAt(levelDelta, x, y); };
+	LimitedCamera.ptr.prototype.limitValue = function(value, min, max) {
+		var $ptr, cam, max, min, result, value;
+		cam = this;
+		result = value;
+		if (result < min) {
+			result = min;
+		}
+		if (result > max) {
+			result = max;
+		}
+		return result;
+	};
+	LimitedCamera.prototype.limitValue = function(value, min, max) { return this.$val.limitValue(value, min, max); };
+	LimitedCamera.ptr.prototype.scaleFactor = function() {
+		var $ptr, cam;
+		cam = this;
+		return $fround(math.Pow(2, cam.requestedZoomLevel));
+	};
+	LimitedCamera.prototype.scaleFactor = function() { return this.$val.scaleFactor(); };
+	LimitedCamera.ptr.prototype.updateViewMatrix = function() {
+		var $ptr, cam, scaleFactor;
+		cam = this;
+		scaleFactor = cam.scaleFactor();
+		mgl32.Mat4.copy(cam.viewMatrix, new mgl32.Mat4($clone(new mgl32.Mat4($clone(new mgl32.Mat4($clone(mgl32.Ident4(), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D($fround(cam.viewportWidth / 2), $fround(cam.viewportHeight / 2), 0), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Scale3D(scaleFactor, scaleFactor, 1), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D(cam.viewOffsetX, cam.viewOffsetY, 0), mgl32.Mat4)));
+	};
+	LimitedCamera.prototype.updateViewMatrix = function() { return this.$val.updateViewMatrix(); };
+	ptrType$1.methods = [{prop: "SetViewportSize", name: "SetViewportSize", pkg: "", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "ViewMatrix", name: "ViewMatrix", pkg: "", typ: $funcType([], [ptrType], false)}, {prop: "MoveBy", name: "MoveBy", pkg: "", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "MoveTo", name: "MoveTo", pkg: "", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "ZoomAt", name: "ZoomAt", pkg: "", typ: $funcType([$Float32, $Float32, $Float32], [], false)}, {prop: "limitValue", name: "limitValue", pkg: "github.com/inkyblackness/shocked-client/editor/camera", typ: $funcType([$Float32, $Float32, $Float32], [$Float32], false)}, {prop: "scaleFactor", name: "scaleFactor", pkg: "github.com/inkyblackness/shocked-client/editor/camera", typ: $funcType([], [$Float32], false)}, {prop: "updateViewMatrix", name: "updateViewMatrix", pkg: "github.com/inkyblackness/shocked-client/editor/camera", typ: $funcType([], [], false)}];
+	LimitedCamera.init("github.com/inkyblackness/shocked-client/editor/camera", [{prop: "viewportWidth", name: "viewportWidth", exported: false, typ: $Float32, tag: ""}, {prop: "viewportHeight", name: "viewportHeight", exported: false, typ: $Float32, tag: ""}, {prop: "minZoom", name: "minZoom", exported: false, typ: $Float32, tag: ""}, {prop: "maxZoom", name: "maxZoom", exported: false, typ: $Float32, tag: ""}, {prop: "minPos", name: "minPos", exported: false, typ: $Float32, tag: ""}, {prop: "maxPos", name: "maxPos", exported: false, typ: $Float32, tag: ""}, {prop: "requestedZoomLevel", name: "requestedZoomLevel", exported: false, typ: $Float32, tag: ""}, {prop: "viewOffsetX", name: "viewOffsetX", exported: false, typ: $Float32, tag: ""}, {prop: "viewOffsetY", name: "viewOffsetY", exported: false, typ: $Float32, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", exported: false, typ: mgl32.Mat4, tag: ""}]);
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = mgl32.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = math.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
 $packages["github.com/inkyblackness/res/text"] = (function() {
 	var $pkg = {}, $init, Codepage, tabledCodepage, sliceType, sliceType$1, ptrType, mapType, cp850ToRune, DefaultCodepage;
 	Codepage = $pkg.Codepage = $newType(8, $kindInterface, "text.Codepage", true, "github.com/inkyblackness/res/text", true, null);
@@ -29306,191 +29435,6 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 	$pkg.$init = $init;
 	return $pkg;
 })();
-$packages["github.com/inkyblackness/shocked-client/editor/display"] = (function() {
-	var $pkg = {}, $init, fmt, mgl32, mgl64, model$1, graphics, opengl, model, math, os, GridRenderable, MapDisplay, sliceType, sliceType$1, sliceType$2, arrayType, ptrType$1, ptrType$2, ptrType$3, ptrType$14, gridVertexShaderSource, gridFragmentShaderSource, uvRotations, NewGridRenderable, NewMapDisplay, init;
-	fmt = $packages["fmt"];
-	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
-	mgl64 = $packages["github.com/go-gl/mathgl/mgl64"];
-	model$1 = $packages["github.com/inkyblackness/shocked-client/editor/model"];
-	graphics = $packages["github.com/inkyblackness/shocked-client/graphics"];
-	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
-	model = $packages["github.com/inkyblackness/shocked-model"];
-	math = $packages["math"];
-	os = $packages["os"];
-	GridRenderable = $pkg.GridRenderable = $newType(0, $kindStruct, "display.GridRenderable", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(context_, program_, vao_, vertexPositionBuffer_, vertexPositionAttrib_, viewMatrixUniform_, projectionMatrixUniform_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.context = ptrType$1.nil;
-			this.program = 0;
-			this.vao = ptrType$2.nil;
-			this.vertexPositionBuffer = 0;
-			this.vertexPositionAttrib = 0;
-			this.viewMatrixUniform = 0;
-			this.projectionMatrixUniform = 0;
-			return;
-		}
-		this.context = context_;
-		this.program = program_;
-		this.vao = vao_;
-		this.vertexPositionBuffer = vertexPositionBuffer_;
-		this.vertexPositionAttrib = vertexPositionAttrib_;
-		this.viewMatrixUniform = viewMatrixUniform_;
-		this.projectionMatrixUniform = projectionMatrixUniform_;
-	});
-	MapDisplay = $pkg.MapDisplay = $newType(0, $kindStruct, "display.MapDisplay", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(viewMatrix_, renderContext_, grid_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.viewMatrix = arrayType.zero();
-			this.renderContext = ptrType$1.nil;
-			this.grid = ptrType$3.nil;
-			return;
-		}
-		this.viewMatrix = viewMatrix_;
-		this.renderContext = renderContext_;
-		this.grid = grid_;
-	});
-	sliceType = $sliceType($Uint32);
-	sliceType$1 = $sliceType($emptyInterface);
-	sliceType$2 = $sliceType($Float32);
-	arrayType = $arrayType($Float32, 16);
-	ptrType$1 = $ptrType(graphics.RenderContext);
-	ptrType$2 = $ptrType(opengl.VertexArrayObject);
-	ptrType$3 = $ptrType(GridRenderable);
-	ptrType$14 = $ptrType(MapDisplay);
-	NewGridRenderable = function(context) {
-		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, context, err1, err2, fragmentShader, gl, half, limit, program, renderable, vertexShader, vertices, x, $s, $deferred, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; context = $f.context; err1 = $f.err1; err2 = $f.err2; fragmentShader = $f.fragmentShader; gl = $f.gl; half = $f.half; limit = $f.limit; program = $f.program; renderable = $f.renderable; vertexShader = $f.vertexShader; vertices = $f.vertices; x = $f.x; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
-		renderable = [renderable];
-		gl = context.OpenGl();
-		_r = opengl.CompileNewShader(gl, 35633, gridVertexShaderSource); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		vertexShader = _tuple[0];
-		err1 = _tuple[1];
-		$deferred.push([$methodVal(gl, "DeleteShader"), [vertexShader]]);
-		_r$1 = opengl.CompileNewShader(gl, 35632, gridFragmentShaderSource); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		fragmentShader = _tuple$1[0];
-		err2 = _tuple$1[1];
-		$deferred.push([$methodVal(gl, "DeleteShader"), [fragmentShader]]);
-		_r$2 = opengl.LinkNewProgram(gl, new sliceType([vertexShader, fragmentShader])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$2 = _r$2;
-		program = _tuple$2[0];
-		/* */ if (!($interfaceIsEqual(err1, $ifaceNil))) { $s = 4; continue; }
-		/* */ $s = 5; continue;
-		/* if (!($interfaceIsEqual(err1, $ifaceNil))) { */ case 4:
-			_r$3 = fmt.Fprintf(os.Stderr, "Failed to compile shader 1:\n", new sliceType$1([err1])); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			_r$3;
-		/* } */ case 5:
-		/* */ if (!($interfaceIsEqual(err2, $ifaceNil))) { $s = 7; continue; }
-		/* */ $s = 8; continue;
-		/* if (!($interfaceIsEqual(err2, $ifaceNil))) { */ case 7:
-			_r$4 = fmt.Fprintf(os.Stderr, "Failed to compile shader 2:\n", new sliceType$1([err2])); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			_r$4;
-		/* } */ case 8:
-		_r$5 = opengl.NewVertexArrayObject(gl, program); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-		_r$6 = gl.GenBuffers(1); /* */ $s = 11; case 11: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		_r$7 = gl.GetAttribLocation(program, "vertexPosition"); /* */ $s = 12; case 12: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-		_r$8 = gl.GetUniformLocation(program, "viewMatrix"); /* */ $s = 13; case 13: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-		_r$9 = gl.GetUniformLocation(program, "projectionMatrix"); /* */ $s = 14; case 14: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-		renderable[0] = new GridRenderable.ptr(context, program, _r$5, (x = _r$6, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), _r$7, (_r$8 >> 0), (_r$9 >> 0));
-		$r = gl.BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		half = 16;
-		limit = $fround(2048 + half);
-		vertices = new sliceType$2([-half, -half, 0, limit, -half, 0, limit, limit, 0, limit, limit, 0, -half, limit, 0, -half, -half, 0]);
-		$r = gl.BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = gl.BindBuffer(34962, 0); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = renderable[0].vao.WithSetter((function(renderable) { return function $b(gl$1) {
-			var $ptr, gl$1, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; gl$1 = $f.gl$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			$r = gl$1.EnableVertexAttribArray((renderable[0].vertexPositionAttrib >>> 0)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl$1.BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl$1.VertexAttribOffset((renderable[0].vertexPositionAttrib >>> 0), 3, 5126, false, 0, 0); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl$1.BindBuffer(34962, 0); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$s = -1; return;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.gl$1 = gl$1; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(renderable)); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return renderable[0];
-		/* */ } return; } } catch(err) { $err = err; $s = -1; return ptrType$3.nil; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: NewGridRenderable }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.context = context; $f.err1 = err1; $f.err2 = err2; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.half = half; $f.limit = limit; $f.program = program; $f.renderable = renderable; $f.vertexShader = vertexShader; $f.vertices = vertices; $f.x = x; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
-	};
-	$pkg.NewGridRenderable = NewGridRenderable;
-	GridRenderable.ptr.prototype.Render = function() {
-		var $ptr, gl, renderable, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; gl = $f.gl; renderable = $f.renderable; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		gl = [gl];
-		renderable = [renderable];
-		renderable[0] = this;
-		gl[0] = renderable[0].context.OpenGl();
-		$r = renderable[0].vao.OnShader((function(gl, renderable) { return function $b() {
-			var $ptr, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			$r = new opengl.Matrix4Uniform(renderable[0].viewMatrixUniform).Set(gl[0], renderable[0].context.ViewMatrix()); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = new opengl.Matrix4Uniform(renderable[0].projectionMatrixUniform).Set(gl[0], renderable[0].context.ProjectionMatrix()); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$r = gl[0].DrawArrays(4, 0, 6); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$s = -1; return;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(gl, renderable)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: GridRenderable.ptr.prototype.Render }; } $f.$ptr = $ptr; $f.gl = gl; $f.renderable = renderable; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	GridRenderable.prototype.Render = function() { return this.$val.Render(); };
-	NewMapDisplay = function(renderContextFactory) {
-		var $ptr, _r, _r$1, display, renderContextFactory, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; display = $f.display; renderContextFactory = $f.renderContextFactory; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		display = new MapDisplay.ptr($clone(mgl32.Ident4(), mgl32.Mat4), ptrType$1.nil, ptrType$3.nil);
-		_r = renderContextFactory(display.viewMatrix); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		display.renderContext = _r;
-		_r$1 = NewGridRenderable(display.renderContext); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		display.grid = _r$1;
-		$s = -1; return display;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewMapDisplay }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.display = display; $f.renderContextFactory = renderContextFactory; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.NewMapDisplay = NewMapDisplay;
-	MapDisplay.ptr.prototype.Render = function() {
-		var $ptr, display, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; display = $f.display; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		display = this;
-		$r = display.grid.Render(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: MapDisplay.ptr.prototype.Render }; } $f.$ptr = $ptr; $f.display = display; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	MapDisplay.prototype.Render = function() { return this.$val.Render(); };
-	init = function() {
-		var $ptr, _key, i, matrix;
-		uvRotations = {};
-		i = 0;
-		while (true) {
-			if (!(i < 4)) { break; }
-			matrix = [matrix];
-			matrix[0] = $clone(new mgl32.Mat4($clone(new mgl32.Mat4($clone(mgl32.Translate3D(0.5, 0.5, 0), mgl32.Mat4)).Mul4($clone(mgl32.HomogRotate3DZ($fround($fround(3.1415927410125732 * i) / 2)), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D(-0.5, -0.5, 0), mgl32.Mat4)), mgl32.Mat4);
-			_key = i; (uvRotations || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: matrix[0] };
-			i = i + (1) >> 0;
-		}
-	};
-	ptrType$3.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}];
-	ptrType$14.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}];
-	GridRenderable.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: ptrType$1, tag: ""}, {prop: "program", name: "program", exported: false, typ: $Uint32, tag: ""}, {prop: "vao", name: "vao", exported: false, typ: ptrType$2, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", exported: false, typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", exported: false, typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}]);
-	MapDisplay.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "viewMatrix", name: "viewMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "renderContext", name: "renderContext", exported: false, typ: ptrType$1, tag: ""}, {prop: "grid", name: "grid", exported: false, typ: ptrType$3, tag: ""}]);
-	$init = function() {
-		$pkg.$init = function() {};
-		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = mgl32.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = mgl64.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = model$1.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = graphics.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = opengl.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = model.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = math.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = os.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		uvRotations = false;
-		gridVertexShaderSource = "\n  attribute vec3 vertexPosition;\n\n  uniform mat4 viewMatrix;\n  uniform mat4 projectionMatrix;\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  void main(void) {\n    gl_Position = projectionMatrix * viewMatrix * vec4(vertexPosition, 1.0);\n\n    color = vec4(0.0, 0.1, 0.0, 0.6);\n    originalPosition = vertexPosition;\n  }\n";
-		gridFragmentShaderSource = "\n  #ifdef GL_ES\n    precision mediump float;\n  #endif\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  float modulo(float x, float y) {\n    return x - y * floor(x/y);\n  }\n\n  float nearGrid(float stepSize, float value) {\n    float remainder = modulo(value - (stepSize / 2.0), stepSize) * 2.0;\n\n    if (remainder >= stepSize) {\n      remainder = (stepSize * 2.0) - remainder;\n    }\n\n    return remainder / stepSize;\n  }\n\n  void main(void) {\n    float alphaX = nearGrid(32.0, originalPosition.x);\n    float alphaY = nearGrid(32.0, originalPosition.y);\n    bool beyondX = (originalPosition.x / 32.0) >= 64.0 || (originalPosition.x < 0.0);\n    bool beyondY = (originalPosition.y / 32.0) >= 64.0 || (originalPosition.y < 0.0);\n    float alpha = 0.0;\n\n    if (!beyondX && !beyondY) {\n       alpha = max(alphaX, alphaY);\n    } else if (beyondX && !beyondY) {\n       alpha = alphaX;\n    } else if (beyondY && !beyondX) {\n       alpha = alphaY;\n    } else {\n       alpha = min(alphaX, alphaY);\n    }\n\n    alpha = pow(2.0, 10.0 * (alpha - 1.0));\n\n    gl_FragColor = vec4(color.rgb, color.a * alpha);\n  }\n";
-		init();
-		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.$init = $init;
-	return $pkg;
-})();
 $packages["github.com/inkyblackness/shocked-client/env/keys"] = (function() {
 	var $pkg = {}, $init, Key, Modifier, shortcut, StickyKeyListener, StickyKeyBuffer, sliceType, ptrType, mapType, mapType$1, keyToModifier, shortcuts, ResolveShortcut, NewStickyKeyBuffer;
 	Key = $pkg.Key = $newType(4, $kindInt, "keys.Key", true, "github.com/inkyblackness/shocked-client/env/keys", true, null);
@@ -30650,6 +30594,340 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
+$packages["github.com/inkyblackness/shocked-client/editor/display"] = (function() {
+	var $pkg = {}, $init, fmt, mgl32, mgl64, camera, model$1, env, graphics, opengl, ui, events, model, math, os, GridRenderable, MapDisplay, sliceType, sliceType$1, sliceType$2, arrayType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$19, funcType$1, gridVertexShaderSource, gridFragmentShaderSource, uvRotations, NewGridRenderable, NewMapDisplay, init;
+	fmt = $packages["fmt"];
+	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
+	mgl64 = $packages["github.com/go-gl/mathgl/mgl64"];
+	camera = $packages["github.com/inkyblackness/shocked-client/editor/camera"];
+	model$1 = $packages["github.com/inkyblackness/shocked-client/editor/model"];
+	env = $packages["github.com/inkyblackness/shocked-client/env"];
+	graphics = $packages["github.com/inkyblackness/shocked-client/graphics"];
+	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
+	ui = $packages["github.com/inkyblackness/shocked-client/ui"];
+	events = $packages["github.com/inkyblackness/shocked-client/ui/events"];
+	model = $packages["github.com/inkyblackness/shocked-model"];
+	math = $packages["math"];
+	os = $packages["os"];
+	GridRenderable = $pkg.GridRenderable = $newType(0, $kindStruct, "display.GridRenderable", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(context_, program_, vao_, vertexPositionBuffer_, vertexPositionAttrib_, viewMatrixUniform_, projectionMatrixUniform_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.context = ptrType$1.nil;
+			this.program = 0;
+			this.vao = ptrType$2.nil;
+			this.vertexPositionBuffer = 0;
+			this.vertexPositionAttrib = 0;
+			this.viewMatrixUniform = 0;
+			this.projectionMatrixUniform = 0;
+			return;
+		}
+		this.context = context_;
+		this.program = program_;
+		this.vao = vao_;
+		this.vertexPositionBuffer = vertexPositionBuffer_;
+		this.vertexPositionAttrib = vertexPositionAttrib_;
+		this.viewMatrixUniform = viewMatrixUniform_;
+		this.projectionMatrixUniform = projectionMatrixUniform_;
+	});
+	MapDisplay = $pkg.MapDisplay = $newType(0, $kindStruct, "display.MapDisplay", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(area_, camera_, viewMatrix_, renderContext_, grid_, moveCapture_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.area = ptrType$4.nil;
+			this.camera = ptrType$5.nil;
+			this.viewMatrix = arrayType.zero();
+			this.renderContext = ptrType$1.nil;
+			this.grid = ptrType$3.nil;
+			this.moveCapture = $throwNilPointerError;
+			return;
+		}
+		this.area = area_;
+		this.camera = camera_;
+		this.viewMatrix = viewMatrix_;
+		this.renderContext = renderContext_;
+		this.grid = grid_;
+		this.moveCapture = moveCapture_;
+	});
+	sliceType = $sliceType($Uint32);
+	sliceType$1 = $sliceType($emptyInterface);
+	sliceType$2 = $sliceType($Float32);
+	arrayType = $arrayType($Float32, 16);
+	ptrType$1 = $ptrType(graphics.RenderContext);
+	ptrType$2 = $ptrType(opengl.VertexArrayObject);
+	ptrType$3 = $ptrType(GridRenderable);
+	ptrType$4 = $ptrType(ui.Area);
+	ptrType$5 = $ptrType(camera.LimitedCamera);
+	ptrType$6 = $ptrType(events.MouseScrollEvent);
+	ptrType$7 = $ptrType(events.MouseMoveEvent);
+	ptrType$8 = $ptrType(events.MouseButtonEvent);
+	ptrType$19 = $ptrType(MapDisplay);
+	funcType$1 = $funcType([$Float32, $Float32], [], false);
+	NewGridRenderable = function(context) {
+		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, context, err1, err2, fragmentShader, gl, half, limit, program, renderable, vertexShader, vertices, x, $s, $deferred, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; context = $f.context; err1 = $f.err1; err2 = $f.err2; fragmentShader = $f.fragmentShader; gl = $f.gl; half = $f.half; limit = $f.limit; program = $f.program; renderable = $f.renderable; vertexShader = $f.vertexShader; vertices = $f.vertices; x = $f.x; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+		renderable = [renderable];
+		gl = context.OpenGl();
+		_r = opengl.CompileNewShader(gl, 35633, gridVertexShaderSource); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		vertexShader = _tuple[0];
+		err1 = _tuple[1];
+		$deferred.push([$methodVal(gl, "DeleteShader"), [vertexShader]]);
+		_r$1 = opengl.CompileNewShader(gl, 35632, gridFragmentShaderSource); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		fragmentShader = _tuple$1[0];
+		err2 = _tuple$1[1];
+		$deferred.push([$methodVal(gl, "DeleteShader"), [fragmentShader]]);
+		_r$2 = opengl.LinkNewProgram(gl, new sliceType([vertexShader, fragmentShader])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		program = _tuple$2[0];
+		/* */ if (!($interfaceIsEqual(err1, $ifaceNil))) { $s = 4; continue; }
+		/* */ $s = 5; continue;
+		/* if (!($interfaceIsEqual(err1, $ifaceNil))) { */ case 4:
+			_r$3 = fmt.Fprintf(os.Stderr, "Failed to compile shader 1:\n", new sliceType$1([err1])); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+		/* } */ case 5:
+		/* */ if (!($interfaceIsEqual(err2, $ifaceNil))) { $s = 7; continue; }
+		/* */ $s = 8; continue;
+		/* if (!($interfaceIsEqual(err2, $ifaceNil))) { */ case 7:
+			_r$4 = fmt.Fprintf(os.Stderr, "Failed to compile shader 2:\n", new sliceType$1([err2])); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4;
+		/* } */ case 8:
+		_r$5 = opengl.NewVertexArrayObject(gl, program); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_r$6 = gl.GenBuffers(1); /* */ $s = 11; case 11: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_r$7 = gl.GetAttribLocation(program, "vertexPosition"); /* */ $s = 12; case 12: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_r$8 = gl.GetUniformLocation(program, "viewMatrix"); /* */ $s = 13; case 13: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_r$9 = gl.GetUniformLocation(program, "projectionMatrix"); /* */ $s = 14; case 14: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		renderable[0] = new GridRenderable.ptr(context, program, _r$5, (x = _r$6, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), _r$7, (_r$8 >> 0), (_r$9 >> 0));
+		$r = gl.BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		half = 16;
+		limit = $fround(2048 + half);
+		vertices = new sliceType$2([-half, -half, 0, limit, -half, 0, limit, limit, 0, limit, limit, 0, -half, limit, 0, -half, -half, 0]);
+		$r = gl.BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BindBuffer(34962, 0); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = renderable[0].vao.WithSetter((function(renderable) { return function $b(gl$1) {
+			var $ptr, gl$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; gl$1 = $f.gl$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = gl$1.EnableVertexAttribArray((renderable[0].vertexPositionAttrib >>> 0)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl$1.BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl$1.VertexAttribOffset((renderable[0].vertexPositionAttrib >>> 0), 3, 5126, false, 0, 0); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl$1.BindBuffer(34962, 0); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = -1; return;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.gl$1 = gl$1; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(renderable)); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return renderable[0];
+		/* */ } return; } } catch(err) { $err = err; $s = -1; return ptrType$3.nil; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: NewGridRenderable }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.context = context; $f.err1 = err1; $f.err2 = err2; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.half = half; $f.limit = limit; $f.program = program; $f.renderable = renderable; $f.vertexShader = vertexShader; $f.vertices = vertices; $f.x = x; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+	};
+	$pkg.NewGridRenderable = NewGridRenderable;
+	GridRenderable.ptr.prototype.Render = function() {
+		var $ptr, gl, renderable, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; gl = $f.gl; renderable = $f.renderable; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		gl = [gl];
+		renderable = [renderable];
+		renderable[0] = this;
+		gl[0] = renderable[0].context.OpenGl();
+		$r = renderable[0].vao.OnShader((function(gl, renderable) { return function $b() {
+			var $ptr, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = new opengl.Matrix4Uniform(renderable[0].viewMatrixUniform).Set(gl[0], renderable[0].context.ViewMatrix()); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = new opengl.Matrix4Uniform(renderable[0].projectionMatrixUniform).Set(gl[0], renderable[0].context.ProjectionMatrix()); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].DrawArrays(4, 0, 6); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = -1; return;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(gl, renderable)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: GridRenderable.ptr.prototype.Render }; } $f.$ptr = $ptr; $f.gl = gl; $f.renderable = renderable; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	GridRenderable.prototype.Render = function() { return this.$val.Render(); };
+	NewMapDisplay = function(parent, renderContextFactory) {
+		var $ptr, _r, _r$1, builder, camLimit, display, parent, renderContextFactory, tileBaseHalf, tileBaseLength, tilesPerMapSide, zoomLevelMax, zoomLevelMin, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; builder = $f.builder; camLimit = $f.camLimit; display = $f.display; parent = $f.parent; renderContextFactory = $f.renderContextFactory; tileBaseHalf = $f.tileBaseHalf; tileBaseLength = $f.tileBaseLength; tilesPerMapSide = $f.tilesPerMapSide; zoomLevelMax = $f.zoomLevelMax; zoomLevelMin = $f.zoomLevelMin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		display = [display];
+		tileBaseLength = 32;
+		tilesPerMapSide = 64;
+		tileBaseHalf = $fround(tileBaseLength / 2);
+		camLimit = $fround($fround(tilesPerMapSide * tileBaseLength) - tileBaseHalf);
+		zoomLevelMin = -2;
+		zoomLevelMax = 4;
+		display[0] = new MapDisplay.ptr(ptrType$4.nil, camera.NewLimited(zoomLevelMin, zoomLevelMax, -tileBaseHalf, camLimit), arrayType.zero(), ptrType$1.nil, ptrType$3.nil, (function(display) { return function(param, param$1) {
+			var $ptr, param, param$1;
+		}; })(display));
+		builder = ui.NewAreaBuilder();
+		builder.SetParent(parent);
+		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0));
+		builder.SetTop(ui.NewOffsetAnchor(parent.Top(), 0));
+		builder.SetRight(ui.NewOffsetAnchor(parent.Right(), 0));
+		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0));
+		builder.SetVisible(false);
+		builder.OnRender((function(display) { return function $b(area) {
+			var $ptr, area, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; area = $f.area; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = display[0].render(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = -1; return;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.area = area; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(display));
+		builder.OnEvent("mouse.scroll", $methodVal(display[0], "onMouseScroll"));
+		builder.OnEvent("mouse.move", $methodVal(display[0], "onMouseMove"));
+		builder.OnEvent("mouse.button.down", $methodVal(display[0], "onMouseButtonDown"));
+		builder.OnEvent("mouse.button.up", $methodVal(display[0], "onMouseButtonUp"));
+		display[0].area = builder.Build();
+		_r = renderContextFactory(display[0].camera.ViewMatrix()); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		display[0].renderContext = _r;
+		_r$1 = NewGridRenderable(display[0].renderContext); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		display[0].grid = _r$1;
+		$s = -1; return display[0];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewMapDisplay }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.builder = builder; $f.camLimit = camLimit; $f.display = display; $f.parent = parent; $f.renderContextFactory = renderContextFactory; $f.tileBaseHalf = tileBaseHalf; $f.tileBaseLength = tileBaseLength; $f.tilesPerMapSide = tilesPerMapSide; $f.zoomLevelMax = zoomLevelMax; $f.zoomLevelMin = zoomLevelMin; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewMapDisplay = NewMapDisplay;
+	MapDisplay.ptr.prototype.SetVisible = function(visible) {
+		var $ptr, display, visible;
+		display = this;
+		display.area.SetVisible(visible);
+	};
+	MapDisplay.prototype.SetVisible = function(visible) { return this.$val.SetVisible(visible); };
+	MapDisplay.ptr.prototype.render = function() {
+		var $ptr, _arg, _arg$1, _r, _r$1, display, root, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; display = $f.display; root = $f.root; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		display = this;
+		root = display.area.Root();
+		_r = root.Right().Value(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg = _r;
+		_r$1 = root.Bottom().Value(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_arg$1 = _r$1;
+		$r = display.camera.SetViewportSize(_arg, _arg$1); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = display.grid.Render(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MapDisplay.ptr.prototype.render }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f.display = display; $f.root = root; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MapDisplay.prototype.render = function() { return this.$val.render(); };
+	MapDisplay.ptr.prototype.unprojectPixel = function(pixelX, pixelY) {
+		var $ptr, _tmp, _tmp$1, display, invertedView, pixelVec, pixelX, pixelY, result, x, y;
+		x = 0;
+		y = 0;
+		display = this;
+		pixelVec = $toNativeArray($kindFloat32, [pixelX, pixelY, 0, 1]);
+		invertedView = $clone(new mgl32.Mat4($clone(display.camera.ViewMatrix(), mgl32.Mat4)).Inv(), mgl32.Mat4);
+		result = $clone(new mgl32.Mat4($clone(invertedView, mgl32.Mat4)).Mul4x1($clone(pixelVec, mgl32.Vec4)), mgl32.Vec4);
+		_tmp = result[0];
+		_tmp$1 = result[1];
+		x = _tmp;
+		y = _tmp$1;
+		return [x, y];
+	};
+	MapDisplay.prototype.unprojectPixel = function(pixelX, pixelY) { return this.$val.unprojectPixel(pixelX, pixelY); };
+	MapDisplay.ptr.prototype.onMouseScroll = function(area, event) {
+		var $ptr, _tuple, _tuple$1, _tuple$2, area, display, dy, event, mouseEvent, mouseX, mouseY, worldX, worldY;
+		display = this;
+		mouseEvent = $assertType(event, ptrType$6);
+		_tuple = mouseEvent.MouseEvent.Position();
+		mouseX = _tuple[0];
+		mouseY = _tuple[1];
+		_tuple$1 = display.unprojectPixel(mouseX, mouseY);
+		worldX = _tuple$1[0];
+		worldY = _tuple$1[1];
+		_tuple$2 = mouseEvent.Deltas();
+		dy = _tuple$2[1];
+		if (dy > 0) {
+			display.camera.ZoomAt(-0.5, worldX, worldY);
+		}
+		if (dy < 0) {
+			display.camera.ZoomAt(0.5, worldX, worldY);
+		}
+		return true;
+	};
+	MapDisplay.prototype.onMouseScroll = function(area, event) { return this.$val.onMouseScroll(area, event); };
+	MapDisplay.ptr.prototype.onMouseMove = function(area, event) {
+		var $ptr, _tuple, area, display, event, mouseEvent, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _tuple = $f._tuple; area = $f.area; display = $f.display; event = $f.event; mouseEvent = $f.mouseEvent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		display = this;
+		mouseEvent = $assertType(event, ptrType$7);
+		_tuple = mouseEvent.MouseEvent.Position();
+		$r = display.moveCapture(_tuple[0], _tuple[1]); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MapDisplay.ptr.prototype.onMouseMove }; } $f.$ptr = $ptr; $f._tuple = _tuple; $f.area = area; $f.display = display; $f.event = event; $f.mouseEvent = mouseEvent; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MapDisplay.prototype.onMouseMove = function(area, event) { return this.$val.onMouseMove(area, event); };
+	MapDisplay.ptr.prototype.onMouseButtonDown = function(area, event) {
+		var $ptr, _tuple, area, display, event, lastPixelX, lastPixelY, mouseEvent;
+		display = this;
+		mouseEvent = $assertType(event, ptrType$8);
+		if (mouseEvent.MouseEvent.Buttons() === 1) {
+			_tuple = mouseEvent.MouseEvent.Position();
+			lastPixelX = _tuple[0];
+			lastPixelY = _tuple[1];
+			display.area.RequestFocus();
+			display.moveCapture = (function(pixelX, pixelY) {
+				var $ptr, _tmp, _tmp$1, _tuple$1, _tuple$2, lastWorldX, lastWorldY, pixelX, pixelY, worldX, worldY;
+				_tuple$1 = display.unprojectPixel(lastPixelX, lastPixelY);
+				lastWorldX = _tuple$1[0];
+				lastWorldY = _tuple$1[1];
+				_tuple$2 = display.unprojectPixel(pixelX, pixelY);
+				worldX = _tuple$2[0];
+				worldY = _tuple$2[1];
+				display.camera.MoveBy($fround(worldX - lastWorldX), $fround(worldY - lastWorldY));
+				_tmp = pixelX;
+				_tmp$1 = pixelY;
+				lastPixelX = _tmp;
+				lastPixelY = _tmp$1;
+			});
+		}
+		return true;
+	};
+	MapDisplay.prototype.onMouseButtonDown = function(area, event) { return this.$val.onMouseButtonDown(area, event); };
+	MapDisplay.ptr.prototype.onMouseButtonUp = function(area, event) {
+		var $ptr, area, display, event, mouseEvent;
+		display = this;
+		mouseEvent = $assertType(event, ptrType$8);
+		if (mouseEvent.AffectedButtons() === 1) {
+			if (display.area.HasFocus()) {
+				display.area.ReleaseFocus();
+			}
+			display.moveCapture = (function(param, param$1) {
+				var $ptr, param, param$1;
+			});
+		}
+		return true;
+	};
+	MapDisplay.prototype.onMouseButtonUp = function(area, event) { return this.$val.onMouseButtonUp(area, event); };
+	init = function() {
+		var $ptr, _key, i, matrix;
+		uvRotations = {};
+		i = 0;
+		while (true) {
+			if (!(i < 4)) { break; }
+			matrix = [matrix];
+			matrix[0] = $clone(new mgl32.Mat4($clone(new mgl32.Mat4($clone(mgl32.Translate3D(0.5, 0.5, 0), mgl32.Mat4)).Mul4($clone(mgl32.HomogRotate3DZ($fround($fround(3.1415927410125732 * i) / 2)), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D(-0.5, -0.5, 0), mgl32.Mat4)), mgl32.Mat4);
+			_key = i; (uvRotations || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: matrix[0] };
+			i = i + (1) >> 0;
+		}
+	};
+	ptrType$3.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}];
+	ptrType$19.methods = [{prop: "SetVisible", name: "SetVisible", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([], [], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$4, events.Event], [$Bool], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$4, events.Event], [$Bool], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$4, events.Event], [$Bool], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$4, events.Event], [$Bool], false)}];
+	GridRenderable.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: ptrType$1, tag: ""}, {prop: "program", name: "program", exported: false, typ: $Uint32, tag: ""}, {prop: "vao", name: "vao", exported: false, typ: ptrType$2, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", exported: false, typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", exported: false, typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}]);
+	MapDisplay.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "area", name: "area", exported: false, typ: ptrType$4, tag: ""}, {prop: "camera", name: "camera", exported: false, typ: ptrType$5, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "renderContext", name: "renderContext", exported: false, typ: ptrType$1, tag: ""}, {prop: "grid", name: "grid", exported: false, typ: ptrType$3, tag: ""}, {prop: "moveCapture", name: "moveCapture", exported: false, typ: funcType$1, tag: ""}]);
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mgl32.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mgl64.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = camera.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = model$1.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = env.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = graphics.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = opengl.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = ui.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = events.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = model.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = math.$init(); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = os.$init(); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		uvRotations = false;
+		gridVertexShaderSource = "\n  attribute vec3 vertexPosition;\n\n  uniform mat4 viewMatrix;\n  uniform mat4 projectionMatrix;\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  void main(void) {\n    gl_Position = projectionMatrix * viewMatrix * vec4(vertexPosition, 1.0);\n\n    color = vec4(0.0, 0.1, 0.0, 0.6);\n    originalPosition = vertexPosition;\n  }\n";
+		gridFragmentShaderSource = "\n  #ifdef GL_ES\n    precision mediump float;\n  #endif\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  float modulo(float x, float y) {\n    return x - y * floor(x/y);\n  }\n\n  float nearGrid(float stepSize, float value) {\n    float remainder = modulo(value - (stepSize / 2.0), stepSize) * 2.0;\n\n    if (remainder >= stepSize) {\n      remainder = (stepSize * 2.0) - remainder;\n    }\n\n    return remainder / stepSize;\n  }\n\n  void main(void) {\n    float alphaX = nearGrid(32.0, originalPosition.x);\n    float alphaY = nearGrid(32.0, originalPosition.y);\n    bool beyondX = (originalPosition.x / 32.0) >= 64.0 || (originalPosition.x < 0.0);\n    bool beyondY = (originalPosition.y / 32.0) >= 64.0 || (originalPosition.y < 0.0);\n    float alpha = 0.0;\n\n    if (!beyondX && !beyondY) {\n       alpha = max(alphaX, alphaY);\n    } else if (beyondX && !beyondY) {\n       alpha = alphaX;\n    } else if (beyondY && !beyondX) {\n       alpha = alphaY;\n    } else {\n       alpha = min(alphaX, alphaY);\n    }\n\n    alpha = pow(2.0, 10.0 * (alpha - 1.0));\n\n    gl_FragColor = vec4(color.rgb, color.a * alpha);\n  }\n";
+		init();
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
 $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (function() {
 	var $pkg = {}, $init, fmt, mgl32, env, graphics, ui, events, Aligner, ComboBoxItem, SelectionChangeHandler, ComboBox, ComboBoxBuilder, Factory, BitmapTexturizer, Label, LabelBuilder, ActionHandler, TextButton, TextButtonBuilder, sliceType, ptrType, ptrType$1, ptrType$2, sliceType$1, ptrType$3, ptrType$4, ptrType$5, ptrType$6, sliceType$2, ptrType$7, ptrType$8, sliceType$3, sliceType$4, sliceType$5, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, LeftAligner, CenterAligner, RightAligner, NewComboBoxBuilder, NewLabelBuilder, NewTextButtonBuilder;
 	fmt = $packages["fmt"];
@@ -31698,12 +31976,13 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.activeLevelLabel = activeLevelLabel_;
 		this.activeLevelBox = activeLevelBox_;
 	});
-	LevelMapMode = $pkg.LevelMapMode = $newType(0, $kindStruct, "modes.LevelMapMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, mapDisplay_, area_, panelRight_, tileTypeLabel_, tileTypeBox_) {
+	LevelMapMode = $pkg.LevelMapMode = $newType(0, $kindStruct, "modes.LevelMapMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, mapDisplay_, area_, panel_, panelRight_, tileTypeLabel_, tileTypeBox_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.context = $ifaceNil;
 			this.mapDisplay = ptrType$3.nil;
 			this.area = ptrType.nil;
+			this.panel = ptrType.nil;
 			this.panelRight = $ifaceNil;
 			this.tileTypeLabel = ptrType$1.nil;
 			this.tileTypeBox = ptrType$2.nil;
@@ -31712,6 +31991,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.context = context_;
 		this.mapDisplay = mapDisplay_;
 		this.area = area_;
+		this.panel = panel_;
 		this.panelRight = panelRight_;
 		this.tileTypeLabel = tileTypeLabel_;
 		this.tileTypeBox = tileTypeBox_;
@@ -31850,39 +32130,45 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	};
 	LevelControlMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
 	NewLevelMapMode = function(context, parent, mapDisplay) {
-		var $ptr, builder, context, lastGrabX, mapDisplay, maxRight, minRight, mode, parent;
-		mode = new LevelMapMode.ptr(context, mapDisplay, ptrType.nil, $ifaceNil, ptrType$1.nil, ptrType$2.nil);
-		minRight = ui.NewOffsetAnchor(parent.Left(), 100);
-		maxRight = ui.NewRelativeAnchor(parent.Left(), parent.Right(), 0.5);
-		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(parent.Left(), 200));
+		var $ptr, builder, builder$1, context, lastGrabX, mapDisplay, maxRight, minRight, mode, parent;
+		mode = new LevelMapMode.ptr(context, mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, ptrType$1.nil, ptrType$2.nil);
 		builder = ui.NewAreaBuilder();
 		builder.SetParent(parent);
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0));
 		builder.SetTop(ui.NewOffsetAnchor(parent.Top(), 0));
-		builder.SetRight(mode.panelRight);
+		builder.SetRight(ui.NewOffsetAnchor(parent.Right(), 0));
 		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0));
 		builder.SetVisible(false);
-		builder.OnRender((function $b(area) {
+		mode.area = builder.Build();
+		minRight = ui.NewOffsetAnchor(mode.area.Left(), 100);
+		maxRight = ui.NewRelativeAnchor(mode.area.Left(), mode.area.Right(), 0.5);
+		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(mode.area.Left(), 200));
+		builder$1 = ui.NewAreaBuilder();
+		builder$1.SetParent(mode.area);
+		builder$1.SetLeft(ui.NewOffsetAnchor(mode.area.Left(), 0));
+		builder$1.SetTop(ui.NewOffsetAnchor(mode.area.Top(), 0));
+		builder$1.SetRight(mode.panelRight);
+		builder$1.SetBottom(ui.NewOffsetAnchor(mode.area.Bottom(), 0));
+		builder$1.OnRender((function $b(area) {
 			var $ptr, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _r, _r$1, _r$2, _r$3, _r$4, _r$5, area, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; area = $f.area; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			$r = mode.mapDisplay.Render(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			_r = context.ForGraphics(); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_r$1 = _r.RectangleRenderer(); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_r$2 = area.Left().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r = context.ForGraphics(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r$1 = _r.RectangleRenderer(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$2 = area.Left().Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 			_arg = _r$2;
-			_r$3 = area.Top().Value(); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3 = area.Top().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 			_arg$1 = _r$3;
-			_r$4 = area.Right().Value(); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4 = area.Right().Value(); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 			_arg$2 = _r$4;
-			_r$5 = area.Bottom().Value(); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_r$5 = area.Bottom().Value(); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 			_arg$3 = _r$5;
 			_arg$4 = graphics.RGBA(0.699999988079071, 0, 0.699999988079071, 0.10000000149011612);
-			$r = _r$1.Fill(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = _r$1.Fill(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$s = -1; return;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.area = area; $f.$s = $s; $f.$r = $r; return $f;
 		}));
 		lastGrabX = 0;
-		builder.OnEvent("mouse.button.down", (function(area, event) {
+		builder$1.OnEvent("mouse.button.down", (function(area, event) {
 			var $ptr, _tuple, area, buttonEvent, event;
 			buttonEvent = $assertType(event, ptrType$4);
 			if (buttonEvent.MouseEvent.Buttons() === 1) {
@@ -31892,7 +32178,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			}
 			return true;
 		}));
-		builder.OnEvent("mouse.button.up", (function(area, event) {
+		builder$1.OnEvent("mouse.button.up", (function(area, event) {
 			var $ptr, area, buttonEvent, event;
 			buttonEvent = $assertType(event, ptrType$4);
 			if (buttonEvent.AffectedButtons() === 1) {
@@ -31900,7 +32186,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			}
 			return true;
 		}));
-		builder.OnEvent("mouse.move", (function $b(area, event) {
+		builder$1.OnEvent("mouse.move", (function $b(area, event) {
 			var $ptr, _r, _tuple, area, consumed, event, moveEvent, newX, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; area = $f.area; consumed = $f.consumed; event = $f.event; moveEvent = $f.moveEvent; newX = $f.newX; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			consumed = false;
@@ -31918,7 +32204,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			$s = -1; return consumed;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.area = area; $f.consumed = consumed; $f.event = event; $f.moveEvent = moveEvent; $f.newX = newX; $f.$s = $s; $f.$r = $r; return $f;
 		}));
-		mode.area = builder.Build();
+		mode.panel = builder$1.Build();
 		return mode;
 	};
 	$pkg.NewLevelMapMode = NewLevelMapMode;
@@ -31926,6 +32212,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		var $ptr, active, mode;
 		mode = this;
 		mode.area.SetVisible(active);
+		mode.mapDisplay.SetVisible(active);
 	};
 	LevelMapMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
 	NewWelcomeMode = function(context, parent) {
@@ -31990,7 +32277,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	ptrType$11.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
 	Context.init([{prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$6], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$7], [ptrType$8], false)}]);
 	LevelControlMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "activeLevelLabel", name: "activeLevelLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "activeLevelBox", name: "activeLevelBox", exported: false, typ: ptrType$2, tag: ""}]);
-	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$3, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}]);
+	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$3, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}]);
 	WelcomeMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "infoArea", name: "infoArea", exported: false, typ: ptrType, tag: ""}, {prop: "infoLabel", name: "infoLabel", exported: false, typ: ptrType$1, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
@@ -32854,6 +33141,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		areaBuilder.SetBottom(ui.NewAbsoluteAnchor(0));
 		root[0].area = areaBuilder.Build();
 		topLine = ptrType$2.nil;
+		_r = display.NewMapDisplay(root[0].area, $methodVal(context[0], "NewRenderContext")); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		mapDisplay = _r;
 		topLineBottom = ui.NewOffsetAnchor(root[0].area.Top(), 29);
 		builder = ui.NewAreaBuilder();
 		builder.SetParent(root[0].area);
@@ -32869,8 +33158,6 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		builder$1.SetRight(ui.NewOffsetAnchor(root[0].area.Right(), 0));
 		builder$1.SetBottom(topLineBottom);
 		topLine = builder$1.Build();
-		_r = display.NewMapDisplay($methodVal(context[0], "NewRenderContext")); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		mapDisplay = _r;
 		_r$1 = modes.NewWelcomeMode(context[0], root[0].modeArea); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_r$2 = root[0].addMode(_r$1, "Welcome"); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		root[0].welcomeMode = _r$2;

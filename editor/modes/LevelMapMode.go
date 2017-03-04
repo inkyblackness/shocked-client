@@ -16,6 +16,7 @@ type LevelMapMode struct {
 	mapDisplay *display.MapDisplay
 
 	area       *ui.Area
+	panel      *ui.Area
 	panelRight ui.Anchor
 
 	tileTypeLabel *controls.Label
@@ -27,19 +28,26 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 	mode := &LevelMapMode{context: context, mapDisplay: mapDisplay}
 
 	{
-		minRight := ui.NewOffsetAnchor(parent.Left(), 100)
-		maxRight := ui.NewRelativeAnchor(parent.Left(), parent.Right(), 0.5)
-		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(parent.Left(), 200))
 		builder := ui.NewAreaBuilder()
 		builder.SetParent(parent)
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0))
 		builder.SetTop(ui.NewOffsetAnchor(parent.Top(), 0))
-		builder.SetRight(mode.panelRight)
+		builder.SetRight(ui.NewOffsetAnchor(parent.Right(), 0))
 		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0))
 		builder.SetVisible(false)
+		mode.area = builder.Build()
+	}
+	{
+		minRight := ui.NewOffsetAnchor(mode.area.Left(), 100)
+		maxRight := ui.NewRelativeAnchor(mode.area.Left(), mode.area.Right(), 0.5)
+		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(mode.area.Left(), 200))
+		builder := ui.NewAreaBuilder()
+		builder.SetParent(mode.area)
+		builder.SetLeft(ui.NewOffsetAnchor(mode.area.Left(), 0))
+		builder.SetTop(ui.NewOffsetAnchor(mode.area.Top(), 0))
+		builder.SetRight(mode.panelRight)
+		builder.SetBottom(ui.NewOffsetAnchor(mode.area.Bottom(), 0))
 		builder.OnRender(func(area *ui.Area) {
-			mode.mapDisplay.Render()
-
 			context.ForGraphics().RectangleRenderer().Fill(
 				area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 				graphics.RGBA(0.7, 0.0, 0.7, 0.1))
@@ -72,7 +80,7 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			return
 		})
 
-		mode.area = builder.Build()
+		mode.panel = builder.Build()
 	}
 
 	return mode
@@ -81,4 +89,5 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 // SetActive implements the Mode interface.
 func (mode *LevelMapMode) SetActive(active bool) {
 	mode.area.SetVisible(active)
+	mode.mapDisplay.SetVisible(active)
 }

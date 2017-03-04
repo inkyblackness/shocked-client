@@ -34,13 +34,15 @@ func NewLimited(minZoom, maxZoom float32, minPos, maxPos float32) *LimitedCamera
 
 // SetViewportSize notifies the camera how big the view is.
 func (cam *LimitedCamera) SetViewportSize(width, height float32) {
-	cam.viewportWidth, cam.viewportHeight = width, height
-	cam.updateViewMatrix()
+	if (cam.viewportWidth != width) || (cam.viewportHeight != height) {
+		cam.viewportWidth, cam.viewportHeight = width, height
+		cam.updateViewMatrix()
+	}
 }
 
 // ViewMatrix implements the Viewer interface.
-func (cam *LimitedCamera) ViewMatrix() mgl.Mat4 {
-	return cam.viewMatrix
+func (cam *LimitedCamera) ViewMatrix() *mgl.Mat4 {
+	return &cam.viewMatrix
 }
 
 // MoveBy adjusts the requested view offset by given delta values in world coordinates.
