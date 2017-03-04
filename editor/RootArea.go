@@ -1,6 +1,7 @@
 package editor
 
 import (
+	"github.com/inkyblackness/shocked-client/editor/display"
 	"github.com/inkyblackness/shocked-client/editor/modes"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
@@ -24,9 +25,10 @@ type rootArea struct {
 	modeBox      *controls.ComboBox
 	messageLabel *controls.Label
 
-	welcomeMode    *modeSelector
-	mapControlMode *modeSelector
-	allModes       []*modeSelector
+	welcomeMode      *modeSelector
+	levelControlMode *modeSelector
+	levelMapMode     *modeSelector
+	allModes         []*modeSelector
 }
 
 func newRootArea(context modes.Context) *ui.Area {
@@ -59,8 +61,10 @@ func newRootArea(context modes.Context) *ui.Area {
 		topLine = builder.Build()
 	}
 
+	mapDisplay := display.NewMapDisplay(context.NewRenderContext)
 	root.welcomeMode = root.addMode(modes.NewWelcomeMode(context, root.modeArea), "Welcome")
-	root.mapControlMode = root.addMode(modes.NewMapControlMode(context, root.modeArea), "Map Control")
+	root.levelControlMode = root.addMode(modes.NewLevelControlMode(context, root.modeArea), "Level Control")
+	root.levelMapMode = root.addMode(modes.NewLevelMapMode(context, root.modeArea, mapDisplay), "Level Map")
 
 	boxMessageSeparator := ui.NewOffsetAnchor(topLine.Left(), 250)
 	{

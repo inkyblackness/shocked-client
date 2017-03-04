@@ -30,12 +30,12 @@ func NewAdapter(store model.DataStore) *Adapter {
 		activeProjectID:     newObservable(),
 		availableArchiveIDs: newObservable(),
 		activeArchiveID:     newObservable(),
-		activeLevel:         newLevelAdapter(),
 
 		availableLevels:   make(map[string]model.LevelProperties),
 		availableLevelIDs: newObservable()}
 
 	adapter.message.set("")
+	adapter.activeLevel = newLevelAdapter(adapter, store, adapter.simpleStoreFailure)
 
 	return adapter
 }
@@ -114,10 +114,9 @@ func (adapter *Adapter) ActiveLevel() *LevelAdapter {
 
 // RequestActiveLevel requests to set the specified level as the active one.
 func (adapter *Adapter) RequestActiveLevel(levelID string) {
-	adapter.activeLevel.clear(levelID)
-	// clear current level stuff
-	// set active level (callback)
-	// request all level specific stuff
+	levelProp, existing := adapter.availableLevels[levelID]
+	adapter.activeLevel.isCyberspace = existing && levelProp.CyberspaceFlag
+	adapter.activeLevel.requestByID(levelID)
 }
 
 // AvailableLevelIDs returns the list of identifier of available levels.

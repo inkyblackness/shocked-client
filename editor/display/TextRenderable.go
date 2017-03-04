@@ -71,8 +71,8 @@ type TextRenderable struct {
 	paletteTexture graphics.Texture
 	bitmapTexture  graphics.Texture
 
-	textRenderer graphics.TextRenderer
-	text         string
+	textPainter graphics.TextPainter
+	text        string
 }
 
 // NewTextRenderable returns a new instance of a text renderable
@@ -114,9 +114,9 @@ func NewTextRenderable(gl opengl.OpenGl, positionX, positionY float32, displaySi
 	return renderable
 }
 
-// SetTextRenderer sets the renderer to use. This update the bitmap.
-func (renderable *TextRenderable) SetTextRenderer(renderer graphics.TextRenderer) {
-	renderable.textRenderer = renderer
+// SetTextPainter sets the renderer to use. This update the bitmap.
+func (renderable *TextRenderable) SetTextPainter(renderer graphics.TextPainter) {
+	renderable.textPainter = renderer
 	renderable.updateBitmap()
 }
 
@@ -133,8 +133,8 @@ func (renderable *TextRenderable) updateBitmap() {
 		renderable.bitmapTexture.Dispose()
 		renderable.bitmapTexture = nil
 	}
-	if renderable.textRenderer != nil {
-		textBitmap := renderable.textRenderer.Render(renderable.text)
+	if renderable.textPainter != nil {
+		textBitmap := renderable.textPainter.Paint(renderable.text)
 		renderable.bitmapTexture = graphics.NewBitmapTexture(renderable.gl, textBitmap.Width, textBitmap.Height, textBitmap.Pixels)
 
 		renderable.withShader(func() {

@@ -1,16 +1,17 @@
 package modes
 
 import (
+	mgl "github.com/go-gl/mathgl/mgl32"
+
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
-	"github.com/inkyblackness/shocked-client/opengl"
 )
 
 // Context provides some global resources.
 type Context interface {
 	ModelAdapter() *model.Adapter
-	OpenGl() opengl.OpenGl // alternate: NewRenderContext(*viewMatrix)
+	NewRenderContext(viewMatrix *mgl.Mat4) *graphics.RenderContext
 	ForGraphics() graphics.Context
 	ControlFactory() controls.Factory
 }

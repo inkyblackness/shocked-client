@@ -22,11 +22,10 @@ func NewTileMap(width, height int) *TileMap {
 	return tileMap
 }
 
-// Clear resets the map to the initial state.
-func (tileMap *TileMap) Clear() {
+func (tileMap *TileMap) clear() {
 	tileMap.ClearSelection()
 	for _, tile := range tileMap.tiles {
-		tile.SetProperties(nil)
+		tile.setProperties(nil)
 	}
 }
 

@@ -203,9 +203,9 @@ func (app *MainApplication) ModelAdapter() *model.Adapter {
 	return app.modelAdapter
 }
 
-// OpenGl implements the Context interface.
-func (app *MainApplication) OpenGl() opengl.OpenGl {
-	return app.gl
+// NewRenderContext implements the Context interface.
+func (app *MainApplication) NewRenderContext(viewMatrix *mgl.Mat4) *graphics.RenderContext {
+	return graphics.NewBasicRenderContext(app.gl, &app.projectionMatrix, viewMatrix)
 }
 
 // ForGraphics implements the Context interface.

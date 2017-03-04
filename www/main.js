@@ -4201,13 +4201,18 @@ $packages["encoding"] = (function() {
 	return $pkg;
 })();
 $packages["math"] = (function() {
-	var $pkg = {}, $init, js, arrayType, arrayType$1, arrayType$2, structType, arrayType$3, math, zero, posInf, negInf, nan, buf, pow10tab, Hypot, Inf, IsInf, IsNaN, NaN, Sqrt, init, Float32bits, Float32frombits, Float64bits, Float64frombits, Abs, hypot, init$1;
+	var $pkg = {}, $init, js, arrayType, arrayType$1, arrayType$2, structType, arrayType$3, math, zero, posInf, negInf, nan, buf, pow10tab, Cos, Hypot, Inf, IsInf, IsNaN, NaN, Sin, Sqrt, init, Float32bits, Float32frombits, Float64bits, Float64frombits, Abs, hypot, init$1;
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	arrayType = $arrayType($Uint32, 2);
 	arrayType$1 = $arrayType($Float32, 2);
 	arrayType$2 = $arrayType($Float64, 1);
 	structType = $structType("math", [{prop: "uint32array", name: "uint32array", exported: false, typ: arrayType, tag: ""}, {prop: "float32array", name: "float32array", exported: false, typ: arrayType$1, tag: ""}, {prop: "float64array", name: "float64array", exported: false, typ: arrayType$2, tag: ""}]);
 	arrayType$3 = $arrayType($Float64, 70);
+	Cos = function(x) {
+		var $ptr, x;
+		return $parseFloat(math.cos(x));
+	};
+	$pkg.Cos = Cos;
 	Hypot = function(p, q) {
 		var $ptr, p, q;
 		return hypot(p, q);
@@ -4245,6 +4250,11 @@ $packages["math"] = (function() {
 		return nan;
 	};
 	$pkg.NaN = NaN;
+	Sin = function(x) {
+		var $ptr, x;
+		return $parseFloat(math.sin(x));
+	};
+	$pkg.Sin = Sin;
 	Sqrt = function(x) {
 		var $ptr, x;
 		return $parseFloat(math.sqrt(x));
@@ -23812,7 +23822,7 @@ $packages["text/tabwriter"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
-	var $pkg = {}, $init, bytes, errors, fmt, f32, math, sync, tabwriter, Mat2, Mat2x3, Mat2x4, Mat3x2, Mat3, Mat3x4, Mat4x2, Mat4x3, Mat4, Vec2, Vec3, Vec4, arrayType, arrayType$1, sliceType$2, arrayType$2, sliceType$3, arrayType$3, arrayType$4, arrayType$5, funcType, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, Mat2FromCols, Mat3FromCols, Ident4, Mat4FromCols, Ortho, Ortho2D, Translate3D, Scale3D, Abs, FloatEqual, FloatEqualThreshold;
+	var $pkg = {}, $init, bytes, errors, fmt, f32, math, sync, tabwriter, Mat2, Mat2x3, Mat2x4, Mat3x2, Mat3, Mat3x4, Mat4x2, Mat4x3, Mat4, Vec2, Vec3, Vec4, arrayType, arrayType$1, sliceType$2, arrayType$2, sliceType$3, arrayType$3, arrayType$4, arrayType$5, funcType, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, Mat2FromCols, Mat3FromCols, Ident4, Mat4FromCols, Ortho, Ortho2D, Translate3D, HomogRotate3DZ, Scale3D, Abs, FloatEqual, FloatEqualThreshold;
 	bytes = $packages["bytes"];
 	errors = $packages["errors"];
 	fmt = $packages["fmt"];
@@ -25987,6 +25997,15 @@ $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
 		return $toNativeArray($kindFloat32, [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, Tx, Ty, Tz, 1]);
 	};
 	$pkg.Translate3D = Translate3D;
+	HomogRotate3DZ = function(angle) {
+		var $ptr, _tmp, _tmp$1, angle, cos, sin;
+		_tmp = $fround(math.Sin(angle));
+		_tmp$1 = $fround(math.Cos(angle));
+		sin = _tmp;
+		cos = _tmp$1;
+		return $toNativeArray($kindFloat32, [cos, sin, 0, 0, -sin, cos, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]);
+	};
+	$pkg.HomogRotate3DZ = HomogRotate3DZ;
 	Scale3D = function(scaleX, scaleY, scaleZ) {
 		var $ptr, scaleX, scaleY, scaleZ;
 		return $toNativeArray($kindFloat32, [scaleX, 0, 0, 0, 0, scaleY, 0, 0, 0, 0, scaleZ, 0, 0, 0, 0, 1]);
@@ -26532,6 +26551,43 @@ $packages["github.com/go-gl/mathgl/mgl32"] = (function() {
 		$pkg.InfPos = $fround(math.Inf(1));
 		$pkg.InfNeg = $fround(math.Inf(-1));
 		$pkg.NaN = $fround(math.NaN());
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["golang.org/x/image/math/f64"] = (function() {
+	var $pkg = {}, $init;
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["github.com/go-gl/mathgl/mgl64"] = (function() {
+	var $pkg = {}, $init, bytes, errors, fmt, f64, math, sync, tabwriter;
+	bytes = $packages["bytes"];
+	errors = $packages["errors"];
+	fmt = $packages["fmt"];
+	f64 = $packages["golang.org/x/image/math/f64"];
+	math = $packages["math"];
+	sync = $packages["sync"];
+	tabwriter = $packages["text/tabwriter"];
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = bytes.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = errors.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = f64.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = math.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = sync.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = tabwriter.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$pkg.InfPos = math.Inf(1);
+		$pkg.InfNeg = math.Inf(-1);
+		$pkg.NaN = math.NaN();
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -28651,7 +28707,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() {
-	var $pkg = {}, $init, fmt, graphics, model, strconv, Adapter, LevelAdapter, observerFunc, observable, ptrType, ptrType$1, sliceType, sliceType$1, sliceType$2, funcType, sliceType$3, ptrType$5, mapType, mapType$2, NewAdapter, newLevelAdapter, newObservable;
+	var $pkg = {}, $init, fmt, graphics, model, strconv, Adapter, LevelAdapter, observerFunc, observable, Tile, TileCoordinate, TileMap, archiveContext, ptrType, ptrType$1, sliceType, sliceType$1, ptrType$2, sliceType$2, ptrType$4, ptrType$5, funcType, sliceType$3, ptrType$6, mapType, funcType$1, mapType$2, funcType$2, mapType$3, NewAdapter, newLevelAdapter, newObservable, NewTile, TileCoordinateOf, NewTileMap;
 	fmt = $packages["fmt"];
 	graphics = $packages["github.com/inkyblackness/shocked-client/graphics"];
 	model = $packages["github.com/inkyblackness/shocked-model"];
@@ -28678,13 +28734,23 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 		this.availableLevels = availableLevels_;
 		this.availableLevelIDs = availableLevelIDs_;
 	});
-	LevelAdapter = $pkg.LevelAdapter = $newType(0, $kindStruct, "model.LevelAdapter", true, "github.com/inkyblackness/shocked-client/editor/model", true, function(id_) {
+	LevelAdapter = $pkg.LevelAdapter = $newType(0, $kindStruct, "model.LevelAdapter", true, "github.com/inkyblackness/shocked-client/editor/model", true, function(context_, store_, simpleStoreFailure_, id_, isCyberspace_, tileMap_) {
 		this.$val = this;
 		if (arguments.length === 0) {
+			this.context = $ifaceNil;
+			this.store = $ifaceNil;
+			this.simpleStoreFailure = $throwNilPointerError;
 			this.id = ptrType.nil;
+			this.isCyberspace = false;
+			this.tileMap = ptrType$2.nil;
 			return;
 		}
+		this.context = context_;
+		this.store = store_;
+		this.simpleStoreFailure = simpleStoreFailure_;
 		this.id = id_;
+		this.isCyberspace = isCyberspace_;
+		this.tileMap = tileMap_;
 	});
 	observerFunc = $pkg.observerFunc = $newType(4, $kindFunc, "model.observerFunc", true, "github.com/inkyblackness/shocked-client/editor/model", false, null);
 	observable = $pkg.observable = $newType(0, $kindStruct, "model.observable", true, "github.com/inkyblackness/shocked-client/editor/model", false, function(value_, observerCounter_, observers_) {
@@ -28699,22 +28765,58 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 		this.observerCounter = observerCounter_;
 		this.observers = observers_;
 	});
+	Tile = $pkg.Tile = $newType(0, $kindStruct, "model.Tile", true, "github.com/inkyblackness/shocked-client/editor/model", true, function(properties_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.properties = ptrType.nil;
+			return;
+		}
+		this.properties = properties_;
+	});
+	TileCoordinate = $pkg.TileCoordinate = $newType(0, $kindStruct, "model.TileCoordinate", true, "github.com/inkyblackness/shocked-client/editor/model", true, function(x_, y_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.x = 0;
+			this.y = 0;
+			return;
+		}
+		this.x = x_;
+		this.y = y_;
+	});
+	TileMap = $pkg.TileMap = $newType(0, $kindStruct, "model.TileMap", true, "github.com/inkyblackness/shocked-client/editor/model", true, function(tiles_, selectedTiles_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.tiles = false;
+			this.selectedTiles = false;
+			return;
+		}
+		this.tiles = tiles_;
+		this.selectedTiles = selectedTiles_;
+	});
+	archiveContext = $pkg.archiveContext = $newType(8, $kindInterface, "model.archiveContext", true, "github.com/inkyblackness/shocked-client/editor/model", false, null);
 	ptrType = $ptrType(observable);
 	ptrType$1 = $ptrType(LevelAdapter);
 	sliceType = $sliceType($emptyInterface);
 	sliceType$1 = $sliceType($String);
+	ptrType$2 = $ptrType(TileMap);
 	sliceType$2 = $sliceType($Int);
+	ptrType$4 = $ptrType(model.TileProperties);
+	ptrType$5 = $ptrType(Tile);
 	funcType = $funcType([], [], false);
 	sliceType$3 = $sliceType(model.Level);
-	ptrType$5 = $ptrType(Adapter);
+	ptrType$6 = $ptrType(Adapter);
 	mapType = $mapType($String, model.LevelProperties);
+	funcType$1 = $funcType([$String], [model.FailureFunc], false);
 	mapType$2 = $mapType($Int, observerFunc);
+	funcType$2 = $funcType([TileCoordinate, ptrType$5], [], false);
+	mapType$3 = $mapType(TileCoordinate, ptrType$5);
 	NewAdapter = function(store) {
 		var $ptr, _r, adapter, store, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; adapter = $f.adapter; store = $f.store; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = newLevelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		adapter = new Adapter.ptr(store, newObservable(), newObservable(), newObservable(), newObservable(), _r, {}, newObservable());
-		$r = adapter.message.set(new $String("")); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		adapter = new Adapter.ptr(store, newObservable(), newObservable(), newObservable(), newObservable(), ptrType$1.nil, {}, newObservable());
+		$r = adapter.message.set(new $String("")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = newLevelAdapter(adapter, store, $methodVal(adapter, "simpleStoreFailure")); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		adapter.activeLevel = _r;
 		$s = -1; return adapter;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: NewAdapter }; } $f.$ptr = $ptr; $f._r = _r; $f.adapter = adapter; $f.store = store; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -28827,12 +28929,16 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 	};
 	Adapter.prototype.ActiveLevel = function() { return this.$val.ActiveLevel(); };
 	Adapter.ptr.prototype.RequestActiveLevel = function(levelID) {
-		var $ptr, adapter, levelID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; adapter = $f.adapter; levelID = $f.levelID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _entry, _tuple, adapter, existing, levelID, levelProp, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _tuple = $f._tuple; adapter = $f.adapter; existing = $f.existing; levelID = $f.levelID; levelProp = $f.levelProp; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		adapter = this;
-		$r = adapter.activeLevel.clear(levelID); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_tuple = (_entry = adapter.availableLevels[$String.keyFor(levelID)], _entry !== undefined ? [_entry.v, true] : [new model.LevelProperties.ptr(0, false), false]);
+		levelProp = $clone(_tuple[0], model.LevelProperties);
+		existing = _tuple[1];
+		adapter.activeLevel.isCyberspace = existing && levelProp.CyberspaceFlag;
+		$r = adapter.activeLevel.requestByID(levelID); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Adapter.ptr.prototype.RequestActiveLevel }; } $f.$ptr = $ptr; $f.adapter = adapter; $f.levelID = levelID; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Adapter.ptr.prototype.RequestActiveLevel }; } $f.$ptr = $ptr; $f._entry = _entry; $f._tuple = _tuple; $f.adapter = adapter; $f.existing = existing; $f.levelID = levelID; $f.levelProp = levelProp; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	Adapter.prototype.RequestActiveLevel = function(levelID) { return this.$val.RequestActiveLevel(levelID); };
 	Adapter.ptr.prototype.AvailableLevelIDs = function() {
@@ -28847,36 +28953,98 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 		adapter.availableLevelIDs.addObserver(callback);
 	};
 	Adapter.prototype.OnAvailableLevelsChanged = function(callback) { return this.$val.OnAvailableLevelsChanged(callback); };
-	newLevelAdapter = function() {
-		var $ptr, adapter, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; adapter = $f.adapter; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		adapter = new LevelAdapter.ptr(newObservable());
+	newLevelAdapter = function(context, store, simpleStoreFailure) {
+		var $ptr, adapter, context, simpleStoreFailure, store, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; adapter = $f.adapter; context = $f.context; simpleStoreFailure = $f.simpleStoreFailure; store = $f.store; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		adapter = new LevelAdapter.ptr(context, store, simpleStoreFailure, newObservable(), false, NewTileMap(64, 64));
 		$r = adapter.id.set(new $String("")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return adapter;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: newLevelAdapter }; } $f.$ptr = $ptr; $f.adapter = adapter; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: newLevelAdapter }; } $f.$ptr = $ptr; $f.adapter = adapter; $f.context = context; $f.simpleStoreFailure = simpleStoreFailure; $f.store = store; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	LevelAdapter.ptr.prototype.clear = function(levelID) {
-		var $ptr, adapter, levelID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; adapter = $f.adapter; levelID = $f.levelID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		adapter = this;
-		$r = adapter.id.set(new $String("")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = adapter.id.set(new $String(levelID)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelAdapter.ptr.prototype.clear }; } $f.$ptr = $ptr; $f.adapter = adapter; $f.levelID = levelID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	LevelAdapter.prototype.clear = function(levelID) { return this.$val.clear(levelID); };
 	LevelAdapter.ptr.prototype.ID = function() {
 		var $ptr, adapter;
 		adapter = this;
 		return $assertType(adapter.id.orDefault(new $String("")), $String);
 	};
 	LevelAdapter.prototype.ID = function() { return this.$val.ID(); };
+	LevelAdapter.ptr.prototype.storeLevelID = function() {
+		var $ptr, _tuple, adapter, id, idAsString, parsed;
+		adapter = this;
+		idAsString = adapter.ID();
+		id = -1;
+		if (!(idAsString === "")) {
+			_tuple = strconv.ParseInt(idAsString, 10, 16);
+			parsed = _tuple[0];
+			id = ((parsed.$low + ((parsed.$high >> 31) * 4294967296)) >> 0);
+		}
+		return id;
+	};
+	LevelAdapter.prototype.storeLevelID = function() { return this.$val.storeLevelID(); };
 	LevelAdapter.ptr.prototype.OnIDChanged = function(callback) {
 		var $ptr, adapter, callback;
 		adapter = this;
 		adapter.id.addObserver(callback);
 	};
 	LevelAdapter.prototype.OnIDChanged = function(callback) { return this.$val.OnIDChanged(callback); };
+	LevelAdapter.ptr.prototype.requestByID = function(levelID) {
+		var $ptr, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _r, _r$1, _r$2, adapter, levelID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; adapter = $f.adapter; levelID = $f.levelID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		adapter = this;
+		$r = adapter.id.set(new $String("")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = adapter.tileMap.clear(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = adapter.id.set(new $String(levelID)); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ if (!(levelID === "")) { $s = 4; continue; }
+		/* */ $s = 5; continue;
+		/* if (!(levelID === "")) { */ case 4:
+			_r = adapter.context.ActiveProjectID(); /* */ $s = 6; case 6: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_arg = _r;
+			_r$1 = adapter.context.ActiveArchiveID(); /* */ $s = 7; case 7: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_arg$1 = _r$1;
+			_arg$2 = adapter.storeLevelID();
+			_arg$3 = $methodVal(adapter, "onTiles");
+			_r$2 = adapter.simpleStoreFailure("Tiles"); /* */ $s = 8; case 8: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_arg$4 = _r$2;
+			$r = adapter.store.Tiles(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 5:
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelAdapter.ptr.prototype.requestByID }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.adapter = adapter; $f.levelID = levelID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	LevelAdapter.prototype.requestByID = function(levelID) { return this.$val.requestByID(levelID); };
+	LevelAdapter.ptr.prototype.IsCyberspace = function() {
+		var $ptr, adapter;
+		adapter = this;
+		return adapter.isCyberspace;
+	};
+	LevelAdapter.prototype.IsCyberspace = function() { return this.$val.IsCyberspace(); };
+	LevelAdapter.ptr.prototype.TileMap = function() {
+		var $ptr, adapter;
+		adapter = this;
+		return adapter.tileMap;
+	};
+	LevelAdapter.prototype.TileMap = function() { return this.$val.TileMap(); };
+	LevelAdapter.ptr.prototype.onTiles = function(tiles) {
+		var $ptr, adapter, coord, row, tile, tileProperties, tiles, x, x$1, y, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; adapter = $f.adapter; coord = $f.coord; row = $f.row; tile = $f.tile; tileProperties = $f.tileProperties; tiles = $f.tiles; x = $f.x; x$1 = $f.x$1; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		adapter = this;
+		y = 0;
+		/* while (true) { */ case 1:
+			/* if (!(y < tiles.Table.$length)) { break; } */ if(!(y < tiles.Table.$length)) { $s = 2; continue; }
+			row = (x = tiles.Table, ((y < 0 || y >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + y]));
+			x$1 = 0;
+			/* while (true) { */ case 3:
+				/* if (!(x$1 < row.$length)) { break; } */ if(!(x$1 < row.$length)) { $s = 4; continue; }
+				tileProperties = ((x$1 < 0 || x$1 >= row.$length) ? ($throwRuntimeError("index out of range"), undefined) : row.$array[row.$offset + x$1]).Properties;
+				coord = $clone(TileCoordinateOf(x$1, y), TileCoordinate);
+				tile = adapter.tileMap.Tile($clone(coord, TileCoordinate));
+				$r = tile.setProperties(tileProperties); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				x$1 = x$1 + (1) >> 0;
+			/* } */ $s = 3; continue; case 4:
+			y = y + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelAdapter.ptr.prototype.onTiles }; } $f.$ptr = $ptr; $f.adapter = adapter; $f.coord = coord; $f.row = row; $f.tile = tile; $f.tileProperties = tileProperties; $f.tiles = tiles; $f.x = x; $f.x$1 = x$1; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	LevelAdapter.prototype.onTiles = function(tiles) { return this.$val.onTiles(tiles); };
 	newObservable = function() {
 		var $ptr;
 		return new observable.ptr($ifaceNil, 0, {});
@@ -28961,13 +29129,171 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 		/* */ } return; } if ($f === undefined) { $f = { $blk: observable.ptr.prototype.notifyObservers }; } $f.$ptr = $ptr; $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f.existing = existing; $f.key = key; $f.key$1 = key$1; $f.obj = obj; $f.observer = observer; $f.observers = observers; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	observable.prototype.notifyObservers = function() { return this.$val.notifyObservers(); };
-	ptrType$5.methods = [{prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [model.FailureFunc], false)}, {prop: "SetMessage", name: "SetMessage", pkg: "", typ: $funcType([$String], [], false)}, {prop: "Message", name: "Message", pkg: "", typ: $funcType([], [$String], false)}, {prop: "OnMessageChanged", name: "OnMessageChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "ActiveProjectID", name: "ActiveProjectID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "RequestProject", name: "RequestProject", pkg: "", typ: $funcType([$String], [], false)}, {prop: "ActiveArchiveID", name: "ActiveArchiveID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "requestArchive", name: "requestArchive", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [], false)}, {prop: "onLevels", name: "onLevels", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([sliceType$3], [], false)}, {prop: "ActiveLevel", name: "ActiveLevel", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "RequestActiveLevel", name: "RequestActiveLevel", pkg: "", typ: $funcType([$String], [], false)}, {prop: "AvailableLevelIDs", name: "AvailableLevelIDs", pkg: "", typ: $funcType([], [sliceType$1], false)}, {prop: "OnAvailableLevelsChanged", name: "OnAvailableLevelsChanged", pkg: "", typ: $funcType([funcType], [], false)}];
-	ptrType$1.methods = [{prop: "clear", name: "clear", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [], false)}, {prop: "ID", name: "ID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "OnIDChanged", name: "OnIDChanged", pkg: "", typ: $funcType([funcType], [], false)}];
+	NewTile = function() {
+		var $ptr, tile;
+		tile = new Tile.ptr(newObservable());
+		return tile;
+	};
+	$pkg.NewTile = NewTile;
+	Tile.ptr.prototype.setProperties = function(properties) {
+		var $ptr, properties, tile, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; properties = $f.properties; tile = $f.tile; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		tile = this;
+		$r = tile.properties.set(properties); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Tile.ptr.prototype.setProperties }; } $f.$ptr = $ptr; $f.properties = properties; $f.tile = tile; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Tile.prototype.setProperties = function(properties) { return this.$val.setProperties(properties); };
+	Tile.ptr.prototype.Properties = function() {
+		var $ptr, tile;
+		tile = this;
+		return $assertType(tile.properties.get(), ptrType$4);
+	};
+	Tile.prototype.Properties = function() { return this.$val.Properties(); };
+	Tile.ptr.prototype.OnPropertiesChanged = function(callback) {
+		var $ptr, callback, tile;
+		tile = this;
+		tile.properties.addObserver(callback);
+	};
+	Tile.prototype.OnPropertiesChanged = function(callback) { return this.$val.OnPropertiesChanged(callback); };
+	TileCoordinateOf = function(x, y) {
+		var $ptr, x, y;
+		return new TileCoordinate.ptr(x, y);
+	};
+	$pkg.TileCoordinateOf = TileCoordinateOf;
+	TileCoordinate.ptr.prototype.XY = function() {
+		var $ptr, _tmp, _tmp$1, coord, x, y;
+		x = 0;
+		y = 0;
+		coord = this;
+		_tmp = coord.x;
+		_tmp$1 = coord.y;
+		x = _tmp;
+		y = _tmp$1;
+		return [x, y];
+	};
+	TileCoordinate.prototype.XY = function() { return this.$val.XY(); };
+	TileCoordinate.ptr.prototype.String = function() {
+		var $ptr, _r, coord, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; coord = $f.coord; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		coord = this;
+		_r = fmt.Sprintf("%2d/%2d", new sliceType([new $Int(coord.x), new $Int(coord.y)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TileCoordinate.ptr.prototype.String }; } $f.$ptr = $ptr; $f._r = _r; $f.coord = coord; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TileCoordinate.prototype.String = function() { return this.$val.String(); };
+	NewTileMap = function(width, height) {
+		var $ptr, _key, coord, height, tileMap, width, x, y;
+		tileMap = new TileMap.ptr({}, {});
+		y = 0;
+		while (true) {
+			if (!(y < height)) { break; }
+			x = 0;
+			while (true) {
+				if (!(x < width)) { break; }
+				coord = $clone(TileCoordinateOf(x, y), TileCoordinate);
+				_key = $clone(coord, TileCoordinate); (tileMap.tiles || $throwRuntimeError("assignment to entry in nil map"))[TileCoordinate.keyFor(_key)] = { k: _key, v: NewTile() };
+				x = x + (1) >> 0;
+			}
+			y = y + (1) >> 0;
+		}
+		return tileMap;
+	};
+	$pkg.NewTileMap = NewTileMap;
+	TileMap.ptr.prototype.clear = function() {
+		var $ptr, _entry, _i, _keys, _ref, tile, tileMap, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _ref = $f._ref; tile = $f.tile; tileMap = $f.tileMap; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		tileMap = this;
+		tileMap.ClearSelection();
+		_ref = tileMap.tiles;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 1:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 1; continue;
+			}
+			tile = _entry.v;
+			$r = tile.setProperties(ptrType$4.nil); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TileMap.ptr.prototype.clear }; } $f.$ptr = $ptr; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._ref = _ref; $f.tile = tile; $f.tileMap = tileMap; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TileMap.prototype.clear = function() { return this.$val.clear(); };
+	TileMap.ptr.prototype.ForEachSelected = function(callback) {
+		var $ptr, _entry, _i, _keys, _ref, callback, coord, tile, tileMap, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _ref = $f._ref; callback = $f.callback; coord = $f.coord; tile = $f.tile; tileMap = $f.tileMap; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		tileMap = this;
+		_ref = tileMap.selectedTiles;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 1:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 1; continue;
+			}
+			coord = $clone(_entry.k, TileCoordinate);
+			tile = _entry.v;
+			$r = callback($clone(coord, TileCoordinate), tile); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TileMap.ptr.prototype.ForEachSelected }; } $f.$ptr = $ptr; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._ref = _ref; $f.callback = callback; $f.coord = coord; $f.tile = tile; $f.tileMap = tileMap; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	TileMap.prototype.ForEachSelected = function(callback) { return this.$val.ForEachSelected(callback); };
+	TileMap.ptr.prototype.ClearSelection = function() {
+		var $ptr, tileMap;
+		tileMap = this;
+		tileMap.selectedTiles = {};
+	};
+	TileMap.prototype.ClearSelection = function() { return this.$val.ClearSelection(); };
+	TileMap.ptr.prototype.IsSelected = function(coord) {
+		var $ptr, _entry, _tuple, coord, isSelected, tileMap;
+		tileMap = this;
+		_tuple = (_entry = tileMap.selectedTiles[TileCoordinate.keyFor(coord)], _entry !== undefined ? [_entry.v, true] : [ptrType$5.nil, false]);
+		isSelected = _tuple[1];
+		return isSelected;
+	};
+	TileMap.prototype.IsSelected = function(coord) { return this.$val.IsSelected(coord); };
+	TileMap.ptr.prototype.SetSelected = function(coord, value) {
+		var $ptr, _entry, _key, _tuple, coord, exists, isSelected, tile, tileMap, value;
+		tileMap = this;
+		isSelected = tileMap.IsSelected($clone(coord, TileCoordinate));
+		_tuple = (_entry = tileMap.tiles[TileCoordinate.keyFor(coord)], _entry !== undefined ? [_entry.v, true] : [ptrType$5.nil, false]);
+		tile = _tuple[0];
+		exists = _tuple[1];
+		if (isSelected && !value) {
+			delete tileMap.selectedTiles[TileCoordinate.keyFor(coord)];
+		} else if (!isSelected && value && exists) {
+			_key = $clone(coord, TileCoordinate); (tileMap.selectedTiles || $throwRuntimeError("assignment to entry in nil map"))[TileCoordinate.keyFor(_key)] = { k: _key, v: tile };
+		}
+	};
+	TileMap.prototype.SetSelected = function(coord, value) { return this.$val.SetSelected(coord, value); };
+	TileMap.ptr.prototype.Tile = function(coord) {
+		var $ptr, _entry, coord, tileMap;
+		tileMap = this;
+		return (_entry = tileMap.tiles[TileCoordinate.keyFor(coord)], _entry !== undefined ? _entry.v : ptrType$5.nil);
+	};
+	TileMap.prototype.Tile = function(coord) { return this.$val.Tile(coord); };
+	ptrType$6.methods = [{prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [model.FailureFunc], false)}, {prop: "SetMessage", name: "SetMessage", pkg: "", typ: $funcType([$String], [], false)}, {prop: "Message", name: "Message", pkg: "", typ: $funcType([], [$String], false)}, {prop: "OnMessageChanged", name: "OnMessageChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "ActiveProjectID", name: "ActiveProjectID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "RequestProject", name: "RequestProject", pkg: "", typ: $funcType([$String], [], false)}, {prop: "ActiveArchiveID", name: "ActiveArchiveID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "requestArchive", name: "requestArchive", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [], false)}, {prop: "onLevels", name: "onLevels", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([sliceType$3], [], false)}, {prop: "ActiveLevel", name: "ActiveLevel", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "RequestActiveLevel", name: "RequestActiveLevel", pkg: "", typ: $funcType([$String], [], false)}, {prop: "AvailableLevelIDs", name: "AvailableLevelIDs", pkg: "", typ: $funcType([], [sliceType$1], false)}, {prop: "OnAvailableLevelsChanged", name: "OnAvailableLevelsChanged", pkg: "", typ: $funcType([funcType], [], false)}];
+	ptrType$1.methods = [{prop: "ID", name: "ID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "storeLevelID", name: "storeLevelID", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [$Int], false)}, {prop: "OnIDChanged", name: "OnIDChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "requestByID", name: "requestByID", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [], false)}, {prop: "IsCyberspace", name: "IsCyberspace", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "TileMap", name: "TileMap", pkg: "", typ: $funcType([], [ptrType$2], false)}, {prop: "onTiles", name: "onTiles", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([model.Tiles], [], false)}];
 	ptrType.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [$emptyInterface], false)}, {prop: "orDefault", name: "orDefault", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$emptyInterface], [$emptyInterface], false)}, {prop: "set", name: "set", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$emptyInterface], [], false)}, {prop: "addObserver", name: "addObserver", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([observerFunc], [funcType], false)}, {prop: "notifyObservers", name: "notifyObservers", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [], false)}];
+	ptrType$5.methods = [{prop: "setProperties", name: "setProperties", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([ptrType$4], [], false)}, {prop: "Properties", name: "Properties", pkg: "", typ: $funcType([], [ptrType$4], false)}, {prop: "OnPropertiesChanged", name: "OnPropertiesChanged", pkg: "", typ: $funcType([funcType], [], false)}];
+	TileCoordinate.methods = [{prop: "XY", name: "XY", pkg: "", typ: $funcType([], [$Int, $Int], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$2.methods = [{prop: "clear", name: "clear", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [], false)}, {prop: "ForEachSelected", name: "ForEachSelected", pkg: "", typ: $funcType([funcType$2], [], false)}, {prop: "ClearSelection", name: "ClearSelection", pkg: "", typ: $funcType([], [], false)}, {prop: "IsSelected", name: "IsSelected", pkg: "", typ: $funcType([TileCoordinate], [$Bool], false)}, {prop: "SetSelected", name: "SetSelected", pkg: "", typ: $funcType([TileCoordinate, $Bool], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([TileCoordinate], [ptrType$5], false)}];
 	Adapter.init("github.com/inkyblackness/shocked-client/editor/model", [{prop: "store", name: "store", exported: false, typ: model.DataStore, tag: ""}, {prop: "message", name: "message", exported: false, typ: ptrType, tag: ""}, {prop: "activeProjectID", name: "activeProjectID", exported: false, typ: ptrType, tag: ""}, {prop: "availableArchiveIDs", name: "availableArchiveIDs", exported: false, typ: ptrType, tag: ""}, {prop: "activeArchiveID", name: "activeArchiveID", exported: false, typ: ptrType, tag: ""}, {prop: "activeLevel", name: "activeLevel", exported: false, typ: ptrType$1, tag: ""}, {prop: "availableLevels", name: "availableLevels", exported: false, typ: mapType, tag: ""}, {prop: "availableLevelIDs", name: "availableLevelIDs", exported: false, typ: ptrType, tag: ""}]);
-	LevelAdapter.init("github.com/inkyblackness/shocked-client/editor/model", [{prop: "id", name: "id", exported: false, typ: ptrType, tag: ""}]);
+	LevelAdapter.init("github.com/inkyblackness/shocked-client/editor/model", [{prop: "context", name: "context", exported: false, typ: archiveContext, tag: ""}, {prop: "store", name: "store", exported: false, typ: model.DataStore, tag: ""}, {prop: "simpleStoreFailure", name: "simpleStoreFailure", exported: false, typ: funcType$1, tag: ""}, {prop: "id", name: "id", exported: false, typ: ptrType, tag: ""}, {prop: "isCyberspace", name: "isCyberspace", exported: false, typ: $Bool, tag: ""}, {prop: "tileMap", name: "tileMap", exported: false, typ: ptrType$2, tag: ""}]);
 	observerFunc.init([], [], false);
 	observable.init("github.com/inkyblackness/shocked-client/editor/model", [{prop: "value", name: "value", exported: false, typ: $emptyInterface, tag: ""}, {prop: "observerCounter", name: "observerCounter", exported: false, typ: $Int, tag: ""}, {prop: "observers", name: "observers", exported: false, typ: mapType$2, tag: ""}]);
+	Tile.init("github.com/inkyblackness/shocked-client/editor/model", [{prop: "properties", name: "properties", exported: false, typ: ptrType, tag: ""}]);
+	TileCoordinate.init("github.com/inkyblackness/shocked-client/editor/model", [{prop: "x", name: "x", exported: false, typ: $Int, tag: ""}, {prop: "y", name: "y", exported: false, typ: $Int, tag: ""}]);
+	TileMap.init("github.com/inkyblackness/shocked-client/editor/model", [{prop: "tiles", name: "tiles", exported: false, typ: mapType$3, tag: ""}, {prop: "selectedTiles", name: "selectedTiles", exported: false, typ: mapType$3, tag: ""}]);
+	archiveContext.init([{prop: "ActiveArchiveID", name: "ActiveArchiveID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "ActiveProjectID", name: "ActiveProjectID", pkg: "", typ: $funcType([], [$String], false)}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -28975,6 +29301,191 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 		$r = graphics.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = model.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = strconv.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["github.com/inkyblackness/shocked-client/editor/display"] = (function() {
+	var $pkg = {}, $init, fmt, mgl32, mgl64, model$1, graphics, opengl, model, math, os, GridRenderable, MapDisplay, sliceType, sliceType$1, sliceType$2, arrayType, ptrType$1, ptrType$2, ptrType$3, ptrType$14, gridVertexShaderSource, gridFragmentShaderSource, uvRotations, NewGridRenderable, NewMapDisplay, init;
+	fmt = $packages["fmt"];
+	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
+	mgl64 = $packages["github.com/go-gl/mathgl/mgl64"];
+	model$1 = $packages["github.com/inkyblackness/shocked-client/editor/model"];
+	graphics = $packages["github.com/inkyblackness/shocked-client/graphics"];
+	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
+	model = $packages["github.com/inkyblackness/shocked-model"];
+	math = $packages["math"];
+	os = $packages["os"];
+	GridRenderable = $pkg.GridRenderable = $newType(0, $kindStruct, "display.GridRenderable", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(context_, program_, vao_, vertexPositionBuffer_, vertexPositionAttrib_, viewMatrixUniform_, projectionMatrixUniform_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.context = ptrType$1.nil;
+			this.program = 0;
+			this.vao = ptrType$2.nil;
+			this.vertexPositionBuffer = 0;
+			this.vertexPositionAttrib = 0;
+			this.viewMatrixUniform = 0;
+			this.projectionMatrixUniform = 0;
+			return;
+		}
+		this.context = context_;
+		this.program = program_;
+		this.vao = vao_;
+		this.vertexPositionBuffer = vertexPositionBuffer_;
+		this.vertexPositionAttrib = vertexPositionAttrib_;
+		this.viewMatrixUniform = viewMatrixUniform_;
+		this.projectionMatrixUniform = projectionMatrixUniform_;
+	});
+	MapDisplay = $pkg.MapDisplay = $newType(0, $kindStruct, "display.MapDisplay", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(viewMatrix_, renderContext_, grid_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.viewMatrix = arrayType.zero();
+			this.renderContext = ptrType$1.nil;
+			this.grid = ptrType$3.nil;
+			return;
+		}
+		this.viewMatrix = viewMatrix_;
+		this.renderContext = renderContext_;
+		this.grid = grid_;
+	});
+	sliceType = $sliceType($Uint32);
+	sliceType$1 = $sliceType($emptyInterface);
+	sliceType$2 = $sliceType($Float32);
+	arrayType = $arrayType($Float32, 16);
+	ptrType$1 = $ptrType(graphics.RenderContext);
+	ptrType$2 = $ptrType(opengl.VertexArrayObject);
+	ptrType$3 = $ptrType(GridRenderable);
+	ptrType$14 = $ptrType(MapDisplay);
+	NewGridRenderable = function(context) {
+		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, context, err1, err2, fragmentShader, gl, half, limit, program, renderable, vertexShader, vertices, x, $s, $deferred, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; context = $f.context; err1 = $f.err1; err2 = $f.err2; fragmentShader = $f.fragmentShader; gl = $f.gl; half = $f.half; limit = $f.limit; program = $f.program; renderable = $f.renderable; vertexShader = $f.vertexShader; vertices = $f.vertices; x = $f.x; $s = $f.$s; $deferred = $f.$deferred; $r = $f.$r; } var $err = null; try { s: while (true) { switch ($s) { case 0: $deferred = []; $deferred.index = $curGoroutine.deferStack.length; $curGoroutine.deferStack.push($deferred);
+		renderable = [renderable];
+		gl = context.OpenGl();
+		_r = opengl.CompileNewShader(gl, 35633, gridVertexShaderSource); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		vertexShader = _tuple[0];
+		err1 = _tuple[1];
+		$deferred.push([$methodVal(gl, "DeleteShader"), [vertexShader]]);
+		_r$1 = opengl.CompileNewShader(gl, 35632, gridFragmentShaderSource); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		fragmentShader = _tuple$1[0];
+		err2 = _tuple$1[1];
+		$deferred.push([$methodVal(gl, "DeleteShader"), [fragmentShader]]);
+		_r$2 = opengl.LinkNewProgram(gl, new sliceType([vertexShader, fragmentShader])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		program = _tuple$2[0];
+		/* */ if (!($interfaceIsEqual(err1, $ifaceNil))) { $s = 4; continue; }
+		/* */ $s = 5; continue;
+		/* if (!($interfaceIsEqual(err1, $ifaceNil))) { */ case 4:
+			_r$3 = fmt.Fprintf(os.Stderr, "Failed to compile shader 1:\n", new sliceType$1([err1])); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+		/* } */ case 5:
+		/* */ if (!($interfaceIsEqual(err2, $ifaceNil))) { $s = 7; continue; }
+		/* */ $s = 8; continue;
+		/* if (!($interfaceIsEqual(err2, $ifaceNil))) { */ case 7:
+			_r$4 = fmt.Fprintf(os.Stderr, "Failed to compile shader 2:\n", new sliceType$1([err2])); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4;
+		/* } */ case 8:
+		_r$5 = opengl.NewVertexArrayObject(gl, program); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_r$6 = gl.GenBuffers(1); /* */ $s = 11; case 11: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_r$7 = gl.GetAttribLocation(program, "vertexPosition"); /* */ $s = 12; case 12: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_r$8 = gl.GetUniformLocation(program, "viewMatrix"); /* */ $s = 13; case 13: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_r$9 = gl.GetUniformLocation(program, "projectionMatrix"); /* */ $s = 14; case 14: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		renderable[0] = new GridRenderable.ptr(context, program, _r$5, (x = _r$6, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), _r$7, (_r$8 >> 0), (_r$9 >> 0));
+		$r = gl.BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		half = 16;
+		limit = $fround(2048 + half);
+		vertices = new sliceType$2([-half, -half, 0, limit, -half, 0, limit, limit, 0, limit, limit, 0, -half, limit, 0, -half, -half, 0]);
+		$r = gl.BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = gl.BindBuffer(34962, 0); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = renderable[0].vao.WithSetter((function(renderable) { return function $b(gl$1) {
+			var $ptr, gl$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; gl$1 = $f.gl$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = gl$1.EnableVertexAttribArray((renderable[0].vertexPositionAttrib >>> 0)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl$1.BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl$1.VertexAttribOffset((renderable[0].vertexPositionAttrib >>> 0), 3, 5126, false, 0, 0); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl$1.BindBuffer(34962, 0); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = -1; return;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.gl$1 = gl$1; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(renderable)); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return renderable[0];
+		/* */ } return; } } catch(err) { $err = err; $s = -1; return ptrType$3.nil; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: NewGridRenderable }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.context = context; $f.err1 = err1; $f.err2 = err2; $f.fragmentShader = fragmentShader; $f.gl = gl; $f.half = half; $f.limit = limit; $f.program = program; $f.renderable = renderable; $f.vertexShader = vertexShader; $f.vertices = vertices; $f.x = x; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
+	};
+	$pkg.NewGridRenderable = NewGridRenderable;
+	GridRenderable.ptr.prototype.Render = function() {
+		var $ptr, gl, renderable, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; gl = $f.gl; renderable = $f.renderable; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		gl = [gl];
+		renderable = [renderable];
+		renderable[0] = this;
+		gl[0] = renderable[0].context.OpenGl();
+		$r = renderable[0].vao.OnShader((function(gl, renderable) { return function $b() {
+			var $ptr, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = new opengl.Matrix4Uniform(renderable[0].viewMatrixUniform).Set(gl[0], renderable[0].context.ViewMatrix()); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = new opengl.Matrix4Uniform(renderable[0].projectionMatrixUniform).Set(gl[0], renderable[0].context.ProjectionMatrix()); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$r = gl[0].DrawArrays(4, 0, 6); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = -1; return;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(gl, renderable)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: GridRenderable.ptr.prototype.Render }; } $f.$ptr = $ptr; $f.gl = gl; $f.renderable = renderable; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	GridRenderable.prototype.Render = function() { return this.$val.Render(); };
+	NewMapDisplay = function(renderContextFactory) {
+		var $ptr, _r, _r$1, display, renderContextFactory, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; display = $f.display; renderContextFactory = $f.renderContextFactory; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		display = new MapDisplay.ptr($clone(mgl32.Ident4(), mgl32.Mat4), ptrType$1.nil, ptrType$3.nil);
+		_r = renderContextFactory(display.viewMatrix); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		display.renderContext = _r;
+		_r$1 = NewGridRenderable(display.renderContext); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		display.grid = _r$1;
+		$s = -1; return display;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewMapDisplay }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.display = display; $f.renderContextFactory = renderContextFactory; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewMapDisplay = NewMapDisplay;
+	MapDisplay.ptr.prototype.Render = function() {
+		var $ptr, display, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; display = $f.display; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		display = this;
+		$r = display.grid.Render(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MapDisplay.ptr.prototype.Render }; } $f.$ptr = $ptr; $f.display = display; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	MapDisplay.prototype.Render = function() { return this.$val.Render(); };
+	init = function() {
+		var $ptr, _key, i, matrix;
+		uvRotations = {};
+		i = 0;
+		while (true) {
+			if (!(i < 4)) { break; }
+			matrix = [matrix];
+			matrix[0] = $clone(new mgl32.Mat4($clone(new mgl32.Mat4($clone(mgl32.Translate3D(0.5, 0.5, 0), mgl32.Mat4)).Mul4($clone(mgl32.HomogRotate3DZ($fround($fround(3.1415927410125732 * i) / 2)), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D(-0.5, -0.5, 0), mgl32.Mat4)), mgl32.Mat4);
+			_key = i; (uvRotations || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: matrix[0] };
+			i = i + (1) >> 0;
+		}
+	};
+	ptrType$3.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}];
+	ptrType$14.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}];
+	GridRenderable.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: ptrType$1, tag: ""}, {prop: "program", name: "program", exported: false, typ: $Uint32, tag: ""}, {prop: "vao", name: "vao", exported: false, typ: ptrType$2, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", exported: false, typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", exported: false, typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}]);
+	MapDisplay.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "viewMatrix", name: "viewMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "renderContext", name: "renderContext", exported: false, typ: ptrType$1, tag: ""}, {prop: "grid", name: "grid", exported: false, typ: ptrType$3, tag: ""}]);
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mgl32.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mgl64.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = model$1.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = graphics.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = opengl.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = model.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = math.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = os.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		uvRotations = false;
+		gridVertexShaderSource = "\n  attribute vec3 vertexPosition;\n\n  uniform mat4 viewMatrix;\n  uniform mat4 projectionMatrix;\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  void main(void) {\n    gl_Position = projectionMatrix * viewMatrix * vec4(vertexPosition, 1.0);\n\n    color = vec4(0.0, 0.1, 0.0, 0.6);\n    originalPosition = vertexPosition;\n  }\n";
+		gridFragmentShaderSource = "\n  #ifdef GL_ES\n    precision mediump float;\n  #endif\n\n  varying vec4 color;\n  varying vec3 originalPosition;\n\n  float modulo(float x, float y) {\n    return x - y * floor(x/y);\n  }\n\n  float nearGrid(float stepSize, float value) {\n    float remainder = modulo(value - (stepSize / 2.0), stepSize) * 2.0;\n\n    if (remainder >= stepSize) {\n      remainder = (stepSize * 2.0) - remainder;\n    }\n\n    return remainder / stepSize;\n  }\n\n  void main(void) {\n    float alphaX = nearGrid(32.0, originalPosition.x);\n    float alphaY = nearGrid(32.0, originalPosition.y);\n    bool beyondX = (originalPosition.x / 32.0) >= 64.0 || (originalPosition.x < 0.0);\n    bool beyondY = (originalPosition.y / 32.0) >= 64.0 || (originalPosition.y < 0.0);\n    float alpha = 0.0;\n\n    if (!beyondX && !beyondY) {\n       alpha = max(alphaX, alphaY);\n    } else if (beyondX && !beyondY) {\n       alpha = alphaX;\n    } else if (beyondY && !beyondX) {\n       alpha = alphaY;\n    } else {\n       alpha = min(alphaX, alphaY);\n    }\n\n    alpha = pow(2.0, 10.0 * (alpha - 1.0));\n\n    gl_FragColor = vec4(color.rgb, color.a * alpha);\n  }\n";
+		init();
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -29502,7 +30013,7 @@ $packages["github.com/inkyblackness/shocked-client/ui/events"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
-	var $pkg = {}, $init, events, absoluteAnchor, Anchor, RenderFunction, EventHandler, Area, AreaBuilder, offsetAnchor, relativeAnchor, zeroAnchor, ptrType, sliceType, ptrType$1, mapType, ptrType$2, ptrType$4, ptrType$5, ptrType$6, NewAbsoluteAnchor, NewAreaBuilder, NewOffsetAnchor, NewRelativeAnchor, ZeroAnchor;
+	var $pkg = {}, $init, events, absoluteAnchor, Anchor, RenderFunction, EventHandler, Area, AreaBuilder, limitedAnchor, offsetAnchor, relativeAnchor, zeroAnchor, ptrType, sliceType, ptrType$1, mapType, ptrType$2, ptrType$3, ptrType$4, ptrType$5, ptrType$6, NewAbsoluteAnchor, NewAreaBuilder, NewLimitedAnchor, NewOffsetAnchor, NewRelativeAnchor, ZeroAnchor;
 	events = $packages["github.com/inkyblackness/shocked-client/ui/events"];
 	absoluteAnchor = $pkg.absoluteAnchor = $newType(0, $kindStruct, "ui.absoluteAnchor", true, "github.com/inkyblackness/shocked-client/ui", false, function(value_) {
 		this.$val = this;
@@ -29563,6 +30074,18 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 		this.onRender = onRender_;
 		this.eventHandler = eventHandler_;
 	});
+	limitedAnchor = $pkg.limitedAnchor = $newType(0, $kindStruct, "ui.limitedAnchor", true, "github.com/inkyblackness/shocked-client/ui", false, function(from_, to_, reference_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.from = $ifaceNil;
+			this.to = $ifaceNil;
+			this.reference = $ifaceNil;
+			return;
+		}
+		this.from = from_;
+		this.to = to_;
+		this.reference = reference_;
+	});
 	offsetAnchor = $pkg.offsetAnchor = $newType(0, $kindStruct, "ui.offsetAnchor", true, "github.com/inkyblackness/shocked-client/ui", false, function(base_, offset_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -29596,6 +30119,7 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 	ptrType$1 = $ptrType(absoluteAnchor);
 	mapType = $mapType(events.EventType, EventHandler);
 	ptrType$2 = $ptrType(AreaBuilder);
+	ptrType$3 = $ptrType(limitedAnchor);
 	ptrType$4 = $ptrType(offsetAnchor);
 	ptrType$5 = $ptrType(relativeAnchor);
 	ptrType$6 = $ptrType(zeroAnchor);
@@ -29979,6 +30503,56 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 		return builder;
 	};
 	AreaBuilder.prototype.OnEvent = function(eventType, handler) { return this.$val.OnEvent(eventType, handler); };
+	NewLimitedAnchor = function(from, to, reference) {
+		var $ptr, from, reference, to;
+		return new limitedAnchor.ptr(from, to, reference);
+	};
+	$pkg.NewLimitedAnchor = NewLimitedAnchor;
+	limitedAnchor.ptr.prototype.Value = function() {
+		var $ptr, _r, _r$1, _r$2, anchor, fromValue, referenceValue, result, toValue, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; anchor = $f.anchor; fromValue = $f.fromValue; referenceValue = $f.referenceValue; result = $f.result; toValue = $f.toValue; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		anchor = this;
+		_r = anchor.from.Value(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		fromValue = _r;
+		_r$1 = anchor.to.Value(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		toValue = _r$1;
+		_r$2 = anchor.reference.Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		referenceValue = _r$2;
+		result = referenceValue;
+		if (toValue < fromValue) {
+			result = $fround(toValue + ($fround(($fround(fromValue - toValue)) / 2)));
+		} else if (referenceValue < fromValue) {
+			result = fromValue;
+		} else if (referenceValue > toValue) {
+			result = toValue;
+		}
+		$s = -1; return result;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: limitedAnchor.ptr.prototype.Value }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f.anchor = anchor; $f.fromValue = fromValue; $f.referenceValue = referenceValue; $f.result = result; $f.toValue = toValue; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	limitedAnchor.prototype.Value = function() { return this.$val.Value(); };
+	limitedAnchor.ptr.prototype.RequestValue = function(newValue) {
+		var $ptr, _r, _r$1, anchor, forwardedValue, fromValue, newValue, toValue, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; anchor = $f.anchor; forwardedValue = $f.forwardedValue; fromValue = $f.fromValue; newValue = $f.newValue; toValue = $f.toValue; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		anchor = this;
+		_r = anchor.from.Value(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		fromValue = _r;
+		_r$1 = anchor.to.Value(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		toValue = _r$1;
+		/* */ if (fromValue <= toValue) { $s = 3; continue; }
+		/* */ $s = 4; continue;
+		/* if (fromValue <= toValue) { */ case 3:
+			forwardedValue = newValue;
+			if (forwardedValue < fromValue) {
+				forwardedValue = fromValue;
+			} else if (forwardedValue > toValue) {
+				forwardedValue = toValue;
+			}
+			$r = anchor.reference.RequestValue(forwardedValue); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 4:
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: limitedAnchor.ptr.prototype.RequestValue }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.anchor = anchor; $f.forwardedValue = forwardedValue; $f.fromValue = fromValue; $f.newValue = newValue; $f.toValue = toValue; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	limitedAnchor.prototype.RequestValue = function(newValue) { return this.$val.RequestValue(newValue); };
 	NewOffsetAnchor = function(base, offset) {
 		var $ptr, base, offset;
 		return new offsetAnchor.ptr(base, offset);
@@ -30053,6 +30627,7 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 	ptrType$1.methods = [{prop: "Value", name: "Value", pkg: "", typ: $funcType([], [$Float32], false)}, {prop: "RequestValue", name: "RequestValue", pkg: "", typ: $funcType([$Float32], [], false)}];
 	ptrType.methods = [{prop: "Remove", name: "Remove", pkg: "", typ: $funcType([], [], false)}, {prop: "SetVisible", name: "SetVisible", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "Root", name: "Root", pkg: "", typ: $funcType([], [ptrType], false)}, {prop: "isChild", name: "isChild", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [$Bool], false)}, {prop: "removeChild", name: "removeChild", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [], false)}, {prop: "currentChildren", name: "currentChildren", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([], [sliceType], false)}, {prop: "isRoot", name: "isRoot", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([], [$Bool], false)}, {prop: "Left", name: "Left", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Top", name: "Top", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Right", name: "Right", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Bottom", name: "Bottom", pkg: "", typ: $funcType([], [Anchor], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}, {prop: "HandleEvent", name: "HandleEvent", pkg: "", typ: $funcType([events.Event], [$Bool], false)}, {prop: "DispatchPositionalEvent", name: "DispatchPositionalEvent", pkg: "", typ: $funcType([events.PositionalEvent], [$Bool], false)}, {prop: "tryEventHandlerFor", name: "tryEventHandlerFor", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([events.Event], [$Bool], false)}, {prop: "HasFocus", name: "HasFocus", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "hasAreaFocus", name: "hasAreaFocus", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [$Bool], false)}, {prop: "RequestFocus", name: "RequestFocus", pkg: "", typ: $funcType([], [], false)}, {prop: "requestFocusFor", name: "requestFocusFor", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([ptrType], [], false)}, {prop: "ReleaseFocus", name: "ReleaseFocus", pkg: "", typ: $funcType([], [], false)}, {prop: "loseFocus", name: "loseFocus", pkg: "github.com/inkyblackness/shocked-client/ui", typ: $funcType([], [], false)}];
 	ptrType$2.methods = [{prop: "Build", name: "Build", pkg: "", typ: $funcType([], [ptrType], false)}, {prop: "SetParent", name: "SetParent", pkg: "", typ: $funcType([ptrType], [ptrType$2], false)}, {prop: "SetLeft", name: "SetLeft", pkg: "", typ: $funcType([Anchor], [ptrType$2], false)}, {prop: "SetTop", name: "SetTop", pkg: "", typ: $funcType([Anchor], [ptrType$2], false)}, {prop: "SetRight", name: "SetRight", pkg: "", typ: $funcType([Anchor], [ptrType$2], false)}, {prop: "SetBottom", name: "SetBottom", pkg: "", typ: $funcType([Anchor], [ptrType$2], false)}, {prop: "SetVisible", name: "SetVisible", pkg: "", typ: $funcType([$Bool], [ptrType$2], false)}, {prop: "OnRender", name: "OnRender", pkg: "", typ: $funcType([RenderFunction], [ptrType$2], false)}, {prop: "OnEvent", name: "OnEvent", pkg: "", typ: $funcType([events.EventType, EventHandler], [ptrType$2], false)}];
+	ptrType$3.methods = [{prop: "Value", name: "Value", pkg: "", typ: $funcType([], [$Float32], false)}, {prop: "RequestValue", name: "RequestValue", pkg: "", typ: $funcType([$Float32], [], false)}];
 	ptrType$4.methods = [{prop: "Value", name: "Value", pkg: "", typ: $funcType([], [$Float32], false)}, {prop: "RequestValue", name: "RequestValue", pkg: "", typ: $funcType([$Float32], [], false)}];
 	ptrType$5.methods = [{prop: "Value", name: "Value", pkg: "", typ: $funcType([], [$Float32], false)}, {prop: "RequestValue", name: "RequestValue", pkg: "", typ: $funcType([$Float32], [], false)}];
 	ptrType$6.methods = [{prop: "Value", name: "Value", pkg: "", typ: $funcType([], [$Float32], false)}, {prop: "RequestValue", name: "RequestValue", pkg: "", typ: $funcType([$Float32], [], false)}];
@@ -30062,6 +30637,7 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 	EventHandler.init([ptrType, events.Event], [$Bool], false);
 	Area.init("github.com/inkyblackness/shocked-client/ui", [{prop: "parent", name: "parent", exported: false, typ: ptrType, tag: ""}, {prop: "children", name: "children", exported: false, typ: sliceType, tag: ""}, {prop: "focusedArea", name: "focusedArea", exported: false, typ: ptrType, tag: ""}, {prop: "left", name: "left", exported: false, typ: Anchor, tag: ""}, {prop: "top", name: "top", exported: false, typ: Anchor, tag: ""}, {prop: "right", name: "right", exported: false, typ: Anchor, tag: ""}, {prop: "bottom", name: "bottom", exported: false, typ: Anchor, tag: ""}, {prop: "visible", name: "visible", exported: false, typ: $Bool, tag: ""}, {prop: "onRender", name: "onRender", exported: false, typ: RenderFunction, tag: ""}, {prop: "eventHandler", name: "eventHandler", exported: false, typ: mapType, tag: ""}]);
 	AreaBuilder.init("github.com/inkyblackness/shocked-client/ui", [{prop: "parent", name: "parent", exported: false, typ: ptrType, tag: ""}, {prop: "left", name: "left", exported: false, typ: Anchor, tag: ""}, {prop: "top", name: "top", exported: false, typ: Anchor, tag: ""}, {prop: "right", name: "right", exported: false, typ: Anchor, tag: ""}, {prop: "bottom", name: "bottom", exported: false, typ: Anchor, tag: ""}, {prop: "visible", name: "visible", exported: false, typ: $Bool, tag: ""}, {prop: "onRender", name: "onRender", exported: false, typ: RenderFunction, tag: ""}, {prop: "eventHandler", name: "eventHandler", exported: false, typ: mapType, tag: ""}]);
+	limitedAnchor.init("github.com/inkyblackness/shocked-client/ui", [{prop: "from", name: "from", exported: false, typ: Anchor, tag: ""}, {prop: "to", name: "to", exported: false, typ: Anchor, tag: ""}, {prop: "reference", name: "reference", exported: false, typ: Anchor, tag: ""}]);
 	offsetAnchor.init("github.com/inkyblackness/shocked-client/ui", [{prop: "base", name: "base", exported: false, typ: Anchor, tag: ""}, {prop: "offset", name: "offset", exported: false, typ: $Float32, tag: ""}]);
 	relativeAnchor.init("github.com/inkyblackness/shocked-client/ui", [{prop: "from", name: "from", exported: false, typ: Anchor, tag: ""}, {prop: "to", name: "to", exported: false, typ: Anchor, tag: ""}, {prop: "fraction", name: "fraction", exported: false, typ: $Float32, tag: ""}]);
 	zeroAnchor.init("", []);
@@ -31098,14 +31674,17 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() {
-	var $pkg = {}, $init, model, graphics, controls, opengl, ui, Context, MapControlMode, WelcomeMode, ptrType, ptrType$1, ptrType$2, sliceType, ptrType$3, ptrType$4, ptrType$5, NewMapControlMode, NewWelcomeMode;
+	var $pkg = {}, $init, mgl32, display, model, env, graphics, controls, ui, events, Context, LevelControlMode, LevelMapMode, WelcomeMode, ptrType, ptrType$1, ptrType$2, sliceType, ptrType$3, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, NewLevelControlMode, NewLevelMapMode, NewWelcomeMode;
+	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
+	display = $packages["github.com/inkyblackness/shocked-client/editor/display"];
 	model = $packages["github.com/inkyblackness/shocked-client/editor/model"];
+	env = $packages["github.com/inkyblackness/shocked-client/env"];
 	graphics = $packages["github.com/inkyblackness/shocked-client/graphics"];
 	controls = $packages["github.com/inkyblackness/shocked-client/graphics/controls"];
-	opengl = $packages["github.com/inkyblackness/shocked-client/opengl"];
 	ui = $packages["github.com/inkyblackness/shocked-client/ui"];
+	events = $packages["github.com/inkyblackness/shocked-client/ui/events"];
 	Context = $pkg.Context = $newType(8, $kindInterface, "modes.Context", true, "github.com/inkyblackness/shocked-client/editor/modes", true, null);
-	MapControlMode = $pkg.MapControlMode = $newType(0, $kindStruct, "modes.MapControlMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, area_, activeLevelLabel_, activeLevelBox_) {
+	LevelControlMode = $pkg.LevelControlMode = $newType(0, $kindStruct, "modes.LevelControlMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, area_, activeLevelLabel_, activeLevelBox_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.context = $ifaceNil;
@@ -31118,6 +31697,24 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.area = area_;
 		this.activeLevelLabel = activeLevelLabel_;
 		this.activeLevelBox = activeLevelBox_;
+	});
+	LevelMapMode = $pkg.LevelMapMode = $newType(0, $kindStruct, "modes.LevelMapMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, mapDisplay_, area_, panelRight_, tileTypeLabel_, tileTypeBox_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.context = $ifaceNil;
+			this.mapDisplay = ptrType$3.nil;
+			this.area = ptrType.nil;
+			this.panelRight = $ifaceNil;
+			this.tileTypeLabel = ptrType$1.nil;
+			this.tileTypeBox = ptrType$2.nil;
+			return;
+		}
+		this.context = context_;
+		this.mapDisplay = mapDisplay_;
+		this.area = area_;
+		this.panelRight = panelRight_;
+		this.tileTypeLabel = tileTypeLabel_;
+		this.tileTypeBox = tileTypeBox_;
 	});
 	WelcomeMode = $pkg.WelcomeMode = $newType(0, $kindStruct, "modes.WelcomeMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, infoArea_, infoLabel_) {
 		this.$val = this;
@@ -31135,17 +31732,23 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	ptrType$1 = $ptrType(controls.Label);
 	ptrType$2 = $ptrType(controls.ComboBox);
 	sliceType = $sliceType(controls.ComboBoxItem);
-	ptrType$3 = $ptrType(model.Adapter);
-	ptrType$4 = $ptrType(MapControlMode);
-	ptrType$5 = $ptrType(WelcomeMode);
-	NewMapControlMode = function(context, parent) {
+	ptrType$3 = $ptrType(display.MapDisplay);
+	ptrType$4 = $ptrType(events.MouseButtonEvent);
+	ptrType$5 = $ptrType(events.MouseMoveEvent);
+	ptrType$6 = $ptrType(model.Adapter);
+	ptrType$7 = $ptrType(mgl32.Mat4);
+	ptrType$8 = $ptrType(graphics.RenderContext);
+	ptrType$9 = $ptrType(LevelControlMode);
+	ptrType$10 = $ptrType(LevelMapMode);
+	ptrType$11 = $ptrType(WelcomeMode);
+	NewLevelControlMode = function(context, parent) {
 		var $ptr, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, activeLevelAdapter, adapter, builder, builder$1, builder$2, context, listCenter, listCenterEnd, listCenterStart, listLeft, listRight, mode, parent, top, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; activeLevelAdapter = $f.activeLevelAdapter; adapter = $f.adapter; builder = $f.builder; builder$1 = $f.builder$1; builder$2 = $f.builder$2; context = $f.context; listCenter = $f.listCenter; listCenterEnd = $f.listCenterEnd; listCenterStart = $f.listCenterStart; listLeft = $f.listLeft; listRight = $f.listRight; mode = $f.mode; parent = $f.parent; top = $f.top; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		activeLevelAdapter = [activeLevelAdapter];
 		adapter = [adapter];
 		context = [context];
 		mode = [mode];
-		mode[0] = new MapControlMode.ptr(context[0], ptrType.nil, ptrType$1.nil, ptrType$2.nil);
+		mode[0] = new LevelControlMode.ptr(context[0], ptrType.nil, ptrType$1.nil, ptrType$2.nil);
 		builder = ui.NewAreaBuilder();
 		builder.SetParent(parent);
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0));
@@ -31237,15 +31840,94 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._i = _i; $f._ref = _ref; $f.id = id; $f.ids = ids; $f.index = index; $f.items = items; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(activeLevelAdapter, adapter, context, mode));
 		$s = -1; return mode[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewMapControlMode }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f.activeLevelAdapter = activeLevelAdapter; $f.adapter = adapter; $f.builder = builder; $f.builder$1 = builder$1; $f.builder$2 = builder$2; $f.context = context; $f.listCenter = listCenter; $f.listCenterEnd = listCenterEnd; $f.listCenterStart = listCenterStart; $f.listLeft = listLeft; $f.listRight = listRight; $f.mode = mode; $f.parent = parent; $f.top = top; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewLevelControlMode }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f.activeLevelAdapter = activeLevelAdapter; $f.adapter = adapter; $f.builder = builder; $f.builder$1 = builder$1; $f.builder$2 = builder$2; $f.context = context; $f.listCenter = listCenter; $f.listCenterEnd = listCenterEnd; $f.listCenterStart = listCenterStart; $f.listLeft = listLeft; $f.listRight = listRight; $f.mode = mode; $f.parent = parent; $f.top = top; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	$pkg.NewMapControlMode = NewMapControlMode;
-	MapControlMode.ptr.prototype.SetActive = function(active) {
+	$pkg.NewLevelControlMode = NewLevelControlMode;
+	LevelControlMode.ptr.prototype.SetActive = function(active) {
 		var $ptr, active, mode;
 		mode = this;
 		mode.area.SetVisible(active);
 	};
-	MapControlMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
+	LevelControlMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
+	NewLevelMapMode = function(context, parent, mapDisplay) {
+		var $ptr, builder, context, lastGrabX, mapDisplay, maxRight, minRight, mode, parent;
+		mode = new LevelMapMode.ptr(context, mapDisplay, ptrType.nil, $ifaceNil, ptrType$1.nil, ptrType$2.nil);
+		minRight = ui.NewOffsetAnchor(parent.Left(), 100);
+		maxRight = ui.NewRelativeAnchor(parent.Left(), parent.Right(), 0.5);
+		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(parent.Left(), 200));
+		builder = ui.NewAreaBuilder();
+		builder.SetParent(parent);
+		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0));
+		builder.SetTop(ui.NewOffsetAnchor(parent.Top(), 0));
+		builder.SetRight(mode.panelRight);
+		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0));
+		builder.SetVisible(false);
+		builder.OnRender((function $b(area) {
+			var $ptr, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _r, _r$1, _r$2, _r$3, _r$4, _r$5, area, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; area = $f.area; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = mode.mapDisplay.Render(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r = context.ForGraphics(); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r$1 = _r.RectangleRenderer(); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$2 = area.Left().Value(); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_arg = _r$2;
+			_r$3 = area.Top().Value(); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_arg$1 = _r$3;
+			_r$4 = area.Right().Value(); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_arg$2 = _r$4;
+			_r$5 = area.Bottom().Value(); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_arg$3 = _r$5;
+			_arg$4 = graphics.RGBA(0.699999988079071, 0, 0.699999988079071, 0.10000000149011612);
+			$r = _r$1.Fill(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = -1; return;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.area = area; $f.$s = $s; $f.$r = $r; return $f;
+		}));
+		lastGrabX = 0;
+		builder.OnEvent("mouse.button.down", (function(area, event) {
+			var $ptr, _tuple, area, buttonEvent, event;
+			buttonEvent = $assertType(event, ptrType$4);
+			if (buttonEvent.MouseEvent.Buttons() === 1) {
+				area.RequestFocus();
+				_tuple = buttonEvent.MouseEvent.Position();
+				lastGrabX = _tuple[0];
+			}
+			return true;
+		}));
+		builder.OnEvent("mouse.button.up", (function(area, event) {
+			var $ptr, area, buttonEvent, event;
+			buttonEvent = $assertType(event, ptrType$4);
+			if (buttonEvent.AffectedButtons() === 1) {
+				area.ReleaseFocus();
+			}
+			return true;
+		}));
+		builder.OnEvent("mouse.move", (function $b(area, event) {
+			var $ptr, _r, _tuple, area, consumed, event, moveEvent, newX, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; area = $f.area; consumed = $f.consumed; event = $f.event; moveEvent = $f.moveEvent; newX = $f.newX; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			consumed = false;
+			moveEvent = $assertType(event, ptrType$5);
+			/* */ if (area.HasFocus()) { $s = 1; continue; }
+			/* */ $s = 2; continue;
+			/* if (area.HasFocus()) { */ case 1:
+				_tuple = moveEvent.MouseEvent.Position();
+				newX = _tuple[0];
+				_r = mode.panelRight.Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				$r = mode.panelRight.RequestValue($fround(_r + ($fround(newX - lastGrabX)))); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				lastGrabX = newX;
+				consumed = true;
+			/* } */ case 2:
+			$s = -1; return consumed;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.area = area; $f.consumed = consumed; $f.event = event; $f.moveEvent = moveEvent; $f.newX = newX; $f.$s = $s; $f.$r = $r; return $f;
+		}));
+		mode.area = builder.Build();
+		return mode;
+	};
+	$pkg.NewLevelMapMode = NewLevelMapMode;
+	LevelMapMode.ptr.prototype.SetActive = function(active) {
+		var $ptr, active, mode;
+		mode = this;
+		mode.area.SetVisible(active);
+	};
+	LevelMapMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
 	NewWelcomeMode = function(context, parent) {
 		var $ptr, _r, _r$1, _r$2, builder, builder$1, context, horizontalCenter, mode, parent, verticalCenter, welcomeText, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; builder = $f.builder; builder$1 = $f.builder$1; context = $f.context; horizontalCenter = $f.horizontalCenter; mode = $f.mode; parent = $f.parent; verticalCenter = $f.verticalCenter; welcomeText = $f.welcomeText; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -31303,19 +31985,24 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		mode.infoArea.SetVisible(active);
 	};
 	WelcomeMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
-	ptrType$4.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
-	ptrType$5.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
-	Context.init([{prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$3], false)}, {prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}]);
-	MapControlMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "activeLevelLabel", name: "activeLevelLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "activeLevelBox", name: "activeLevelBox", exported: false, typ: ptrType$2, tag: ""}]);
+	ptrType$9.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
+	ptrType$10.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
+	ptrType$11.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
+	Context.init([{prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$6], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$7], [ptrType$8], false)}]);
+	LevelControlMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "activeLevelLabel", name: "activeLevelLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "activeLevelBox", name: "activeLevelBox", exported: false, typ: ptrType$2, tag: ""}]);
+	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$3, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}]);
 	WelcomeMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "infoArea", name: "infoArea", exported: false, typ: ptrType, tag: ""}, {prop: "infoLabel", name: "infoLabel", exported: false, typ: ptrType$1, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = model.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = graphics.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = controls.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = opengl.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = ui.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mgl32.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = display.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = model.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = env.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = graphics.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = controls.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = ui.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = events.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -31332,11 +32019,12 @@ $packages["github.com/inkyblackness/shocked-client/viewmodel"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
-	var $pkg = {}, $init, bytes, json, fmt, mgl32, model$1, modes, env, keys, graphics, controls, opengl, ui, events, viewmodel, model, os, strconv, time, MainApplication, Mode, RestDataStore, RestTransport, modeSelector, rootArea, sliceType, ptrType, ptrType$1, arrayType, ptrType$2, ptrType$3, ptrType$4, ptrType$5, sliceType$1, sliceType$2, arrayType$1, sliceType$3, sliceType$5, arrayType$2, sliceType$6, sliceType$7, sliceType$8, sliceType$9, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, sliceType$10, ptrType$14, ptrType$15, ptrType$16, sliceType$11, sliceType$12, ptrType$22, ptrType$23, ptrType$24, ptrType$25, ptrType$26, ptrType$27, funcType, funcType$1, ptrType$28, funcType$2, ptrType$29, funcType$3, funcType$4, funcType$5, funcType$6, funcType$7, funcType$8, funcType$9, ptrType$30, funcType$10, ptrType$31, funcType$11, sliceType$13, ptrType$32, defaultFont, NewMainApplication, NewRestDataStore, newRootArea;
+	var $pkg = {}, $init, bytes, json, fmt, mgl32, display, model$1, modes, env, keys, graphics, controls, opengl, ui, events, viewmodel, model, os, strconv, time, MainApplication, Mode, RestDataStore, RestTransport, modeSelector, rootArea, sliceType, ptrType, ptrType$1, arrayType, ptrType$2, ptrType$3, ptrType$4, ptrType$5, sliceType$1, sliceType$2, arrayType$1, sliceType$3, sliceType$5, arrayType$2, sliceType$6, sliceType$7, sliceType$8, sliceType$9, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, sliceType$10, ptrType$14, ptrType$15, ptrType$16, sliceType$11, sliceType$12, ptrType$22, ptrType$23, ptrType$24, ptrType$25, ptrType$26, ptrType$27, ptrType$28, ptrType$29, funcType, funcType$1, ptrType$30, funcType$2, ptrType$31, funcType$3, funcType$4, funcType$5, funcType$6, funcType$7, funcType$8, funcType$9, ptrType$32, funcType$10, ptrType$33, funcType$11, sliceType$13, ptrType$34, defaultFont, NewMainApplication, NewRestDataStore, newRootArea;
 	bytes = $packages["bytes"];
 	json = $packages["encoding/json"];
 	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
+	display = $packages["github.com/inkyblackness/shocked-client/editor/display"];
 	model$1 = $packages["github.com/inkyblackness/shocked-client/editor/model"];
 	modes = $packages["github.com/inkyblackness/shocked-client/editor/modes"];
 	env = $packages["github.com/inkyblackness/shocked-client/env"];
@@ -31413,7 +32101,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.mode = mode_;
 		this.name = name_;
 	});
-	rootArea = $pkg.rootArea = $newType(0, $kindStruct, "editor.rootArea", true, "github.com/inkyblackness/shocked-client/editor", false, function(context_, area_, modeArea_, modeBox_, messageLabel_, welcomeMode_, mapControlMode_, allModes_) {
+	rootArea = $pkg.rootArea = $newType(0, $kindStruct, "editor.rootArea", true, "github.com/inkyblackness/shocked-client/editor", false, function(context_, area_, modeArea_, modeBox_, messageLabel_, welcomeMode_, levelControlMode_, levelMapMode_, allModes_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.context = $ifaceNil;
@@ -31422,7 +32110,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			this.modeBox = ptrType$14.nil;
 			this.messageLabel = ptrType$15.nil;
 			this.welcomeMode = ptrType$16.nil;
-			this.mapControlMode = ptrType$16.nil;
+			this.levelControlMode = ptrType$16.nil;
+			this.levelMapMode = ptrType$16.nil;
 			this.allModes = sliceType$11.nil;
 			return;
 		}
@@ -31432,7 +32121,8 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.modeBox = modeBox_;
 		this.messageLabel = messageLabel_;
 		this.welcomeMode = welcomeMode_;
-		this.mapControlMode = mapControlMode_;
+		this.levelControlMode = levelControlMode_;
+		this.levelMapMode = levelMapMode_;
 		this.allModes = allModes_;
 	});
 	sliceType = $sliceType($Int);
@@ -31464,30 +32154,32 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	ptrType$16 = $ptrType(modeSelector);
 	sliceType$11 = $sliceType(ptrType$16);
 	sliceType$12 = $sliceType(controls.ComboBoxItem);
-	ptrType$22 = $ptrType(graphics.Bitmap);
-	ptrType$23 = $ptrType(graphics.BitmapTexture);
-	ptrType$24 = $ptrType(controls.LabelBuilder);
-	ptrType$25 = $ptrType(controls.TextButtonBuilder);
-	ptrType$26 = $ptrType(controls.ComboBoxBuilder);
-	ptrType$27 = $ptrType(MainApplication);
+	ptrType$22 = $ptrType(mgl32.Mat4);
+	ptrType$23 = $ptrType(graphics.RenderContext);
+	ptrType$24 = $ptrType(graphics.Bitmap);
+	ptrType$25 = $ptrType(graphics.BitmapTexture);
+	ptrType$26 = $ptrType(controls.LabelBuilder);
+	ptrType$27 = $ptrType(controls.TextButtonBuilder);
+	ptrType$28 = $ptrType(controls.ComboBoxBuilder);
+	ptrType$29 = $ptrType(MainApplication);
 	funcType = $funcType([], [], false);
 	funcType$1 = $funcType([sliceType$1], [], false);
-	ptrType$28 = $ptrType(model.Font);
-	funcType$2 = $funcType([ptrType$28], [], false);
-	ptrType$29 = $ptrType(model.RawBitmap);
-	funcType$3 = $funcType([ptrType$29], [], false);
+	ptrType$30 = $ptrType(model.Font);
+	funcType$2 = $funcType([ptrType$30], [], false);
+	ptrType$31 = $ptrType(model.RawBitmap);
+	funcType$3 = $funcType([ptrType$31], [], false);
 	funcType$4 = $funcType([arrayType$2], [], false);
 	funcType$5 = $funcType([sliceType$6], [], false);
 	funcType$6 = $funcType([sliceType], [], false);
 	funcType$7 = $funcType([sliceType$7], [], false);
 	funcType$8 = $funcType([model.Tiles], [], false);
 	funcType$9 = $funcType([model.TileProperties], [], false);
-	ptrType$30 = $ptrType(model.LevelObjects);
-	funcType$10 = $funcType([ptrType$30], [], false);
-	ptrType$31 = $ptrType(RestDataStore);
+	ptrType$32 = $ptrType(model.LevelObjects);
+	funcType$10 = $funcType([ptrType$32], [], false);
+	ptrType$33 = $ptrType(RestDataStore);
 	funcType$11 = $funcType([$String], [], false);
 	sliceType$13 = $sliceType($Uint8);
-	ptrType$32 = $ptrType(rootArea);
+	ptrType$34 = $ptrType(rootArea);
 	NewMainApplication = function(store) {
 		var $ptr, _r, app, store, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; store = $f.store; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -31705,12 +32397,12 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		return app.modelAdapter;
 	};
 	MainApplication.prototype.ModelAdapter = function() { return this.$val.ModelAdapter(); };
-	MainApplication.ptr.prototype.OpenGl = function() {
-		var $ptr, app;
+	MainApplication.ptr.prototype.NewRenderContext = function(viewMatrix) {
+		var $ptr, app, viewMatrix;
 		app = this;
-		return app.gl;
+		return graphics.NewBasicRenderContext(app.gl, app.projectionMatrix, viewMatrix);
 	};
-	MainApplication.prototype.OpenGl = function() { return this.$val.OpenGl(); };
+	MainApplication.prototype.NewRenderContext = function(viewMatrix) { return this.$val.NewRenderContext(viewMatrix); };
 	MainApplication.ptr.prototype.ForGraphics = function() {
 		var $ptr, app;
 		app = this;
@@ -32152,11 +32844,11 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	modeSelector.prototype.String = function() { return this.$val.String(); };
 	newRootArea = function(context) {
-		var $ptr, _i, _r, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, areaBuilder, boxMessageSeparator, builder, builder$1, builder$2, builder$3, context, index, items, root, selector, topLine, topLineBottom, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; areaBuilder = $f.areaBuilder; boxMessageSeparator = $f.boxMessageSeparator; builder = $f.builder; builder$1 = $f.builder$1; builder$2 = $f.builder$2; builder$3 = $f.builder$3; context = $f.context; index = $f.index; items = $f.items; root = $f.root; selector = $f.selector; topLine = $f.topLine; topLineBottom = $f.topLineBottom; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _i, _r, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, areaBuilder, boxMessageSeparator, builder, builder$1, builder$2, builder$3, context, index, items, mapDisplay, root, selector, topLine, topLineBottom, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; areaBuilder = $f.areaBuilder; boxMessageSeparator = $f.boxMessageSeparator; builder = $f.builder; builder$1 = $f.builder$1; builder$2 = $f.builder$2; builder$3 = $f.builder$3; context = $f.context; index = $f.index; items = $f.items; mapDisplay = $f.mapDisplay; root = $f.root; selector = $f.selector; topLine = $f.topLine; topLineBottom = $f.topLineBottom; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		context = [context];
 		root = [root];
-		root[0] = new rootArea.ptr(context[0], ptrType$2.nil, ptrType$2.nil, ptrType$14.nil, ptrType$15.nil, ptrType$16.nil, ptrType$16.nil, sliceType$11.nil);
+		root[0] = new rootArea.ptr(context[0], ptrType$2.nil, ptrType$2.nil, ptrType$14.nil, ptrType$15.nil, ptrType$16.nil, ptrType$16.nil, ptrType$16.nil, sliceType$11.nil);
 		areaBuilder = ui.NewAreaBuilder();
 		areaBuilder.SetRight(ui.NewAbsoluteAnchor(0));
 		areaBuilder.SetBottom(ui.NewAbsoluteAnchor(0));
@@ -32177,12 +32869,15 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		builder$1.SetRight(ui.NewOffsetAnchor(root[0].area.Right(), 0));
 		builder$1.SetBottom(topLineBottom);
 		topLine = builder$1.Build();
-		_r = modes.NewWelcomeMode(context[0], root[0].modeArea); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r$1 = root[0].addMode(_r, "Welcome"); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		root[0].welcomeMode = _r$1;
-		_r$2 = modes.NewMapControlMode(context[0], root[0].modeArea); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_r$3 = root[0].addMode(_r$2, "Map Control"); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		root[0].mapControlMode = _r$3;
+		_r = display.NewMapDisplay($methodVal(context[0], "NewRenderContext")); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		mapDisplay = _r;
+		_r$1 = modes.NewWelcomeMode(context[0], root[0].modeArea); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$2 = root[0].addMode(_r$1, "Welcome"); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		root[0].welcomeMode = _r$2;
+		_r$3 = modes.NewLevelControlMode(context[0], root[0].modeArea); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$4 = root[0].addMode(_r$3, "Level Control"); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		root[0].levelControlMode = _r$4;
+		root[0].levelMapMode = root[0].addMode(modes.NewLevelMapMode(context[0], root[0].modeArea, mapDisplay), "Level Map");
 		boxMessageSeparator = ui.NewOffsetAnchor(topLine.Left(), 250);
 		items = $makeSlice(sliceType$12, root[0].allModes.$length);
 		_ref = root[0].allModes;
@@ -32194,9 +32889,9 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			((index < 0 || index >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + index] = selector);
 			_i++;
 		}
-		_r$4 = context[0].ControlFactory(); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-		_r$5 = _r$4.ForComboBox(); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-		builder$2 = _r$5;
+		_r$5 = context[0].ControlFactory(); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_r$6 = _r$5.ForComboBox(); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		builder$2 = _r$6;
 		builder$2.SetParent(topLine);
 		builder$2.SetLeft(ui.NewOffsetAnchor(topLine.Left(), 2));
 		builder$2.SetTop(ui.NewOffsetAnchor(topLine.Top(), 2));
@@ -32210,32 +32905,32 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			$s = -1; return;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.item = item; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(context, root));
-		_r$6 = builder$2.Build(); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		root[0].modeBox = _r$6;
-		_r$7 = context[0].ControlFactory(); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-		_r$8 = _r$7.ForLabel(); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-		builder$3 = _r$8;
+		_r$7 = builder$2.Build(); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		root[0].modeBox = _r$7;
+		_r$8 = context[0].ControlFactory(); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_r$9 = _r$8.ForLabel(); /* */ $s = 10; case 10: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		builder$3 = _r$9;
 		builder$3.SetParent(topLine);
 		builder$3.SetLeft(ui.NewOffsetAnchor(boxMessageSeparator, 2));
 		builder$3.SetTop(ui.NewOffsetAnchor(topLine.Top(), 2));
 		builder$3.SetRight(ui.NewOffsetAnchor(root[0].area.Right(), -2));
 		builder$3.SetBottom(ui.NewOffsetAnchor(topLine.Bottom(), -2));
 		builder$3.AlignedHorizontallyBy(controls.LeftAligner);
-		_r$9 = builder$3.Build(); /* */ $s = 10; case 10: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-		root[0].messageLabel = _r$9;
-		_r$10 = context[0].ModelAdapter(); /* */ $s = 11; case 11: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-		$r = _r$10.OnMessageChanged((function(context, root) { return function $b() {
-			var $ptr, _r$11, _r$12, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$11 = $f._r$11; _r$12 = $f._r$12; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			_r$11 = context[0].ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
-			_r$12 = _r$11.Message(); /* */ $s = 2; case 2: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-			$r = root[0].messageLabel.SetText(_r$12); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$10 = builder$3.Build(); /* */ $s = 11; case 11: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		root[0].messageLabel = _r$10;
+		_r$11 = context[0].ModelAdapter(); /* */ $s = 12; case 12: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+		$r = _r$11.OnMessageChanged((function(context, root) { return function $b() {
+			var $ptr, _r$12, _r$13, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$12 = $f._r$12; _r$13 = $f._r$13; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_r$12 = context[0].ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+			_r$13 = _r$12.Message(); /* */ $s = 2; case 2: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+			$r = root[0].messageLabel.SetText(_r$13); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$s = -1; return;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$11 = _r$11; $f._r$12 = _r$12; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(context, root)); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = root[0].setActiveMode(root[0].welcomeMode); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$12 = _r$12; $f._r$13 = _r$13; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(context, root)); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = root[0].setActiveMode(root[0].welcomeMode); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return root[0].area;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: newRootArea }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f.areaBuilder = areaBuilder; $f.boxMessageSeparator = boxMessageSeparator; $f.builder = builder; $f.builder$1 = builder$1; $f.builder$2 = builder$2; $f.builder$3 = builder$3; $f.context = context; $f.index = index; $f.items = items; $f.root = root; $f.selector = selector; $f.topLine = topLine; $f.topLineBottom = topLineBottom; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: newRootArea }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f.areaBuilder = areaBuilder; $f.boxMessageSeparator = boxMessageSeparator; $f.builder = builder; $f.builder$1 = builder$1; $f.builder$2 = builder$2; $f.builder$3 = builder$3; $f.context = context; $f.index = index; $f.items = items; $f.mapDisplay = mapDisplay; $f.root = root; $f.selector = selector; $f.topLine = topLine; $f.topLineBottom = topLineBottom; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	rootArea.ptr.prototype.addMode = function(mode, name) {
 		var $ptr, mode, name, root, selector;
@@ -32267,16 +32962,16 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: rootArea.ptr.prototype.setActiveMode }; } $f.$ptr = $ptr; $f._i = _i; $f._ref = _ref; $f.other = other; $f.root = root; $f.selector = selector; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	rootArea.prototype.setActiveMode = function(selector) { return this.$val.setActiveMode(selector); };
-	ptrType$27.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setWindow", name: "setWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setDebugOpenGl", name: "setDebugOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initOpenGl", name: "initOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initInterface", name: "initInterface", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onWindowResize", name: "onWindowResize", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int, $Int], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseClick", name: "onMouseClick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onKey", name: "onKey", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Key, keys.Modifier], [], false)}, {prop: "onModifier", name: "onModifier", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onChar", name: "onChar", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32], [], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "OpenGl", name: "OpenGl", pkg: "", typ: $funcType([], [opengl.OpenGl], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "RectangleRenderer", name: "RectangleRenderer", pkg: "", typ: $funcType([], [ptrType$4], false)}, {prop: "TextPainter", name: "TextPainter", pkg: "", typ: $funcType([], [graphics.TextPainter], false)}, {prop: "Texturize", name: "Texturize", pkg: "", typ: $funcType([ptrType$22], [ptrType$23], false)}, {prop: "UITextRenderer", name: "UITextRenderer", pkg: "", typ: $funcType([], [ptrType$5], false)}, {prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForLabel", name: "ForLabel", pkg: "", typ: $funcType([], [ptrType$24], false)}, {prop: "ForTextButton", name: "ForTextButton", pkg: "", typ: $funcType([], [ptrType$25], false)}, {prop: "ForComboBox", name: "ForComboBox", pkg: "", typ: $funcType([], [ptrType$26], false)}];
-	ptrType$31.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, funcType, model.FailureFunc], [], false)}, {prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType, model.FailureFunc], [], false)}, {prop: "post", name: "post", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType, model.FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType, model.FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$1, model.FailureFunc], [], false)}, {prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType$2, model.FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$3, model.FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$4, model.FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$5, model.FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$6, model.FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType, funcType$6, model.FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$7, model.FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$3, model.FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$8, model.FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$9, model.FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$9, model.FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, model.FailureFunc], [], false)}];
+	ptrType$29.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setWindow", name: "setWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setDebugOpenGl", name: "setDebugOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initOpenGl", name: "initOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initInterface", name: "initInterface", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onWindowResize", name: "onWindowResize", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int, $Int], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseClick", name: "onMouseClick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onKey", name: "onKey", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Key, keys.Modifier], [], false)}, {prop: "onModifier", name: "onModifier", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onChar", name: "onChar", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32], [], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$22], [ptrType$23], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "RectangleRenderer", name: "RectangleRenderer", pkg: "", typ: $funcType([], [ptrType$4], false)}, {prop: "TextPainter", name: "TextPainter", pkg: "", typ: $funcType([], [graphics.TextPainter], false)}, {prop: "Texturize", name: "Texturize", pkg: "", typ: $funcType([ptrType$24], [ptrType$25], false)}, {prop: "UITextRenderer", name: "UITextRenderer", pkg: "", typ: $funcType([], [ptrType$5], false)}, {prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForLabel", name: "ForLabel", pkg: "", typ: $funcType([], [ptrType$26], false)}, {prop: "ForTextButton", name: "ForTextButton", pkg: "", typ: $funcType([], [ptrType$27], false)}, {prop: "ForComboBox", name: "ForComboBox", pkg: "", typ: $funcType([], [ptrType$28], false)}];
+	ptrType$33.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, funcType, model.FailureFunc], [], false)}, {prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType, model.FailureFunc], [], false)}, {prop: "post", name: "post", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType, model.FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType, model.FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$1, model.FailureFunc], [], false)}, {prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType$2, model.FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$3, model.FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$4, model.FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$5, model.FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$6, model.FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType, funcType$6, model.FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$7, model.FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$3, model.FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$8, model.FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$9, model.FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$9, model.FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, model.FailureFunc], [], false)}];
 	ptrType$16.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
-	ptrType$32.methods = [{prop: "addMode", name: "addMode", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([Mode, $String], [ptrType$16], false)}, {prop: "setActiveMode", name: "setActiveMode", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([ptrType$16], [], false)}];
+	ptrType$34.methods = [{prop: "addMode", name: "addMode", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([Mode, $String], [ptrType$16], false)}, {prop: "setActiveMode", name: "setActiveMode", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([ptrType$16], [], false)}];
 	MainApplication.init("github.com/inkyblackness/shocked-client/editor", [{prop: "lastElapsedTick", name: "lastElapsedTick", exported: false, typ: time.Time, tag: ""}, {prop: "elapsedMSec", name: "elapsedMSec", exported: false, typ: $Int64, tag: ""}, {prop: "store", name: "store", exported: false, typ: model.DataStore, tag: ""}, {prop: "modelAdapter", name: "modelAdapter", exported: false, typ: ptrType$1, tag: ""}, {prop: "glWindow", name: "glWindow", exported: false, typ: env.OpenGlWindow, tag: ""}, {prop: "windowWidth", name: "windowWidth", exported: false, typ: $Float32, tag: ""}, {prop: "windowHeight", name: "windowHeight", exported: false, typ: $Float32, tag: ""}, {prop: "gl", name: "gl", exported: false, typ: opengl.OpenGl, tag: ""}, {prop: "projectionMatrix", name: "projectionMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "mouseX", name: "mouseX", exported: false, typ: $Float32, tag: ""}, {prop: "mouseY", name: "mouseY", exported: false, typ: $Float32, tag: ""}, {prop: "mouseButtons", name: "mouseButtons", exported: false, typ: $Uint32, tag: ""}, {prop: "keyModifier", name: "keyModifier", exported: false, typ: keys.Modifier, tag: ""}, {prop: "rootArea", name: "rootArea", exported: false, typ: ptrType$2, tag: ""}, {prop: "defaultFontPainter", name: "defaultFontPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "uiTextPalette", name: "uiTextPalette", exported: false, typ: ptrType$3, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$4, tag: ""}, {prop: "uiTextRenderer", name: "uiTextRenderer", exported: false, typ: ptrType$5, tag: ""}]);
 	Mode.init([{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}]);
 	RestDataStore.init("github.com/inkyblackness/shocked-client/editor", [{prop: "transport", name: "transport", exported: false, typ: RestTransport, tag: ""}]);
 	RestTransport.init([{prop: "Get", name: "Get", pkg: "", typ: $funcType([$String, funcType$11, funcType], [], false)}, {prop: "Post", name: "Post", pkg: "", typ: $funcType([$String, sliceType$13, funcType$11, funcType], [], false)}, {prop: "Put", name: "Put", pkg: "", typ: $funcType([$String, sliceType$13, funcType$11, funcType], [], false)}]);
 	modeSelector.init("github.com/inkyblackness/shocked-client/editor", [{prop: "mode", name: "mode", exported: false, typ: Mode, tag: ""}, {prop: "name", name: "name", exported: false, typ: $String, tag: ""}]);
-	rootArea.init("github.com/inkyblackness/shocked-client/editor", [{prop: "context", name: "context", exported: false, typ: modes.Context, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType$2, tag: ""}, {prop: "modeArea", name: "modeArea", exported: false, typ: ptrType$2, tag: ""}, {prop: "modeBox", name: "modeBox", exported: false, typ: ptrType$14, tag: ""}, {prop: "messageLabel", name: "messageLabel", exported: false, typ: ptrType$15, tag: ""}, {prop: "welcomeMode", name: "welcomeMode", exported: false, typ: ptrType$16, tag: ""}, {prop: "mapControlMode", name: "mapControlMode", exported: false, typ: ptrType$16, tag: ""}, {prop: "allModes", name: "allModes", exported: false, typ: sliceType$11, tag: ""}]);
+	rootArea.init("github.com/inkyblackness/shocked-client/editor", [{prop: "context", name: "context", exported: false, typ: modes.Context, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType$2, tag: ""}, {prop: "modeArea", name: "modeArea", exported: false, typ: ptrType$2, tag: ""}, {prop: "modeBox", name: "modeBox", exported: false, typ: ptrType$14, tag: ""}, {prop: "messageLabel", name: "messageLabel", exported: false, typ: ptrType$15, tag: ""}, {prop: "welcomeMode", name: "welcomeMode", exported: false, typ: ptrType$16, tag: ""}, {prop: "levelControlMode", name: "levelControlMode", exported: false, typ: ptrType$16, tag: ""}, {prop: "levelMapMode", name: "levelMapMode", exported: false, typ: ptrType$16, tag: ""}, {prop: "allModes", name: "allModes", exported: false, typ: sliceType$11, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -32284,20 +32979,21 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		$r = json.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = fmt.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = mgl32.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = model$1.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = modes.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = env.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = keys.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = graphics.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = controls.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = opengl.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = ui.$init(); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = events.$init(); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = viewmodel.$init(); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = model.$init(); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = os.$init(); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = strconv.$init(); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = time.$init(); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = display.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = model$1.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = modes.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = env.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = keys.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = graphics.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = controls.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = opengl.$init(); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = ui.$init(); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = events.$init(); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = viewmodel.$init(); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = model.$init(); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = os.$init(); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = strconv.$init(); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = time.$init(); /* */ $s = 19; case 19: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		defaultFont = new model.Font.ptr(true, new model.RawBitmap.ptr(616, 6, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQAAAAEBAAABAAEAAQABAQAAAAEAAAAAAAAAAAEAAQABAAEBAAAAAAAAAAEAAAEAAAEAAQAAAQAAAAABAQAAAAAAAAAAAAEAAAEAAQABAQAAAAEAAAEBAAABAAEAAQABAAEAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAQAAAAEBAAABAQABAQAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQABAAEAAAEAAAEBAQABAQABAAEBAAEAAAEAAAEAAQABAAABAAAAAAAAAAAAAAAAAAEAAQEBAAEBAAABAQEAAQEBAAEAAQABAQEAAQAAAAEBAQABAQEAAQEBAAEAAAEAAAAAAAAAAAAAAAAAAQEAAAEBAAEBAQABAQAAAQEBAAEBAAABAQEAAQEBAAEBAQABAAEAAQABAQEAAQABAAEAAAABAAAAAQABAAABAAEBAQABAQAAAQEBAQAAAQEAAAEBAQABAQEAAQABAAEAAQABAAAAAQABAAEAAQABAAEBAQABAQABAAAAAQEAAAEAAAAAAAABAAAAAAAAAQAAAAAAAAAAAAEAAAAAAAABAQAAAAAAAQAAAAEAAAEAAAEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAABAAEAAAAAAAAAAAAAAAAAAAAAAAEAAQAAAAAAAAAAAQABAAEAAQAAAQAAAQAAAQEBAAEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQABAAEBAQABAQAAAQEBAAABAQABAAEAAAAAAQABAAABAQEAAAAAAQEBAAAAAAEAAAEAAQAAAQAAAAABAAAAAQABAQEAAQAAAAEBAQAAAAEAAAEAAAEAAQAAAAAAAAABAAABAQAAAQAAAAABAAEAAQABAAEAAQEBAAEAAAABAAEAAQEAAAEBAAABAAAAAQABAAEAAAEAAAEBAAABAAAAAQEAAQEAAQEAAQABAAEAAQABAAEAAAEAAAEAAQABAAAAAAEAAAEAAQABAAEAAQABAAEAAAEAAAEAAQAAAAEAAQAAAAEAAAABAAEAAQAAAAAAAAEAAAEBAAEBAAABAQEAAAEBAAEBAAAAAQAAAQEBAAEBAQAAAAAAAAABAAEAAQABAQEBAQABAQEAAQEBAAEBAQABAQEAAAEBAQAAAQEAAQEBAAEAAQABAAEAAQABAAEAAQABAAEAAQABAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQABAAEBAAAAAQEAAAEBAAABAQAAAQEAAQEBAAEBAAABAQAAAQEAAAAAAAAAAAAAAAAAAQABAAEAAQABAQAAAAAAAAAAAAABAQEAAQEBAAEBAQABAAEAAQABAAEAAQABAQEAAQABAAEBAQAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAEBAQABAAEAAQEBAAEBAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAEBAAABAQEAAQAAAAABAAAAAAEBAAEAAAEAAAAAAAAAAAAAAAABAAABAAEAAAEAAAEBAAAAAQEAAAABAAABAQABAAEAAAABAAEAAQABAQEAAQAAAQABAAAAAAAAAAABAAABAAAAAQEAAQEBAAEAAQABAAAAAQABAAEAAAABAAAAAQABAAEBAQABAAABAAABAAEAAQAAAAEAAQABAAEAAQEAAQABAAEBAAABAAEBAAABAQAAAAEBAAABAAABAAEAAQABAAEAAQABAAABAAAAAQAAAAEAAAEAAAABAAAAAQAAAAAAAAAAAAAAAAEAAQABAAEAAQAAAAEAAQABAQAAAQEBAAEAAQABAAEAAQAAAQAAAQEAAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAABAAAAAAEAAAABAAABAAEAAQABAAEAAQABAAABAAABAAEAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAEAAQABAQAAAQABAAEAAQABAAEAAQABAAEAAAABAQAAAQEAAAEBAAAAAQAAAAEAAAABAAEBAQABAQEAAQAAAAAAAAAAAAAAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAEAAQABAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQABAAABAAEAAQABAAEAAQABAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQEBAAEBAQABAAEBAQABAAAAAAEAAAEAAAAAAAAAAAAAAQAAAAAAAQABAAAAAQEBAAEBAQABAQEAAQEBAAAAAQABAQEAAQEBAAAAAQABAQEAAAABAAAAAQAAAAEAAAEBAAABAAAAAAAAAAEBAAEAAQABAQEAAQEBAAEBAAABAQEAAQAAAAEBAQABAAEAAQABAQAAAQABAAEBAQABAAAAAQABAAABAAEBAQABAAAAAQEBAQEAAQABAAEBAQAAAQAAAQEBAAABAAAAAQABAAABAAEAAAEAAAEBAQABAQAAAAEAAQEAAAAAAAEBAQAAAAABAQEAAQEBAAEBAQABAQEAAQEBAAABAAABAQEAAQABAAEAAQEAAAEAAQABAAEAAQABAAEAAQABAQEAAQEBAAEBAQAAAQAAAAEBAAAAAQAAAQEBAAABAAAAAQABAAABAAEAAQEBAAABAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQABAQEAAQEBAAEBAQABAQEAAQEBAAEBAQABAQEAAQEBAAEBAQABAQEAAAEAAAABAAAAAQABAAEAAQABAAEBAQAAAAAAAAAAAAEBAQABAQEAAQEBAAEBAQABAQEAAQEBAAEBAQABAQEAAQEBAAAAAAAAAAAAAAAAAAAAAAABAQEAAQAAAQEBAAEBAQABAAEAAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"), 32, new sliceType([0, 2, 4, 8, 12, 16, 20, 24, 26, 29, 32, 36, 40, 43, 47, 49, 53, 57, 61, 65, 69, 73, 77, 81, 85, 89, 93, 95, 98, 102, 105, 109, 113, 117, 121, 125, 129, 133, 137, 141, 145, 149, 151, 155, 159, 163, 169, 174, 178, 182, 188, 192, 196, 200, 204, 208, 214, 218, 222, 226, 229, 233, 236, 240, 244, 247, 251, 255, 259, 263, 267, 271, 275, 279, 281, 285, 289, 291, 297, 301, 305, 309, 314, 318, 322, 326, 330, 334, 340, 344, 348, 352, 356, 360, 364, 368, 372, 376, 380, 384, 388, 392, 396, 400, 404, 408, 412, 416, 420, 424, 427, 431, 435, 439, 443, 447, 451, 455, 459, 463, 467, 471, 475, 479, 483, 487, 491, 495, 499, 503, 506, 510, 514, 518, 523, 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539, 540, 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572, 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600, 601, 602, 603, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 614]));
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};

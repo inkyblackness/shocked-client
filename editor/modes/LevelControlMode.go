@@ -6,8 +6,8 @@ import (
 	"github.com/inkyblackness/shocked-client/ui"
 )
 
-// MapControlMode is a mode for archive map control.
-type MapControlMode struct {
+// LevelControlMode is a mode for archive level control.
+type LevelControlMode struct {
 	context Context
 
 	area *ui.Area
@@ -16,9 +16,9 @@ type MapControlMode struct {
 	activeLevelBox   *controls.ComboBox
 }
 
-// NewMapControlMode returns a new instance.
-func NewMapControlMode(context Context, parent *ui.Area) *MapControlMode {
-	mode := &MapControlMode{context: context}
+// NewLevelControlMode returns a new instance.
+func NewLevelControlMode(context Context, parent *ui.Area) *LevelControlMode {
+	mode := &LevelControlMode{context: context}
 
 	{
 		builder := ui.NewAreaBuilder()
@@ -84,6 +84,6 @@ func NewMapControlMode(context Context, parent *ui.Area) *MapControlMode {
 }
 
 // SetActive implements the Mode interface.
-func (mode *MapControlMode) SetActive(active bool) {
+func (mode *LevelControlMode) SetActive(active bool) {
 	mode.area.SetVisible(active)
 }
