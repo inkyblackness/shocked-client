@@ -28,6 +28,9 @@ type MapDisplay struct {
 	background *GridRenderable
 	mapGrid    *TileGridMapRenderable
 	textures   *TileTextureMapRenderable
+	objects    *PlacedIconsRenderable
+
+	displayedObjectIcons []PlacedIcon
 
 	moveCapture func(pixelX, pixelY float32)
 }
@@ -73,10 +76,11 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 	display.renderContext = context.NewRenderContext(display.camera.ViewMatrix())
 	display.background = NewGridRenderable(display.renderContext)
 	display.mapGrid = NewTileGridMapRenderable(display.renderContext)
-	display.textures = NewTileTextureMapRenderable(display.renderContext, display.paletteTexture, func(index int) graphics.Texture {
+	display.textures = NewTileTextureMapRenderable(display.renderContext, display.paletteTexture, func(index int) *graphics.BitmapTexture {
 		id := display.levelAdapter.LevelTextureID(index)
 		return display.context.ForGraphics().WorldTextureStore(dataModel.TextureLarge).Texture(graphics.TextureKeyFromInt(id))
 	})
+	display.objects = NewPlacedIconsRenderable(display.renderContext, display.paletteTexture)
 
 	linkTileProperties := func(coord model.TileCoordinate) {
 		tile := display.levelAdapter.TileMap().Tile(coord)
@@ -116,6 +120,23 @@ func (display *MapDisplay) SetVisible(visible bool) {
 	display.area.SetVisible(visible)
 }
 
+// SetDisplayedObjects requests to show the given set of objects.
+func (display *MapDisplay) SetDisplayedObjects(objects []*model.LevelObject) {
+	display.displayedObjectIcons = make([]PlacedIcon, len(objects))
+
+	for index, obj := range objects {
+		display.displayedObjectIcons[index] = &referringPlacedIcon{
+			center:  obj.Center,
+			texture: display.iconTextureForObject(obj.ID())}
+	}
+}
+
+func (display *MapDisplay) iconTextureForObject(id model.ObjectID) func() *graphics.BitmapTexture {
+	return func() *graphics.BitmapTexture {
+		return display.context.ForGraphics().GameObjectIconsStore().Texture(graphics.TextureKeyFromInt(id.ToInt()))
+	}
+}
+
 func (display *MapDisplay) render() {
 	root := display.area.Root()
 	display.camera.SetViewportSize(root.Right().Value(), root.Bottom().Value())
@@ -124,6 +145,7 @@ func (display *MapDisplay) render() {
 		display.textures.Render()
 	}
 	display.mapGrid.Render()
+	display.objects.Render(display.displayedObjectIcons)
 }
 
 func (display *MapDisplay) unprojectPixel(pixelX, pixelY float32) (x, y float32) {

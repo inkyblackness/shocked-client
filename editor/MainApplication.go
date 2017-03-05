@@ -41,7 +41,8 @@ type MainApplication struct {
 	rectRenderer       *graphics.RectangleRenderer
 	uiTextRenderer     *graphics.BitmapTextureRenderer
 
-	worldTextures map[dataModel.TextureSize]*graphics.BufferedTextureStore
+	worldTextures   map[dataModel.TextureSize]*graphics.BufferedTextureStore
+	gameObjectIcons *graphics.BufferedTextureStore
 }
 
 // NewMainApplication returns a new instance of MainApplication.
@@ -120,27 +121,50 @@ func (app *MainApplication) initResources() {
 	for _, size := range dataModel.TextureSizes() {
 		app.initWorldTextureBuffer(size)
 	}
+	app.initGameObjectIconsBuffer()
 }
 
 func (app *MainApplication) initWorldTextureBuffer(size dataModel.TextureSize) {
-	observedKeys := make(map[int]bool)
+	observedTextures := make(map[int]bool)
 	var buffer *graphics.BufferedTextureStore
 
 	buffer = graphics.NewBufferedTextureStore(func(key graphics.TextureKey) {
 		keyAsInt := key.ToInt()
 
-		if !observedKeys[keyAsInt] {
+		if !observedTextures[keyAsInt] {
 			textures := app.modelAdapter.TextureAdapter().WorldTextures(size)
 			textures.OnBitmapChanged(keyAsInt, func() {
 				raw := textures.RawBitmap(keyAsInt)
 				bmp := graphics.BitmapFromRaw(*raw)
 				buffer.SetTexture(key, app.Texturize(&bmp))
 			})
-			observedKeys[keyAsInt] = true
+			observedTextures[keyAsInt] = true
 		}
 		app.modelAdapter.TextureAdapter().RequestWorldTextureBitmaps(keyAsInt)
 	})
 	app.worldTextures[size] = buffer
+}
+
+func (app *MainApplication) initGameObjectIconsBuffer() {
+	observedObjectIcons := make(map[int]bool)
+	var buffer *graphics.BufferedTextureStore
+
+	buffer = graphics.NewBufferedTextureStore(func(key graphics.TextureKey) {
+		keyAsInt := key.ToInt()
+		objects := app.modelAdapter.ObjectsAdapter()
+
+		if !observedObjectIcons[keyAsInt] {
+			icons := objects.Icons()
+			icons.OnBitmapChanged(keyAsInt, func() {
+				raw := icons.RawBitmap(keyAsInt)
+				bmp := graphics.BitmapFromRaw(*raw)
+				buffer.SetTexture(key, app.Texturize(&bmp))
+			})
+			observedObjectIcons[keyAsInt] = true
+		}
+		objects.RequestIcon(model.ObjectIDFromInt(keyAsInt))
+	})
+	app.gameObjectIcons = buffer
 }
 
 func (app *MainApplication) initInterface() {
@@ -272,6 +296,11 @@ func (app *MainApplication) NewPaletteTexture(colorProvider graphics.ColorProvid
 // WorldTextureStore implements the graphics.Context interface.
 func (app *MainApplication) WorldTextureStore(size dataModel.TextureSize) *graphics.BufferedTextureStore {
 	return app.worldTextures[size]
+}
+
+// GameObjectIconsStore implements the graphics.Context interface.
+func (app *MainApplication) GameObjectIconsStore() *graphics.BufferedTextureStore {
+	return app.gameObjectIcons
 }
 
 // ControlFactory implements the Context interface.

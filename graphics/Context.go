@@ -13,4 +13,5 @@ type Context interface {
 
 	NewPaletteTexture(colorProvider ColorProvider) *PaletteTexture
 	WorldTextureStore(size model.TextureSize) *BufferedTextureStore
+	GameObjectIconsStore() *BufferedTextureStore
 }

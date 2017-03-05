@@ -19,29 +19,31 @@ type TextureQuery func(id TextureKey)
 // BufferedTextureStore keeps textures in a buffer.
 type BufferedTextureStore struct {
 	query    TextureQuery
-	textures map[TextureKey]Texture
+	textures map[TextureKey]*BitmapTexture
 }
 
 // NewBufferedTextureStore returns a new instance of a store.
 func NewBufferedTextureStore(query TextureQuery) *BufferedTextureStore {
 	return &BufferedTextureStore{
 		query:    query,
-		textures: make(map[TextureKey]Texture)}
+		textures: make(map[TextureKey]*BitmapTexture)}
 }
 
 // Reset clears the store. It disposes any registered texture.
 func (store *BufferedTextureStore) Reset() {
 	oldTextures := store.textures
 
-	store.textures = make(map[TextureKey]Texture)
+	store.textures = make(map[TextureKey]*BitmapTexture)
 	for _, texture := range oldTextures {
-		texture.Dispose()
+		if texture != nil {
+			texture.Dispose()
+		}
 	}
 }
 
-// Texture returns the texture associated with the given ID. May be null if
+// Texture returns the texture associated with the given ID. May be nil if
 // not yet known/available.
-func (store *BufferedTextureStore) Texture(id TextureKey) Texture {
+func (store *BufferedTextureStore) Texture(id TextureKey) *BitmapTexture {
 	texture, existing := store.textures[id]
 
 	if !existing {
@@ -54,7 +56,7 @@ func (store *BufferedTextureStore) Texture(id TextureKey) Texture {
 
 // SetTexture registers a (new) texture under given ID. It disposes any
 // previously registered texture.
-func (store *BufferedTextureStore) SetTexture(id TextureKey, texture Texture) {
+func (store *BufferedTextureStore) SetTexture(id TextureKey, texture *BitmapTexture) {
 	oldTexture := store.textures[id]
 
 	store.textures[id] = texture

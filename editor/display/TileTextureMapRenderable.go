@@ -50,7 +50,7 @@ var mapTileFragmentShaderSource = `
 
 // TextureQuery is a getter function to retrieve the texture for the given
 // level texture index.
-type TextureQuery func(index int) graphics.Texture
+type TextureQuery func(index int) *graphics.BitmapTexture
 
 // TileTextureMapRenderable is a renderable for textures.
 type TileTextureMapRenderable struct {

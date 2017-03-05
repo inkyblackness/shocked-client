@@ -1,6 +1,7 @@
 package model
 
 import (
+	"sort"
 	"strconv"
 
 	"github.com/inkyblackness/shocked-model"
@@ -16,6 +17,8 @@ type LevelAdapter struct {
 	tileMap      *TileMap
 
 	levelTextures *observable
+
+	levelObjects *observable
 }
 
 func newLevelAdapter(context archiveContext, store model.DataStore) *LevelAdapter {
@@ -26,7 +29,8 @@ func newLevelAdapter(context archiveContext, store model.DataStore) *LevelAdapte
 		id:      newObservable(),
 		tileMap: NewTileMap(64, 64),
 
-		levelTextures: newObservable()}
+		levelTextures: newObservable(),
+		levelObjects:  newObservable()}
 
 	adapter.id.set("")
 
@@ -59,6 +63,8 @@ func (adapter *LevelAdapter) requestByID(levelID string) {
 	adapter.id.set("")
 	adapter.tileMap.clear()
 	adapter.levelTextures.set(nil)
+	objects := make(map[int]*LevelObject)
+	adapter.levelObjects.set(&objects)
 
 	adapter.id.set(levelID)
 	if levelID != "" {
@@ -67,6 +73,8 @@ func (adapter *LevelAdapter) requestByID(levelID string) {
 			adapter.onTiles, adapter.context.simpleStoreFailure("Tiles"))
 		adapter.store.LevelTextures(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
 			adapter.onLevelTextures, adapter.context.simpleStoreFailure("LevelTextures"))
+		adapter.store.LevelObjects(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
+			adapter.onLevelObjects, adapter.context.simpleStoreFailure("LevelObjects"))
 	}
 }
 
@@ -111,4 +119,37 @@ func (adapter *LevelAdapter) LevelTextureID(index int) (id int) {
 
 func (adapter *LevelAdapter) onLevelTextures(textureIDs []int) {
 	adapter.levelTextures.set(textureIDs)
+}
+
+// LevelObjects returns a sorted set of objects that match the provided filter.
+func (adapter *LevelAdapter) LevelObjects(filter func(*LevelObject) bool) []*LevelObject {
+	objects := *adapter.levelObjects.get().(*map[int]*LevelObject)
+	indexList := make([]int, 0, len(objects))
+
+	for key, obj := range objects {
+		if filter(obj) {
+			indexList = append(indexList, key)
+		}
+	}
+	sort.Ints(indexList)
+	result := make([]*LevelObject, len(indexList))
+	for index, key := range indexList {
+		result[index] = objects[key]
+	}
+
+	return result
+}
+
+// OnLevelObjectsChanged registers a callback for updates on the list of level objects.
+func (adapter *LevelAdapter) OnLevelObjectsChanged(callback func()) {
+	adapter.levelObjects.addObserver(callback)
+}
+
+func (adapter *LevelAdapter) onLevelObjects(objects *model.LevelObjects) {
+	newMap := make(map[int]*LevelObject)
+	for tableIndex := 0; tableIndex < len(objects.Table); tableIndex++ {
+		obj := newLevelObject(&objects.Table[tableIndex])
+		newMap[obj.Index()] = obj
+	}
+	adapter.levelObjects.set(&newMap)
 }

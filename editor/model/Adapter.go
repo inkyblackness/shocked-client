@@ -22,6 +22,7 @@ type Adapter struct {
 
 	palette        *observable
 	textureAdapter *TextureAdapter
+	objectsAdapter *ObjectsAdapter
 }
 
 // NewAdapter returns a new model adapter.
@@ -42,6 +43,7 @@ func NewAdapter(store model.DataStore) *Adapter {
 	adapter.message.set("")
 	adapter.activeLevel = newLevelAdapter(adapter, store)
 	adapter.textureAdapter = newTextureAdapter(adapter, store)
+	adapter.objectsAdapter = newObjectsAdapter(adapter, store)
 	adapter.palette.set(&[256]model.Color{})
 
 	return adapter
@@ -76,6 +78,7 @@ func (adapter *Adapter) ActiveProjectID() string {
 // RequestProject sets the project to work on.
 func (adapter *Adapter) RequestProject(projectID string) {
 	adapter.textureAdapter.clear()
+	adapter.objectsAdapter.clear()
 	adapter.requestArchive("")
 	adapter.availableArchiveIDs.set("")
 
@@ -85,6 +88,7 @@ func (adapter *Adapter) RequestProject(projectID string) {
 		adapter.requestArchive("archive")
 		adapter.store.Palette(adapter.ActiveProjectID(), "game",
 			adapter.onGamePalette, adapter.simpleStoreFailure("Palette"))
+		adapter.objectsAdapter.refresh()
 	}
 }
 
@@ -105,6 +109,11 @@ func (adapter *Adapter) OnGamePaletteChanged(callback func()) {
 // TextureAdapter returns the adapter for textures.
 func (adapter *Adapter) TextureAdapter() *TextureAdapter {
 	return adapter.textureAdapter
+}
+
+// ObjectsAdapter returns the adapter for game objects.
+func (adapter *Adapter) ObjectsAdapter() *ObjectsAdapter {
+	return adapter.objectsAdapter
 }
 
 // ActiveArchiveID returns the identifier of the current archive.
