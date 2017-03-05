@@ -1,15 +1,16 @@
-package model
-
-import (
-	"fmt"
-
-	"github.com/inkyblackness/shocked-client/graphics"
-)
+package graphics
 
 // TextureKey is a reference identifier for textures.
-// It has to implement fmt.Stringer to uniquely represent itself.
-type TextureKey interface {
-	fmt.Stringer
+type TextureKey int
+
+// ToInt returns the integer representation of the key.
+func (key TextureKey) ToInt() int {
+	return int(key)
+}
+
+// TextureKeyFromInt wraps an integer as TextureKey.
+func TextureKeyFromInt(value int) TextureKey {
+	return TextureKey(value)
 }
 
 // TextureQuery is a callback function to request the data for a specific texture.
@@ -18,21 +19,21 @@ type TextureQuery func(id TextureKey)
 // BufferedTextureStore keeps textures in a buffer.
 type BufferedTextureStore struct {
 	query    TextureQuery
-	textures map[string]graphics.Texture
+	textures map[TextureKey]Texture
 }
 
 // NewBufferedTextureStore returns a new instance of a store.
 func NewBufferedTextureStore(query TextureQuery) *BufferedTextureStore {
 	return &BufferedTextureStore{
 		query:    query,
-		textures: make(map[string]graphics.Texture)}
+		textures: make(map[TextureKey]Texture)}
 }
 
 // Reset clears the store. It disposes any registered texture.
 func (store *BufferedTextureStore) Reset() {
 	oldTextures := store.textures
 
-	store.textures = make(map[string]graphics.Texture)
+	store.textures = make(map[TextureKey]Texture)
 	for _, texture := range oldTextures {
 		texture.Dispose()
 	}
@@ -40,13 +41,12 @@ func (store *BufferedTextureStore) Reset() {
 
 // Texture returns the texture associated with the given ID. May be null if
 // not yet known/available.
-func (store *BufferedTextureStore) Texture(id TextureKey) graphics.Texture {
-	idString := id.String()
-	texture, existing := store.textures[idString]
+func (store *BufferedTextureStore) Texture(id TextureKey) Texture {
+	texture, existing := store.textures[id]
 
 	if !existing {
 		store.query(id)
-		store.textures[idString] = nil
+		store.textures[id] = nil
 	}
 
 	return texture
@@ -54,11 +54,10 @@ func (store *BufferedTextureStore) Texture(id TextureKey) graphics.Texture {
 
 // SetTexture registers a (new) texture under given ID. It disposes any
 // previously registered texture.
-func (store *BufferedTextureStore) SetTexture(id TextureKey, texture graphics.Texture) {
-	idString := id.String()
-	oldTexture := store.textures[idString]
+func (store *BufferedTextureStore) SetTexture(id TextureKey, texture Texture) {
+	oldTexture := store.textures[id]
 
-	store.textures[idString] = texture
+	store.textures[id] = texture
 	if oldTexture != nil {
 		oldTexture.Dispose()
 	}

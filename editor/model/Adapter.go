@@ -19,6 +19,9 @@ type Adapter struct {
 
 	availableLevels   map[string]model.LevelProperties
 	availableLevelIDs *observable
+
+	palette        *observable
+	textureAdapter *TextureAdapter
 }
 
 // NewAdapter returns a new model adapter.
@@ -32,10 +35,14 @@ func NewAdapter(store model.DataStore) *Adapter {
 		activeArchiveID:     newObservable(),
 
 		availableLevels:   make(map[string]model.LevelProperties),
-		availableLevelIDs: newObservable()}
+		availableLevelIDs: newObservable(),
+
+		palette: newObservable()}
 
 	adapter.message.set("")
-	adapter.activeLevel = newLevelAdapter(adapter, store, adapter.simpleStoreFailure)
+	adapter.activeLevel = newLevelAdapter(adapter, store)
+	adapter.textureAdapter = newTextureAdapter(adapter, store)
+	adapter.palette.set(&[256]model.Color{})
 
 	return adapter
 }
@@ -68,6 +75,7 @@ func (adapter *Adapter) ActiveProjectID() string {
 
 // RequestProject sets the project to work on.
 func (adapter *Adapter) RequestProject(projectID string) {
+	adapter.textureAdapter.clear()
 	adapter.requestArchive("")
 	adapter.availableArchiveIDs.set("")
 
@@ -75,7 +83,28 @@ func (adapter *Adapter) RequestProject(projectID string) {
 	if projectID != "" {
 		adapter.availableArchiveIDs.set([]string{"archive"})
 		adapter.requestArchive("archive")
+		adapter.store.Palette(adapter.ActiveProjectID(), "game",
+			adapter.onGamePalette, adapter.simpleStoreFailure("Palette"))
 	}
+}
+
+func (adapter *Adapter) onGamePalette(colors [256]model.Color) {
+	adapter.palette.set(&colors)
+}
+
+// GamePalette returns the main palette.
+func (adapter *Adapter) GamePalette() *[256]model.Color {
+	return adapter.palette.get().(*[256]model.Color)
+}
+
+// OnGamePaletteChanged registers a callback for updates.
+func (adapter *Adapter) OnGamePaletteChanged(callback func()) {
+	adapter.palette.addObserver(callback)
+}
+
+// TextureAdapter returns the adapter for textures.
+func (adapter *Adapter) TextureAdapter() *TextureAdapter {
+	return adapter.textureAdapter
 }
 
 // ActiveArchiveID returns the identifier of the current archive.

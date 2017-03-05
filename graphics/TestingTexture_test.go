@@ -1,14 +1,10 @@
-package model
-
-import (
-	"github.com/inkyblackness/shocked-client/graphics"
-)
+package graphics
 
 type testingTexture struct {
 	disposed bool
 }
 
-func aTexture() graphics.Texture {
+func aTexture() Texture {
 	return aTestingTexture()
 }
 

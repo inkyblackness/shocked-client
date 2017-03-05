@@ -40,6 +40,8 @@ type MainApplication struct {
 	uiTextPalette      *graphics.PaletteTexture
 	rectRenderer       *graphics.RectangleRenderer
 	uiTextRenderer     *graphics.BitmapTextureRenderer
+
+	worldTextures map[dataModel.TextureSize]*graphics.BufferedTextureStore
 }
 
 // NewMainApplication returns a new instance of MainApplication.
@@ -49,7 +51,8 @@ func NewMainApplication(store dataModel.DataStore) *MainApplication {
 		lastElapsedTick:    time.Now(),
 		store:              store,
 		modelAdapter:       model.NewAdapter(store),
-		defaultFontPainter: graphics.NewBitmapTextPainter(defaultFont)}
+		defaultFontPainter: graphics.NewBitmapTextPainter(defaultFont),
+		worldTextures:      make(map[dataModel.TextureSize]*graphics.BufferedTextureStore)}
 
 	return app
 }
@@ -60,6 +63,7 @@ func (app *MainApplication) Init(glWindow env.OpenGlWindow) {
 	app.setDebugOpenGl()
 	app.initOpenGl()
 
+	app.initResources()
 	app.initInterface()
 
 	app.onWindowResize(glWindow.Size())
@@ -110,6 +114,33 @@ func (app *MainApplication) initOpenGl() {
 	app.gl.Enable(opengl.BLEND)
 	app.gl.BlendFunc(opengl.SRC_ALPHA, opengl.ONE_MINUS_SRC_ALPHA)
 	app.gl.ClearColor(0.0, 0.0, 0.0, 1.0)
+}
+
+func (app *MainApplication) initResources() {
+	for _, size := range dataModel.TextureSizes() {
+		app.initWorldTextureBuffer(size)
+	}
+}
+
+func (app *MainApplication) initWorldTextureBuffer(size dataModel.TextureSize) {
+	observedKeys := make(map[int]bool)
+	var buffer *graphics.BufferedTextureStore
+
+	buffer = graphics.NewBufferedTextureStore(func(key graphics.TextureKey) {
+		keyAsInt := key.ToInt()
+
+		if !observedKeys[keyAsInt] {
+			textures := app.modelAdapter.TextureAdapter().WorldTextures(size)
+			textures.OnBitmapChanged(keyAsInt, func() {
+				raw := textures.RawBitmap(keyAsInt)
+				bmp := graphics.BitmapFromRaw(*raw)
+				buffer.SetTexture(key, app.Texturize(&bmp))
+			})
+			observedKeys[keyAsInt] = true
+		}
+		app.modelAdapter.TextureAdapter().RequestWorldTextureBitmaps(keyAsInt)
+	})
+	app.worldTextures[size] = buffer
 }
 
 func (app *MainApplication) initInterface() {
@@ -231,6 +262,16 @@ func (app *MainApplication) Texturize(bmp *graphics.Bitmap) *graphics.BitmapText
 // UITextRenderer implements the graphics.Context interface.
 func (app *MainApplication) UITextRenderer() *graphics.BitmapTextureRenderer {
 	return app.uiTextRenderer
+}
+
+// NewPaletteTexture implements the graphics.Context interface.
+func (app *MainApplication) NewPaletteTexture(colorProvider graphics.ColorProvider) *graphics.PaletteTexture {
+	return graphics.NewPaletteTexture(app.gl, colorProvider)
+}
+
+// WorldTextureStore implements the graphics.Context interface.
+func (app *MainApplication) WorldTextureStore(size dataModel.TextureSize) *graphics.BufferedTextureStore {
+	return app.worldTextures[size]
 }
 
 // ControlFactory implements the Context interface.

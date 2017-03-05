@@ -8,23 +8,25 @@ import (
 
 // LevelAdapter is the entry point for a level.
 type LevelAdapter struct {
-	context            archiveContext
-	store              model.DataStore
-	simpleStoreFailure func(string) model.FailureFunc
+	context archiveContext
+	store   model.DataStore
 
 	id           *observable
 	isCyberspace bool
 	tileMap      *TileMap
+
+	levelTextures *observable
 }
 
-func newLevelAdapter(context archiveContext, store model.DataStore, simpleStoreFailure func(string) model.FailureFunc) *LevelAdapter {
+func newLevelAdapter(context archiveContext, store model.DataStore) *LevelAdapter {
 	adapter := &LevelAdapter{
-		context:            context,
-		store:              store,
-		simpleStoreFailure: simpleStoreFailure,
+		context: context,
+		store:   store,
 
 		id:      newObservable(),
-		tileMap: NewTileMap(64, 64)}
+		tileMap: NewTileMap(64, 64),
+
+		levelTextures: newObservable()}
 
 	adapter.id.set("")
 
@@ -56,11 +58,15 @@ func (adapter *LevelAdapter) OnIDChanged(callback func()) {
 func (adapter *LevelAdapter) requestByID(levelID string) {
 	adapter.id.set("")
 	adapter.tileMap.clear()
+	adapter.levelTextures.set(nil)
 
 	adapter.id.set(levelID)
 	if levelID != "" {
-		adapter.store.Tiles(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.storeLevelID(),
-			adapter.onTiles, adapter.simpleStoreFailure("Tiles"))
+		storeLevelID := adapter.storeLevelID()
+		adapter.store.Tiles(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
+			adapter.onTiles, adapter.context.simpleStoreFailure("Tiles"))
+		adapter.store.LevelTextures(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
+			adapter.onLevelTextures, adapter.context.simpleStoreFailure("LevelTextures"))
 	}
 }
 
@@ -84,4 +90,25 @@ func (adapter *LevelAdapter) onTiles(tiles model.Tiles) {
 			tile.setProperties(tileProperties)
 		}
 	}
+}
+
+// LevelTextureIDs returns the IDs of the level textures.
+func (adapter *LevelAdapter) LevelTextureIDs() []int {
+	return adapter.levelTextures.get().([]int)
+}
+
+// LevelTextureID returns the texture ID for given level index.
+func (adapter *LevelAdapter) LevelTextureID(index int) (id int) {
+	ids := adapter.LevelTextureIDs()
+	if index < len(ids) {
+		id = ids[index]
+	} else {
+		id = -1
+	}
+
+	return
+}
+
+func (adapter *LevelAdapter) onLevelTextures(textureIDs []int) {
+	adapter.levelTextures.set(textureIDs)
 }

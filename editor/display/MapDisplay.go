@@ -9,6 +9,7 @@ import (
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/ui"
 	"github.com/inkyblackness/shocked-client/ui/events"
+	dataModel "github.com/inkyblackness/shocked-model"
 )
 
 // MapDisplay is a display for a level map
@@ -22,8 +23,11 @@ type MapDisplay struct {
 	viewMatrix    mgl.Mat4
 	renderContext *graphics.RenderContext
 
+	paletteTexture *graphics.PaletteTexture
+
 	background *GridRenderable
 	mapGrid    *TileGridMapRenderable
+	textures   *TileTextureMapRenderable
 
 	moveCapture func(pixelX, pixelY float32)
 }
@@ -61,15 +65,26 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 		display.area = builder.Build()
 	}
 
+	display.paletteTexture = context.ForGraphics().NewPaletteTexture(display.paletteEntry)
+	display.context.ModelAdapter().OnGamePaletteChanged(func() {
+		display.paletteTexture.Update()
+	})
+
 	display.renderContext = context.NewRenderContext(display.camera.ViewMatrix())
 	display.background = NewGridRenderable(display.renderContext)
 	display.mapGrid = NewTileGridMapRenderable(display.renderContext)
+	display.textures = NewTileTextureMapRenderable(display.renderContext, display.paletteTexture, func(index int) graphics.Texture {
+		id := display.levelAdapter.LevelTextureID(index)
+		return display.context.ForGraphics().WorldTextureStore(dataModel.TextureLarge).Texture(graphics.TextureKeyFromInt(id))
+	})
 
 	linkTileProperties := func(coord model.TileCoordinate) {
 		tile := display.levelAdapter.TileMap().Tile(coord)
 		tile.OnPropertiesChanged(func() {
 			x, y := coord.XY()
-			display.mapGrid.SetTile(x, 63-y, tile.Properties())
+			properties := tile.Properties()
+			display.mapGrid.SetTile(x, 63-y, properties)
+			display.textures.SetTile(x, 63-y, properties)
 		})
 	}
 
@@ -82,6 +97,20 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 	return display
 }
 
+func (display *MapDisplay) paletteEntry(index int) (r, g, b, a byte) {
+	pal := display.context.ModelAdapter().GamePalette()
+	color := &pal[index]
+
+	r = byte(color.Red)
+	g = byte(color.Green)
+	b = byte(color.Blue)
+	if index > 0 {
+		a = 0xFF
+	}
+
+	return
+}
+
 // SetVisible sets the display visibility state.
 func (display *MapDisplay) SetVisible(visible bool) {
 	display.area.SetVisible(visible)
@@ -91,6 +120,9 @@ func (display *MapDisplay) render() {
 	root := display.area.Root()
 	display.camera.SetViewportSize(root.Right().Value(), root.Bottom().Value())
 	display.background.Render()
+	if !display.levelAdapter.IsCyberspace() {
+		display.textures.Render()
+	}
 	display.mapGrid.Render()
 }
 
