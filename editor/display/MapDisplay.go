@@ -25,11 +25,13 @@ type MapDisplay struct {
 
 	paletteTexture *graphics.PaletteTexture
 
-	background *GridRenderable
-	mapGrid    *TileGridMapRenderable
-	textures   *TileTextureMapRenderable
-	objects    *PlacedIconsRenderable
+	highlighter *BasicHighlighter
+	background  *GridRenderable
+	mapGrid     *TileGridMapRenderable
+	textures    *TileTextureMapRenderable
+	objects     *PlacedIconsRenderable
 
+	displayedObjectAreas []Area
 	displayedObjectIcons []PlacedIcon
 
 	moveCapture func(pixelX, pixelY float32)
@@ -74,6 +76,7 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 	})
 
 	display.renderContext = context.NewRenderContext(display.camera.ViewMatrix())
+	display.highlighter = NewBasicHighlighter(display.renderContext, graphics.RGBA(1.0, 1.0, 1.0, 0.3))
 	display.background = NewGridRenderable(display.renderContext)
 	display.mapGrid = NewTileGridMapRenderable(display.renderContext)
 	display.textures = NewTileTextureMapRenderable(display.renderContext, display.paletteTexture, func(index int) *graphics.BitmapTexture {
@@ -123,11 +126,14 @@ func (display *MapDisplay) SetVisible(visible bool) {
 // SetDisplayedObjects requests to show the given set of objects.
 func (display *MapDisplay) SetDisplayedObjects(objects []*model.LevelObject) {
 	display.displayedObjectIcons = make([]PlacedIcon, len(objects))
+	display.displayedObjectAreas = make([]Area, len(objects))
 
 	for index, obj := range objects {
-		display.displayedObjectIcons[index] = &referringPlacedIcon{
+		icon := &referringPlacedIcon{
 			center:  obj.Center,
 			texture: display.iconTextureForObject(obj.ID())}
+		display.displayedObjectAreas[index] = icon
+		display.displayedObjectIcons[index] = icon
 	}
 }
 
@@ -145,6 +151,7 @@ func (display *MapDisplay) render() {
 		display.textures.Render()
 	}
 	display.mapGrid.Render()
+	display.highlighter.Render(display.displayedObjectAreas)
 	display.objects.Render(display.displayedObjectIcons)
 }
 

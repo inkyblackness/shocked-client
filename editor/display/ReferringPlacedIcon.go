@@ -16,3 +16,7 @@ func (icon *referringPlacedIcon) Center() (x, y float32) {
 func (icon *referringPlacedIcon) Texture() *graphics.BitmapTexture {
 	return icon.texture()
 }
+
+func (icon *referringPlacedIcon) Size() (width, height float32) {
+	return 16.0, 16.0
+}
