@@ -127,8 +127,8 @@ func (renderable *TileGridMapRenderable) Render() {
 				if tile != nil {
 					left := float32(x) * fineCoordinatesPerTileSide
 					right := left + fineCoordinatesPerTileSide
-					top := float32(y) * fineCoordinatesPerTileSide
-					bottom := top + fineCoordinatesPerTileSide
+					bottom := float32(y) * fineCoordinatesPerTileSide
+					top := bottom + fineCoordinatesPerTileSide
 
 					vertices := make([]float32, 0, 6*2*3)
 

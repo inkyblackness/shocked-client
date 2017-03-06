@@ -104,13 +104,13 @@ func NewPlacedIconsRenderable(context *graphics.RenderContext, paletteTexture gr
 	{
 		half := float32(0.5)
 		var vertices = []float32{
-			-half, -half, 0.0,
-			half, -half, 0.0,
-			half, half, 0.0,
-
-			half, half, 0.0,
 			-half, half, 0.0,
-			-half, -half, 0.0}
+			half, half, 0.0,
+			half, -half, 0.0,
+
+			half, -half, 0.0,
+			-half, -half, 0.0,
+			-half, half, 0.0}
 		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.vertexPositionBuffer)
 		gl.BufferData(opengl.ARRAY_BUFFER, len(vertices)*4, vertices, opengl.STATIC_DRAW)
 		gl.BindBuffer(opengl.ARRAY_BUFFER, 0)

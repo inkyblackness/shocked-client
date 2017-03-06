@@ -82,7 +82,8 @@ func init() {
 	for i := 0; i < 4; i++ {
 		matrix := mgl.Translate3D(0.5, 0.5, 0.0).
 			Mul4(mgl.HomogRotate3DZ(float32(math.Pi * float32(i) / 2.0))).
-			Mul4(mgl.Translate3D(-0.5, -0.5, 0.0))
+			Mul4(mgl.Translate3D(-0.5, -0.5, 0.0)).
+			Mul4(mgl.Scale3D(1.0, -1.0, 1.0))
 		uvRotations[i] = &matrix
 	}
 }
@@ -216,24 +217,24 @@ func (renderable *TileTextureMapRenderable) ensureTileType(tileType model.TileTy
 
 		if displayedType == model.DiagonalOpenNorthEast {
 			vertices = []float32{
-				0.0, 0.0, 0.0,
-				limit, 0.0, 0.0,
-				limit, limit, 0.0}
+				0.0, limit, 0.0,
+				limit, limit, 0.0,
+				limit, 0.0, 0.0}
 		} else if displayedType == model.DiagonalOpenNorthWest {
 			vertices = []float32{
-				0.0, 0.0, 0.0,
-				limit, 0.0, 0.0,
-				0.0, limit, 0.0}
+				0.0, limit, 0.0,
+				limit, limit, 0.0,
+				0.0, 0.0, 0.0}
 		} else if displayedType == model.DiagonalOpenSouthEast {
 			vertices = []float32{
-				limit, 0.0, 0.0,
 				limit, limit, 0.0,
-				0.0, limit, 0.0}
+				limit, 0.0, 0.0,
+				0.0, 0.0, 0.0}
 		} else if displayedType == model.DiagonalOpenSouthWest {
 			vertices = []float32{
-				0.0, 0.0, 0.0,
-				limit, limit, 0.0,
-				0.0, limit, 0.0}
+				0.0, limit, 0.0,
+				limit, 0.0, 0.0,
+				0.0, 0.0, 0.0}
 		} else if displayedType == model.Open {
 			vertices = []float32{
 				0.0, 0.0, 0.0,

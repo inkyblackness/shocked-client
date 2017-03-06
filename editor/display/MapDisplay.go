@@ -91,8 +91,8 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 		tile.OnPropertiesChanged(func() {
 			x, y := coord.XY()
 			properties := tile.Properties()
-			display.mapGrid.SetTile(x, 63-y, properties)
-			display.textures.SetTile(x, 63-y, properties)
+			display.mapGrid.SetTile(x, y, properties)
+			display.textures.SetTile(x, y, properties)
 		})
 	}
 
@@ -183,6 +183,7 @@ func (display *MapDisplay) onMouseScroll(area *ui.Area, event events.Event) bool
 func (display *MapDisplay) onMouseMove(area *ui.Area, event events.Event) bool {
 	mouseEvent := event.(*events.MouseMoveEvent)
 	display.moveCapture(mouseEvent.Position())
+
 	return true
 }
 

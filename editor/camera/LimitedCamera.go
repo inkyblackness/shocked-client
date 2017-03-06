@@ -69,7 +69,7 @@ func (cam *LimitedCamera) ZoomAt(levelDelta float32, x, y float32) {
 
 	newPixel := cam.viewMatrix.Mul4x1(focusPoint)
 	scaleFactor := cam.scaleFactor()
-	cam.MoveBy(-(newPixel[0]-oldPixel[0])/scaleFactor, -(newPixel[1]-oldPixel[1])/scaleFactor)
+	cam.MoveBy(-(newPixel[0]-oldPixel[0])/scaleFactor, +(newPixel[1]-oldPixel[1])/scaleFactor)
 }
 
 func (cam *LimitedCamera) limitValue(value float32, min, max float32) float32 {
@@ -93,6 +93,6 @@ func (cam *LimitedCamera) updateViewMatrix() {
 	scaleFactor := cam.scaleFactor()
 	cam.viewMatrix = mgl.Ident4().
 		Mul4(mgl.Translate3D(cam.viewportWidth/2.0, cam.viewportHeight/2.0, 0)).
-		Mul4(mgl.Scale3D(scaleFactor, scaleFactor, 1.0)).
+		Mul4(mgl.Scale3D(scaleFactor, -scaleFactor, 1.0)).
 		Mul4(mgl.Translate3D(cam.viewOffsetX, cam.viewOffsetY, 0))
 }

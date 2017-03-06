@@ -26732,7 +26732,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/camera"] = (function()
 		cam.updateViewMatrix();
 		newPixel = $clone(new mgl32.Mat4($clone(cam.viewMatrix, mgl32.Mat4)).Mul4x1($clone(focusPoint, mgl32.Vec4)), mgl32.Vec4);
 		scaleFactor = cam.scaleFactor();
-		cam.MoveBy($fround(-($fround(newPixel[0] - oldPixel[0])) / scaleFactor), $fround(-($fround(newPixel[1] - oldPixel[1])) / scaleFactor));
+		cam.MoveBy($fround(-($fround(newPixel[0] - oldPixel[0])) / scaleFactor), $fround(($fround(newPixel[1] - oldPixel[1])) / scaleFactor));
 	};
 	LimitedCamera.prototype.ZoomAt = function(levelDelta, x, y) { return this.$val.ZoomAt(levelDelta, x, y); };
 	LimitedCamera.ptr.prototype.limitValue = function(value, min, max) {
@@ -26758,7 +26758,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/camera"] = (function()
 		var $ptr, cam, scaleFactor;
 		cam = this;
 		scaleFactor = cam.scaleFactor();
-		mgl32.Mat4.copy(cam.viewMatrix, new mgl32.Mat4($clone(new mgl32.Mat4($clone(new mgl32.Mat4($clone(mgl32.Ident4(), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D($fround(cam.viewportWidth / 2), $fround(cam.viewportHeight / 2), 0), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Scale3D(scaleFactor, scaleFactor, 1), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D(cam.viewOffsetX, cam.viewOffsetY, 0), mgl32.Mat4)));
+		mgl32.Mat4.copy(cam.viewMatrix, new mgl32.Mat4($clone(new mgl32.Mat4($clone(new mgl32.Mat4($clone(mgl32.Ident4(), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D($fround(cam.viewportWidth / 2), $fround(cam.viewportHeight / 2), 0), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Scale3D(scaleFactor, -scaleFactor, 1), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D(cam.viewOffsetX, cam.viewOffsetY, 0), mgl32.Mat4)));
 	};
 	LimitedCamera.prototype.updateViewMatrix = function() { return this.$val.updateViewMatrix(); };
 	ptrType$1.methods = [{prop: "SetViewportSize", name: "SetViewportSize", pkg: "", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "ViewMatrix", name: "ViewMatrix", pkg: "", typ: $funcType([], [ptrType], false)}, {prop: "MoveBy", name: "MoveBy", pkg: "", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "MoveTo", name: "MoveTo", pkg: "", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "ZoomAt", name: "ZoomAt", pkg: "", typ: $funcType([$Float32, $Float32, $Float32], [], false)}, {prop: "limitValue", name: "limitValue", pkg: "github.com/inkyblackness/shocked-client/editor/camera", typ: $funcType([$Float32, $Float32, $Float32], [$Float32], false)}, {prop: "scaleFactor", name: "scaleFactor", pkg: "github.com/inkyblackness/shocked-client/editor/camera", typ: $funcType([], [$Float32], false)}, {prop: "updateViewMatrix", name: "updateViewMatrix", pkg: "github.com/inkyblackness/shocked-client/editor/camera", typ: $funcType([], [], false)}];
@@ -27839,7 +27839,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 		y = 0;
 		obj = this;
 		x = $fround(($fround(obj.data.BaseProperties.TileX * 256)) + obj.data.BaseProperties.FineX);
-		y = $fround(($fround((63 - obj.data.BaseProperties.TileY >> 0) * 256)) + (255 - obj.data.BaseProperties.FineY >> 0));
+		y = $fround(($fround(obj.data.BaseProperties.TileY * 256)) + obj.data.BaseProperties.FineY);
 		return [x, y];
 	};
 	LevelObject.prototype.Center = function() { return this.$val.Center(); };
@@ -31836,8 +31836,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 				x = _tuple[0];
 				y = _tuple[1];
 				properties = tile.Properties();
-				display[0].mapGrid.SetTile(x, 63 - y >> 0, properties);
-				display[0].textures.SetTile(x, 63 - y >> 0, properties);
+				display[0].mapGrid.SetTile(x, y, properties);
+				display[0].textures.SetTile(x, y, properties);
 			}; })(display));
 		}; })(display);
 		y = 0;
@@ -32069,7 +32069,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		_r$14 = gl.GetUniformLocation(program, "bitmap"); /* */ $s = 19; case 19: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
 		renderable[0] = new PlacedIconsRenderable.ptr(context, program, _r$5, (x = _r$6, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), _r$7, (x$1 = _r$8, (0 >= x$1.$length ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + 0])), _r$9, (_r$10 >> 0), (_r$11 >> 0), (_r$12 >> 0), _r$13, _r$14, paletteTexture);
 		half = 0.5;
-		vertices = new sliceType$2([-half, -half, 0, half, -half, 0, half, half, 0, half, half, 0, -half, half, 0, -half, -half, 0]);
+		vertices = new sliceType$2([-half, half, 0, half, half, 0, half, -half, 0, half, -half, 0, -half, -half, 0, -half, half, 0]);
 		$r = gl.BindBuffer(34962, renderable[0].vertexPositionBuffer); /* */ $s = 20; case 20: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = gl.BufferData(34962, $imul(vertices.$length, 4), vertices, 35044); /* */ $s = 21; case 21: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = gl.BindBuffer(34962, 0); /* */ $s = 22; case 22: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -32332,8 +32332,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 					/* if (!(tile === ptrType$15.nil)) { */ case 8:
 						left = $fround(x * 256);
 						right = $fround(left + 256);
-						top = $fround(y * 256);
-						bottom = $fround(top + 256);
+						bottom = $fround(y * 256);
+						top = $fround(bottom + 256);
 						vertices = $makeSlice(sliceType$2, 0, 36);
 						if (tile.CalculatedWallHeights.North > 0) {
 							vertices = $append(vertices, left, top, tile.CalculatedWallHeights.North, right, top, tile.CalculatedWallHeights.North);
@@ -32379,7 +32379,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		while (true) {
 			if (!(i < 4)) { break; }
 			matrix = [matrix];
-			matrix[0] = $clone(new mgl32.Mat4($clone(new mgl32.Mat4($clone(mgl32.Translate3D(0.5, 0.5, 0), mgl32.Mat4)).Mul4($clone(mgl32.HomogRotate3DZ($fround($fround(3.1415927410125732 * i) / 2)), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D(-0.5, -0.5, 0), mgl32.Mat4)), mgl32.Mat4);
+			matrix[0] = $clone(new mgl32.Mat4($clone(new mgl32.Mat4($clone(new mgl32.Mat4($clone(mgl32.Translate3D(0.5, 0.5, 0), mgl32.Mat4)).Mul4($clone(mgl32.HomogRotate3DZ($fround($fround(3.1415927410125732 * i) / 2)), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Translate3D(-0.5, -0.5, 0), mgl32.Mat4)), mgl32.Mat4)).Mul4($clone(mgl32.Scale3D(1, -1, 1), mgl32.Mat4)), mgl32.Mat4);
 			_key = i; (uvRotations || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: matrix[0] };
 			i = i + (1) >> 0;
 		}
@@ -32563,13 +32563,13 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 			vertices = sliceType$2.nil;
 			limit = 1;
 			if (displayedType === "diagonalOpenNorthEast") {
-				vertices = new sliceType$2([0, 0, 0, limit, 0, 0, limit, limit, 0]);
+				vertices = new sliceType$2([0, limit, 0, limit, limit, 0, limit, 0, 0]);
 			} else if (displayedType === "diagonalOpenNorthWest") {
-				vertices = new sliceType$2([0, 0, 0, limit, 0, 0, 0, limit, 0]);
+				vertices = new sliceType$2([0, limit, 0, limit, limit, 0, 0, 0, 0]);
 			} else if (displayedType === "diagonalOpenSouthEast") {
-				vertices = new sliceType$2([limit, 0, 0, limit, limit, 0, 0, limit, 0]);
+				vertices = new sliceType$2([limit, limit, 0, limit, 0, 0, 0, 0, 0]);
 			} else if (displayedType === "diagonalOpenSouthWest") {
-				vertices = new sliceType$2([0, 0, 0, limit, limit, 0, 0, limit, 0]);
+				vertices = new sliceType$2([0, limit, 0, limit, 0, 0, 0, 0, 0]);
 			} else if (displayedType === "open") {
 				vertices = new sliceType$2([0, 0, 0, limit, 0, 0, limit, limit, 0, limit, limit, 0, 0, limit, 0, 0, 0, 0]);
 			}
