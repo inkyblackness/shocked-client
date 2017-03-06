@@ -39,12 +39,11 @@ type MapDisplay struct {
 
 // NewMapDisplay returns a new instance.
 func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
-	tileBaseLength := float32(32)
-	tilesPerMapSide := float32(64.0)
+	tileBaseLength := fineCoordinatesPerTileSide
 	tileBaseHalf := tileBaseLength / 2.0
 	camLimit := tilesPerMapSide*tileBaseLength - tileBaseHalf
-	zoomLevelMin := float32(-2)
-	zoomLevelMax := float32(4)
+	zoomLevelMin := float32(-5)
+	zoomLevelMax := float32(1)
 
 	display := &MapDisplay{
 		context:      context,
@@ -52,7 +51,9 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 		camera:       camera.NewLimited(zoomLevelMin, zoomLevelMax, -tileBaseHalf, camLimit),
 		moveCapture:  func(float32, float32) {}}
 
-	display.camera.MoveTo(float32(tilesPerMapSide*tileBaseLength)/-2.0, float32(tilesPerMapSide*tileBaseLength)/-2.0)
+	centerX, centerY := float32(tilesPerMapSide*tileBaseLength)/-2.0, float32(tilesPerMapSide*tileBaseLength)/-2.0
+	display.camera.ZoomAt(-3, centerX, centerY)
+	display.camera.MoveTo(centerX, centerY)
 
 	{
 		builder := ui.NewAreaBuilder()

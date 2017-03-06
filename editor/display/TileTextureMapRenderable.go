@@ -119,11 +119,11 @@ func NewTileTextureMapRenderable(context *graphics.RenderContext, paletteTexture
 		bitmapUniform:           gl.GetUniformLocation(program, "bitmap"),
 		paletteTexture:          paletteTexture,
 		textureQuery:            textureQuery,
-		tiles:                   make([][]*model.TileProperties, 64),
+		tiles:                   make([][]*model.TileProperties, int(tilesPerMapSide)),
 		lastTileType:            model.Solid}
 
-	for i := 0; i < 64; i++ {
-		renderable.tiles[i] = make([]*model.TileProperties, 64)
+	for i := 0; i < len(renderable.tiles); i++ {
+		renderable.tiles[i] = make([]*model.TileProperties, int(tilesPerMapSide))
 	}
 	renderable.vao.WithSetter(func(gl opengl.OpenGl) {
 		gl.EnableVertexAttribArray(uint32(renderable.vertexPositionAttrib))
@@ -174,13 +174,13 @@ func (renderable *TileTextureMapRenderable) Render() {
 		textureUnit = 1
 		gl.ActiveTexture(opengl.TEXTURE0 + uint32(textureUnit))
 
-		scaling := mgl.Scale3D(32.0, 32.0, 1.0)
+		scaling := mgl.Scale3D(fineCoordinatesPerTileSide, fineCoordinatesPerTileSide, 1.0)
 		for y, row := range renderable.tiles {
 			for x, tile := range row {
 				if tile != nil && *tile.Type != model.Solid && tile.RealWorld != nil {
 					texture := renderable.textureQuery(*tile.RealWorld.FloorTexture)
 					if texture != nil {
-						modelMatrix := mgl.Translate3D(float32(x)*32.0, float32(y)*32.0, 0.0).
+						modelMatrix := mgl.Translate3D(float32(x)*fineCoordinatesPerTileSide, float32(y)*fineCoordinatesPerTileSide, 0.0).
 							Mul4(scaling)
 
 						uvMatrix := uvRotations[*tile.RealWorld.FloorTextureRotations]

@@ -179,16 +179,19 @@ func (renderable *PlacedIconsRenderable) Render(icons []PlacedIcon) {
 
 func (renderable *PlacedIconsRenderable) limitedSize(texture *graphics.BitmapTexture) (width, height float32) {
 	width, height = texture.Size()
+	referenceSize := float32(16.0)
 	larger := width
 
 	if larger < height {
 		larger = height
 	}
-	if larger > 16.0 {
-		ratio := 16.0 / larger
+	if larger > referenceSize {
+		ratio := referenceSize / larger
 		width *= ratio
 		height *= ratio
 	}
+	width *= (iconSize / referenceSize)
+	height *= (iconSize / referenceSize)
 
 	return
 }

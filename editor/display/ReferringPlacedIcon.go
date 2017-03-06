@@ -18,5 +18,5 @@ func (icon *referringPlacedIcon) Texture() *graphics.BitmapTexture {
 }
 
 func (icon *referringPlacedIcon) Size() (width, height float32) {
-	return 16.0, 16.0
+	return iconSize, iconSize
 }

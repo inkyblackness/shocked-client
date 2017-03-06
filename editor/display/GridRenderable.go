@@ -48,10 +48,10 @@ var gridFragmentShaderSource = `
   }
 
   void main(void) {
-    float alphaX = nearGrid(32.0, originalPosition.x);
-    float alphaY = nearGrid(32.0, originalPosition.y);
-    bool beyondX = (originalPosition.x / 32.0) >= 64.0 || (originalPosition.x < 0.0);
-    bool beyondY = (originalPosition.y / 32.0) >= 64.0 || (originalPosition.y < 0.0);
+    float alphaX = nearGrid(256.0, originalPosition.x);
+    float alphaY = nearGrid(256.0, originalPosition.y);
+    bool beyondX = (originalPosition.x / 256.0) >= 64.0 || (originalPosition.x < 0.0);
+    bool beyondY = (originalPosition.y / 256.0) >= 64.0 || (originalPosition.y < 0.0);
     float alpha = 0.0;
 
     if (!beyondX && !beyondY) {
@@ -109,8 +109,8 @@ func NewGridRenderable(context *graphics.RenderContext) *GridRenderable {
 
 	{
 		gl.BindBuffer(opengl.ARRAY_BUFFER, renderable.vertexPositionBuffer)
-		half := float32(16.0)
-		limit := float32(32.0*64.0 + half)
+		half := fineCoordinatesPerTileSide / float32(2.0)
+		limit := float32(fineCoordinatesPerTileSide*tilesPerMapSide + half)
 		var vertices = []float32{
 			-half, -half, 0.0,
 			limit, -half, 0.0,

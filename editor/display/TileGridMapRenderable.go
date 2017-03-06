@@ -75,10 +75,10 @@ func NewTileGridMapRenderable(context *graphics.RenderContext) *TileGridMapRende
 		viewMatrixUniform:       opengl.Matrix4Uniform(gl.GetUniformLocation(program, "viewMatrix")),
 		projectionMatrixUniform: opengl.Matrix4Uniform(gl.GetUniformLocation(program, "projectionMatrix")),
 
-		tiles: make([][]*model.TileProperties, 64)}
+		tiles: make([][]*model.TileProperties, int(tilesPerMapSide))}
 
-	for i := 0; i < 64; i++ {
-		renderable.tiles[i] = make([]*model.TileProperties, 64)
+	for i := 0; i < len(renderable.tiles); i++ {
+		renderable.tiles[i] = make([]*model.TileProperties, int(tilesPerMapSide))
 	}
 
 	renderable.vao.WithSetter(func(gl opengl.OpenGl) {
@@ -125,10 +125,10 @@ func (renderable *TileGridMapRenderable) Render() {
 		for y, row := range renderable.tiles {
 			for x, tile := range row {
 				if tile != nil {
-					left := float32(x) * 32.0
-					right := left + 32.0
-					top := float32(y) * 32.0
-					bottom := top + 32.0
+					left := float32(x) * fineCoordinatesPerTileSide
+					right := left + fineCoordinatesPerTileSide
+					top := float32(y) * fineCoordinatesPerTileSide
+					bottom := top + fineCoordinatesPerTileSide
 
 					vertices := make([]float32, 0, 6*2*3)
 

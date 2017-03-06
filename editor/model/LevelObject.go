@@ -38,8 +38,8 @@ func (obj *LevelObject) ClassData() []int {
 
 // Center returns the location of the object within the map
 func (obj *LevelObject) Center() (x, y float32) {
-	x = (float32(obj.data.BaseProperties.TileX) + (float32(obj.data.BaseProperties.FineX) / float32(0xFF))) * 32.0
-	y = (float32(63-obj.data.BaseProperties.TileY) + (float32(0xFF-obj.data.BaseProperties.FineY) / float32(0xFF))) * 32.0
+	x = (float32(obj.data.BaseProperties.TileX) * 256.0) + float32(obj.data.BaseProperties.FineX)
+	y = (float32(63-obj.data.BaseProperties.TileY) * 256.0) + float32(0xFF-obj.data.BaseProperties.FineY)
 
 	return
 }
