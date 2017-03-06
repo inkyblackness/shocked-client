@@ -33,6 +33,7 @@ type MapDisplay struct {
 
 	displayedObjectAreas  []Area
 	displayedObjectIcons  []PlacedIcon
+	selectedObjectAreas   []Area
 	highlightedObjectArea Area
 	highlightedObjectIcon PlacedIcon
 
@@ -138,6 +139,16 @@ func (display *MapDisplay) SetDisplayedObjects(objects []*model.LevelObject) {
 	}
 }
 
+// SetSelectedObjects requests to show the given set of objects as selected.
+func (display *MapDisplay) SetSelectedObjects(objects []*model.LevelObject) {
+	display.selectedObjectAreas = make([]Area, len(objects))
+
+	for index, object := range objects {
+		icon := display.iconForObject(object)
+		display.selectedObjectAreas[index] = icon
+	}
+}
+
 // SetHighlightedObject registers an object that shall be highlighted.
 func (display *MapDisplay) SetHighlightedObject(object *model.LevelObject) {
 	// TODO: In some future update (past 1.8), see if it still crashes if
@@ -169,6 +180,7 @@ func (display *MapDisplay) render() {
 	}
 	display.mapGrid.Render()
 	display.highlighter.Render(display.displayedObjectAreas, graphics.RGBA(1.0, 1.0, 1.0, 0.3))
+	display.highlighter.Render(display.selectedObjectAreas, graphics.RGBA(0.0, 0.8, 0.2, 0.5))
 	if display.highlightedObjectArea != nil {
 		display.highlighter.Render([]Area{display.highlightedObjectArea}, graphics.RGBA(0.0, 0.2, 0.8, 0.3))
 	}

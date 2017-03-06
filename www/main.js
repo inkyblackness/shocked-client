@@ -31402,7 +31402,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		this.viewMatrixUniform = viewMatrixUniform_;
 		this.projectionMatrixUniform = projectionMatrixUniform_;
 	});
-	MapDisplay = $pkg.MapDisplay = $newType(0, $kindStruct, "display.MapDisplay", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(context_, levelAdapter_, area_, camera_, viewMatrix_, renderContext_, paletteTexture_, highlighter_, background_, mapGrid_, textures_, objects_, displayedObjectAreas_, displayedObjectIcons_, highlightedObjectArea_, highlightedObjectIcon_, moveCapture_) {
+	MapDisplay = $pkg.MapDisplay = $newType(0, $kindStruct, "display.MapDisplay", true, "github.com/inkyblackness/shocked-client/editor/display", true, function(context_, levelAdapter_, area_, camera_, viewMatrix_, renderContext_, paletteTexture_, highlighter_, background_, mapGrid_, textures_, objects_, displayedObjectAreas_, displayedObjectIcons_, selectedObjectAreas_, highlightedObjectArea_, highlightedObjectIcon_, moveCapture_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.context = $ifaceNil;
@@ -31419,6 +31419,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 			this.objects = ptrType$10.nil;
 			this.displayedObjectAreas = sliceType$3.nil;
 			this.displayedObjectIcons = sliceType$4.nil;
+			this.selectedObjectAreas = sliceType$3.nil;
 			this.highlightedObjectArea = $ifaceNil;
 			this.highlightedObjectIcon = $ifaceNil;
 			this.moveCapture = $throwNilPointerError;
@@ -31438,6 +31439,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		this.objects = objects_;
 		this.displayedObjectAreas = displayedObjectAreas_;
 		this.displayedObjectIcons = displayedObjectIcons_;
+		this.selectedObjectAreas = selectedObjectAreas_;
 		this.highlightedObjectArea = highlightedObjectArea_;
 		this.highlightedObjectIcon = highlightedObjectIcon_;
 		this.moveCapture = moveCapture_;
@@ -31779,7 +31781,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		zoomLevelMax = 1;
 		_r = context.ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r$1 = _r.ActiveLevel(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		display[0] = new MapDisplay.ptr(context, _r$1, ptrType$5.nil, camera.NewLimited(zoomLevelMin, zoomLevelMax, -tileBaseHalf, camLimit), arrayType.zero(), ptrType.nil, ptrType$7.nil, ptrType$2.nil, ptrType$3.nil, ptrType$8.nil, ptrType$9.nil, ptrType$10.nil, sliceType$3.nil, sliceType$4.nil, $ifaceNil, $ifaceNil, (function(display) { return function(param, param$1) {
+		display[0] = new MapDisplay.ptr(context, _r$1, ptrType$5.nil, camera.NewLimited(zoomLevelMin, zoomLevelMax, -tileBaseHalf, camLimit), arrayType.zero(), ptrType.nil, ptrType$7.nil, ptrType$2.nil, ptrType$3.nil, ptrType$8.nil, ptrType$9.nil, ptrType$10.nil, sliceType$3.nil, sliceType$4.nil, sliceType$3.nil, $ifaceNil, $ifaceNil, (function(display) { return function(param, param$1) {
 			var $ptr, param, param$1;
 		}; })(display));
 		_tmp = $fround($fround(64 * tileBaseLength) / -2);
@@ -31913,6 +31915,22 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		}
 	};
 	MapDisplay.prototype.SetDisplayedObjects = function(objects) { return this.$val.SetDisplayedObjects(objects); };
+	MapDisplay.ptr.prototype.SetSelectedObjects = function(objects) {
+		var $ptr, _i, _ref, display, icon, index, object, objects, x;
+		display = this;
+		display.selectedObjectAreas = $makeSlice(sliceType$3, objects.$length);
+		_ref = objects;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			index = _i;
+			object = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			icon = display.iconForObject(object);
+			(x = display.selectedObjectAreas, ((index < 0 || index >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + index] = icon));
+			_i++;
+		}
+	};
+	MapDisplay.prototype.SetSelectedObjects = function(objects) { return this.$val.SetSelectedObjects(objects); };
 	MapDisplay.ptr.prototype.SetHighlightedObject = function(object) {
 		var $ptr, display, icon, object;
 		display = this;
@@ -31961,17 +31979,18 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 		/* } */ case 6:
 		$r = display.mapGrid.Render(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = display.highlighter.Render(display.displayedObjectAreas, graphics.RGBA(1, 1, 1, 0.30000001192092896)); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ if (!($interfaceIsEqual(display.highlightedObjectArea, $ifaceNil))) { $s = 10; continue; }
-		/* */ $s = 11; continue;
-		/* if (!($interfaceIsEqual(display.highlightedObjectArea, $ifaceNil))) { */ case 10:
-			$r = display.highlighter.Render(new sliceType$3([display.highlightedObjectArea]), graphics.RGBA(0, 0.20000000298023224, 0.800000011920929, 0.30000001192092896)); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* } */ case 11:
-		$r = display.objects.Render(display.displayedObjectIcons); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ if (!($interfaceIsEqual(display.highlightedObjectIcon, $ifaceNil))) { $s = 14; continue; }
-		/* */ $s = 15; continue;
-		/* if (!($interfaceIsEqual(display.highlightedObjectIcon, $ifaceNil))) { */ case 14:
-			$r = display.objects.Render(new sliceType$4([display.highlightedObjectIcon])); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* } */ case 15:
+		$r = display.highlighter.Render(display.selectedObjectAreas, graphics.RGBA(0, 0.800000011920929, 0.20000000298023224, 0.5)); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ if (!($interfaceIsEqual(display.highlightedObjectArea, $ifaceNil))) { $s = 11; continue; }
+		/* */ $s = 12; continue;
+		/* if (!($interfaceIsEqual(display.highlightedObjectArea, $ifaceNil))) { */ case 11:
+			$r = display.highlighter.Render(new sliceType$3([display.highlightedObjectArea]), graphics.RGBA(0, 0.20000000298023224, 0.800000011920929, 0.30000001192092896)); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 12:
+		$r = display.objects.Render(display.displayedObjectIcons); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ if (!($interfaceIsEqual(display.highlightedObjectIcon, $ifaceNil))) { $s = 15; continue; }
+		/* */ $s = 16; continue;
+		/* if (!($interfaceIsEqual(display.highlightedObjectIcon, $ifaceNil))) { */ case 15:
+			$r = display.objects.Render(new sliceType$4([display.highlightedObjectIcon])); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 16:
 		$s = -1; return;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: MapDisplay.ptr.prototype.render }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f.display = display; $f.root = root; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -32633,7 +32652,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 	TileTextureMapRenderable.prototype.ensureTileType = function(tileType) { return this.$val.ensureTileType(tileType); };
 	ptrType$2.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([sliceType$3, graphics.Color], [], false)}];
 	ptrType$3.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}];
-	ptrType$21.methods = [{prop: "paletteEntry", name: "paletteEntry", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([$Int], [$Uint8, $Uint8, $Uint8, $Uint8], false)}, {prop: "SetVisible", name: "SetVisible", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "SetDisplayedObjects", name: "SetDisplayedObjects", pkg: "", typ: $funcType([sliceType$7], [], false)}, {prop: "SetHighlightedObject", name: "SetHighlightedObject", pkg: "", typ: $funcType([ptrType$11], [], false)}, {prop: "iconForObject", name: "iconForObject", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$11], [ptrType$20], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([], [], false)}, {prop: "WorldCoordinatesForPixel", name: "WorldCoordinatesForPixel", pkg: "", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}];
+	ptrType$21.methods = [{prop: "paletteEntry", name: "paletteEntry", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([$Int], [$Uint8, $Uint8, $Uint8, $Uint8], false)}, {prop: "SetVisible", name: "SetVisible", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "SetDisplayedObjects", name: "SetDisplayedObjects", pkg: "", typ: $funcType([sliceType$7], [], false)}, {prop: "SetSelectedObjects", name: "SetSelectedObjects", pkg: "", typ: $funcType([sliceType$7], [], false)}, {prop: "SetHighlightedObject", name: "SetHighlightedObject", pkg: "", typ: $funcType([ptrType$11], [], false)}, {prop: "iconForObject", name: "iconForObject", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$11], [ptrType$20], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([], [], false)}, {prop: "WorldCoordinatesForPixel", name: "WorldCoordinatesForPixel", pkg: "", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "unprojectPixel", name: "unprojectPixel", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([$Float32, $Float32], [$Float32, $Float32], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$5, events.Event], [$Bool], false)}];
 	ptrType$10.methods = [{prop: "Render", name: "Render", pkg: "", typ: $funcType([sliceType$4], [], false)}, {prop: "limitedSize", name: "limitedSize", pkg: "github.com/inkyblackness/shocked-client/editor/display", typ: $funcType([ptrType$15], [$Float32, $Float32], false)}];
 	ptrType$20.methods = [{prop: "Center", name: "Center", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}, {prop: "Texture", name: "Texture", pkg: "", typ: $funcType([], [ptrType$15], false)}, {prop: "Size", name: "Size", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}];
 	ptrType$8.methods = [{prop: "Dispose", name: "Dispose", pkg: "", typ: $funcType([], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$Int, $Int, ptrType$16], [], false)}, {prop: "Clear", name: "Clear", pkg: "", typ: $funcType([], [], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([], [], false)}];
@@ -32642,7 +32661,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/display"] = (function(
 	BasicHighlighter.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: ptrType, tag: ""}, {prop: "program", name: "program", exported: false, typ: $Uint32, tag: ""}, {prop: "vao", name: "vao", exported: false, typ: ptrType$1, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", exported: false, typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", exported: false, typ: $Int32, tag: ""}, {prop: "modelMatrixUniform", name: "modelMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "inColorUniform", name: "inColorUniform", exported: false, typ: opengl.Vector4Uniform, tag: ""}]);
 	Context.init([{prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$19], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$18], [ptrType], false)}]);
 	GridRenderable.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: ptrType, tag: ""}, {prop: "program", name: "program", exported: false, typ: $Uint32, tag: ""}, {prop: "vao", name: "vao", exported: false, typ: ptrType$1, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", exported: false, typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", exported: false, typ: $Int32, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}]);
-	MapDisplay.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$4, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType$5, tag: ""}, {prop: "camera", name: "camera", exported: false, typ: ptrType$6, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "renderContext", name: "renderContext", exported: false, typ: ptrType, tag: ""}, {prop: "paletteTexture", name: "paletteTexture", exported: false, typ: ptrType$7, tag: ""}, {prop: "highlighter", name: "highlighter", exported: false, typ: ptrType$2, tag: ""}, {prop: "background", name: "background", exported: false, typ: ptrType$3, tag: ""}, {prop: "mapGrid", name: "mapGrid", exported: false, typ: ptrType$8, tag: ""}, {prop: "textures", name: "textures", exported: false, typ: ptrType$9, tag: ""}, {prop: "objects", name: "objects", exported: false, typ: ptrType$10, tag: ""}, {prop: "displayedObjectAreas", name: "displayedObjectAreas", exported: false, typ: sliceType$3, tag: ""}, {prop: "displayedObjectIcons", name: "displayedObjectIcons", exported: false, typ: sliceType$4, tag: ""}, {prop: "highlightedObjectArea", name: "highlightedObjectArea", exported: false, typ: Area, tag: ""}, {prop: "highlightedObjectIcon", name: "highlightedObjectIcon", exported: false, typ: PlacedIcon, tag: ""}, {prop: "moveCapture", name: "moveCapture", exported: false, typ: funcType, tag: ""}]);
+	MapDisplay.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$4, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType$5, tag: ""}, {prop: "camera", name: "camera", exported: false, typ: ptrType$6, tag: ""}, {prop: "viewMatrix", name: "viewMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "renderContext", name: "renderContext", exported: false, typ: ptrType, tag: ""}, {prop: "paletteTexture", name: "paletteTexture", exported: false, typ: ptrType$7, tag: ""}, {prop: "highlighter", name: "highlighter", exported: false, typ: ptrType$2, tag: ""}, {prop: "background", name: "background", exported: false, typ: ptrType$3, tag: ""}, {prop: "mapGrid", name: "mapGrid", exported: false, typ: ptrType$8, tag: ""}, {prop: "textures", name: "textures", exported: false, typ: ptrType$9, tag: ""}, {prop: "objects", name: "objects", exported: false, typ: ptrType$10, tag: ""}, {prop: "displayedObjectAreas", name: "displayedObjectAreas", exported: false, typ: sliceType$3, tag: ""}, {prop: "displayedObjectIcons", name: "displayedObjectIcons", exported: false, typ: sliceType$4, tag: ""}, {prop: "selectedObjectAreas", name: "selectedObjectAreas", exported: false, typ: sliceType$3, tag: ""}, {prop: "highlightedObjectArea", name: "highlightedObjectArea", exported: false, typ: Area, tag: ""}, {prop: "highlightedObjectIcon", name: "highlightedObjectIcon", exported: false, typ: PlacedIcon, tag: ""}, {prop: "moveCapture", name: "moveCapture", exported: false, typ: funcType, tag: ""}]);
 	PlacedIcon.init([{prop: "Center", name: "Center", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}, {prop: "Texture", name: "Texture", pkg: "", typ: $funcType([], [ptrType$15], false)}]);
 	PlacedIconsRenderable.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "context", name: "context", exported: false, typ: ptrType, tag: ""}, {prop: "program", name: "program", exported: false, typ: $Uint32, tag: ""}, {prop: "vao", name: "vao", exported: false, typ: ptrType$1, tag: ""}, {prop: "vertexPositionBuffer", name: "vertexPositionBuffer", exported: false, typ: $Uint32, tag: ""}, {prop: "vertexPositionAttrib", name: "vertexPositionAttrib", exported: false, typ: $Int32, tag: ""}, {prop: "uvPositionBuffer", name: "uvPositionBuffer", exported: false, typ: $Uint32, tag: ""}, {prop: "uvPositionAttrib", name: "uvPositionAttrib", exported: false, typ: $Int32, tag: ""}, {prop: "modelMatrixUniform", name: "modelMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "viewMatrixUniform", name: "viewMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "projectionMatrixUniform", name: "projectionMatrixUniform", exported: false, typ: opengl.Matrix4Uniform, tag: ""}, {prop: "paletteUniform", name: "paletteUniform", exported: false, typ: $Int32, tag: ""}, {prop: "bitmapUniform", name: "bitmapUniform", exported: false, typ: $Int32, tag: ""}, {prop: "paletteTexture", name: "paletteTexture", exported: false, typ: graphics.Texture, tag: ""}]);
 	referringPlacedIcon.init("github.com/inkyblackness/shocked-client/editor/display", [{prop: "center", name: "center", exported: false, typ: funcType$1, tag: ""}, {prop: "texture", name: "texture", exported: false, typ: funcType$2, tag: ""}]);
@@ -33751,7 +33770,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.tileTypeLabel = tileTypeLabel_;
 		this.tileTypeBox = tileTypeBox_;
 	});
-	LevelObjectsMode = $pkg.LevelObjectsMode = $newType(0, $kindStruct, "modes.LevelObjectsMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, levelAdapter_, objectsAdapter_, displayFilter_, displayedObjects_, mapDisplay_, area_, panel_, panelRight_, tileTypeLabel_, tileTypeBox_, closestObjects_, closestObjectHighlightIndex_) {
+	LevelObjectsMode = $pkg.LevelObjectsMode = $newType(0, $kindStruct, "modes.LevelObjectsMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, levelAdapter_, objectsAdapter_, displayFilter_, displayedObjects_, mapDisplay_, area_, panel_, panelRight_, tileTypeLabel_, tileTypeBox_, closestObjects_, closestObjectHighlightIndex_, selectedObjects_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.context = $ifaceNil;
@@ -33767,6 +33786,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			this.tileTypeBox = ptrType$2.nil;
 			this.closestObjects = sliceType$1.nil;
 			this.closestObjectHighlightIndex = 0;
+			this.selectedObjects = sliceType$1.nil;
 			return;
 		}
 		this.context = context_;
@@ -33782,6 +33802,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.tileTypeBox = tileTypeBox_;
 		this.closestObjects = closestObjects_;
 		this.closestObjectHighlightIndex = closestObjectHighlightIndex_;
+		this.selectedObjects = selectedObjects_;
 	});
 	WelcomeMode = $pkg.WelcomeMode = $newType(0, $kindStruct, "modes.WelcomeMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, infoArea_, infoLabel_) {
 		this.$val = this;
@@ -34034,7 +34055,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		mode[0] = new LevelObjectsMode.ptr(context[0], _r$1, _r$3, (function(context, lastGrabX, mode) { return function(param) {
 			var $ptr, param;
 			return true;
-		}; })(context, lastGrabX, mode), sliceType$1.nil, mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, ptrType$1.nil, ptrType$2.nil, sliceType$1.nil, 0);
+		}; })(context, lastGrabX, mode), sliceType$1.nil, mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, ptrType$1.nil, ptrType$2.nil, sliceType$1.nil, 0, sliceType$1.nil);
 		builder = ui.NewAreaBuilder();
 		builder.SetParent(parent);
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0));
@@ -34044,6 +34065,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		builder.SetVisible(false);
 		builder.OnEvent("mouse.move", $methodVal(mode[0], "onMouseMoved"));
 		builder.OnEvent("mouse.scroll", $methodVal(mode[0], "onMouseScrolled"));
+		builder.OnEvent("mouse.button.clicked", $methodVal(mode[0], "onMouseButtonClicked"));
 		mode[0].area = builder.Build();
 		minRight = ui.NewOffsetAnchor(mode[0].area.Left(), 100);
 		maxRight = ui.NewRelativeAnchor(mode[0].area.Left(), mode[0].area.Right(), 0.5);
@@ -34123,9 +34145,12 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		/* */ $s = 2; continue;
 		/* if (active) { */ case 1:
 			$r = mode.updateDisplayedObjects(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			mode.onSelectedObjectsChanged();
 			$s = 3; continue;
 		/* } else { */ case 2:
 			mode.mapDisplay.SetDisplayedObjects(sliceType$1.nil);
+			mode.mapDisplay.SetHighlightedObject(ptrType$8.nil);
+			mode.mapDisplay.SetSelectedObjects(sliceType$1.nil);
 		/* } */ case 3:
 		mode.area.SetVisible(active);
 		mode.mapDisplay.SetVisible(active);
@@ -34198,6 +34223,25 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		return consumed;
 	};
 	LevelObjectsMode.prototype.onMouseScrolled = function(area, event) { return this.$val.onMouseScrolled(area, event); };
+	LevelObjectsMode.ptr.prototype.onMouseButtonClicked = function(area, event) {
+		var $ptr, area, consumed, event, mode, mouseEvent, object, x, x$1;
+		consumed = false;
+		mode = this;
+		mouseEvent = $assertType(event, ptrType$4);
+		if (mouseEvent.AffectedButtons() === 1) {
+			if (mode.closestObjects.$length > 0) {
+				object = (x = mode.closestObjects, x$1 = mode.closestObjectHighlightIndex, ((x$1 < 0 || x$1 >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + x$1]));
+				if ((mouseEvent.MouseEvent.Modifier() >>> 0) === 2) {
+					mode.toggleSelectedObject(object);
+				} else {
+					mode.setSelectedObjects(new sliceType$1([object]));
+				}
+			}
+			consumed = true;
+		}
+		return consumed;
+	};
+	LevelObjectsMode.prototype.onMouseButtonClicked = function(area, event) { return this.$val.onMouseButtonClicked(area, event); };
 	LevelObjectsMode.ptr.prototype.updateClosestDisplayedObjects = function(worldX, worldY) {
 		var $ptr, _i, _i$1, _ref, _ref$1, _tuple, delta, entries, entry, index, len, limit, mode, object, otherPoint, otherX, otherY, refPoint, worldX, worldY, x, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _i$1 = $f._i$1; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; delta = $f.delta; entries = $f.entries; entry = $f.entry; index = $f.index; len = $f.len; limit = $f.limit; mode = $f.mode; object = $f.object; otherPoint = $f.otherPoint; otherX = $f.otherX; otherY = $f.otherY; refPoint = $f.refPoint; worldX = $f.worldX; worldY = $f.worldY; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -34252,6 +34296,42 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		}
 	};
 	LevelObjectsMode.prototype.updateClosestObjectHighlight = function() { return this.$val.updateClosestObjectHighlight(); };
+	LevelObjectsMode.ptr.prototype.setSelectedObjects = function(objects) {
+		var $ptr, mode, objects;
+		mode = this;
+		mode.selectedObjects = objects;
+		mode.onSelectedObjectsChanged();
+	};
+	LevelObjectsMode.prototype.setSelectedObjects = function(objects) { return this.$val.setSelectedObjects(objects); };
+	LevelObjectsMode.ptr.prototype.toggleSelectedObject = function(object) {
+		var $ptr, _i, _ref, mode, newList, object, other, wasSelected;
+		mode = this;
+		newList = new sliceType$1([]);
+		wasSelected = false;
+		_ref = mode.selectedObjects;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			other = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			if (!((other.Index() === object.Index()))) {
+				newList = $append(newList, other);
+			} else {
+				wasSelected = true;
+			}
+			_i++;
+		}
+		if (!wasSelected) {
+			newList = $append(newList, object);
+		}
+		mode.setSelectedObjects(newList);
+	};
+	LevelObjectsMode.prototype.toggleSelectedObject = function(object) { return this.$val.toggleSelectedObject(object); };
+	LevelObjectsMode.ptr.prototype.onSelectedObjectsChanged = function() {
+		var $ptr, mode;
+		mode = this;
+		mode.mapDisplay.SetSelectedObjects(mode.selectedObjects);
+	};
+	LevelObjectsMode.prototype.onSelectedObjectsChanged = function() { return this.$val.onSelectedObjectsChanged(); };
 	NewWelcomeMode = function(context, parent) {
 		var $ptr, _r, _r$1, _r$2, builder, builder$1, context, horizontalCenter, mode, parent, verticalCenter, welcomeText, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; builder = $f.builder; builder$1 = $f.builder$1; context = $f.context; horizontalCenter = $f.horizontalCenter; mode = $f.mode; parent = $f.parent; verticalCenter = $f.verticalCenter; welcomeText = $f.welcomeText; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -34311,12 +34391,12 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	WelcomeMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
 	ptrType$14.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
 	ptrType$15.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
-	ptrType$16.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "onLevelObjectsChanged", name: "onLevelObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "updateDisplayedObjects", name: "updateDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseScrolled", name: "onMouseScrolled", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "updateClosestDisplayedObjects", name: "updateClosestDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "updateClosestObjectHighlight", name: "updateClosestObjectHighlight", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}];
+	ptrType$16.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "onLevelObjectsChanged", name: "onLevelObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "updateDisplayedObjects", name: "updateDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseScrolled", name: "onMouseScrolled", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "updateClosestDisplayedObjects", name: "updateClosestDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "updateClosestObjectHighlight", name: "updateClosestObjectHighlight", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "setSelectedObjects", name: "setSelectedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$1], [], false)}, {prop: "toggleSelectedObject", name: "toggleSelectedObject", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType$8], [], false)}, {prop: "onSelectedObjectsChanged", name: "onSelectedObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}];
 	ptrType$17.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
 	Context.init([{prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$11], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$12], [ptrType$13], false)}]);
 	LevelControlMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "activeLevelLabel", name: "activeLevelLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "activeLevelBox", name: "activeLevelBox", exported: false, typ: ptrType$2, tag: ""}]);
 	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$3, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}]);
-	LevelObjectsMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$6, tag: ""}, {prop: "objectsAdapter", name: "objectsAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "displayFilter", name: "displayFilter", exported: false, typ: funcType, tag: ""}, {prop: "displayedObjects", name: "displayedObjects", exported: false, typ: sliceType$1, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$3, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "closestObjects", name: "closestObjects", exported: false, typ: sliceType$1, tag: ""}, {prop: "closestObjectHighlightIndex", name: "closestObjectHighlightIndex", exported: false, typ: $Int, tag: ""}]);
+	LevelObjectsMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$6, tag: ""}, {prop: "objectsAdapter", name: "objectsAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "displayFilter", name: "displayFilter", exported: false, typ: funcType, tag: ""}, {prop: "displayedObjects", name: "displayedObjects", exported: false, typ: sliceType$1, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$3, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "closestObjects", name: "closestObjects", exported: false, typ: sliceType$1, tag: ""}, {prop: "closestObjectHighlightIndex", name: "closestObjectHighlightIndex", exported: false, typ: $Int, tag: ""}, {prop: "selectedObjects", name: "selectedObjects", exported: false, typ: sliceType$1, tag: ""}]);
 	WelcomeMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "infoArea", name: "infoArea", exported: false, typ: ptrType, tag: ""}, {prop: "infoLabel", name: "infoLabel", exported: false, typ: ptrType$1, tag: ""}]);
 	resultEntry.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "distance", name: "distance", exported: false, typ: $Float32, tag: ""}, {prop: "object", name: "object", exported: false, typ: ptrType$8, tag: ""}]);
 	$init = function() {
@@ -34368,7 +34448,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	os = $packages["os"];
 	strconv = $packages["strconv"];
 	time = $packages["time"];
-	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", true, "github.com/inkyblackness/shocked-client/editor", true, function(lastElapsedTick_, elapsedMSec_, store_, modelAdapter_, glWindow_, windowWidth_, windowHeight_, gl_, projectionMatrix_, mouseX_, mouseY_, mouseButtons_, keyModifier_, rootArea_, defaultFontPainter_, uiTextPalette_, rectRenderer_, uiTextRenderer_, worldTextures_, gameObjectIcons_) {
+	MainApplication = $pkg.MainApplication = $newType(0, $kindStruct, "editor.MainApplication", true, "github.com/inkyblackness/shocked-client/editor", true, function(lastElapsedTick_, elapsedMSec_, store_, modelAdapter_, glWindow_, windowWidth_, windowHeight_, gl_, projectionMatrix_, mouseX_, mouseY_, mouseButtons_, mouseButtonsDragged_, keyModifier_, rootArea_, defaultFontPainter_, uiTextPalette_, rectRenderer_, uiTextRenderer_, worldTextures_, gameObjectIcons_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.lastElapsedTick = new time.Time.ptr(new $Int64(0, 0), 0, ptrType.nil);
@@ -34383,6 +34463,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 			this.mouseX = 0;
 			this.mouseY = 0;
 			this.mouseButtons = 0;
+			this.mouseButtonsDragged = 0;
 			this.keyModifier = 0;
 			this.rootArea = ptrType$2.nil;
 			this.defaultFontPainter = $ifaceNil;
@@ -34405,6 +34486,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		this.mouseX = mouseX_;
 		this.mouseY = mouseY_;
 		this.mouseButtons = mouseButtons_;
+		this.mouseButtonsDragged = mouseButtonsDragged_;
 		this.keyModifier = keyModifier_;
 		this.rootArea = rootArea_;
 		this.defaultFontPainter = defaultFontPainter_;
@@ -34521,7 +34603,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		var $ptr, _r, app, store, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; store = $f.store; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r = model$1.NewAdapter(store); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		app = new MainApplication.ptr($clone(time.Now(), time.Time), new $Int64(0, 0), store, _r, $ifaceNil, 0, 0, $ifaceNil, $clone(mgl32.Ident4(), mgl32.Mat4), 0, 0, 0, 0, ptrType$2.nil, graphics.NewBitmapTextPainter($clone(defaultFont, model.Font)), ptrType$3.nil, ptrType$4.nil, ptrType$5.nil, {}, ptrType$6.nil);
+		app = new MainApplication.ptr($clone(time.Now(), time.Time), new $Int64(0, 0), store, _r, $ifaceNil, 0, 0, $ifaceNil, $clone(mgl32.Ident4(), mgl32.Mat4), 0, 0, 0, 0, 0, ptrType$2.nil, graphics.NewBitmapTextPainter($clone(defaultFont, model.Font)), ptrType$3.nil, ptrType$4.nil, ptrType$5.nil, {}, ptrType$6.nil);
 		$s = -1; return app;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: NewMainApplication }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.store = store; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -34765,6 +34847,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		_tmp$1 = y;
 		app.mouseX = _tmp;
 		app.mouseY = _tmp$1;
+		app.mouseButtonsDragged = (app.mouseButtonsDragged | (app.mouseButtons)) >>> 0;
 		_r = app.rootArea.DispatchPositionalEvent(events.NewMouseMoveEvent(app.mouseX, app.mouseY, (app.keyModifier >>> 0), app.mouseButtons)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
 		$s = -1; return;
@@ -34776,6 +34859,7 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; modifier = $f.modifier; mouseButton = $f.mouseButton; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
 		app.mouseButtons = (app.mouseButtons | (mouseButton)) >>> 0;
+		app.mouseButtonsDragged = (app.mouseButtonsDragged & ((~mouseButton >>> 0))) >>> 0;
 		_r = app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent("mouse.button.down", app.mouseX, app.mouseY, (app.keyModifier >>> 0), app.mouseButtons, mouseButton)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
 		$s = -1; return;
@@ -34783,14 +34867,20 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 	};
 	MainApplication.prototype.onMouseButtonDown = function(mouseButton, modifier) { return this.$val.onMouseButtonDown(mouseButton, modifier); };
 	MainApplication.ptr.prototype.onMouseButtonUp = function(mouseButton, modifier) {
-		var $ptr, _r, app, modifier, mouseButton, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; app = $f.app; modifier = $f.modifier; mouseButton = $f.mouseButton; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _r, _r$1, app, modifier, mouseButton, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; app = $f.app; modifier = $f.modifier; mouseButton = $f.mouseButton; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		app = this;
 		app.mouseButtons = (app.mouseButtons & ((~mouseButton >>> 0))) >>> 0;
-		_r = app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent("mouse.button.up", app.mouseX, app.mouseY, (app.keyModifier >>> 0), app.mouseButtons, mouseButton)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r;
+		/* */ if ((((app.mouseButtonsDragged & mouseButton) >>> 0)) === 0) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if ((((app.mouseButtonsDragged & mouseButton) >>> 0)) === 0) { */ case 1:
+			_r = app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent("mouse.button.clicked", app.mouseX, app.mouseY, (app.keyModifier >>> 0), app.mouseButtons, mouseButton)); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r;
+		/* } */ case 2:
+		_r$1 = app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent("mouse.button.up", app.mouseX, app.mouseY, (app.keyModifier >>> 0), app.mouseButtons, mouseButton)); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1;
 		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseButtonUp }; } $f.$ptr = $ptr; $f._r = _r; $f.app = app; $f.modifier = modifier; $f.mouseButton = mouseButton; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MainApplication.ptr.prototype.onMouseButtonUp }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.app = app; $f.modifier = modifier; $f.mouseButton = mouseButton; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	MainApplication.prototype.onMouseButtonUp = function(mouseButton, modifier) { return this.$val.onMouseButtonUp(mouseButton, modifier); };
 	MainApplication.ptr.prototype.onMouseScroll = function(dx, dy) {
@@ -35415,11 +35505,11 @@ $packages["github.com/inkyblackness/shocked-client/editor"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: rootArea.ptr.prototype.setActiveMode }; } $f.$ptr = $ptr; $f._i = _i; $f._ref = _ref; $f.other = other; $f.root = root; $f.selector = selector; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	rootArea.prototype.setActiveMode = function(selector) { return this.$val.setActiveMode(selector); };
-	ptrType$30.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setWindow", name: "setWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setDebugOpenGl", name: "setDebugOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initOpenGl", name: "initOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initResources", name: "initResources", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initWorldTextureBuffer", name: "initWorldTextureBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([model.TextureSize], [], false)}, {prop: "initGameObjectIconsBuffer", name: "initGameObjectIconsBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initInterface", name: "initInterface", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onWindowResize", name: "onWindowResize", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int, $Int], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseClick", name: "onMouseClick", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onKey", name: "onKey", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Key, keys.Modifier], [], false)}, {prop: "onModifier", name: "onModifier", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onChar", name: "onChar", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32], [], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$23], [ptrType$24], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "RectangleRenderer", name: "RectangleRenderer", pkg: "", typ: $funcType([], [ptrType$4], false)}, {prop: "TextPainter", name: "TextPainter", pkg: "", typ: $funcType([], [graphics.TextPainter], false)}, {prop: "Texturize", name: "Texturize", pkg: "", typ: $funcType([ptrType$25], [ptrType$26], false)}, {prop: "UITextRenderer", name: "UITextRenderer", pkg: "", typ: $funcType([], [ptrType$5], false)}, {prop: "NewPaletteTexture", name: "NewPaletteTexture", pkg: "", typ: $funcType([graphics.ColorProvider], [ptrType$3], false)}, {prop: "WorldTextureStore", name: "WorldTextureStore", pkg: "", typ: $funcType([model.TextureSize], [ptrType$6], false)}, {prop: "GameObjectIconsStore", name: "GameObjectIconsStore", pkg: "", typ: $funcType([], [ptrType$6], false)}, {prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForLabel", name: "ForLabel", pkg: "", typ: $funcType([], [ptrType$27], false)}, {prop: "ForTextButton", name: "ForTextButton", pkg: "", typ: $funcType([], [ptrType$28], false)}, {prop: "ForComboBox", name: "ForComboBox", pkg: "", typ: $funcType([], [ptrType$29], false)}];
+	ptrType$30.methods = [{prop: "Init", name: "Init", pkg: "", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setWindow", name: "setWindow", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([env.OpenGlWindow], [], false)}, {prop: "setDebugOpenGl", name: "setDebugOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initOpenGl", name: "initOpenGl", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initResources", name: "initResources", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initWorldTextureBuffer", name: "initWorldTextureBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([model.TextureSize], [], false)}, {prop: "initGameObjectIconsBuffer", name: "initGameObjectIconsBuffer", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "initInterface", name: "initInterface", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "updateElapsedNano", name: "updateElapsedNano", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onWindowResize", name: "onWindowResize", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int, $Int], [], false)}, {prop: "render", name: "render", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([], [], false)}, {prop: "onMouseMove", name: "onMouseMove", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onMouseButtonDown", name: "onMouseButtonDown", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseButtonUp", name: "onMouseButtonUp", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Uint32, keys.Modifier], [], false)}, {prop: "onMouseScroll", name: "onMouseScroll", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "onKey", name: "onKey", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Key, keys.Modifier], [], false)}, {prop: "onModifier", name: "onModifier", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([keys.Modifier], [], false)}, {prop: "onChar", name: "onChar", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$Int32], [], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$23], [ptrType$24], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "RectangleRenderer", name: "RectangleRenderer", pkg: "", typ: $funcType([], [ptrType$4], false)}, {prop: "TextPainter", name: "TextPainter", pkg: "", typ: $funcType([], [graphics.TextPainter], false)}, {prop: "Texturize", name: "Texturize", pkg: "", typ: $funcType([ptrType$25], [ptrType$26], false)}, {prop: "UITextRenderer", name: "UITextRenderer", pkg: "", typ: $funcType([], [ptrType$5], false)}, {prop: "NewPaletteTexture", name: "NewPaletteTexture", pkg: "", typ: $funcType([graphics.ColorProvider], [ptrType$3], false)}, {prop: "WorldTextureStore", name: "WorldTextureStore", pkg: "", typ: $funcType([model.TextureSize], [ptrType$6], false)}, {prop: "GameObjectIconsStore", name: "GameObjectIconsStore", pkg: "", typ: $funcType([], [ptrType$6], false)}, {prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForLabel", name: "ForLabel", pkg: "", typ: $funcType([], [ptrType$27], false)}, {prop: "ForTextButton", name: "ForTextButton", pkg: "", typ: $funcType([], [ptrType$28], false)}, {prop: "ForComboBox", name: "ForComboBox", pkg: "", typ: $funcType([], [ptrType$29], false)}];
 	ptrType$34.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, funcType, model.FailureFunc], [], false)}, {prop: "put", name: "put", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType, model.FailureFunc], [], false)}, {prop: "post", name: "post", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([$String, $emptyInterface, $emptyInterface, funcType, model.FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType, model.FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$1, model.FailureFunc], [], false)}, {prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType$2, model.FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$3, model.FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$4, model.FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$5, model.FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$6, model.FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType, funcType$6, model.FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$7, model.FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$3, model.FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$8, model.FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$9, model.FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, model.TileProperties, funcType$9, model.FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, model.FailureFunc], [], false)}];
 	ptrType$17.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
 	ptrType$35.methods = [{prop: "addMode", name: "addMode", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([Mode, $String], [ptrType$17], false)}, {prop: "setActiveMode", name: "setActiveMode", pkg: "github.com/inkyblackness/shocked-client/editor", typ: $funcType([ptrType$17], [], false)}];
-	MainApplication.init("github.com/inkyblackness/shocked-client/editor", [{prop: "lastElapsedTick", name: "lastElapsedTick", exported: false, typ: time.Time, tag: ""}, {prop: "elapsedMSec", name: "elapsedMSec", exported: false, typ: $Int64, tag: ""}, {prop: "store", name: "store", exported: false, typ: model.DataStore, tag: ""}, {prop: "modelAdapter", name: "modelAdapter", exported: false, typ: ptrType$1, tag: ""}, {prop: "glWindow", name: "glWindow", exported: false, typ: env.OpenGlWindow, tag: ""}, {prop: "windowWidth", name: "windowWidth", exported: false, typ: $Float32, tag: ""}, {prop: "windowHeight", name: "windowHeight", exported: false, typ: $Float32, tag: ""}, {prop: "gl", name: "gl", exported: false, typ: opengl.OpenGl, tag: ""}, {prop: "projectionMatrix", name: "projectionMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "mouseX", name: "mouseX", exported: false, typ: $Float32, tag: ""}, {prop: "mouseY", name: "mouseY", exported: false, typ: $Float32, tag: ""}, {prop: "mouseButtons", name: "mouseButtons", exported: false, typ: $Uint32, tag: ""}, {prop: "keyModifier", name: "keyModifier", exported: false, typ: keys.Modifier, tag: ""}, {prop: "rootArea", name: "rootArea", exported: false, typ: ptrType$2, tag: ""}, {prop: "defaultFontPainter", name: "defaultFontPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "uiTextPalette", name: "uiTextPalette", exported: false, typ: ptrType$3, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$4, tag: ""}, {prop: "uiTextRenderer", name: "uiTextRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "worldTextures", name: "worldTextures", exported: false, typ: mapType, tag: ""}, {prop: "gameObjectIcons", name: "gameObjectIcons", exported: false, typ: ptrType$6, tag: ""}]);
+	MainApplication.init("github.com/inkyblackness/shocked-client/editor", [{prop: "lastElapsedTick", name: "lastElapsedTick", exported: false, typ: time.Time, tag: ""}, {prop: "elapsedMSec", name: "elapsedMSec", exported: false, typ: $Int64, tag: ""}, {prop: "store", name: "store", exported: false, typ: model.DataStore, tag: ""}, {prop: "modelAdapter", name: "modelAdapter", exported: false, typ: ptrType$1, tag: ""}, {prop: "glWindow", name: "glWindow", exported: false, typ: env.OpenGlWindow, tag: ""}, {prop: "windowWidth", name: "windowWidth", exported: false, typ: $Float32, tag: ""}, {prop: "windowHeight", name: "windowHeight", exported: false, typ: $Float32, tag: ""}, {prop: "gl", name: "gl", exported: false, typ: opengl.OpenGl, tag: ""}, {prop: "projectionMatrix", name: "projectionMatrix", exported: false, typ: mgl32.Mat4, tag: ""}, {prop: "mouseX", name: "mouseX", exported: false, typ: $Float32, tag: ""}, {prop: "mouseY", name: "mouseY", exported: false, typ: $Float32, tag: ""}, {prop: "mouseButtons", name: "mouseButtons", exported: false, typ: $Uint32, tag: ""}, {prop: "mouseButtonsDragged", name: "mouseButtonsDragged", exported: false, typ: $Uint32, tag: ""}, {prop: "keyModifier", name: "keyModifier", exported: false, typ: keys.Modifier, tag: ""}, {prop: "rootArea", name: "rootArea", exported: false, typ: ptrType$2, tag: ""}, {prop: "defaultFontPainter", name: "defaultFontPainter", exported: false, typ: graphics.TextPainter, tag: ""}, {prop: "uiTextPalette", name: "uiTextPalette", exported: false, typ: ptrType$3, tag: ""}, {prop: "rectRenderer", name: "rectRenderer", exported: false, typ: ptrType$4, tag: ""}, {prop: "uiTextRenderer", name: "uiTextRenderer", exported: false, typ: ptrType$5, tag: ""}, {prop: "worldTextures", name: "worldTextures", exported: false, typ: mapType, tag: ""}, {prop: "gameObjectIcons", name: "gameObjectIcons", exported: false, typ: ptrType$6, tag: ""}]);
 	Mode.init([{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}]);
 	RestDataStore.init("github.com/inkyblackness/shocked-client/editor", [{prop: "transport", name: "transport", exported: false, typ: RestTransport, tag: ""}]);
 	RestTransport.init([{prop: "Get", name: "Get", pkg: "", typ: $funcType([$String, funcType$11, funcType], [], false)}, {prop: "Post", name: "Post", pkg: "", typ: $funcType([$String, sliceType$13, funcType$11, funcType], [], false)}, {prop: "Put", name: "Put", pkg: "", typ: $funcType([$String, sliceType$13, funcType$11, funcType], [], false)}]);

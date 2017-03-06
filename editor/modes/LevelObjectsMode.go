@@ -35,6 +35,7 @@ type LevelObjectsMode struct {
 
 	closestObjects              []*model.LevelObject
 	closestObjectHighlightIndex int
+	selectedObjects             []*model.LevelObject
 }
 
 // NewLevelObjectsMode returns a new instance.
@@ -57,6 +58,7 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 		builder.SetVisible(false)
 		builder.OnEvent(events.MouseMoveEventType, mode.onMouseMoved)
 		builder.OnEvent(events.MouseScrollEventType, mode.onMouseScrolled)
+		builder.OnEvent(events.MouseButtonClickedEventType, mode.onMouseButtonClicked)
 		mode.area = builder.Build()
 	}
 	{
@@ -114,8 +116,11 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 func (mode *LevelObjectsMode) SetActive(active bool) {
 	if active {
 		mode.updateDisplayedObjects()
+		mode.onSelectedObjectsChanged()
 	} else {
 		mode.mapDisplay.SetDisplayedObjects(nil)
+		mode.mapDisplay.SetHighlightedObject(nil)
+		mode.mapDisplay.SetSelectedObjects(nil)
 	}
 	mode.area.SetVisible(active)
 	mode.mapDisplay.SetVisible(active)
@@ -168,6 +173,24 @@ func (mode *LevelObjectsMode) onMouseScrolled(area *ui.Area, event events.Event)
 	return
 }
 
+func (mode *LevelObjectsMode) onMouseButtonClicked(area *ui.Area, event events.Event) (consumed bool) {
+	mouseEvent := event.(*events.MouseButtonEvent)
+
+	if mouseEvent.AffectedButtons() == env.MousePrimary {
+		if len(mode.closestObjects) > 0 {
+			object := mode.closestObjects[mode.closestObjectHighlightIndex]
+			if keys.Modifier(mouseEvent.Modifier()) == keys.ModControl {
+				mode.toggleSelectedObject(object)
+			} else {
+				mode.setSelectedObjects([]*model.LevelObject{object})
+			}
+		}
+		consumed = true
+	}
+
+	return
+}
+
 func (mode *LevelObjectsMode) updateClosestDisplayedObjects(worldX, worldY float32) {
 	type resultEntry struct {
 		distance float32
@@ -202,4 +225,30 @@ func (mode *LevelObjectsMode) updateClosestObjectHighlight() {
 	} else {
 		mode.mapDisplay.SetHighlightedObject(nil)
 	}
+}
+
+func (mode *LevelObjectsMode) setSelectedObjects(objects []*model.LevelObject) {
+	mode.selectedObjects = objects
+	mode.onSelectedObjectsChanged()
+}
+
+func (mode *LevelObjectsMode) toggleSelectedObject(object *model.LevelObject) {
+	newList := []*model.LevelObject{}
+	wasSelected := false
+
+	for _, other := range mode.selectedObjects {
+		if other.Index() != object.Index() {
+			newList = append(newList, other)
+		} else {
+			wasSelected = true
+		}
+	}
+	if !wasSelected {
+		newList = append(newList, object)
+	}
+	mode.setSelectedObjects(newList)
+}
+
+func (mode *LevelObjectsMode) onSelectedObjectsChanged() {
+	mode.mapDisplay.SetSelectedObjects(mode.selectedObjects)
 }

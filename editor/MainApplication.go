@@ -31,9 +31,10 @@ type MainApplication struct {
 	gl                        opengl.OpenGl
 	projectionMatrix          mgl.Mat4
 
-	mouseX, mouseY float32
-	mouseButtons   uint32
-	keyModifier    keys.Modifier
+	mouseX, mouseY      float32
+	mouseButtons        uint32
+	mouseButtonsDragged uint32
+	keyModifier         keys.Modifier
 
 	rootArea           *ui.Area
 	defaultFontPainter graphics.TextPainter
@@ -218,18 +219,24 @@ func (app *MainApplication) render() {
 
 func (app *MainApplication) onMouseMove(x float32, y float32) {
 	app.mouseX, app.mouseY = x, y
+	app.mouseButtonsDragged |= app.mouseButtons
 	app.rootArea.DispatchPositionalEvent(events.NewMouseMoveEvent(
 		app.mouseX, app.mouseY, uint32(app.keyModifier), app.mouseButtons))
 }
 
 func (app *MainApplication) onMouseButtonDown(mouseButton uint32, modifier keys.Modifier) {
 	app.mouseButtons |= mouseButton
+	app.mouseButtonsDragged &= ^mouseButton
 	app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent(events.MouseButtonDownEventType,
 		app.mouseX, app.mouseY, uint32(app.keyModifier), app.mouseButtons, mouseButton))
 }
 
 func (app *MainApplication) onMouseButtonUp(mouseButton uint32, modifier keys.Modifier) {
 	app.mouseButtons &= ^mouseButton
+	if (app.mouseButtonsDragged & mouseButton) == 0 {
+		app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent(events.MouseButtonClickedEventType,
+			app.mouseX, app.mouseY, uint32(app.keyModifier), app.mouseButtons, mouseButton))
+	}
 	app.rootArea.DispatchPositionalEvent(events.NewMouseButtonEvent(events.MouseButtonUpEventType,
 		app.mouseX, app.mouseY, uint32(app.keyModifier), app.mouseButtons, mouseButton))
 }
@@ -237,9 +244,6 @@ func (app *MainApplication) onMouseButtonUp(mouseButton uint32, modifier keys.Mo
 func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 	app.rootArea.DispatchPositionalEvent(events.NewMouseScrollEvent(
 		app.mouseX, app.mouseY, uint32(app.keyModifier), app.mouseButtons, dx, dy))
-}
-
-func (app *MainApplication) onMouseClick(modifierMask keys.Modifier) {
 }
 
 func (app *MainApplication) onKey(key keys.Key, modifier keys.Modifier) {
