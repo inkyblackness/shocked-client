@@ -1,9 +1,14 @@
 package modes
 
 import (
+	"sort"
+
+	mgl "github.com/go-gl/mathgl/mgl32"
+
 	"github.com/inkyblackness/shocked-client/editor/display"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/env"
+	"github.com/inkyblackness/shocked-client/env/keys"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
@@ -16,7 +21,8 @@ type LevelObjectsMode struct {
 	levelAdapter   *model.LevelAdapter
 	objectsAdapter *model.ObjectsAdapter
 
-	displayFilter func(*model.LevelObject) bool
+	displayFilter    func(*model.LevelObject) bool
+	displayedObjects []*model.LevelObject
 
 	mapDisplay *display.MapDisplay
 
@@ -26,6 +32,9 @@ type LevelObjectsMode struct {
 
 	tileTypeLabel *controls.Label
 	tileTypeBox   *controls.ComboBox
+
+	closestObjects              []*model.LevelObject
+	closestObjectHighlightIndex int
 }
 
 // NewLevelObjectsMode returns a new instance.
@@ -46,6 +55,8 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 		builder.SetRight(ui.NewOffsetAnchor(parent.Right(), 0))
 		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0))
 		builder.SetVisible(false)
+		builder.OnEvent(events.MouseMoveEventType, mode.onMouseMoved)
+		builder.OnEvent(events.MouseScrollEventType, mode.onMouseScrolled)
 		mode.area = builder.Build()
 	}
 	{
@@ -115,6 +126,80 @@ func (mode *LevelObjectsMode) onLevelObjectsChanged() {
 }
 
 func (mode *LevelObjectsMode) updateDisplayedObjects() {
-	objects := mode.levelAdapter.LevelObjects(mode.displayFilter)
-	mode.mapDisplay.SetDisplayedObjects(objects)
+	mode.displayedObjects = mode.levelAdapter.LevelObjects(mode.displayFilter)
+	mode.mapDisplay.SetDisplayedObjects(mode.displayedObjects)
+
+	mode.closestObjects = nil
+	mode.closestObjectHighlightIndex = 0
+	mode.updateClosestObjectHighlight()
+}
+
+func (mode *LevelObjectsMode) onMouseMoved(area *ui.Area, event events.Event) (consumed bool) {
+	mouseEvent := event.(*events.MouseMoveEvent)
+
+	if mouseEvent.Buttons() == 0 {
+		worldX, worldY := mode.mapDisplay.WorldCoordinatesForPixel(mouseEvent.Position())
+		mode.updateClosestDisplayedObjects(worldX, worldY)
+		consumed = true
+	}
+
+	return
+}
+
+func (mode *LevelObjectsMode) onMouseScrolled(area *ui.Area, event events.Event) (consumed bool) {
+	mouseEvent := event.(*events.MouseScrollEvent)
+
+	if (mouseEvent.Buttons() == 0) && (keys.Modifier(mouseEvent.Modifier()) == keys.ModControl) {
+		available := len(mode.closestObjects)
+
+		if available > 1 {
+			_, dy := mouseEvent.Deltas()
+			delta := 1
+
+			if dy < 0 {
+				delta = -1
+			}
+			mode.closestObjectHighlightIndex = (available + mode.closestObjectHighlightIndex + delta) % available
+			mode.updateClosestObjectHighlight()
+		}
+		consumed = true
+	}
+
+	return
+}
+
+func (mode *LevelObjectsMode) updateClosestDisplayedObjects(worldX, worldY float32) {
+	type resultEntry struct {
+		distance float32
+		object   *model.LevelObject
+	}
+	entries := []*resultEntry{}
+	refPoint := mgl.Vec2{worldX, worldY}
+	limit := float32(48.0)
+
+	for _, object := range mode.displayedObjects {
+		otherX, otherY := object.Center()
+		otherPoint := mgl.Vec2{otherX, otherY}
+		delta := refPoint.Sub(otherPoint)
+		len := delta.Len()
+
+		if len <= limit {
+			entries = append(entries, &resultEntry{len, object})
+		}
+	}
+	sort.Slice(entries, func(a int, b int) bool { return entries[a].distance < entries[b].distance })
+	mode.closestObjects = make([]*model.LevelObject, len(entries))
+	for index, entry := range entries {
+		mode.closestObjects[index] = entry.object
+	}
+	mode.closestObjectHighlightIndex = 0
+	mode.updateClosestObjectHighlight()
+}
+
+func (mode *LevelObjectsMode) updateClosestObjectHighlight() {
+	if len(mode.closestObjects) > 0 {
+		mode.mapDisplay.SetHighlightedObject(mode.closestObjects[mode.closestObjectHighlightIndex])
+	} else {
+		mode.mapDisplay.SetHighlightedObject(nil)
+	}
 }

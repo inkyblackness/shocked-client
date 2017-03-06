@@ -54,7 +54,7 @@ type BasicHighlighter struct {
 }
 
 // NewBasicHighlighter returns a new instance of BasicHighlighter.
-func NewBasicHighlighter(context *graphics.RenderContext, color graphics.Color) *BasicHighlighter {
+func NewBasicHighlighter(context *graphics.RenderContext) *BasicHighlighter {
 	gl := context.OpenGl()
 	vertexShader, err1 := opengl.CompileNewShader(gl, opengl.VERTEX_SHADER, basicHighlighterVertexShaderSource)
 	defer gl.DeleteShader(vertexShader)
@@ -101,8 +101,6 @@ func NewBasicHighlighter(context *graphics.RenderContext, color graphics.Color) 
 		gl.BindBuffer(opengl.ARRAY_BUFFER, highlighter.vertexPositionBuffer)
 		gl.VertexAttribOffset(uint32(highlighter.vertexPositionAttrib), 3, opengl.FLOAT, false, 0, 0)
 		gl.BindBuffer(opengl.ARRAY_BUFFER, 0)
-
-		highlighter.inColorUniform.Set(gl, color.AsVector())
 	})
 
 	return highlighter
@@ -118,12 +116,13 @@ func (highlighter *BasicHighlighter) Dispose() {
 }
 
 // Render renders the highlights.
-func (highlighter *BasicHighlighter) Render(areas []Area) {
+func (highlighter *BasicHighlighter) Render(areas []Area, color graphics.Color) {
 	gl := highlighter.context.OpenGl()
 
 	highlighter.vao.OnShader(func() {
 		highlighter.viewMatrixUniform.Set(gl, highlighter.context.ViewMatrix())
 		highlighter.projectionMatrixUniform.Set(gl, highlighter.context.ProjectionMatrix())
+		highlighter.inColorUniform.Set(gl, color.AsVector())
 
 		for _, area := range areas {
 			x, y := area.Center()

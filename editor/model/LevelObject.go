@@ -8,8 +8,9 @@ import (
 
 // LevelObject describes one object within a level
 type LevelObject struct {
-	data  *model.LevelObject
-	index int
+	data             *model.LevelObject
+	centerX, centerY float32
+	index            int
 }
 
 func newLevelObject(data *model.LevelObject) *LevelObject {
@@ -17,6 +18,9 @@ func newLevelObject(data *model.LevelObject) *LevelObject {
 	obj := &LevelObject{
 		data:  data,
 		index: int(index)}
+
+	obj.centerX = float32((obj.data.BaseProperties.TileX << 8) + obj.data.BaseProperties.FineX)
+	obj.centerY = float32((obj.data.BaseProperties.TileY << 8) + obj.data.BaseProperties.FineY)
 
 	return obj
 }
@@ -38,8 +42,5 @@ func (obj *LevelObject) ClassData() []int {
 
 // Center returns the location of the object within the map
 func (obj *LevelObject) Center() (x, y float32) {
-	x = (float32(obj.data.BaseProperties.TileX) * 256.0) + float32(obj.data.BaseProperties.FineX)
-	y = (float32(obj.data.BaseProperties.TileY) * 256.0) + float32(obj.data.BaseProperties.FineY)
-
-	return
+	return obj.centerX, obj.centerY
 }
