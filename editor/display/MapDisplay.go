@@ -31,6 +31,9 @@ type MapDisplay struct {
 	textures    *TileTextureMapRenderable
 	objects     *PlacedIconsRenderable
 
+	selectedTileAreas   []Area
+	highlightedTileArea Area
+
 	displayedObjectAreas  []Area
 	displayedObjectIcons  []PlacedIcon
 	selectedObjectAreas   []Area
@@ -127,6 +130,27 @@ func (display *MapDisplay) SetVisible(visible bool) {
 	display.area.SetVisible(visible)
 }
 
+// SetHighlightedTile requests to highlight the identified tile.
+func (display *MapDisplay) SetHighlightedTile(coord model.TileCoordinate) {
+	tileX, tileY := coord.XY()
+	display.highlightedTileArea = NewSimpleArea(float32(tileX<<8+128), float32(tileY<<8+128), 256.0, 256.0)
+}
+
+// ClearHighlightedTile requests to remove any tile highlight.
+func (display *MapDisplay) ClearHighlightedTile() {
+	display.highlightedTileArea = nil
+}
+
+// SetSelectedTiles requests to show the given set of tiles as selected.
+func (display *MapDisplay) SetSelectedTiles(tiles []model.TileCoordinate) {
+	display.selectedTileAreas = make([]Area, len(tiles))
+
+	for index, coord := range tiles {
+		tileX, tileY := coord.XY()
+		display.selectedTileAreas[index] = NewSimpleArea(float32(tileX<<8+128), float32(tileY<<8+128), 256.0, 256.0)
+	}
+}
+
 // SetDisplayedObjects requests to show the given set of objects.
 func (display *MapDisplay) SetDisplayedObjects(objects []*model.LevelObject) {
 	display.displayedObjectIcons = make([]PlacedIcon, len(objects))
@@ -177,6 +201,10 @@ func (display *MapDisplay) render() {
 	display.background.Render()
 	if !display.levelAdapter.IsCyberspace() {
 		display.textures.Render()
+	}
+	display.highlighter.Render(display.selectedTileAreas, graphics.RGBA(0.0, 0.8, 0.2, 0.5))
+	if display.highlightedTileArea != nil {
+		display.highlighter.Render([]Area{display.highlightedTileArea}, graphics.RGBA(0.0, 0.2, 0.8, 0.3))
 	}
 	display.mapGrid.Render()
 	display.highlighter.Render(display.displayedObjectAreas, graphics.RGBA(1.0, 1.0, 1.0, 0.3))

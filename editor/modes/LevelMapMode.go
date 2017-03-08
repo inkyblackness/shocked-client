@@ -2,7 +2,9 @@ package modes
 
 import (
 	"github.com/inkyblackness/shocked-client/editor/display"
+	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/env"
+	"github.com/inkyblackness/shocked-client/env/keys"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
@@ -21,11 +23,15 @@ type LevelMapMode struct {
 
 	tileTypeLabel *controls.Label
 	tileTypeBox   *controls.ComboBox
+
+	selectedTiles []model.TileCoordinate
 }
 
 // NewLevelMapMode returns a new instance.
 func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDisplay) *LevelMapMode {
-	mode := &LevelMapMode{context: context, mapDisplay: mapDisplay}
+	mode := &LevelMapMode{
+		context:    context,
+		mapDisplay: mapDisplay}
 
 	{
 		builder := ui.NewAreaBuilder()
@@ -35,6 +41,8 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 		builder.SetRight(ui.NewOffsetAnchor(parent.Right(), 0))
 		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0))
 		builder.SetVisible(false)
+		builder.OnEvent(events.MouseMoveEventType, mode.onMouseMoved)
+		builder.OnEvent(events.MouseButtonClickedEventType, mode.onMouseButtonClicked)
 		mode.area = builder.Build()
 	}
 	{
@@ -88,6 +96,80 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 
 // SetActive implements the Mode interface.
 func (mode *LevelMapMode) SetActive(active bool) {
+	if active {
+		mode.mapDisplay.SetSelectedTiles(mode.selectedTiles)
+	} else {
+		mode.mapDisplay.ClearHighlightedTile()
+		mode.mapDisplay.SetSelectedTiles(nil)
+	}
 	mode.area.SetVisible(active)
 	mode.mapDisplay.SetVisible(active)
+}
+
+func (mode *LevelMapMode) onMouseMoved(area *ui.Area, event events.Event) (consumed bool) {
+	mouseEvent := event.(*events.MouseMoveEvent)
+
+	if mouseEvent.Buttons() == 0 {
+		worldX, worldY := mode.mapDisplay.WorldCoordinatesForPixel(mouseEvent.Position())
+		coord := model.TileCoordinateOf(int(worldX)>>8, int(worldY)>>8)
+		tileX, tileY := coord.XY()
+
+		if tileX >= 0 && tileX < 64 && tileY >= 0 && tileY < 64 {
+			mode.mapDisplay.SetHighlightedTile(coord)
+		} else {
+			mode.mapDisplay.ClearHighlightedTile()
+		}
+		consumed = true
+	}
+
+	return
+}
+
+func (mode *LevelMapMode) onMouseButtonClicked(area *ui.Area, event events.Event) (consumed bool) {
+	mouseEvent := event.(*events.MouseButtonEvent)
+
+	if mouseEvent.AffectedButtons() == env.MousePrimary {
+		worldX, worldY := mode.mapDisplay.WorldCoordinatesForPixel(mouseEvent.Position())
+		coord := model.TileCoordinateOf(int(worldX)>>8, int(worldY)>>8)
+		tileX, tileY := coord.XY()
+
+		if tileX >= 0 && tileX < 64 && tileY >= 0 && tileY < 64 {
+			if keys.Modifier(mouseEvent.Modifier()) == keys.ModControl {
+				mode.toggleSelectedTile(coord)
+			} else {
+				mode.setSelectedTiles([]model.TileCoordinate{coord})
+			}
+			consumed = true
+		}
+	}
+
+	return
+}
+
+func (mode *LevelMapMode) setSelectedTiles(tiles []model.TileCoordinate) {
+	mode.selectedTiles = tiles
+	mode.onSelectedTilesChanged()
+}
+
+func (mode *LevelMapMode) toggleSelectedTile(coord model.TileCoordinate) {
+	newList := []model.TileCoordinate{}
+	wasSelected := false
+
+	for _, other := range mode.selectedTiles {
+		if other != coord {
+			newList = append(newList, other)
+		} else {
+			wasSelected = true
+		}
+	}
+	if !wasSelected {
+		newList = append(newList, coord)
+	}
+
+	mode.selectedTiles = newList
+	mode.onSelectedTilesChanged()
+}
+
+func (mode *LevelMapMode) onSelectedTilesChanged() {
+	mode.mapDisplay.SetSelectedTiles(mode.selectedTiles)
 }
