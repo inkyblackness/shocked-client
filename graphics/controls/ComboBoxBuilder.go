@@ -38,6 +38,9 @@ func (builder *ComboBoxBuilder) Build() *ComboBox {
 
 	builder.areaBuilder.OnRender(box.onRender)
 	builder.areaBuilder.OnEvent(events.MouseButtonDownEventType, box.onMouseDown)
+	builder.areaBuilder.OnEvent(events.MouseButtonUpEventType, ui.SilentConsumer)
+	builder.areaBuilder.OnEvent(events.MouseButtonClickedEventType, ui.SilentConsumer)
+	builder.areaBuilder.OnEvent(events.MouseScrollEventType, ui.SilentConsumer)
 	box.area = builder.areaBuilder.Build()
 
 	builder.labelBuilder.SetParent(box.area)

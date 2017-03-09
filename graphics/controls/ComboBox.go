@@ -118,6 +118,7 @@ func (box *ComboBox) showList() {
 		listAreaBuilder.OnEvent(events.MouseButtonDownEventType, box.onListMouseDown)
 		listAreaBuilder.OnEvent(events.MouseButtonUpEventType, box.onListMouseUp)
 		listAreaBuilder.OnEvent(events.MouseScrollEventType, box.onListScroll)
+		listAreaBuilder.OnEvent(events.MouseButtonClickedEventType, ui.SilentConsumer)
 
 		box.listArea = listAreaBuilder.Build()
 		box.listArea.RequestFocus()

@@ -76,8 +76,11 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 				area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
 				graphics.RGBA(0.7, 0.0, 0.7, 0.1))
 		})
-		lastGrabX := float32(0.0)
 
+		builder.OnEvent(events.MouseButtonClickedEventType, ui.SilentConsumer)
+		builder.OnEvent(events.MouseScrollEventType, ui.SilentConsumer)
+
+		lastGrabX := float32(0.0)
 		builder.OnEvent(events.MouseButtonDownEventType, func(area *ui.Area, event events.Event) bool {
 			buttonEvent := event.(*events.MouseButtonEvent)
 			if buttonEvent.Buttons() == env.MousePrimary {

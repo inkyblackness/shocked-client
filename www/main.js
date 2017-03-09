@@ -30705,7 +30705,7 @@ $packages["github.com/inkyblackness/shocked-client/ui/events"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
-	var $pkg = {}, $init, events, absoluteAnchor, Anchor, RenderFunction, EventHandler, Area, AreaBuilder, limitedAnchor, offsetAnchor, relativeAnchor, zeroAnchor, ptrType, sliceType, ptrType$1, mapType, ptrType$2, ptrType$3, ptrType$4, ptrType$5, ptrType$6, NewAbsoluteAnchor, NewAreaBuilder, NewLimitedAnchor, NewOffsetAnchor, NewRelativeAnchor, ZeroAnchor;
+	var $pkg = {}, $init, events, absoluteAnchor, Anchor, RenderFunction, EventHandler, Area, AreaBuilder, limitedAnchor, offsetAnchor, relativeAnchor, zeroAnchor, ptrType, sliceType, ptrType$1, mapType, ptrType$2, ptrType$3, ptrType$4, ptrType$5, ptrType$6, NewAbsoluteAnchor, NewAreaBuilder, NewLimitedAnchor, NewOffsetAnchor, NewRelativeAnchor, SilentConsumer, ZeroAnchor;
 	events = $packages["github.com/inkyblackness/shocked-client/ui/events"];
 	absoluteAnchor = $pkg.absoluteAnchor = $newType(0, $kindStruct, "ui.absoluteAnchor", true, "github.com/inkyblackness/shocked-client/ui", false, function(value_) {
 		this.$val = this;
@@ -31300,6 +31300,11 @@ $packages["github.com/inkyblackness/shocked-client/ui"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: relativeAnchor.ptr.prototype.RequestValue }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.anchor = anchor; $f.fromValue = fromValue; $f.newValue = newValue; $f.toValue = toValue; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	relativeAnchor.prototype.RequestValue = function(newValue) { return this.$val.RequestValue(newValue); };
+	SilentConsumer = function(param, param$1) {
+		var $ptr, param, param$1;
+		return true;
+	};
+	$pkg.SilentConsumer = SilentConsumer;
 	ZeroAnchor = function() {
 		var $ptr;
 		return new zeroAnchor.ptr();
@@ -33123,6 +33128,7 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 			listAreaBuilder.OnEvent("mouse.button.down", $methodVal(box, "onListMouseDown"));
 			listAreaBuilder.OnEvent("mouse.button.up", $methodVal(box, "onListMouseUp"));
 			listAreaBuilder.OnEvent("mouse.scroll", $methodVal(box, "onListScroll"));
+			listAreaBuilder.OnEvent("mouse.button.clicked", ui.SilentConsumer);
 			box.listArea = listAreaBuilder.Build();
 			box.listArea.RequestFocus();
 			box.listItemLabels = $makeSlice(sliceType$1, box.listItemCount);
@@ -33318,6 +33324,9 @@ $packages["github.com/inkyblackness/shocked-client/graphics/controls"] = (functi
 		box = new ComboBox.ptr(builder.labelBuilder, ptrType$1.nil, builder.rectRenderer, ptrType$2.nil, ptrType$2.nil, builder.selectionChangeHandler, builder.items, $ifaceNil, ptrType$1.nil, 0, sliceType$1.nil, 0);
 		builder.areaBuilder.OnRender($methodVal(box, "onRender"));
 		builder.areaBuilder.OnEvent("mouse.button.down", $methodVal(box, "onMouseDown"));
+		builder.areaBuilder.OnEvent("mouse.button.up", ui.SilentConsumer);
+		builder.areaBuilder.OnEvent("mouse.button.clicked", ui.SilentConsumer);
+		builder.areaBuilder.OnEvent("mouse.scroll", ui.SilentConsumer);
 		box.area = builder.areaBuilder.Build();
 		builder.labelBuilder.SetParent(box.area);
 		builder.labelBuilder.SetTop(ui.NewOffsetAnchor(box.area.Top(), 0));
@@ -34089,6 +34098,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			$s = -1; return;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.area = area; $f.$s = $s; $f.$r = $r; return $f;
 		}));
+		builder$1.OnEvent("mouse.button.clicked", ui.SilentConsumer);
+		builder$1.OnEvent("mouse.scroll", ui.SilentConsumer);
 		lastGrabX = 0;
 		builder$1.OnEvent("mouse.button.down", (function(area, event) {
 			var $ptr, _tuple, area, buttonEvent, event;
@@ -34282,6 +34293,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			$s = -1; return;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.area = area; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(context, lastGrabX, mode));
+		builder$1.OnEvent("mouse.button.clicked", ui.SilentConsumer);
+		builder$1.OnEvent("mouse.scroll", ui.SilentConsumer);
 		lastGrabX[0] = 0;
 		builder$1.OnEvent("mouse.button.down", (function(context, lastGrabX, mode) { return function(area, event) {
 			var $ptr, _tuple, area, buttonEvent, event;
