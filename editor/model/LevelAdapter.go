@@ -92,12 +92,14 @@ func (adapter *LevelAdapter) onTiles(tiles model.Tiles) {
 	for y := 0; y < len(tiles.Table); y++ {
 		row := tiles.Table[y]
 		for x := 0; x < len(row); x++ {
-			tileProperties := &row[x].Properties
-			coord := TileCoordinateOf(x, y)
-			tile := adapter.tileMap.Tile(coord)
-			tile.setProperties(tileProperties)
+			adapter.onTilePropertiesUpdated(TileCoordinateOf(x, y), &row[x].Properties)
 		}
 	}
+}
+
+func (adapter *LevelAdapter) onTilePropertiesUpdated(coord TileCoordinate, properties *model.TileProperties) {
+	tile := adapter.tileMap.Tile(coord)
+	tile.setProperties(properties)
 }
 
 // LevelTextureIDs returns the IDs of the level textures.
@@ -152,4 +154,35 @@ func (adapter *LevelAdapter) onLevelObjects(objects *model.LevelObjects) {
 		newMap[obj.Index()] = obj
 	}
 	adapter.levelObjects.set(&newMap)
+}
+
+// RequestTilePropertyChange requests the tiles at given coordinates to set provided properties.
+func (adapter *LevelAdapter) RequestTilePropertyChange(coordinates []TileCoordinate, properties *model.TileProperties) {
+	additionalQueries := make(map[TileCoordinate]bool)
+	storeLevelID := adapter.storeLevelID()
+	tileUpdateHandler := func(coord TileCoordinate) func(model.TileProperties) {
+		return func(newProperties model.TileProperties) {
+			adapter.onTilePropertiesUpdated(coord, &newProperties)
+		}
+	}
+	for _, coord := range coordinates {
+		x, y := coord.XY()
+		additionalQueries[TileCoordinateOf(x-1, y)] = true
+		additionalQueries[TileCoordinateOf(x+1, y)] = true
+		additionalQueries[TileCoordinateOf(x, y-1)] = true
+		additionalQueries[TileCoordinateOf(x, y+1)] = true
+		adapter.store.SetTile(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
+			x, y, *properties,
+			tileUpdateHandler(coord), adapter.context.simpleStoreFailure("SetTile"))
+	}
+	for _, coord := range coordinates {
+		delete(additionalQueries, coord)
+	}
+	for coord := range additionalQueries {
+		x, y := coord.XY()
+		if (x >= 0) && (x < 64) && (y >= 0) && (y < 64) {
+			adapter.store.Tile(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
+				x, y, tileUpdateHandler(coord), adapter.context.simpleStoreFailure("Tile"))
+		}
+	}
 }

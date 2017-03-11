@@ -1,6 +1,8 @@
 package modes
 
 import (
+	"fmt"
+
 	"github.com/inkyblackness/shocked-client/editor/display"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/env"
@@ -9,7 +11,19 @@ import (
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
 	"github.com/inkyblackness/shocked-client/ui/events"
+	"github.com/inkyblackness/shocked-client/util"
+	dataModel "github.com/inkyblackness/shocked-model"
 )
+
+type tilePropertySetter func(properties *dataModel.TileProperties, value interface{})
+type tilePropertyItem struct {
+	value  interface{}
+	setter tilePropertySetter
+}
+
+func (item *tilePropertyItem) String() string {
+	return fmt.Sprintf("%v", item.value)
+}
 
 // LevelMapMode is a mode for level maps.
 type LevelMapMode struct {
@@ -21,10 +35,17 @@ type LevelMapMode struct {
 	panel      *ui.Area
 	panelRight ui.Anchor
 
-	tileTypeLabel *controls.Label
-	tileTypeBox   *controls.ComboBox
-
 	selectedTiles []model.TileCoordinate
+
+	tileTypeLabel      *controls.Label
+	tileTypeBox        *controls.ComboBox
+	tileTypeItems      map[dataModel.TileType]*tilePropertyItem
+	floorHeightLabel   *controls.Label
+	floorHeightBox     *controls.ComboBox
+	ceilingHeightLabel *controls.Label
+	ceilingHeightBox   *controls.ComboBox
+	slopeHeightLabel   *controls.Label
+	slopeHeightBox     *controls.ComboBox
 }
 
 // NewLevelMapMode returns a new instance.
@@ -58,7 +79,7 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 		builder.OnRender(func(area *ui.Area) {
 			context.ForGraphics().RectangleRenderer().Fill(
 				area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-				graphics.RGBA(0.7, 0.0, 0.7, 0.1))
+				graphics.RGBA(0.7, 0.0, 0.7, 0.3))
 		})
 
 		builder.OnEvent(events.MouseButtonClickedEventType, ui.SilentConsumer)
@@ -80,18 +101,43 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			}
 			return true
 		})
-		builder.OnEvent(events.MouseMoveEventType, func(area *ui.Area, event events.Event) (consumed bool) {
+		builder.OnEvent(events.MouseMoveEventType, func(area *ui.Area, event events.Event) bool {
 			moveEvent := event.(*events.MouseMoveEvent)
 			if area.HasFocus() {
 				newX, _ := moveEvent.Position()
 				mode.panelRight.RequestValue(mode.panelRight.Value() + (newX - lastGrabX))
 				lastGrabX = newX
-				consumed = true
 			}
-			return
+			return true
 		})
 
 		mode.panel = builder.Build()
+	}
+
+	{
+		panelBuilder := newControlPanelBuilder(mode.panel, context.ControlFactory())
+
+		mode.tileTypeLabel, mode.tileTypeBox = panelBuilder.addComboProperty("Tile Type", mode.onTilePropertyChangeRequested)
+		{
+			setter := func(properties *dataModel.TileProperties, value interface{}) {
+				tileType := value.(dataModel.TileType)
+				properties.Type = &tileType
+			}
+			tileTypes := dataModel.TileTypes()
+			tileTypeItems := make([]controls.ComboBoxItem, len(tileTypes))
+			mode.tileTypeItems = make(map[dataModel.TileType]*tilePropertyItem)
+			for index, tileType := range tileTypes {
+				item := &tilePropertyItem{tileType, setter}
+				tileTypeItems[index] = item
+				mode.tileTypeItems[tileType] = item
+			}
+			mode.tileTypeItems[dataModel.TileType("")] = &tilePropertyItem{"", nil}
+			mode.tileTypeBox.SetItems(tileTypeItems)
+		}
+
+		mode.floorHeightLabel, mode.floorHeightBox = panelBuilder.addComboProperty("Floor Height", mode.onTilePropertyChangeRequested)
+		mode.ceilingHeightLabel, mode.ceilingHeightBox = panelBuilder.addComboProperty("Ceiling Height", mode.onTilePropertyChangeRequested)
+		mode.slopeHeightLabel, mode.slopeHeightBox = panelBuilder.addComboProperty("Slope Height", mode.onTilePropertyChangeRequested)
 	}
 
 	return mode
@@ -175,4 +221,23 @@ func (mode *LevelMapMode) toggleSelectedTile(coord model.TileCoordinate) {
 
 func (mode *LevelMapMode) onSelectedTilesChanged() {
 	mode.mapDisplay.SetSelectedTiles(mode.selectedTiles)
+	tileMap := mode.context.ModelAdapter().ActiveLevel().TileMap()
+	typeUnifier := util.NewValueUnifier(dataModel.TileType(""))
+
+	for _, coord := range mode.selectedTiles {
+		tile := tileMap.Tile(coord)
+		properties := tile.Properties()
+		if properties != nil {
+			typeUnifier.Add(*properties.Type)
+		}
+	}
+	mode.tileTypeBox.SetSelectedItem(mode.tileTypeItems[typeUnifier.Value().(dataModel.TileType)])
+}
+
+func (mode *LevelMapMode) onTilePropertyChangeRequested(item controls.ComboBoxItem) {
+	propertyItem := item.(*tilePropertyItem)
+	properties := &dataModel.TileProperties{}
+
+	propertyItem.setter(properties, propertyItem.value)
+	mode.context.ModelAdapter().ActiveLevel().RequestTilePropertyChange(mode.selectedTiles, properties)
 }
