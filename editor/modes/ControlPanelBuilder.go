@@ -59,3 +59,33 @@ func (panelBuilder *controlPanelBuilder) addComboProperty(labelText string, hand
 
 	return
 }
+
+func (panelBuilder *controlPanelBuilder) addSection(visible bool) (sectionArea *ui.Area, sectionBuilder *controlPanelBuilder) {
+	sectionBuilder = &controlPanelBuilder{}
+	sectionBuilder.controlFactory = panelBuilder.controlFactory
+	sectionBuilder.listLeft = panelBuilder.listLeft
+	sectionBuilder.listRight = panelBuilder.listRight
+	sectionBuilder.listCenterEnd = panelBuilder.listCenterEnd
+	sectionBuilder.listCenterStart = panelBuilder.listCenterStart
+	sectionBuilder.lastBottom = panelBuilder.lastBottom
+	{
+		builder := ui.NewAreaBuilder()
+		builder.SetParent(panelBuilder.parent)
+		builder.SetLeft(ui.NewOffsetAnchor(panelBuilder.parent.Left(), 0))
+		builder.SetTop(ui.NewOffsetAnchor(panelBuilder.lastBottom, 0))
+		builder.SetRight(ui.NewOffsetAnchor(panelBuilder.parent.Right(), 0))
+		builder.SetBottom(ui.NewResolvingAnchor(func() ui.Anchor {
+			anchor := sectionBuilder.lastBottom
+			if !sectionArea.IsVisible() {
+				anchor = sectionArea.Top()
+			}
+			return anchor
+		}))
+		builder.SetVisible(visible)
+		sectionArea = builder.Build()
+		sectionBuilder.parent = sectionArea
+	}
+	panelBuilder.lastBottom = sectionArea.Bottom()
+
+	return
+}

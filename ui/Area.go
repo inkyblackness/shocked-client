@@ -37,12 +37,17 @@ func (area *Area) Remove() {
 	}
 }
 
+// IsVisible returns true if the area is currently visible.
+func (area *Area) IsVisible() bool {
+	return area.visible
+}
+
 // SetVisible determines whether the area (and all of its children) shall
 // be visible and target for events.
 // Invisible areas are not rendered and will not handle any events.
 func (area *Area) SetVisible(visible bool) {
 	area.visible = visible
-	if !area.visible {
+	if !area.IsVisible() {
 		area.ReleaseFocus()
 	}
 }
@@ -108,7 +113,7 @@ func (area *Area) Bottom() Anchor {
 
 // Render first renders this area, then sequentially all children.
 func (area *Area) Render() {
-	if area.visible {
+	if area.IsVisible() {
 		area.onRender(area)
 		for _, child := range area.children {
 			child.Render()
@@ -119,7 +124,7 @@ func (area *Area) Render() {
 // HandleEvent tries to process the given event.
 // It returns true if the area consumed the event.
 func (area *Area) HandleEvent(event events.Event) (consumed bool) {
-	if area.visible {
+	if area.IsVisible() {
 		if area.focusedArea != nil {
 			consumed = area.focusedArea.HandleEvent(event)
 		}
@@ -135,7 +140,7 @@ func (area *Area) HandleEvent(event events.Event) (consumed bool) {
 // UI tree at the position of the event. The event is tried depth-first,
 // before trying to handle it within this area.
 func (area *Area) DispatchPositionalEvent(event events.PositionalEvent) (consumed bool) {
-	if area.visible {
+	if area.IsVisible() {
 		if area.focusedArea != nil {
 			consumed = area.focusedArea.DispatchPositionalEvent(event)
 		}
