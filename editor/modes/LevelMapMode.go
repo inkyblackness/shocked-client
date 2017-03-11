@@ -42,10 +42,16 @@ type LevelMapMode struct {
 	tileTypeItems      map[dataModel.TileType]*tilePropertyItem
 	floorHeightLabel   *controls.Label
 	floorHeightBox     *controls.ComboBox
+	floorHeightItems   map[dataModel.HeightUnit]*tilePropertyItem
 	ceilingHeightLabel *controls.Label
 	ceilingHeightBox   *controls.ComboBox
+	ceilingHeightItems map[dataModel.HeightUnit]*tilePropertyItem
 	slopeHeightLabel   *controls.Label
 	slopeHeightBox     *controls.ComboBox
+	slopeHeightItems   map[dataModel.HeightUnit]*tilePropertyItem
+	slopeControlLabel  *controls.Label
+	slopeControlBox    *controls.ComboBox
+	slopeControlItems  map[dataModel.SlopeControl]*tilePropertyItem
 }
 
 // NewLevelMapMode returns a new instance.
@@ -138,6 +144,65 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 		mode.floorHeightLabel, mode.floorHeightBox = panelBuilder.addComboProperty("Floor Height", mode.onTilePropertyChangeRequested)
 		mode.ceilingHeightLabel, mode.ceilingHeightBox = panelBuilder.addComboProperty("Ceiling Height", mode.onTilePropertyChangeRequested)
 		mode.slopeHeightLabel, mode.slopeHeightBox = panelBuilder.addComboProperty("Slope Height", mode.onTilePropertyChangeRequested)
+		{
+			positiveHeight := func(value int) dataModel.HeightUnit { return dataModel.HeightUnit(value) }
+			negativeHeight := func(value int) dataModel.HeightUnit { return dataModel.HeightUnit(31 - value) }
+			setupCollections := func(mapper func(int) dataModel.HeightUnit,
+				setter func(*dataModel.TileProperties, dataModel.HeightUnit)) ([]controls.ComboBoxItem, map[dataModel.HeightUnit]*tilePropertyItem) {
+				mappingSetter := func(properties *dataModel.TileProperties, value interface{}) {
+					height := mapper(int(value.(dataModel.HeightUnit)))
+					setter(properties, height)
+				}
+				itemsSlice := make([]controls.ComboBoxItem, 32)
+				heightItems := make(map[dataModel.HeightUnit]*tilePropertyItem)
+				for height := 0; height < 32; height++ {
+					heightUnit := mapper(height)
+					item := &tilePropertyItem{heightUnit, mappingSetter}
+					itemsSlice[height] = item
+					heightItems[heightUnit] = item
+				}
+				heightItems[dataModel.HeightUnit(-1)] = &tilePropertyItem{"", nil}
+				return itemsSlice, heightItems
+			}
+
+			var floorHeightItemsSlice []controls.ComboBoxItem
+			var ceilingHeightItemsSlice []controls.ComboBoxItem
+			var slopeHeightItemsSlice []controls.ComboBoxItem
+			floorHeightItemsSlice, mode.floorHeightItems = setupCollections(positiveHeight,
+				func(properties *dataModel.TileProperties, height dataModel.HeightUnit) {
+					properties.FloorHeight = &height
+				})
+			ceilingHeightItemsSlice, mode.ceilingHeightItems = setupCollections(negativeHeight,
+				func(properties *dataModel.TileProperties, height dataModel.HeightUnit) {
+					properties.CeilingHeight = &height
+				})
+			slopeHeightItemsSlice, mode.slopeHeightItems = setupCollections(positiveHeight,
+				func(properties *dataModel.TileProperties, height dataModel.HeightUnit) {
+					properties.SlopeHeight = &height
+				})
+
+			mode.floorHeightBox.SetItems(floorHeightItemsSlice)
+			mode.ceilingHeightBox.SetItems(ceilingHeightItemsSlice)
+			mode.slopeHeightBox.SetItems(slopeHeightItemsSlice)
+		}
+
+		mode.slopeControlLabel, mode.slopeControlBox = panelBuilder.addComboProperty("Slope Control", mode.onTilePropertyChangeRequested)
+		{
+			setter := func(properties *dataModel.TileProperties, value interface{}) {
+				slopeControl := value.(dataModel.SlopeControl)
+				properties.SlopeControl = &slopeControl
+			}
+			slopeControls := dataModel.SlopeControls()
+			slopeControlItems := make([]controls.ComboBoxItem, len(slopeControls))
+			mode.slopeControlItems = make(map[dataModel.SlopeControl]*tilePropertyItem)
+			for index, slopeControl := range slopeControls {
+				item := &tilePropertyItem{slopeControl, setter}
+				slopeControlItems[index] = item
+				mode.slopeControlItems[slopeControl] = item
+			}
+			mode.slopeControlItems[dataModel.SlopeControl("")] = &tilePropertyItem{"", nil}
+			mode.slopeControlBox.SetItems(slopeControlItems)
+		}
 	}
 
 	return mode
@@ -223,15 +288,27 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	mode.mapDisplay.SetSelectedTiles(mode.selectedTiles)
 	tileMap := mode.context.ModelAdapter().ActiveLevel().TileMap()
 	typeUnifier := util.NewValueUnifier(dataModel.TileType(""))
+	floorHeightUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
+	ceilingHeightUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
+	slopeHeightUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
+	slopeControlUnifier := util.NewValueUnifier(dataModel.SlopeControl(""))
 
 	for _, coord := range mode.selectedTiles {
 		tile := tileMap.Tile(coord)
 		properties := tile.Properties()
 		if properties != nil {
 			typeUnifier.Add(*properties.Type)
+			floorHeightUnifier.Add(*properties.FloorHeight)
+			ceilingHeightUnifier.Add(*properties.CeilingHeight)
+			slopeHeightUnifier.Add(*properties.SlopeHeight)
+			slopeControlUnifier.Add(*properties.SlopeControl)
 		}
 	}
 	mode.tileTypeBox.SetSelectedItem(mode.tileTypeItems[typeUnifier.Value().(dataModel.TileType)])
+	mode.floorHeightBox.SetSelectedItem(mode.floorHeightItems[floorHeightUnifier.Value().(dataModel.HeightUnit)])
+	mode.ceilingHeightBox.SetSelectedItem(mode.ceilingHeightItems[ceilingHeightUnifier.Value().(dataModel.HeightUnit)])
+	mode.slopeHeightBox.SetSelectedItem(mode.slopeHeightItems[slopeHeightUnifier.Value().(dataModel.HeightUnit)])
+	mode.slopeControlBox.SetSelectedItem(mode.slopeControlItems[slopeControlUnifier.Value().(dataModel.SlopeControl)])
 }
 
 func (mode *LevelMapMode) onTilePropertyChangeRequested(item controls.ComboBoxItem) {

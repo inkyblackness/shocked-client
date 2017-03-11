@@ -26774,7 +26774,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/camera"] = (function()
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-model"] = (function() {
-	var $pkg = {}, $init, CalculatedWallHeights, FailureFunc, DataStore, Font, HeightUnit, Identifiable, Level, LevelObject, LevelObjectHacking, LevelObjectBaseProperties, LevelObjects, LevelProperties, LevelTextures, Levels, Link, Color, Palette, Project, ProjectTemplate, Projects, RawBitmap, RealWorldTileProperties, Referable, SlopeControl, Texture, TextureProperties, TextureSize, Textures, Tile, TileProperties, TileType, Tiles, sliceType, sliceType$1, ptrType, funcType, ptrType$1, funcType$1, ptrType$2, funcType$2, sliceType$2, funcType$3, sliceType$3, funcType$4, funcType$5, arrayType, funcType$6, sliceType$4, funcType$7, funcType$8, sliceType$5, funcType$9, funcType$10, ptrType$3, arrayType$1, sliceType$6, sliceType$7, sliceType$8, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, sliceType$9, sliceType$10, TextureSizes, TileTypes;
+	var $pkg = {}, $init, CalculatedWallHeights, FailureFunc, DataStore, Font, HeightUnit, Identifiable, Level, LevelObject, LevelObjectHacking, LevelObjectBaseProperties, LevelObjects, LevelProperties, LevelTextures, Levels, Link, Color, Palette, Project, ProjectTemplate, Projects, RawBitmap, RealWorldTileProperties, Referable, SlopeControl, Texture, TextureProperties, TextureSize, Textures, Tile, TileProperties, TileType, Tiles, sliceType, sliceType$1, sliceType$2, ptrType, funcType, ptrType$1, funcType$1, ptrType$2, funcType$2, sliceType$3, funcType$3, sliceType$4, funcType$4, funcType$5, arrayType, funcType$6, sliceType$5, funcType$7, funcType$8, sliceType$6, funcType$9, funcType$10, ptrType$3, arrayType$1, sliceType$7, sliceType$8, sliceType$9, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, sliceType$10, sliceType$11, SlopeControls, TextureSizes, TileTypes;
 	CalculatedWallHeights = $pkg.CalculatedWallHeights = $newType(0, $kindStruct, "model.CalculatedWallHeights", true, "github.com/inkyblackness/shocked-model", true, function(North_, East_, West_, South_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -26797,7 +26797,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 			this.Monochrome = false;
 			this.Bitmap = new RawBitmap.ptr(0, 0, "");
 			this.FirstCharacter = 0;
-			this.GlyphXOffsets = sliceType$2.nil;
+			this.GlyphXOffsets = sliceType$3.nil;
 			return;
 		}
 		this.Monochrome = Monochrome_;
@@ -26821,7 +26821,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 		if (arguments.length === 0) {
 			this.Identifiable = new Identifiable.ptr(new Referable.ptr(""), "");
 			this.Properties = new LevelProperties.ptr(0, false);
-			this.Links = sliceType$7.nil;
+			this.Links = sliceType$8.nil;
 			return;
 		}
 		this.Identifiable = Identifiable_;
@@ -26836,8 +26836,8 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 			this.Subclass = 0;
 			this.Type = 0;
 			this.BaseProperties = new LevelObjectBaseProperties.ptr(0, 0, 0, 0, 0);
-			this.Hacking = new LevelObjectHacking.ptr(sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil);
-			this.Links = sliceType$7.nil;
+			this.Hacking = new LevelObjectHacking.ptr(sliceType$3.nil, sliceType$3.nil, sliceType$3.nil, sliceType$3.nil);
+			this.Links = sliceType$8.nil;
 			return;
 		}
 		this.Identifiable = Identifiable_;
@@ -26851,10 +26851,10 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 	LevelObjectHacking = $pkg.LevelObjectHacking = $newType(0, $kindStruct, "model.LevelObjectHacking", true, "github.com/inkyblackness/shocked-model", true, function(Unknown0013_, Unknown0015_, Unknown0017_, ClassData_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.Unknown0013 = sliceType$2.nil;
-			this.Unknown0015 = sliceType$2.nil;
-			this.Unknown0017 = sliceType$2.nil;
-			this.ClassData = sliceType$2.nil;
+			this.Unknown0013 = sliceType$3.nil;
+			this.Unknown0015 = sliceType$3.nil;
+			this.Unknown0017 = sliceType$3.nil;
+			this.ClassData = sliceType$3.nil;
 			return;
 		}
 		this.Unknown0013 = Unknown0013_;
@@ -26881,7 +26881,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 	LevelObjects = $pkg.LevelObjects = $newType(0, $kindStruct, "model.LevelObjects", true, "github.com/inkyblackness/shocked-model", true, function(Table_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.Table = sliceType$8.nil;
+			this.Table = sliceType$9.nil;
 			return;
 		}
 		this.Table = Table_;
@@ -26900,7 +26900,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Referable = new Referable.ptr("");
-			this.IDs = sliceType$2.nil;
+			this.IDs = sliceType$3.nil;
 			return;
 		}
 		this.Referable = Referable_;
@@ -26910,7 +26910,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Referable = new Referable.ptr("");
-			this.List = sliceType$3.nil;
+			this.List = sliceType$4.nil;
 			return;
 		}
 		this.Referable = Referable_;
@@ -26968,7 +26968,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Referable = new Referable.ptr("");
-			this.Items = sliceType$6.nil;
+			this.Items = sliceType$7.nil;
 			return;
 		}
 		this.Referable = Referable_;
@@ -27020,7 +27020,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 		if (arguments.length === 0) {
 			this.Identifiable = new Identifiable.ptr(new Referable.ptr(""), "");
 			this.Properties = new TextureProperties.ptr(arrayType$1.zero(), arrayType$1.zero());
-			this.Images = sliceType$7.nil;
+			this.Images = sliceType$8.nil;
 			return;
 		}
 		this.Identifiable = Identifiable_;
@@ -27041,7 +27041,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 	Textures = $pkg.Textures = $newType(0, $kindStruct, "model.Textures", true, "github.com/inkyblackness/shocked-model", true, function(List_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.List = sliceType$5.nil;
+			this.List = sliceType$6.nil;
 			return;
 		}
 		this.List = List_;
@@ -27080,37 +27080,38 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 	Tiles = $pkg.Tiles = $newType(0, $kindStruct, "model.Tiles", true, "github.com/inkyblackness/shocked-model", true, function(Table_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.Table = sliceType$10.nil;
+			this.Table = sliceType$11.nil;
 			return;
 		}
 		this.Table = Table_;
 	});
-	sliceType = $sliceType(TextureSize);
-	sliceType$1 = $sliceType(TileType);
+	sliceType = $sliceType(SlopeControl);
+	sliceType$1 = $sliceType(TextureSize);
+	sliceType$2 = $sliceType(TileType);
 	ptrType = $ptrType(Font);
 	funcType = $funcType([ptrType], [], false);
 	ptrType$1 = $ptrType(RawBitmap);
 	funcType$1 = $funcType([ptrType$1], [], false);
 	ptrType$2 = $ptrType(LevelObjects);
 	funcType$2 = $funcType([ptrType$2], [], false);
-	sliceType$2 = $sliceType($Int);
-	funcType$3 = $funcType([sliceType$2], [], false);
-	sliceType$3 = $sliceType(Level);
-	funcType$4 = $funcType([sliceType$3], [], false);
+	sliceType$3 = $sliceType($Int);
+	funcType$3 = $funcType([sliceType$3], [], false);
+	sliceType$4 = $sliceType(Level);
+	funcType$4 = $funcType([sliceType$4], [], false);
 	funcType$5 = $funcType([], [], false);
 	arrayType = $arrayType(Color, 256);
 	funcType$6 = $funcType([arrayType], [], false);
-	sliceType$4 = $sliceType($String);
-	funcType$7 = $funcType([sliceType$4], [], false);
+	sliceType$5 = $sliceType($String);
+	funcType$7 = $funcType([sliceType$5], [], false);
 	funcType$8 = $funcType([TileProperties], [], false);
-	sliceType$5 = $sliceType(Texture);
-	funcType$9 = $funcType([sliceType$5], [], false);
+	sliceType$6 = $sliceType(Texture);
+	funcType$9 = $funcType([sliceType$6], [], false);
 	funcType$10 = $funcType([Tiles], [], false);
 	ptrType$3 = $ptrType($String);
 	arrayType$1 = $arrayType(ptrType$3, 3);
-	sliceType$6 = $sliceType(Identifiable);
-	sliceType$7 = $sliceType(Link);
-	sliceType$8 = $sliceType(LevelObject);
+	sliceType$7 = $sliceType(Identifiable);
+	sliceType$8 = $sliceType(Link);
+	sliceType$9 = $sliceType(LevelObject);
 	ptrType$4 = $ptrType($Int);
 	ptrType$5 = $ptrType($Bool);
 	ptrType$6 = $ptrType(HeightUnit);
@@ -27118,46 +27119,51 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 	ptrType$8 = $ptrType(SlopeControl);
 	ptrType$9 = $ptrType(CalculatedWallHeights);
 	ptrType$10 = $ptrType(RealWorldTileProperties);
-	sliceType$9 = $sliceType(Tile);
-	sliceType$10 = $sliceType(sliceType$9);
+	sliceType$10 = $sliceType(Tile);
+	sliceType$11 = $sliceType(sliceType$10);
+	SlopeControls = function() {
+		var $ptr;
+		return new sliceType(["ceilingInverted", "ceilingMirrored", "ceilingFlat", "floorFlat"]);
+	};
+	$pkg.SlopeControls = SlopeControls;
 	TextureSizes = function() {
 		var $ptr;
-		return new sliceType(["icon", "small", "medium", "large"]);
+		return new sliceType$1(["icon", "small", "medium", "large"]);
 	};
 	$pkg.TextureSizes = TextureSizes;
 	TileTypes = function() {
 		var $ptr;
-		return new sliceType$1(["solid", "open", "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast", "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest", "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest", "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"]);
+		return new sliceType$2(["solid", "open", "diagonalOpenSouthEast", "diagonalOpenSouthWest", "diagonalOpenNorthWest", "diagonalOpenNorthEast", "slopeSouthToNorth", "slopeWestToEast", "slopeNorthToSouth", "slopeEastToWest", "valleySouthEastToNorthWest", "valleySouthWestToNorthEast", "valleyNorthWestToSouthEast", "valleyNorthEastToSouthWest", "ridgeNorthWestToSouthEast", "ridgeNorthEastToSouthWest", "ridgeSouthEastToNorthWest", "ridgeSouthWestToNorthEast"]);
 	};
 	$pkg.TileTypes = TileTypes;
 	CalculatedWallHeights.init("", [{prop: "North", name: "North", exported: true, typ: $Float32, tag: "json:\"north\""}, {prop: "East", name: "East", exported: true, typ: $Float32, tag: "json:\"east\""}, {prop: "West", name: "West", exported: true, typ: $Float32, tag: "json:\"west\""}, {prop: "South", name: "South", exported: true, typ: $Float32, tag: "json:\"south\""}]);
 	FailureFunc.init([], [], false);
-	DataStore.init([{prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType, FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$1, FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$2, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$4, FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType$5, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$6, FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$7, FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType$2, funcType$3, FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, TileProperties, funcType$8, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$1, FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$9, FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$8, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, FailureFunc], [], false)}]);
-	Font.init("", [{prop: "Monochrome", name: "Monochrome", exported: true, typ: $Bool, tag: "json:\"monochrome\""}, {prop: "Bitmap", name: "Bitmap", exported: true, typ: RawBitmap, tag: "json:\"bitmap\""}, {prop: "FirstCharacter", name: "FirstCharacter", exported: true, typ: $Int, tag: "json:\"firstCharacter\""}, {prop: "GlyphXOffsets", name: "GlyphXOffsets", exported: true, typ: sliceType$2, tag: "json:\"glyphXOffsets\""}]);
+	DataStore.init([{prop: "Font", name: "Font", pkg: "", typ: $funcType([$String, $Int, funcType, FailureFunc], [], false)}, {prop: "GameObjectIcon", name: "GameObjectIcon", pkg: "", typ: $funcType([$String, $Int, $Int, $Int, funcType$1, FailureFunc], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([$String, $String, $Int, funcType$2, FailureFunc], [], false)}, {prop: "LevelTextures", name: "LevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, funcType$3, FailureFunc], [], false)}, {prop: "Levels", name: "Levels", pkg: "", typ: $funcType([$String, $String, funcType$4, FailureFunc], [], false)}, {prop: "NewProject", name: "NewProject", pkg: "", typ: $funcType([$String, funcType$5, FailureFunc], [], false)}, {prop: "Palette", name: "Palette", pkg: "", typ: $funcType([$String, $String, funcType$6, FailureFunc], [], false)}, {prop: "Projects", name: "Projects", pkg: "", typ: $funcType([funcType$7, FailureFunc], [], false)}, {prop: "SetLevelTextures", name: "SetLevelTextures", pkg: "", typ: $funcType([$String, $String, $Int, sliceType$3, funcType$3, FailureFunc], [], false)}, {prop: "SetTile", name: "SetTile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, TileProperties, funcType$8, FailureFunc], [], false)}, {prop: "TextureBitmap", name: "TextureBitmap", pkg: "", typ: $funcType([$String, $Int, $String, funcType$1, FailureFunc], [], false)}, {prop: "Textures", name: "Textures", pkg: "", typ: $funcType([$String, funcType$9, FailureFunc], [], false)}, {prop: "Tile", name: "Tile", pkg: "", typ: $funcType([$String, $String, $Int, $Int, $Int, funcType$8, FailureFunc], [], false)}, {prop: "Tiles", name: "Tiles", pkg: "", typ: $funcType([$String, $String, $Int, funcType$10, FailureFunc], [], false)}]);
+	Font.init("", [{prop: "Monochrome", name: "Monochrome", exported: true, typ: $Bool, tag: "json:\"monochrome\""}, {prop: "Bitmap", name: "Bitmap", exported: true, typ: RawBitmap, tag: "json:\"bitmap\""}, {prop: "FirstCharacter", name: "FirstCharacter", exported: true, typ: $Int, tag: "json:\"firstCharacter\""}, {prop: "GlyphXOffsets", name: "GlyphXOffsets", exported: true, typ: sliceType$3, tag: "json:\"glyphXOffsets\""}]);
 	Identifiable.init("", [{prop: "Referable", name: "", exported: true, typ: Referable, tag: ""}, {prop: "ID", name: "ID", exported: true, typ: $String, tag: "json:\"id\""}]);
-	Level.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Properties", name: "Properties", exported: true, typ: LevelProperties, tag: "json:\"properties\""}, {prop: "Links", name: "Links", exported: true, typ: sliceType$7, tag: "json:\"links\""}]);
-	LevelObject.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Class", name: "Class", exported: true, typ: $Int, tag: "json:\"class\""}, {prop: "Subclass", name: "Subclass", exported: true, typ: $Int, tag: "json:\"subclass\""}, {prop: "Type", name: "Type", exported: true, typ: $Int, tag: "json:\"type\""}, {prop: "BaseProperties", name: "BaseProperties", exported: true, typ: LevelObjectBaseProperties, tag: "json:\"properties\""}, {prop: "Hacking", name: "Hacking", exported: true, typ: LevelObjectHacking, tag: ""}, {prop: "Links", name: "Links", exported: true, typ: sliceType$7, tag: "json:\"links\""}]);
-	LevelObjectHacking.init("", [{prop: "Unknown0013", name: "Unknown0013", exported: true, typ: sliceType$2, tag: ""}, {prop: "Unknown0015", name: "Unknown0015", exported: true, typ: sliceType$2, tag: ""}, {prop: "Unknown0017", name: "Unknown0017", exported: true, typ: sliceType$2, tag: ""}, {prop: "ClassData", name: "ClassData", exported: true, typ: sliceType$2, tag: ""}]);
+	Level.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Properties", name: "Properties", exported: true, typ: LevelProperties, tag: "json:\"properties\""}, {prop: "Links", name: "Links", exported: true, typ: sliceType$8, tag: "json:\"links\""}]);
+	LevelObject.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Class", name: "Class", exported: true, typ: $Int, tag: "json:\"class\""}, {prop: "Subclass", name: "Subclass", exported: true, typ: $Int, tag: "json:\"subclass\""}, {prop: "Type", name: "Type", exported: true, typ: $Int, tag: "json:\"type\""}, {prop: "BaseProperties", name: "BaseProperties", exported: true, typ: LevelObjectBaseProperties, tag: "json:\"properties\""}, {prop: "Hacking", name: "Hacking", exported: true, typ: LevelObjectHacking, tag: ""}, {prop: "Links", name: "Links", exported: true, typ: sliceType$8, tag: "json:\"links\""}]);
+	LevelObjectHacking.init("", [{prop: "Unknown0013", name: "Unknown0013", exported: true, typ: sliceType$3, tag: ""}, {prop: "Unknown0015", name: "Unknown0015", exported: true, typ: sliceType$3, tag: ""}, {prop: "Unknown0017", name: "Unknown0017", exported: true, typ: sliceType$3, tag: ""}, {prop: "ClassData", name: "ClassData", exported: true, typ: sliceType$3, tag: ""}]);
 	LevelObjectBaseProperties.init("", [{prop: "TileX", name: "TileX", exported: true, typ: $Int, tag: "json:\"tileX\""}, {prop: "FineX", name: "FineX", exported: true, typ: $Int, tag: "json:\"fineX\""}, {prop: "TileY", name: "TileY", exported: true, typ: $Int, tag: "json:\"tileY\""}, {prop: "FineY", name: "FineY", exported: true, typ: $Int, tag: "json:\"fineY\""}, {prop: "Z", name: "Z", exported: true, typ: $Int, tag: "json:\"z\""}]);
-	LevelObjects.init("", [{prop: "Table", name: "Table", exported: true, typ: sliceType$8, tag: "json:\"table\""}]);
+	LevelObjects.init("", [{prop: "Table", name: "Table", exported: true, typ: sliceType$9, tag: "json:\"table\""}]);
 	LevelProperties.init("", [{prop: "HeightShift", name: "HeightShift", exported: true, typ: $Int, tag: "json:\"heightShift\""}, {prop: "CyberspaceFlag", name: "CyberspaceFlag", exported: true, typ: $Bool, tag: "json:\"cyberspaceFlag\""}]);
-	LevelTextures.init("", [{prop: "Referable", name: "", exported: true, typ: Referable, tag: ""}, {prop: "IDs", name: "IDs", exported: true, typ: sliceType$2, tag: "json:\"ids\""}]);
-	Levels.init("", [{prop: "Referable", name: "", exported: true, typ: Referable, tag: ""}, {prop: "List", name: "List", exported: true, typ: sliceType$3, tag: "json:\"list\""}]);
+	LevelTextures.init("", [{prop: "Referable", name: "", exported: true, typ: Referable, tag: ""}, {prop: "IDs", name: "IDs", exported: true, typ: sliceType$3, tag: "json:\"ids\""}]);
+	Levels.init("", [{prop: "Referable", name: "", exported: true, typ: Referable, tag: ""}, {prop: "List", name: "List", exported: true, typ: sliceType$4, tag: "json:\"list\""}]);
 	Link.init("", [{prop: "Rel", name: "Rel", exported: true, typ: $String, tag: "json:\"rel\""}, {prop: "Href", name: "Href", exported: true, typ: $String, tag: "json:\"href\""}]);
 	Color.init("", [{prop: "Red", name: "Red", exported: true, typ: $Int, tag: "json:\"r\""}, {prop: "Green", name: "Green", exported: true, typ: $Int, tag: "json:\"g\""}, {prop: "Blue", name: "Blue", exported: true, typ: $Int, tag: "json:\"b\""}]);
 	Palette.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Colors", name: "Colors", exported: true, typ: arrayType, tag: "json:\"colors\""}]);
 	Project.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}]);
 	ProjectTemplate.init("", [{prop: "ID", name: "ID", exported: true, typ: $String, tag: "json:\"id\""}]);
-	Projects.init("", [{prop: "Referable", name: "", exported: true, typ: Referable, tag: ""}, {prop: "Items", name: "Items", exported: true, typ: sliceType$6, tag: "json:\"items\""}]);
+	Projects.init("", [{prop: "Referable", name: "", exported: true, typ: Referable, tag: ""}, {prop: "Items", name: "Items", exported: true, typ: sliceType$7, tag: "json:\"items\""}]);
 	RawBitmap.init("", [{prop: "Width", name: "Width", exported: true, typ: $Int, tag: "json:\"width\""}, {prop: "Height", name: "Height", exported: true, typ: $Int, tag: "json:\"height\""}, {prop: "Pixels", name: "Pixels", exported: true, typ: $String, tag: "json:\"pixels\""}]);
 	RealWorldTileProperties.init("", [{prop: "FloorTexture", name: "FloorTexture", exported: true, typ: ptrType$4, tag: "json:\"floorTexture\""}, {prop: "CeilingTexture", name: "CeilingTexture", exported: true, typ: ptrType$4, tag: "json:\"ceilingTexture\""}, {prop: "WallTexture", name: "WallTexture", exported: true, typ: ptrType$4, tag: "json:\"wallTexture\""}, {prop: "FloorTextureRotations", name: "FloorTextureRotations", exported: true, typ: ptrType$4, tag: "json:\"floorTextureRotations\""}, {prop: "CeilingTextureRotations", name: "CeilingTextureRotations", exported: true, typ: ptrType$4, tag: "json:\"ceilingTextureRotations\""}, {prop: "UseAdjacentWallTexture", name: "UseAdjacentWallTexture", exported: true, typ: ptrType$5, tag: "json:\"useAdjacentWallTexture\""}, {prop: "WallTextureOffset", name: "WallTextureOffset", exported: true, typ: ptrType$6, tag: "json:\"wallTextureOffset\""}]);
 	Referable.init("", [{prop: "Href", name: "Href", exported: true, typ: $String, tag: "json:\"href\""}]);
-	Texture.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Properties", name: "Properties", exported: true, typ: TextureProperties, tag: "json:\"properties\""}, {prop: "Images", name: "Images", exported: true, typ: sliceType$7, tag: "json:\"images\""}]);
+	Texture.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Properties", name: "Properties", exported: true, typ: TextureProperties, tag: "json:\"properties\""}, {prop: "Images", name: "Images", exported: true, typ: sliceType$8, tag: "json:\"images\""}]);
 	TextureProperties.init("", [{prop: "Name", name: "Name", exported: true, typ: arrayType$1, tag: "json:\"name\""}, {prop: "CantBeUsed", name: "CantBeUsed", exported: true, typ: arrayType$1, tag: "json:\"cantBeUsed\""}]);
-	Textures.init("", [{prop: "List", name: "List", exported: true, typ: sliceType$5, tag: "json:\"list\""}]);
+	Textures.init("", [{prop: "List", name: "List", exported: true, typ: sliceType$6, tag: "json:\"list\""}]);
 	Tile.init("", [{prop: "Referable", name: "", exported: true, typ: Referable, tag: ""}, {prop: "Properties", name: "Properties", exported: true, typ: TileProperties, tag: "json:\"properties\""}]);
 	TileProperties.init("", [{prop: "Type", name: "Type", exported: true, typ: ptrType$7, tag: "json:\"type\""}, {prop: "FloorHeight", name: "FloorHeight", exported: true, typ: ptrType$6, tag: "json:\"floorHeight\""}, {prop: "CeilingHeight", name: "CeilingHeight", exported: true, typ: ptrType$6, tag: "json:\"ceilingHeight\""}, {prop: "SlopeHeight", name: "SlopeHeight", exported: true, typ: ptrType$6, tag: "json:\"slopeHeight\""}, {prop: "SlopeControl", name: "SlopeControl", exported: true, typ: ptrType$8, tag: "json:\"slopeControl\""}, {prop: "CalculatedWallHeights", name: "CalculatedWallHeights", exported: true, typ: ptrType$9, tag: "json:\"calculatedWallHeights\""}, {prop: "RealWorld", name: "RealWorld", exported: true, typ: ptrType$10, tag: "json:\"realWorld\""}]);
-	Tiles.init("", [{prop: "Table", name: "Table", exported: true, typ: sliceType$10, tag: ""}]);
+	Tiles.init("", [{prop: "Table", name: "Table", exported: true, typ: sliceType$11, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -33930,7 +33936,7 @@ $packages["github.com/inkyblackness/shocked-client/util"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() {
-	var $pkg = {}, $init, fmt, mgl32, display, model, env, keys, graphics, controls, ui, events, util, model$1, sort, Context, controlPanelBuilder, LevelControlMode, tilePropertySetter, tilePropertyItem, LevelMapMode, LevelObjectsMode, WelcomeMode, resultEntry, ptrType, ptrType$1, ptrType$2, sliceType, sliceType$1, ptrType$3, sliceType$2, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, ptrType$15, sliceType$3, ptrType$16, ptrType$17, sliceType$4, ptrType$18, ptrType$19, ptrType$20, ptrType$21, ptrType$22, ptrType$23, mapType, ptrType$24, funcType, ptrType$25, newControlPanelBuilder, NewLevelControlMode, NewLevelMapMode, NewLevelObjectsMode, NewWelcomeMode;
+	var $pkg = {}, $init, fmt, mgl32, display, model, env, keys, graphics, controls, ui, events, util, model$1, sort, Context, controlPanelBuilder, LevelControlMode, tilePropertySetter, tilePropertyItem, LevelMapMode, LevelObjectsMode, WelcomeMode, resultEntry, ptrType, ptrType$1, ptrType$2, sliceType, sliceType$1, ptrType$3, sliceType$2, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, ptrType$15, sliceType$3, ptrType$16, ptrType$17, sliceType$4, ptrType$18, ptrType$19, ptrType$20, ptrType$21, ptrType$22, ptrType$23, mapType, mapType$1, mapType$2, ptrType$24, funcType, ptrType$25, newControlPanelBuilder, NewLevelControlMode, NewLevelMapMode, NewLevelObjectsMode, NewWelcomeMode;
 	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
 	display = $packages["github.com/inkyblackness/shocked-client/editor/display"];
@@ -33990,7 +33996,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.value = value_;
 		this.setter = setter_;
 	});
-	LevelMapMode = $pkg.LevelMapMode = $newType(0, $kindStruct, "modes.LevelMapMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, mapDisplay_, area_, panel_, panelRight_, selectedTiles_, tileTypeLabel_, tileTypeBox_, tileTypeItems_, floorHeightLabel_, floorHeightBox_, ceilingHeightLabel_, ceilingHeightBox_, slopeHeightLabel_, slopeHeightBox_) {
+	LevelMapMode = $pkg.LevelMapMode = $newType(0, $kindStruct, "modes.LevelMapMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, mapDisplay_, area_, panel_, panelRight_, selectedTiles_, tileTypeLabel_, tileTypeBox_, tileTypeItems_, floorHeightLabel_, floorHeightBox_, floorHeightItems_, ceilingHeightLabel_, ceilingHeightBox_, ceilingHeightItems_, slopeHeightLabel_, slopeHeightBox_, slopeHeightItems_, slopeControlLabel_, slopeControlBox_, slopeControlItems_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.context = $ifaceNil;
@@ -34004,10 +34010,16 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			this.tileTypeItems = false;
 			this.floorHeightLabel = ptrType$1.nil;
 			this.floorHeightBox = ptrType$2.nil;
+			this.floorHeightItems = false;
 			this.ceilingHeightLabel = ptrType$1.nil;
 			this.ceilingHeightBox = ptrType$2.nil;
+			this.ceilingHeightItems = false;
 			this.slopeHeightLabel = ptrType$1.nil;
 			this.slopeHeightBox = ptrType$2.nil;
+			this.slopeHeightItems = false;
+			this.slopeControlLabel = ptrType$1.nil;
+			this.slopeControlBox = ptrType$2.nil;
+			this.slopeControlItems = false;
 			return;
 		}
 		this.context = context_;
@@ -34021,10 +34033,16 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.tileTypeItems = tileTypeItems_;
 		this.floorHeightLabel = floorHeightLabel_;
 		this.floorHeightBox = floorHeightBox_;
+		this.floorHeightItems = floorHeightItems_;
 		this.ceilingHeightLabel = ceilingHeightLabel_;
 		this.ceilingHeightBox = ceilingHeightBox_;
+		this.ceilingHeightItems = ceilingHeightItems_;
 		this.slopeHeightLabel = slopeHeightLabel_;
 		this.slopeHeightBox = slopeHeightBox_;
+		this.slopeHeightItems = slopeHeightItems_;
+		this.slopeControlLabel = slopeControlLabel_;
+		this.slopeControlBox = slopeControlBox_;
+		this.slopeControlItems = slopeControlItems_;
 	});
 	LevelObjectsMode = $pkg.LevelObjectsMode = $newType(0, $kindStruct, "modes.LevelObjectsMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, levelAdapter_, objectsAdapter_, displayFilter_, displayedObjects_, mapDisplay_, area_, panel_, panelRight_, tileTypeLabel_, tileTypeBox_, closestObjects_, closestObjectHighlightIndex_, selectedObjects_) {
 		this.$val = this;
@@ -34092,10 +34110,10 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	ptrType$4 = $ptrType(events.MouseButtonEvent);
 	ptrType$5 = $ptrType(events.MouseMoveEvent);
 	ptrType$6 = $ptrType(model$1.TileType);
-	ptrType$7 = $ptrType(model$1.TileProperties);
-	ptrType$8 = $ptrType(tilePropertyItem);
-	ptrType$9 = $ptrType(model$1.HeightUnit);
-	ptrType$10 = $ptrType(model$1.SlopeControl);
+	ptrType$7 = $ptrType(model$1.HeightUnit);
+	ptrType$8 = $ptrType(model$1.SlopeControl);
+	ptrType$9 = $ptrType(model$1.TileProperties);
+	ptrType$10 = $ptrType(tilePropertyItem);
 	ptrType$11 = $ptrType(model$1.CalculatedWallHeights);
 	ptrType$12 = $ptrType(model$1.RealWorldTileProperties);
 	ptrType$13 = $ptrType(model.LevelAdapter);
@@ -34111,7 +34129,9 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	ptrType$21 = $ptrType(controlPanelBuilder);
 	ptrType$22 = $ptrType(LevelControlMode);
 	ptrType$23 = $ptrType(LevelMapMode);
-	mapType = $mapType(model$1.TileType, ptrType$8);
+	mapType = $mapType(model$1.TileType, ptrType$10);
+	mapType$1 = $mapType(model$1.HeightUnit, ptrType$10);
+	mapType$2 = $mapType(model$1.SlopeControl, ptrType$10);
 	ptrType$24 = $ptrType(LevelObjectsMode);
 	funcType = $funcType([ptrType$15], [$Bool], false);
 	ptrType$25 = $ptrType(WelcomeMode);
@@ -34280,12 +34300,12 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	};
 	tilePropertyItem.prototype.String = function() { return this.$val.String(); };
 	NewLevelMapMode = function(context, parent, mapDisplay) {
-		var $ptr, _arg, _arg$1, _i, _key, _key$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, builder, builder$1, context, index, item, lastGrabX, mapDisplay, maxRight, minRight, mode, panelBuilder, parent, setter, tileType, tileTypeItems, tileTypes, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _i = $f._i; _key = $f._key; _key$1 = $f._key$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; builder = $f.builder; builder$1 = $f.builder$1; context = $f.context; index = $f.index; item = $f.item; lastGrabX = $f.lastGrabX; mapDisplay = $f.mapDisplay; maxRight = $f.maxRight; minRight = $f.minRight; mode = $f.mode; panelBuilder = $f.panelBuilder; parent = $f.parent; setter = $f.setter; tileType = $f.tileType; tileTypeItems = $f.tileTypeItems; tileTypes = $f.tileTypes; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _arg, _arg$1, _i, _i$1, _key, _key$1, _key$2, _key$3, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, builder, builder$1, ceilingHeightItemsSlice, context, floorHeightItemsSlice, index, index$1, item, item$1, lastGrabX, mapDisplay, maxRight, minRight, mode, negativeHeight, panelBuilder, parent, positiveHeight, setter, setter$1, setupCollections, slopeControl, slopeControlItems, slopeControls, slopeHeightItemsSlice, tileType, tileTypeItems, tileTypes, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _key$1 = $f._key$1; _key$2 = $f._key$2; _key$3 = $f._key$3; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; builder = $f.builder; builder$1 = $f.builder$1; ceilingHeightItemsSlice = $f.ceilingHeightItemsSlice; context = $f.context; floorHeightItemsSlice = $f.floorHeightItemsSlice; index = $f.index; index$1 = $f.index$1; item = $f.item; item$1 = $f.item$1; lastGrabX = $f.lastGrabX; mapDisplay = $f.mapDisplay; maxRight = $f.maxRight; minRight = $f.minRight; mode = $f.mode; negativeHeight = $f.negativeHeight; panelBuilder = $f.panelBuilder; parent = $f.parent; positiveHeight = $f.positiveHeight; setter = $f.setter; setter$1 = $f.setter$1; setupCollections = $f.setupCollections; slopeControl = $f.slopeControl; slopeControlItems = $f.slopeControlItems; slopeControls = $f.slopeControls; slopeHeightItemsSlice = $f.slopeHeightItemsSlice; tileType = $f.tileType; tileTypeItems = $f.tileTypeItems; tileTypes = $f.tileTypes; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		context = [context];
 		lastGrabX = [lastGrabX];
 		mode = [mode];
-		mode[0] = new LevelMapMode.ptr(context[0], mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, sliceType$2.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, ptrType$1.nil, ptrType$2.nil, ptrType$1.nil, ptrType$2.nil);
+		mode[0] = new LevelMapMode.ptr(context[0], mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, sliceType$2.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false);
 		builder = ui.NewAreaBuilder();
 		builder.SetParent(parent);
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0));
@@ -34403,8 +34423,98 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		_tuple$3 = _r$5;
 		mode[0].slopeHeightLabel = _tuple$3[0];
 		mode[0].slopeHeightBox = _tuple$3[1];
+		positiveHeight = (function(context, lastGrabX, mode) { return function(value) {
+			var $ptr, value;
+			return (value >> 0);
+		}; })(context, lastGrabX, mode);
+		negativeHeight = (function(context, lastGrabX, mode) { return function(value) {
+			var $ptr, value;
+			return ((31 - value >> 0) >> 0);
+		}; })(context, lastGrabX, mode);
+		setupCollections = (function(context, lastGrabX, mode) { return function $b(mapper, setter$1) {
+			var $ptr, _key$2, _key$3, _r$6, height, heightItems, heightUnit, item$1, itemsSlice, mapper, mappingSetter, setter$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _key$2 = $f._key$2; _key$3 = $f._key$3; _r$6 = $f._r$6; height = $f.height; heightItems = $f.heightItems; heightUnit = $f.heightUnit; item$1 = $f.item$1; itemsSlice = $f.itemsSlice; mapper = $f.mapper; mappingSetter = $f.mappingSetter; setter$1 = $f.setter$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			mapper = [mapper];
+			setter$1 = [setter$1];
+			mappingSetter = (function(context, lastGrabX, mapper, mode, setter$1) { return function $b(properties, value) {
+				var $ptr, _r$6, height, properties, value, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$6 = $f._r$6; height = $f.height; properties = $f.properties; value = $f.value; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				_r$6 = mapper[0](($assertType(value, model$1.HeightUnit) >> 0)); /* */ $s = 1; case 1: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+				height = _r$6;
+				$r = setter$1[0](properties, height); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				$s = -1; return;
+				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$6 = _r$6; $f.height = height; $f.properties = properties; $f.value = value; $f.$s = $s; $f.$r = $r; return $f;
+			}; })(context, lastGrabX, mapper, mode, setter$1);
+			itemsSlice = $makeSlice(sliceType, 32);
+			heightItems = {};
+			height = 0;
+			/* while (true) { */ case 1:
+				/* if (!(height < 32)) { break; } */ if(!(height < 32)) { $s = 2; continue; }
+				_r$6 = mapper[0](height); /* */ $s = 3; case 3: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+				heightUnit = _r$6;
+				item$1 = new tilePropertyItem.ptr(new model$1.HeightUnit(heightUnit), mappingSetter);
+				((height < 0 || height >= itemsSlice.$length) ? ($throwRuntimeError("index out of range"), undefined) : itemsSlice.$array[itemsSlice.$offset + height] = item$1);
+				_key$2 = heightUnit; (heightItems || $throwRuntimeError("assignment to entry in nil map"))[model$1.HeightUnit.keyFor(_key$2)] = { k: _key$2, v: item$1 };
+				height = height + (1) >> 0;
+			/* } */ $s = 1; continue; case 2:
+			_key$3 = -1; (heightItems || $throwRuntimeError("assignment to entry in nil map"))[model$1.HeightUnit.keyFor(_key$3)] = { k: _key$3, v: new tilePropertyItem.ptr(new $String(""), $throwNilPointerError) };
+			$s = -1; return [itemsSlice, heightItems];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._key$2 = _key$2; $f._key$3 = _key$3; $f._r$6 = _r$6; $f.height = height; $f.heightItems = heightItems; $f.heightUnit = heightUnit; $f.item$1 = item$1; $f.itemsSlice = itemsSlice; $f.mapper = mapper; $f.mappingSetter = mappingSetter; $f.setter$1 = setter$1; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(context, lastGrabX, mode);
+		floorHeightItemsSlice = sliceType.nil;
+		ceilingHeightItemsSlice = sliceType.nil;
+		slopeHeightItemsSlice = sliceType.nil;
+		_r$6 = setupCollections(positiveHeight, (function(context, lastGrabX, mode) { return function(properties, height) {
+			var $ptr, height, height$24ptr, properties;
+			properties.FloorHeight = (height$24ptr || (height$24ptr = new ptrType$7(function() { return height; }, function($v) { height = $v; })));
+		}; })(context, lastGrabX, mode)); /* */ $s = 8; case 8: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_tuple$4 = _r$6;
+		floorHeightItemsSlice = _tuple$4[0];
+		mode[0].floorHeightItems = _tuple$4[1];
+		_r$7 = setupCollections(negativeHeight, (function(context, lastGrabX, mode) { return function(properties, height) {
+			var $ptr, height, height$24ptr, properties;
+			properties.CeilingHeight = (height$24ptr || (height$24ptr = new ptrType$7(function() { return height; }, function($v) { height = $v; })));
+		}; })(context, lastGrabX, mode)); /* */ $s = 9; case 9: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_tuple$5 = _r$7;
+		ceilingHeightItemsSlice = _tuple$5[0];
+		mode[0].ceilingHeightItems = _tuple$5[1];
+		_r$8 = setupCollections(positiveHeight, (function(context, lastGrabX, mode) { return function(properties, height) {
+			var $ptr, height, height$24ptr, properties;
+			properties.SlopeHeight = (height$24ptr || (height$24ptr = new ptrType$7(function() { return height; }, function($v) { height = $v; })));
+		}; })(context, lastGrabX, mode)); /* */ $s = 10; case 10: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_tuple$6 = _r$8;
+		slopeHeightItemsSlice = _tuple$6[0];
+		mode[0].slopeHeightItems = _tuple$6[1];
+		$r = mode[0].floorHeightBox.SetItems(floorHeightItemsSlice); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mode[0].ceilingHeightBox.SetItems(ceilingHeightItemsSlice); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mode[0].slopeHeightBox.SetItems(slopeHeightItemsSlice); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$9 = panelBuilder.addComboProperty("Slope Control", $methodVal(mode[0], "onTilePropertyChangeRequested")); /* */ $s = 14; case 14: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		_tuple$7 = _r$9;
+		mode[0].slopeControlLabel = _tuple$7[0];
+		mode[0].slopeControlBox = _tuple$7[1];
+		setter$1 = (function(context, lastGrabX, mode) { return function(properties, value) {
+			var $ptr, properties, slopeControl, slopeControl$24ptr, value;
+			slopeControl = $assertType(value, model$1.SlopeControl);
+			properties.SlopeControl = (slopeControl$24ptr || (slopeControl$24ptr = new ptrType$8(function() { return slopeControl; }, function($v) { slopeControl = $v; })));
+		}; })(context, lastGrabX, mode);
+		slopeControls = model$1.SlopeControls();
+		slopeControlItems = $makeSlice(sliceType, slopeControls.$length);
+		mode[0].slopeControlItems = {};
+		_ref$1 = slopeControls;
+		_i$1 = 0;
+		while (true) {
+			if (!(_i$1 < _ref$1.$length)) { break; }
+			index$1 = _i$1;
+			slopeControl = ((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]);
+			item$1 = new tilePropertyItem.ptr(new model$1.SlopeControl(slopeControl), setter$1);
+			((index$1 < 0 || index$1 >= slopeControlItems.$length) ? ($throwRuntimeError("index out of range"), undefined) : slopeControlItems.$array[slopeControlItems.$offset + index$1] = item$1);
+			_key$2 = slopeControl; (mode[0].slopeControlItems || $throwRuntimeError("assignment to entry in nil map"))[model$1.SlopeControl.keyFor(_key$2)] = { k: _key$2, v: item$1 };
+			_i$1++;
+		}
+		_key$3 = ""; (mode[0].slopeControlItems || $throwRuntimeError("assignment to entry in nil map"))[model$1.SlopeControl.keyFor(_key$3)] = { k: _key$3, v: new tilePropertyItem.ptr(new $String(""), $throwNilPointerError) };
+		$r = mode[0].slopeControlBox.SetItems(slopeControlItems); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return mode[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewLevelMapMode }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._i = _i; $f._key = _key; $f._key$1 = _key$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.builder = builder; $f.builder$1 = builder$1; $f.context = context; $f.index = index; $f.item = item; $f.lastGrabX = lastGrabX; $f.mapDisplay = mapDisplay; $f.maxRight = maxRight; $f.minRight = minRight; $f.mode = mode; $f.panelBuilder = panelBuilder; $f.parent = parent; $f.setter = setter; $f.tileType = tileType; $f.tileTypeItems = tileTypeItems; $f.tileTypes = tileTypes; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewLevelMapMode }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._i = _i; $f._i$1 = _i$1; $f._key = _key; $f._key$1 = _key$1; $f._key$2 = _key$2; $f._key$3 = _key$3; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f.builder = builder; $f.builder$1 = builder$1; $f.ceilingHeightItemsSlice = ceilingHeightItemsSlice; $f.context = context; $f.floorHeightItemsSlice = floorHeightItemsSlice; $f.index = index; $f.index$1 = index$1; $f.item = item; $f.item$1 = item$1; $f.lastGrabX = lastGrabX; $f.mapDisplay = mapDisplay; $f.maxRight = maxRight; $f.minRight = minRight; $f.mode = mode; $f.negativeHeight = negativeHeight; $f.panelBuilder = panelBuilder; $f.parent = parent; $f.positiveHeight = positiveHeight; $f.setter = setter; $f.setter$1 = setter$1; $f.setupCollections = setupCollections; $f.slopeControl = slopeControl; $f.slopeControlItems = slopeControlItems; $f.slopeControls = slopeControls; $f.slopeHeightItemsSlice = slopeHeightItemsSlice; $f.tileType = tileType; $f.tileTypeItems = tileTypeItems; $f.tileTypes = tileTypes; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewLevelMapMode = NewLevelMapMode;
 	LevelMapMode.ptr.prototype.SetActive = function(active) {
@@ -34517,8 +34627,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	};
 	LevelMapMode.prototype.toggleSelectedTile = function(coord) { return this.$val.toggleSelectedTile(coord); };
 	LevelMapMode.ptr.prototype.onSelectedTilesChanged = function() {
-		var $ptr, _entry, _i, _r, _r$1, _r$2, _ref, coord, mode, properties, tile, tileMap, typeUnifier, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; coord = $f.coord; mode = $f.mode; properties = $f.properties; tile = $f.tile; tileMap = $f.tileMap; typeUnifier = $f.typeUnifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _i, _r, _r$1, _r$2, _ref, ceilingHeightUnifier, coord, floorHeightUnifier, mode, properties, slopeControlUnifier, slopeHeightUnifier, tile, tileMap, typeUnifier, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; ceilingHeightUnifier = $f.ceilingHeightUnifier; coord = $f.coord; floorHeightUnifier = $f.floorHeightUnifier; mode = $f.mode; properties = $f.properties; slopeControlUnifier = $f.slopeControlUnifier; slopeHeightUnifier = $f.slopeHeightUnifier; tile = $f.tile; tileMap = $f.tileMap; typeUnifier = $f.typeUnifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
 		mode.mapDisplay.SetSelectedTiles(mode.selectedTiles);
 		_r = mode.context.ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
@@ -34526,6 +34636,10 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		_r$2 = _r$1.TileMap(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		tileMap = _r$2;
 		typeUnifier = util.NewValueUnifier(new model$1.TileType(""));
+		floorHeightUnifier = util.NewValueUnifier(new model$1.HeightUnit(-1));
+		ceilingHeightUnifier = util.NewValueUnifier(new model$1.HeightUnit(-1));
+		slopeHeightUnifier = util.NewValueUnifier(new model$1.HeightUnit(-1));
+		slopeControlUnifier = util.NewValueUnifier(new model$1.SlopeControl(""));
 		_ref = mode.selectedTiles;
 		_i = 0;
 		while (true) {
@@ -34533,22 +34647,30 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			coord = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), model.TileCoordinate);
 			tile = tileMap.Tile($clone(coord, model.TileCoordinate));
 			properties = tile.Properties();
-			if (!(properties === ptrType$7.nil)) {
+			if (!(properties === ptrType$9.nil)) {
 				typeUnifier.Add(new model$1.TileType(properties.Type.$get()));
+				floorHeightUnifier.Add(new model$1.HeightUnit(properties.FloorHeight.$get()));
+				ceilingHeightUnifier.Add(new model$1.HeightUnit(properties.CeilingHeight.$get()));
+				slopeHeightUnifier.Add(new model$1.HeightUnit(properties.SlopeHeight.$get()));
+				slopeControlUnifier.Add(new model$1.SlopeControl(properties.SlopeControl.$get()));
 			}
 			_i++;
 		}
-		$r = mode.tileTypeBox.SetSelectedItem((_entry = mode.tileTypeItems[model$1.TileType.keyFor($assertType(typeUnifier.Value(), model$1.TileType))], _entry !== undefined ? _entry.v : ptrType$8.nil)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mode.tileTypeBox.SetSelectedItem((_entry = mode.tileTypeItems[model$1.TileType.keyFor($assertType(typeUnifier.Value(), model$1.TileType))], _entry !== undefined ? _entry.v : ptrType$10.nil)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mode.floorHeightBox.SetSelectedItem((_entry$1 = mode.floorHeightItems[model$1.HeightUnit.keyFor($assertType(floorHeightUnifier.Value(), model$1.HeightUnit))], _entry$1 !== undefined ? _entry$1.v : ptrType$10.nil)); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mode.ceilingHeightBox.SetSelectedItem((_entry$2 = mode.ceilingHeightItems[model$1.HeightUnit.keyFor($assertType(ceilingHeightUnifier.Value(), model$1.HeightUnit))], _entry$2 !== undefined ? _entry$2.v : ptrType$10.nil)); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mode.slopeHeightBox.SetSelectedItem((_entry$3 = mode.slopeHeightItems[model$1.HeightUnit.keyFor($assertType(slopeHeightUnifier.Value(), model$1.HeightUnit))], _entry$3 !== undefined ? _entry$3.v : ptrType$10.nil)); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mode.slopeControlBox.SetSelectedItem((_entry$4 = mode.slopeControlItems[model$1.SlopeControl.keyFor($assertType(slopeControlUnifier.Value(), model$1.SlopeControl))], _entry$4 !== undefined ? _entry$4.v : ptrType$10.nil)); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.onSelectedTilesChanged }; } $f.$ptr = $ptr; $f._entry = _entry; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.coord = coord; $f.mode = mode; $f.properties = properties; $f.tile = tile; $f.tileMap = tileMap; $f.typeUnifier = typeUnifier; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.onSelectedTilesChanged }; } $f.$ptr = $ptr; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.ceilingHeightUnifier = ceilingHeightUnifier; $f.coord = coord; $f.floorHeightUnifier = floorHeightUnifier; $f.mode = mode; $f.properties = properties; $f.slopeControlUnifier = slopeControlUnifier; $f.slopeHeightUnifier = slopeHeightUnifier; $f.tile = tile; $f.tileMap = tileMap; $f.typeUnifier = typeUnifier; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelMapMode.prototype.onSelectedTilesChanged = function() { return this.$val.onSelectedTilesChanged(); };
 	LevelMapMode.ptr.prototype.onTilePropertyChangeRequested = function(item) {
 		var $ptr, _r, _r$1, item, mode, properties, propertyItem, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; item = $f.item; mode = $f.mode; properties = $f.properties; propertyItem = $f.propertyItem; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
-		propertyItem = $assertType(item, ptrType$8);
-		properties = new model$1.TileProperties.ptr(ptrType$6.nil, ptrType$9.nil, ptrType$9.nil, ptrType$9.nil, ptrType$10.nil, ptrType$11.nil, ptrType$12.nil);
+		propertyItem = $assertType(item, ptrType$10);
+		properties = new model$1.TileProperties.ptr(ptrType$6.nil, ptrType$7.nil, ptrType$7.nil, ptrType$7.nil, ptrType$8.nil, ptrType$11.nil, ptrType$12.nil);
 		$r = propertyItem.setter(properties, propertyItem.value); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_r = mode.context.ModelAdapter(); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r$1 = _r.ActiveLevel(); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
@@ -34908,16 +35030,16 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	WelcomeMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
 	ptrType$21.methods = [{prop: "addComboProperty", name: "addComboProperty", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$String, controls.SelectionChangeHandler], [ptrType$1, ptrType$2], false)}];
 	ptrType$22.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
-	ptrType$8.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
+	ptrType$10.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
 	ptrType$23.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "setSelectedTiles", name: "setSelectedTiles", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$2], [], false)}, {prop: "toggleSelectedTile", name: "toggleSelectedTile", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([model.TileCoordinate], [], false)}, {prop: "onSelectedTilesChanged", name: "onSelectedTilesChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "onTilePropertyChangeRequested", name: "onTilePropertyChangeRequested", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([controls.ComboBoxItem], [], false)}];
 	ptrType$24.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "onLevelObjectsChanged", name: "onLevelObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "updateDisplayedObjects", name: "updateDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseScrolled", name: "onMouseScrolled", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "updateClosestDisplayedObjects", name: "updateClosestDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "updateClosestObjectHighlight", name: "updateClosestObjectHighlight", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "setSelectedObjects", name: "setSelectedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$3], [], false)}, {prop: "toggleSelectedObject", name: "toggleSelectedObject", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType$15], [], false)}, {prop: "onSelectedObjectsChanged", name: "onSelectedObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}];
 	ptrType$25.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
 	Context.init([{prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$18], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$19], [ptrType$20], false)}]);
 	controlPanelBuilder.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "controlFactory", name: "controlFactory", exported: false, typ: controls.Factory, tag: ""}, {prop: "parent", name: "parent", exported: false, typ: ptrType, tag: ""}, {prop: "listLeft", name: "listLeft", exported: false, typ: ui.Anchor, tag: ""}, {prop: "listRight", name: "listRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "listCenterEnd", name: "listCenterEnd", exported: false, typ: ui.Anchor, tag: ""}, {prop: "listCenterStart", name: "listCenterStart", exported: false, typ: ui.Anchor, tag: ""}, {prop: "lastBottom", name: "lastBottom", exported: false, typ: ui.Anchor, tag: ""}]);
 	LevelControlMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "activeLevelLabel", name: "activeLevelLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "activeLevelBox", name: "activeLevelBox", exported: false, typ: ptrType$2, tag: ""}]);
-	tilePropertySetter.init([ptrType$7, $emptyInterface], [], false);
+	tilePropertySetter.init([ptrType$9, $emptyInterface], [], false);
 	tilePropertyItem.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "value", name: "value", exported: false, typ: $emptyInterface, tag: ""}, {prop: "setter", name: "setter", exported: false, typ: tilePropertySetter, tag: ""}]);
-	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$3, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "selectedTiles", name: "selectedTiles", exported: false, typ: sliceType$2, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "tileTypeItems", name: "tileTypeItems", exported: false, typ: mapType, tag: ""}, {prop: "floorHeightLabel", name: "floorHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorHeightBox", name: "floorHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingHeightLabel", name: "ceilingHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingHeightBox", name: "ceilingHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeHeightLabel", name: "slopeHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeHeightBox", name: "slopeHeightBox", exported: false, typ: ptrType$2, tag: ""}]);
+	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$3, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "selectedTiles", name: "selectedTiles", exported: false, typ: sliceType$2, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "tileTypeItems", name: "tileTypeItems", exported: false, typ: mapType, tag: ""}, {prop: "floorHeightLabel", name: "floorHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorHeightBox", name: "floorHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "floorHeightItems", name: "floorHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "ceilingHeightLabel", name: "ceilingHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingHeightBox", name: "ceilingHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingHeightItems", name: "ceilingHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeHeightLabel", name: "slopeHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeHeightBox", name: "slopeHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeHeightItems", name: "slopeHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeControlLabel", name: "slopeControlLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeControlBox", name: "slopeControlBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeControlItems", name: "slopeControlItems", exported: false, typ: mapType$2, tag: ""}]);
 	LevelObjectsMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$13, tag: ""}, {prop: "objectsAdapter", name: "objectsAdapter", exported: false, typ: ptrType$14, tag: ""}, {prop: "displayFilter", name: "displayFilter", exported: false, typ: funcType, tag: ""}, {prop: "displayedObjects", name: "displayedObjects", exported: false, typ: sliceType$3, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$3, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "closestObjects", name: "closestObjects", exported: false, typ: sliceType$3, tag: ""}, {prop: "closestObjectHighlightIndex", name: "closestObjectHighlightIndex", exported: false, typ: $Int, tag: ""}, {prop: "selectedObjects", name: "selectedObjects", exported: false, typ: sliceType$3, tag: ""}]);
 	WelcomeMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "infoArea", name: "infoArea", exported: false, typ: ptrType, tag: ""}, {prop: "infoLabel", name: "infoLabel", exported: false, typ: ptrType$1, tag: ""}]);
 	resultEntry.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "distance", name: "distance", exported: false, typ: $Float32, tag: ""}, {prop: "object", name: "object", exported: false, typ: ptrType$15, tag: ""}]);
