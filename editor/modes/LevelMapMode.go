@@ -288,9 +288,10 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			}
 			{
 				var useAdjacentWallTextureSlice []controls.ComboBoxItem
-				useAdjacentWallTextureSlice, mode.useAdjacentWallTextureItems = setupBooleanCollections(func(properties *dataModel.TileProperties, value bool) {
-					properties.RealWorld.UseAdjacentWallTexture = &value
-				})
+				useAdjacentWallTextureSlice, mode.useAdjacentWallTextureItems = setupBooleanCollections(
+					func(properties *dataModel.TileProperties, value bool) {
+						properties.RealWorld.UseAdjacentWallTexture = &value
+					})
 
 				mode.useAdjacentWallTextureLabel, mode.useAdjacentWallTextureBox = realWorldPanelBuilder.addComboProperty("Use Adjacent Wall Texture", mode.onTilePropertyChangeRequested)
 				mode.useAdjacentWallTextureBox.SetItems(useAdjacentWallTextureSlice)

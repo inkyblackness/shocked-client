@@ -11,7 +11,7 @@ type LabelBuilder struct {
 
 	textPainter     graphics.TextPainter
 	texturizer      BitmapTexturizer
-	textureRenderer *graphics.BitmapTextureRenderer
+	textureRenderer graphics.TextureRenderer
 
 	scale             float32
 	horizontalAligner Aligner
@@ -20,7 +20,7 @@ type LabelBuilder struct {
 
 // NewLabelBuilder returns a new instance of a LabelBuilder.
 func NewLabelBuilder(textPainter graphics.TextPainter, texturizer BitmapTexturizer,
-	textureRenderer *graphics.BitmapTextureRenderer) *LabelBuilder {
+	textureRenderer graphics.TextureRenderer) *LabelBuilder {
 	builder := &LabelBuilder{
 		areaBuilder:       ui.NewAreaBuilder(),
 		textPainter:       textPainter,

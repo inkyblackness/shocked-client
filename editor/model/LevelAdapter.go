@@ -62,7 +62,8 @@ func (adapter *LevelAdapter) OnIDChanged(callback func()) {
 func (adapter *LevelAdapter) requestByID(levelID string) {
 	adapter.id.set("")
 	adapter.tileMap.clear()
-	adapter.levelTextures.set(nil)
+	textures := []int{}
+	adapter.levelTextures.set(&textures)
 	objects := make(map[int]*LevelObject)
 	adapter.levelObjects.set(&objects)
 
@@ -104,7 +105,7 @@ func (adapter *LevelAdapter) onTilePropertiesUpdated(coord TileCoordinate, prope
 
 // LevelTextureIDs returns the IDs of the level textures.
 func (adapter *LevelAdapter) LevelTextureIDs() []int {
-	return adapter.levelTextures.get().([]int)
+	return *adapter.levelTextures.get().(*[]int)
 }
 
 // LevelTextureID returns the texture ID for given level index.
@@ -120,7 +121,12 @@ func (adapter *LevelAdapter) LevelTextureID(index int) (id int) {
 }
 
 func (adapter *LevelAdapter) onLevelTextures(textureIDs []int) {
-	adapter.levelTextures.set(textureIDs)
+	adapter.levelTextures.set(&textureIDs)
+}
+
+// OnLevelTexturesChanged registers for updates of the level textures.
+func (adapter *LevelAdapter) OnLevelTexturesChanged(callback func()) {
+	adapter.levelTextures.addObserver(callback)
 }
 
 // LevelObjects returns a sorted set of objects that match the provided filter.

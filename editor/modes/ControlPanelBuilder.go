@@ -60,6 +60,37 @@ func (panelBuilder *controlPanelBuilder) addComboProperty(labelText string, hand
 	return
 }
 
+func (panelBuilder *controlPanelBuilder) addTextureProperty(labelText string, provider controls.TextureProvider,
+	handler controls.TextureSelectionChangeHandler) (label *controls.Label, selector *controls.TextureSelector) {
+	top := ui.NewOffsetAnchor(panelBuilder.lastBottom, 2)
+	bottom := ui.NewOffsetAnchor(top, 64+4)
+	{
+		builder := panelBuilder.controlFactory.ForLabel()
+		builder.SetParent(panelBuilder.parent)
+		builder.SetLeft(panelBuilder.listLeft)
+		builder.SetTop(top)
+		builder.SetRight(panelBuilder.listCenterEnd)
+		builder.SetBottom(bottom)
+		builder.AlignedHorizontallyBy(controls.RightAligner)
+		label = builder.Build()
+		label.SetText(labelText)
+	}
+	{
+		builder := panelBuilder.controlFactory.ForTextureSelector()
+		builder.SetParent(panelBuilder.parent)
+		builder.SetLeft(panelBuilder.listCenterStart)
+		builder.SetTop(top)
+		builder.SetRight(panelBuilder.listRight)
+		builder.SetBottom(bottom)
+		builder.WithProvider(provider)
+		builder.WithSelectionChangeHandler(handler)
+		selector = builder.Build()
+	}
+	panelBuilder.lastBottom = bottom
+
+	return
+}
+
 func (panelBuilder *controlPanelBuilder) addSection(visible bool) (sectionArea *ui.Area, sectionBuilder *controlPanelBuilder) {
 	sectionBuilder = &controlPanelBuilder{}
 	sectionBuilder.controlFactory = panelBuilder.controlFactory

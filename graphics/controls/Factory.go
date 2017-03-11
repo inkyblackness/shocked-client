@@ -5,4 +5,5 @@ type Factory interface {
 	ForLabel() *LabelBuilder
 	ForTextButton() *TextButtonBuilder
 	ForComboBox() *ComboBoxBuilder
+	ForTextureSelector() *TextureSelectorBuilder
 }

@@ -42,8 +42,10 @@ type MainApplication struct {
 	rectRenderer       *graphics.RectangleRenderer
 	uiTextRenderer     *graphics.BitmapTextureRenderer
 
-	worldTextures   map[dataModel.TextureSize]*graphics.BufferedTextureStore
-	gameObjectIcons *graphics.BufferedTextureStore
+	worldTextures        map[dataModel.TextureSize]*graphics.BufferedTextureStore
+	gameObjectIcons      *graphics.BufferedTextureStore
+	worldPalette         *graphics.PaletteTexture
+	worldTextureRenderer *graphics.BitmapTextureRenderer
 }
 
 // NewMainApplication returns a new instance of MainApplication.
@@ -123,6 +125,7 @@ func (app *MainApplication) initResources() {
 		app.initWorldTextureBuffer(size)
 	}
 	app.initGameObjectIconsBuffer()
+	app.initWorldPalette()
 }
 
 func (app *MainApplication) initWorldTextureBuffer(size dataModel.TextureSize) {
@@ -168,6 +171,26 @@ func (app *MainApplication) initGameObjectIconsBuffer() {
 	app.gameObjectIcons = buffer
 }
 
+func (app *MainApplication) initWorldPalette() {
+	gamePalette := app.modelAdapter.GamePalette()
+	app.modelAdapter.OnGamePaletteChanged(func() {
+		gamePalette = app.modelAdapter.GamePalette()
+		app.worldPalette.Update()
+	})
+	app.worldPalette = graphics.NewPaletteTexture(app.gl, func(index int) (r byte, g byte, b byte, a byte) {
+		color := &gamePalette[index]
+
+		r = byte(color.Red)
+		g = byte(color.Green)
+		b = byte(color.Blue)
+		if index > 0 {
+			a = 0xFF
+		}
+
+		return
+	})
+}
+
 func (app *MainApplication) initInterface() {
 	app.rectRenderer = graphics.NewRectangleRenderer(app.gl, &app.projectionMatrix)
 
@@ -186,6 +209,7 @@ func (app *MainApplication) initInterface() {
 	viewMatrix := mgl.Ident4()
 	uiRenderContext := graphics.NewBasicRenderContext(app.gl, &app.projectionMatrix, &viewMatrix)
 	app.uiTextRenderer = graphics.NewBitmapTextureRenderer(uiRenderContext, app.uiTextPalette)
+	app.worldTextureRenderer = graphics.NewBitmapTextureRenderer(uiRenderContext, app.worldPalette)
 
 	app.rootArea = newRootArea(app)
 }
@@ -327,4 +351,9 @@ func (app *MainApplication) ForTextButton() *controls.TextButtonBuilder {
 // ForComboBox implements the controls.Factory interface.
 func (app *MainApplication) ForComboBox() *controls.ComboBoxBuilder {
 	return controls.NewComboBoxBuilder(app.ForLabel(), app.rectRenderer)
+}
+
+// ForTextureSelector implements the controls.Factory interface.
+func (app *MainApplication) ForTextureSelector() *controls.TextureSelectorBuilder {
+	return controls.NewTextureSelectorBuilder(app.rectRenderer, app.worldTextureRenderer)
 }

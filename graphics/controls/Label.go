@@ -16,7 +16,7 @@ type Label struct {
 
 	textPainter     graphics.TextPainter
 	texturizer      BitmapTexturizer
-	textureRenderer *graphics.BitmapTextureRenderer
+	textureRenderer graphics.TextureRenderer
 
 	scale             float32
 	horizontalAligner Aligner

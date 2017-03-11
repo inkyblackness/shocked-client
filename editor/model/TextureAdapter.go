@@ -36,6 +36,11 @@ func (adapter *TextureAdapter) clear() {
 	}
 }
 
+// WorldTextureCount returns the number of available textures.
+func (adapter *TextureAdapter) WorldTextureCount() int {
+	return 273
+}
+
 // RequestWorldTextureBitmaps will load the bitmap data for given world texture.
 func (adapter *TextureAdapter) RequestWorldTextureBitmaps(key int) {
 	if adapter.worldTextureRequestsPending[key] == 0 {

@@ -4,6 +4,8 @@ import (
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
+
+	dataModel "github.com/inkyblackness/shocked-model"
 )
 
 // LevelControlMode is a mode for archive level control.
@@ -14,6 +16,11 @@ type LevelControlMode struct {
 
 	activeLevelLabel *controls.Label
 	activeLevelBox   *controls.ComboBox
+
+	levelTexturesLabel    *controls.Label
+	levelTexturesSelector *controls.TextureSelector
+	worldTexturesLabel    *controls.Label
+	worldTexturesSelector *controls.TextureSelector
 }
 
 // NewLevelControlMode returns a new instance.
@@ -25,7 +32,7 @@ func NewLevelControlMode(context Context, parent *ui.Area) *LevelControlMode {
 		builder.SetParent(parent)
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0))
 		builder.SetTop(ui.NewOffsetAnchor(parent.Top(), 0))
-		builder.SetRight(ui.NewOffsetAnchor(parent.Left(), 300))
+		builder.SetRight(ui.NewRelativeAnchor(parent.Left(), parent.Right(), 0.66))
 		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0))
 		builder.SetVisible(false)
 		builder.OnRender(func(area *ui.Area) {
@@ -35,49 +42,34 @@ func NewLevelControlMode(context Context, parent *ui.Area) *LevelControlMode {
 		})
 		mode.area = builder.Build()
 	}
-	listLeft := ui.NewOffsetAnchor(mode.area.Left(), 2)
-	listRight := ui.NewOffsetAnchor(mode.area.Right(), 0)
-	listCenter := ui.NewRelativeAnchor(listLeft, listRight, 0.5)
-	listCenterEnd := ui.NewOffsetAnchor(listCenter, -1)
-	listCenterStart := ui.NewOffsetAnchor(listCenter, 1)
 	{
-		top := ui.NewOffsetAnchor(mode.area.Top(), 2)
+		panelBuilder := newControlPanelBuilder(mode.area, context.ControlFactory())
+
 		{
-			builder := context.ControlFactory().ForLabel()
-			builder.SetParent(mode.area)
-			builder.SetLeft(listLeft)
-			builder.SetTop(top)
-			builder.SetRight(listCenterEnd)
-			builder.SetBottom(ui.NewOffsetAnchor(top, 25))
-			builder.AlignedHorizontallyBy(controls.RightAligner)
-			mode.activeLevelLabel = builder.Build()
-			mode.activeLevelLabel.SetText("Active Level")
-		}
-		{
-			builder := context.ControlFactory().ForComboBox()
-			builder.SetParent(mode.area)
-			builder.SetLeft(listCenterStart)
-			builder.SetTop(top)
-			builder.SetRight(listRight)
-			builder.SetBottom(ui.NewOffsetAnchor(top, 25))
-			builder.WithSelectionChangeHandler(func(item controls.ComboBoxItem) {
+			mode.activeLevelLabel, mode.activeLevelBox = panelBuilder.addComboProperty("Active Level", func(item controls.ComboBoxItem) {
 				context.ModelAdapter().RequestActiveLevel(item.(string))
 			})
-			mode.activeLevelBox = builder.Build()
+
+			adapter := context.ModelAdapter()
+			activeLevelAdapter := adapter.ActiveLevel()
+			activeLevelAdapter.OnIDChanged(func() {
+				mode.activeLevelBox.SetSelectedItem(activeLevelAdapter.ID())
+			})
+			adapter.OnAvailableLevelsChanged(func() {
+				ids := adapter.AvailableLevelIDs()
+				items := make([]controls.ComboBoxItem, len(ids))
+				for index, id := range ids {
+					items[index] = id
+				}
+				mode.activeLevelBox.SetItems(items)
+			})
 		}
-		adapter := context.ModelAdapter()
-		activeLevelAdapter := adapter.ActiveLevel()
-		activeLevelAdapter.OnIDChanged(func() {
-			mode.activeLevelBox.SetSelectedItem(activeLevelAdapter.ID())
-		})
-		adapter.OnAvailableLevelsChanged(func() {
-			ids := adapter.AvailableLevelIDs()
-			items := make([]controls.ComboBoxItem, len(ids))
-			for index, id := range ids {
-				items[index] = id
-			}
-			mode.activeLevelBox.SetItems(items)
-		})
+		{
+			mode.levelTexturesLabel, mode.levelTexturesSelector = panelBuilder.addTextureProperty("Level Textures",
+				mode.levelTextures, mode.onSelectedLevelTextureChanged)
+			mode.worldTexturesLabel, mode.worldTexturesSelector = panelBuilder.addTextureProperty("World Textures",
+				mode.worldTextures, mode.onSelectedWorldTextureChanged)
+		}
 	}
 
 	return mode
@@ -86,4 +78,42 @@ func NewLevelControlMode(context Context, parent *ui.Area) *LevelControlMode {
 // SetActive implements the Mode interface.
 func (mode *LevelControlMode) SetActive(active bool) {
 	mode.area.SetVisible(active)
+}
+
+func (mode *LevelControlMode) levelTextures() []*graphics.BitmapTexture {
+	ids := mode.context.ModelAdapter().ActiveLevel().LevelTextureIDs()
+	textures := make([]*graphics.BitmapTexture, len(ids))
+	store := mode.context.ForGraphics().WorldTextureStore(dataModel.TextureLarge)
+
+	for index, id := range ids {
+		textures[index] = store.Texture(graphics.TextureKeyFromInt(id))
+	}
+
+	return textures
+}
+
+func (mode *LevelControlMode) worldTextures() []*graphics.BitmapTexture {
+	textureCount := mode.context.ModelAdapter().TextureAdapter().WorldTextureCount()
+	textures := make([]*graphics.BitmapTexture, textureCount)
+	store := mode.context.ForGraphics().WorldTextureStore(dataModel.TextureLarge)
+
+	for index := 0; index < textureCount; index++ {
+		textures[index] = store.Texture(graphics.TextureKeyFromInt(index))
+	}
+
+	return textures
+}
+
+func (mode *LevelControlMode) onSelectedLevelTextureChanged(index int) {
+	ids := mode.context.ModelAdapter().ActiveLevel().LevelTextureIDs()
+
+	if (index >= 0) && (index < len(ids)) {
+		mode.worldTexturesSelector.SetSelectedIndex(ids[index])
+	} else {
+		mode.worldTexturesSelector.SetSelectedIndex(-1)
+	}
+}
+
+func (mode *LevelControlMode) onSelectedWorldTextureChanged(index int) {
+
 }
