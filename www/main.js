@@ -34314,7 +34314,7 @@ $packages["github.com/inkyblackness/shocked-client/util"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() {
-	var $pkg = {}, $init, fmt, mgl32, display, model, env, keys, graphics, controls, ui, events, util, model$1, sort, Context, controlPanelBuilder, LevelControlMode, tilePropertySetter, tilePropertyItem, LevelMapMode, LevelObjectsMode, WelcomeMode, resultEntry, ptrType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, ptrType$5, sliceType, ptrType$6, sliceType$1, sliceType$2, sliceType$3, ptrType$7, sliceType$4, ptrType$8, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, ptrType$15, ptrType$16, ptrType$17, ptrType$18, ptrType$19, ptrType$20, sliceType$5, ptrType$21, ptrType$22, sliceType$6, ptrType$23, ptrType$24, ptrType$25, ptrType$26, ptrType$27, mapType, mapType$1, mapType$2, mapType$3, mapType$4, ptrType$28, funcType, ptrType$29, newControlPanelBuilder, NewLevelControlMode, NewLevelMapMode, NewLevelObjectsMode, NewWelcomeMode;
+	var $pkg = {}, $init, fmt, mgl32, display, model, env, keys, graphics, controls, ui, events, util, model$1, sort, Context, controlPanelBuilder, LevelControlMode, tilePropertySetter, tilePropertyItem, LevelMapMode, LevelObjectsMode, WelcomeMode, resultEntry, ptrType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, ptrType$5, sliceType, ptrType$6, sliceType$1, sliceType$2, sliceType$3, ptrType$7, sliceType$4, ptrType$8, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, ptrType$15, ptrType$16, ptrType$17, ptrType$18, ptrType$19, ptrType$20, sliceType$5, ptrType$21, ptrType$22, sliceType$6, ptrType$23, ptrType$24, ptrType$25, ptrType$26, funcType, ptrType$27, mapType, mapType$1, mapType$2, mapType$3, mapType$4, ptrType$28, funcType$1, ptrType$29, newControlPanelBuilder, NewLevelControlMode, NewLevelMapMode, NewLevelObjectsMode, NewWelcomeMode;
 	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
 	display = $packages["github.com/inkyblackness/shocked-client/editor/display"];
@@ -34386,7 +34386,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.value = value_;
 		this.setter = setter_;
 	});
-	LevelMapMode = $pkg.LevelMapMode = $newType(0, $kindStruct, "modes.LevelMapMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, levelAdapter_, mapDisplay_, area_, panel_, panelRight_, selectedTiles_, tileTypeLabel_, tileTypeBox_, tileTypeItems_, floorHeightLabel_, floorHeightBox_, floorHeightItems_, ceilingHeightLabel_, ceilingHeightBox_, ceilingHeightItems_, slopeHeightLabel_, slopeHeightBox_, slopeHeightItems_, slopeControlLabel_, slopeControlBox_, slopeControlItems_, realWorldArea_, floorTextureRotationsLabel_, floorTextureRotationsBox_, floorTextureRotationsItems_, ceilingTextureRotationsLabel_, ceilingTextureRotationsBox_, ceilingTextureRotationsItems_, wallTextureOffsetLabel_, wallTextureOffsetBox_, wallTextureOffsetItems_, useAdjacentWallTextureLabel_, useAdjacentWallTextureBox_, useAdjacentWallTextureItems_, cyberspaceArea_) {
+	LevelMapMode = $pkg.LevelMapMode = $newType(0, $kindStruct, "modes.LevelMapMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, levelAdapter_, mapDisplay_, area_, panel_, panelRight_, selectedTiles_, tileTypeLabel_, tileTypeBox_, tileTypeItems_, floorHeightLabel_, floorHeightBox_, floorHeightItems_, ceilingHeightLabel_, ceilingHeightBox_, ceilingHeightItems_, slopeHeightLabel_, slopeHeightBox_, slopeHeightItems_, slopeControlLabel_, slopeControlBox_, slopeControlItems_, realWorldArea_, floorTextureLabel_, floorTextureSelector_, floorTextureRotationsLabel_, floorTextureRotationsBox_, floorTextureRotationsItems_, ceilingTextureLabel_, ceilingTextureSelector_, ceilingTextureRotationsLabel_, ceilingTextureRotationsBox_, ceilingTextureRotationsItems_, wallTextureLabel_, wallTextureSelector_, wallTextureOffsetLabel_, wallTextureOffsetBox_, wallTextureOffsetItems_, useAdjacentWallTextureLabel_, useAdjacentWallTextureBox_, useAdjacentWallTextureItems_, cyberspaceArea_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.context = $ifaceNil;
@@ -34412,12 +34412,18 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			this.slopeControlBox = ptrType$2.nil;
 			this.slopeControlItems = false;
 			this.realWorldArea = ptrType.nil;
+			this.floorTextureLabel = ptrType$1.nil;
+			this.floorTextureSelector = ptrType$3.nil;
 			this.floorTextureRotationsLabel = ptrType$1.nil;
 			this.floorTextureRotationsBox = ptrType$2.nil;
 			this.floorTextureRotationsItems = false;
+			this.ceilingTextureLabel = ptrType$1.nil;
+			this.ceilingTextureSelector = ptrType$3.nil;
 			this.ceilingTextureRotationsLabel = ptrType$1.nil;
 			this.ceilingTextureRotationsBox = ptrType$2.nil;
 			this.ceilingTextureRotationsItems = false;
+			this.wallTextureLabel = ptrType$1.nil;
+			this.wallTextureSelector = ptrType$3.nil;
 			this.wallTextureOffsetLabel = ptrType$1.nil;
 			this.wallTextureOffsetBox = ptrType$2.nil;
 			this.wallTextureOffsetItems = false;
@@ -34450,12 +34456,18 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.slopeControlBox = slopeControlBox_;
 		this.slopeControlItems = slopeControlItems_;
 		this.realWorldArea = realWorldArea_;
+		this.floorTextureLabel = floorTextureLabel_;
+		this.floorTextureSelector = floorTextureSelector_;
 		this.floorTextureRotationsLabel = floorTextureRotationsLabel_;
 		this.floorTextureRotationsBox = floorTextureRotationsBox_;
 		this.floorTextureRotationsItems = floorTextureRotationsItems_;
+		this.ceilingTextureLabel = ceilingTextureLabel_;
+		this.ceilingTextureSelector = ceilingTextureSelector_;
 		this.ceilingTextureRotationsLabel = ceilingTextureRotationsLabel_;
 		this.ceilingTextureRotationsBox = ceilingTextureRotationsBox_;
 		this.ceilingTextureRotationsItems = ceilingTextureRotationsItems_;
+		this.wallTextureLabel = wallTextureLabel_;
+		this.wallTextureSelector = wallTextureSelector_;
 		this.wallTextureOffsetLabel = wallTextureOffsetLabel_;
 		this.wallTextureOffsetBox = wallTextureOffsetBox_;
 		this.wallTextureOffsetItems = wallTextureOffsetItems_;
@@ -34554,6 +34566,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	ptrType$24 = $ptrType(mgl32.Mat4);
 	ptrType$25 = $ptrType(graphics.RenderContext);
 	ptrType$26 = $ptrType(LevelControlMode);
+	funcType = $funcType([ptrType$15], [], false);
 	ptrType$27 = $ptrType(LevelMapMode);
 	mapType = $mapType(model$1.TileType, ptrType$17);
 	mapType$1 = $mapType(model$1.HeightUnit, ptrType$17);
@@ -34561,7 +34574,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	mapType$3 = $mapType($Int, ptrType$17);
 	mapType$4 = $mapType($String, ptrType$17);
 	ptrType$28 = $ptrType(LevelObjectsMode);
-	funcType = $funcType([ptrType$20], [$Bool], false);
+	funcType$1 = $funcType([ptrType$20], [$Bool], false);
 	ptrType$29 = $ptrType(WelcomeMode);
 	newControlPanelBuilder = function(parent, controlFactory) {
 		var $ptr, controlFactory, listCenter, panelBuilder, parent;
@@ -34877,14 +34890,14 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	};
 	tilePropertyItem.prototype.String = function() { return this.$val.String(); };
 	NewLevelMapMode = function(context, parent, mapDisplay) {
-		var $ptr, _arg, _arg$1, _i, _i$1, _key, _key$1, _key$2, _key$3, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$15, _r$16, _r$17, _r$18, _r$19, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _tuple, _tuple$1, _tuple$10, _tuple$11, _tuple$12, _tuple$13, _tuple$14, _tuple$15, _tuple$16, _tuple$17, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, _tuple$9, builder, builder$1, ceilingHeightItemsSlice, ceilingTextureRotationsItemsSlice, context, floorHeightItemsSlice, floorTextureRotationsItemsSlice, index, index$1, item, item$1, lastGrabX, mapDisplay, maxRight, minRight, mode, negativeHeight, panelBuilder, parent, positiveHeight, realWorldPanelBuilder, setter, setter$1, setupBooleanCollections, setupHeightCollections, setupRotations, slopeControl, slopeControlItems, slopeControls, slopeHeightItemsSlice, tileType, tileTypeItems, tileTypes, useAdjacentWallTextureSlice, wallTextureOffsetItemsSlice, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _key$1 = $f._key$1; _key$2 = $f._key$2; _key$3 = $f._key$3; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$17 = $f._r$17; _r$18 = $f._r$18; _r$19 = $f._r$19; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$10 = $f._tuple$10; _tuple$11 = $f._tuple$11; _tuple$12 = $f._tuple$12; _tuple$13 = $f._tuple$13; _tuple$14 = $f._tuple$14; _tuple$15 = $f._tuple$15; _tuple$16 = $f._tuple$16; _tuple$17 = $f._tuple$17; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; _tuple$9 = $f._tuple$9; builder = $f.builder; builder$1 = $f.builder$1; ceilingHeightItemsSlice = $f.ceilingHeightItemsSlice; ceilingTextureRotationsItemsSlice = $f.ceilingTextureRotationsItemsSlice; context = $f.context; floorHeightItemsSlice = $f.floorHeightItemsSlice; floorTextureRotationsItemsSlice = $f.floorTextureRotationsItemsSlice; index = $f.index; index$1 = $f.index$1; item = $f.item; item$1 = $f.item$1; lastGrabX = $f.lastGrabX; mapDisplay = $f.mapDisplay; maxRight = $f.maxRight; minRight = $f.minRight; mode = $f.mode; negativeHeight = $f.negativeHeight; panelBuilder = $f.panelBuilder; parent = $f.parent; positiveHeight = $f.positiveHeight; realWorldPanelBuilder = $f.realWorldPanelBuilder; setter = $f.setter; setter$1 = $f.setter$1; setupBooleanCollections = $f.setupBooleanCollections; setupHeightCollections = $f.setupHeightCollections; setupRotations = $f.setupRotations; slopeControl = $f.slopeControl; slopeControlItems = $f.slopeControlItems; slopeControls = $f.slopeControls; slopeHeightItemsSlice = $f.slopeHeightItemsSlice; tileType = $f.tileType; tileTypeItems = $f.tileTypeItems; tileTypes = $f.tileTypes; useAdjacentWallTextureSlice = $f.useAdjacentWallTextureSlice; wallTextureOffsetItemsSlice = $f.wallTextureOffsetItemsSlice; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _arg, _arg$1, _i, _i$1, _key, _key$1, _key$2, _key$3, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$15, _r$16, _r$17, _r$18, _r$19, _r$2, _r$20, _r$21, _r$22, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _tuple, _tuple$1, _tuple$10, _tuple$11, _tuple$12, _tuple$13, _tuple$14, _tuple$15, _tuple$16, _tuple$17, _tuple$18, _tuple$19, _tuple$2, _tuple$20, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, _tuple$9, builder, builder$1, ceilingHeightItemsSlice, ceilingTextureRotationsItemsSlice, context, floorHeightItemsSlice, floorTextureRotationsItemsSlice, index, index$1, item, item$1, lastGrabX, mapDisplay, maxRight, minRight, mode, negativeHeight, panelBuilder, parent, positiveHeight, realWorldPanelBuilder, setter, setter$1, setupBooleanCollections, setupHeightCollections, setupRotations, slopeControl, slopeControlItems, slopeControls, slopeHeightItemsSlice, tileType, tileTypeItems, tileTypes, useAdjacentWallTextureSlice, wallTextureOffsetItemsSlice, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _key$1 = $f._key$1; _key$2 = $f._key$2; _key$3 = $f._key$3; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$17 = $f._r$17; _r$18 = $f._r$18; _r$19 = $f._r$19; _r$2 = $f._r$2; _r$20 = $f._r$20; _r$21 = $f._r$21; _r$22 = $f._r$22; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$10 = $f._tuple$10; _tuple$11 = $f._tuple$11; _tuple$12 = $f._tuple$12; _tuple$13 = $f._tuple$13; _tuple$14 = $f._tuple$14; _tuple$15 = $f._tuple$15; _tuple$16 = $f._tuple$16; _tuple$17 = $f._tuple$17; _tuple$18 = $f._tuple$18; _tuple$19 = $f._tuple$19; _tuple$2 = $f._tuple$2; _tuple$20 = $f._tuple$20; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; _tuple$9 = $f._tuple$9; builder = $f.builder; builder$1 = $f.builder$1; ceilingHeightItemsSlice = $f.ceilingHeightItemsSlice; ceilingTextureRotationsItemsSlice = $f.ceilingTextureRotationsItemsSlice; context = $f.context; floorHeightItemsSlice = $f.floorHeightItemsSlice; floorTextureRotationsItemsSlice = $f.floorTextureRotationsItemsSlice; index = $f.index; index$1 = $f.index$1; item = $f.item; item$1 = $f.item$1; lastGrabX = $f.lastGrabX; mapDisplay = $f.mapDisplay; maxRight = $f.maxRight; minRight = $f.minRight; mode = $f.mode; negativeHeight = $f.negativeHeight; panelBuilder = $f.panelBuilder; parent = $f.parent; positiveHeight = $f.positiveHeight; realWorldPanelBuilder = $f.realWorldPanelBuilder; setter = $f.setter; setter$1 = $f.setter$1; setupBooleanCollections = $f.setupBooleanCollections; setupHeightCollections = $f.setupHeightCollections; setupRotations = $f.setupRotations; slopeControl = $f.slopeControl; slopeControlItems = $f.slopeControlItems; slopeControls = $f.slopeControls; slopeHeightItemsSlice = $f.slopeHeightItemsSlice; tileType = $f.tileType; tileTypeItems = $f.tileTypeItems; tileTypes = $f.tileTypes; useAdjacentWallTextureSlice = $f.useAdjacentWallTextureSlice; wallTextureOffsetItemsSlice = $f.wallTextureOffsetItemsSlice; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		context = [context];
 		lastGrabX = [lastGrabX];
 		mode = [mode];
 		_r = context[0].ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r$1 = _r.ActiveLevel(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		mode[0] = new LevelMapMode.ptr(context[0], _r$1, mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, sliceType$4.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType.nil);
+		mode[0] = new LevelMapMode.ptr(context[0], _r$1, mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, sliceType$4.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType.nil, ptrType$1.nil, ptrType$3.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$3.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$3.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType.nil);
 		builder = ui.NewAreaBuilder();
 		builder.SetParent(parent);
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0));
@@ -35139,67 +35152,79 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			_key$5 = -1; (propertyItems || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key$5)] = { k: _key$5, v: new tilePropertyItem.ptr(new $String(""), $throwNilPointerError) };
 			return [itemsSlice, propertyItems];
 		}; })(context, lastGrabX, mode);
-		_r$12 = realWorldPanelBuilder.addComboProperty("Floor Texture Rotations", $methodVal(mode[0], "onTilePropertyChangeRequested")); /* */ $s = 18; case 18: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+		_r$12 = realWorldPanelBuilder.addTextureProperty("Floor Texture", $methodVal(mode[0], "levelTextures"), $methodVal(mode[0], "onFloorTextureChanged")); /* */ $s = 18; case 18: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
 		_tuple$9 = _r$12;
-		mode[0].floorTextureRotationsLabel = _tuple$9[0];
-		mode[0].floorTextureRotationsBox = _tuple$9[1];
-		_r$13 = realWorldPanelBuilder.addComboProperty("Ceiling Texture Rotations", $methodVal(mode[0], "onTilePropertyChangeRequested")); /* */ $s = 19; case 19: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+		mode[0].floorTextureLabel = _tuple$9[0];
+		mode[0].floorTextureSelector = _tuple$9[1];
+		_r$13 = realWorldPanelBuilder.addComboProperty("Floor Texture Rotations", $methodVal(mode[0], "onTilePropertyChangeRequested")); /* */ $s = 19; case 19: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
 		_tuple$10 = _r$13;
-		mode[0].ceilingTextureRotationsLabel = _tuple$10[0];
-		mode[0].ceilingTextureRotationsBox = _tuple$10[1];
+		mode[0].floorTextureRotationsLabel = _tuple$10[0];
+		mode[0].floorTextureRotationsBox = _tuple$10[1];
+		_r$14 = realWorldPanelBuilder.addTextureProperty("Ceiling Texture", $methodVal(mode[0], "levelTextures"), $methodVal(mode[0], "onCeilingTextureChanged")); /* */ $s = 20; case 20: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+		_tuple$11 = _r$14;
+		mode[0].ceilingTextureLabel = _tuple$11[0];
+		mode[0].ceilingTextureSelector = _tuple$11[1];
+		_r$15 = realWorldPanelBuilder.addComboProperty("Ceiling Texture Rotations", $methodVal(mode[0], "onTilePropertyChangeRequested")); /* */ $s = 21; case 21: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+		_tuple$12 = _r$15;
+		mode[0].ceilingTextureRotationsLabel = _tuple$12[0];
+		mode[0].ceilingTextureRotationsBox = _tuple$12[1];
 		floorTextureRotationsItemsSlice = sliceType.nil;
 		ceilingTextureRotationsItemsSlice = sliceType.nil;
-		_r$14 = setupRotations((function(context, lastGrabX, mode) { return function(properties, value) {
+		_r$16 = setupRotations((function(context, lastGrabX, mode) { return function(properties, value) {
 			var $ptr, properties, value, value$24ptr;
 			properties.RealWorld.FloorTextureRotations = (value$24ptr || (value$24ptr = new ptrType$13(function() { return value; }, function($v) { value = $v; })));
-		}; })(context, lastGrabX, mode)); /* */ $s = 20; case 20: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
-		_tuple$11 = _r$14;
-		floorTextureRotationsItemsSlice = _tuple$11[0];
-		mode[0].floorTextureRotationsItems = _tuple$11[1];
-		_r$15 = setupRotations((function(context, lastGrabX, mode) { return function(properties, value) {
+		}; })(context, lastGrabX, mode)); /* */ $s = 22; case 22: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
+		_tuple$13 = _r$16;
+		floorTextureRotationsItemsSlice = _tuple$13[0];
+		mode[0].floorTextureRotationsItems = _tuple$13[1];
+		_r$17 = setupRotations((function(context, lastGrabX, mode) { return function(properties, value) {
 			var $ptr, properties, value, value$24ptr;
 			properties.RealWorld.CeilingTextureRotations = (value$24ptr || (value$24ptr = new ptrType$13(function() { return value; }, function($v) { value = $v; })));
-		}; })(context, lastGrabX, mode)); /* */ $s = 21; case 21: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
-		_tuple$12 = _r$15;
-		ceilingTextureRotationsItemsSlice = _tuple$12[0];
-		mode[0].ceilingTextureRotationsItems = _tuple$12[1];
-		$r = mode[0].floorTextureRotationsBox.SetItems(floorTextureRotationsItemsSlice); /* */ $s = 22; case 22: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = mode[0].ceilingTextureRotationsBox.SetItems(ceilingTextureRotationsItemsSlice); /* */ $s = 23; case 23: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		}; })(context, lastGrabX, mode)); /* */ $s = 23; case 23: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
+		_tuple$14 = _r$17;
+		ceilingTextureRotationsItemsSlice = _tuple$14[0];
+		mode[0].ceilingTextureRotationsItems = _tuple$14[1];
+		$r = mode[0].floorTextureRotationsBox.SetItems(floorTextureRotationsItemsSlice); /* */ $s = 24; case 24: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mode[0].ceilingTextureRotationsBox.SetItems(ceilingTextureRotationsItemsSlice); /* */ $s = 25; case 25: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$18 = realWorldPanelBuilder.addTextureProperty("Wall Texture", $methodVal(mode[0], "levelTextures"), $methodVal(mode[0], "onWallTextureChanged")); /* */ $s = 26; case 26: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
+		_tuple$15 = _r$18;
+		mode[0].wallTextureLabel = _tuple$15[0];
+		mode[0].wallTextureSelector = _tuple$15[1];
 		wallTextureOffsetItemsSlice = sliceType.nil;
-		_r$16 = setupHeightCollections(positiveHeight, (function(context, lastGrabX, mode) { return function(properties, height) {
+		_r$19 = setupHeightCollections(positiveHeight, (function(context, lastGrabX, mode) { return function(properties, height) {
 			var $ptr, height, height$24ptr, properties;
 			properties.RealWorld.WallTextureOffset = (height$24ptr || (height$24ptr = new ptrType$11(function() { return height; }, function($v) { height = $v; })));
-		}; })(context, lastGrabX, mode)); /* */ $s = 24; case 24: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
-		_tuple$13 = _r$16;
-		wallTextureOffsetItemsSlice = _tuple$13[0];
-		mode[0].wallTextureOffsetItems = _tuple$13[1];
-		_r$17 = realWorldPanelBuilder.addComboProperty("Wall Texture Offset", $methodVal(mode[0], "onTilePropertyChangeRequested")); /* */ $s = 25; case 25: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
-		_tuple$14 = _r$17;
-		mode[0].wallTextureOffsetLabel = _tuple$14[0];
-		mode[0].wallTextureOffsetBox = _tuple$14[1];
-		$r = mode[0].wallTextureOffsetBox.SetItems(wallTextureOffsetItemsSlice); /* */ $s = 26; case 26: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		}; })(context, lastGrabX, mode)); /* */ $s = 27; case 27: if($c) { $c = false; _r$19 = _r$19.$blk(); } if (_r$19 && _r$19.$blk !== undefined) { break s; }
+		_tuple$16 = _r$19;
+		wallTextureOffsetItemsSlice = _tuple$16[0];
+		mode[0].wallTextureOffsetItems = _tuple$16[1];
+		_r$20 = realWorldPanelBuilder.addComboProperty("Wall Texture Offset", $methodVal(mode[0], "onTilePropertyChangeRequested")); /* */ $s = 28; case 28: if($c) { $c = false; _r$20 = _r$20.$blk(); } if (_r$20 && _r$20.$blk !== undefined) { break s; }
+		_tuple$17 = _r$20;
+		mode[0].wallTextureOffsetLabel = _tuple$17[0];
+		mode[0].wallTextureOffsetBox = _tuple$17[1];
+		$r = mode[0].wallTextureOffsetBox.SetItems(wallTextureOffsetItemsSlice); /* */ $s = 29; case 29: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		useAdjacentWallTextureSlice = sliceType.nil;
-		_r$18 = setupBooleanCollections((function(context, lastGrabX, mode) { return function(properties, value) {
+		_r$21 = setupBooleanCollections((function(context, lastGrabX, mode) { return function(properties, value) {
 			var $ptr, properties, value, value$24ptr;
 			properties.RealWorld.UseAdjacentWallTexture = (value$24ptr || (value$24ptr = new ptrType$14(function() { return value; }, function($v) { value = $v; })));
-		}; })(context, lastGrabX, mode)); /* */ $s = 27; case 27: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
-		_tuple$15 = _r$18;
-		useAdjacentWallTextureSlice = _tuple$15[0];
-		mode[0].useAdjacentWallTextureItems = _tuple$15[1];
-		_r$19 = realWorldPanelBuilder.addComboProperty("Use Adjacent Wall Texture", $methodVal(mode[0], "onTilePropertyChangeRequested")); /* */ $s = 28; case 28: if($c) { $c = false; _r$19 = _r$19.$blk(); } if (_r$19 && _r$19.$blk !== undefined) { break s; }
-		_tuple$16 = _r$19;
-		mode[0].useAdjacentWallTextureLabel = _tuple$16[0];
-		mode[0].useAdjacentWallTextureBox = _tuple$16[1];
-		$r = mode[0].useAdjacentWallTextureBox.SetItems(useAdjacentWallTextureSlice); /* */ $s = 29; case 29: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_tuple$17 = panelBuilder.addSection(false);
-		mode[0].cyberspaceArea = _tuple$17[0];
+		}; })(context, lastGrabX, mode)); /* */ $s = 30; case 30: if($c) { $c = false; _r$21 = _r$21.$blk(); } if (_r$21 && _r$21.$blk !== undefined) { break s; }
+		_tuple$18 = _r$21;
+		useAdjacentWallTextureSlice = _tuple$18[0];
+		mode[0].useAdjacentWallTextureItems = _tuple$18[1];
+		_r$22 = realWorldPanelBuilder.addComboProperty("Use Adjacent Wall Texture", $methodVal(mode[0], "onTilePropertyChangeRequested")); /* */ $s = 31; case 31: if($c) { $c = false; _r$22 = _r$22.$blk(); } if (_r$22 && _r$22.$blk !== undefined) { break s; }
+		_tuple$19 = _r$22;
+		mode[0].useAdjacentWallTextureLabel = _tuple$19[0];
+		mode[0].useAdjacentWallTextureBox = _tuple$19[1];
+		$r = mode[0].useAdjacentWallTextureBox.SetItems(useAdjacentWallTextureSlice); /* */ $s = 32; case 32: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_tuple$20 = panelBuilder.addSection(false);
+		mode[0].cyberspaceArea = _tuple$20[0];
 		mode[0].levelAdapter.OnIDChanged((function(context, lastGrabX, mode) { return function() {
 			var $ptr;
 			mode[0].realWorldArea.SetVisible(!mode[0].levelAdapter.IsCyberspace());
 			mode[0].cyberspaceArea.SetVisible(mode[0].levelAdapter.IsCyberspace());
 		}; })(context, lastGrabX, mode));
 		$s = -1; return mode[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewLevelMapMode }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._i = _i; $f._i$1 = _i$1; $f._key = _key; $f._key$1 = _key$1; $f._key$2 = _key$2; $f._key$3 = _key$3; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._r$19 = _r$19; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$10 = _tuple$10; $f._tuple$11 = _tuple$11; $f._tuple$12 = _tuple$12; $f._tuple$13 = _tuple$13; $f._tuple$14 = _tuple$14; $f._tuple$15 = _tuple$15; $f._tuple$16 = _tuple$16; $f._tuple$17 = _tuple$17; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f._tuple$9 = _tuple$9; $f.builder = builder; $f.builder$1 = builder$1; $f.ceilingHeightItemsSlice = ceilingHeightItemsSlice; $f.ceilingTextureRotationsItemsSlice = ceilingTextureRotationsItemsSlice; $f.context = context; $f.floorHeightItemsSlice = floorHeightItemsSlice; $f.floorTextureRotationsItemsSlice = floorTextureRotationsItemsSlice; $f.index = index; $f.index$1 = index$1; $f.item = item; $f.item$1 = item$1; $f.lastGrabX = lastGrabX; $f.mapDisplay = mapDisplay; $f.maxRight = maxRight; $f.minRight = minRight; $f.mode = mode; $f.negativeHeight = negativeHeight; $f.panelBuilder = panelBuilder; $f.parent = parent; $f.positiveHeight = positiveHeight; $f.realWorldPanelBuilder = realWorldPanelBuilder; $f.setter = setter; $f.setter$1 = setter$1; $f.setupBooleanCollections = setupBooleanCollections; $f.setupHeightCollections = setupHeightCollections; $f.setupRotations = setupRotations; $f.slopeControl = slopeControl; $f.slopeControlItems = slopeControlItems; $f.slopeControls = slopeControls; $f.slopeHeightItemsSlice = slopeHeightItemsSlice; $f.tileType = tileType; $f.tileTypeItems = tileTypeItems; $f.tileTypes = tileTypes; $f.useAdjacentWallTextureSlice = useAdjacentWallTextureSlice; $f.wallTextureOffsetItemsSlice = wallTextureOffsetItemsSlice; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewLevelMapMode }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._i = _i; $f._i$1 = _i$1; $f._key = _key; $f._key$1 = _key$1; $f._key$2 = _key$2; $f._key$3 = _key$3; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._r$19 = _r$19; $f._r$2 = _r$2; $f._r$20 = _r$20; $f._r$21 = _r$21; $f._r$22 = _r$22; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$10 = _tuple$10; $f._tuple$11 = _tuple$11; $f._tuple$12 = _tuple$12; $f._tuple$13 = _tuple$13; $f._tuple$14 = _tuple$14; $f._tuple$15 = _tuple$15; $f._tuple$16 = _tuple$16; $f._tuple$17 = _tuple$17; $f._tuple$18 = _tuple$18; $f._tuple$19 = _tuple$19; $f._tuple$2 = _tuple$2; $f._tuple$20 = _tuple$20; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f._tuple$9 = _tuple$9; $f.builder = builder; $f.builder$1 = builder$1; $f.ceilingHeightItemsSlice = ceilingHeightItemsSlice; $f.ceilingTextureRotationsItemsSlice = ceilingTextureRotationsItemsSlice; $f.context = context; $f.floorHeightItemsSlice = floorHeightItemsSlice; $f.floorTextureRotationsItemsSlice = floorTextureRotationsItemsSlice; $f.index = index; $f.index$1 = index$1; $f.item = item; $f.item$1 = item$1; $f.lastGrabX = lastGrabX; $f.mapDisplay = mapDisplay; $f.maxRight = maxRight; $f.minRight = minRight; $f.mode = mode; $f.negativeHeight = negativeHeight; $f.panelBuilder = panelBuilder; $f.parent = parent; $f.positiveHeight = positiveHeight; $f.realWorldPanelBuilder = realWorldPanelBuilder; $f.setter = setter; $f.setter$1 = setter$1; $f.setupBooleanCollections = setupBooleanCollections; $f.setupHeightCollections = setupHeightCollections; $f.setupRotations = setupRotations; $f.slopeControl = slopeControl; $f.slopeControlItems = slopeControlItems; $f.slopeControls = slopeControls; $f.slopeHeightItemsSlice = slopeHeightItemsSlice; $f.tileType = tileType; $f.tileTypeItems = tileTypeItems; $f.tileTypes = tileTypes; $f.useAdjacentWallTextureSlice = useAdjacentWallTextureSlice; $f.wallTextureOffsetItemsSlice = wallTextureOffsetItemsSlice; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewLevelMapMode = NewLevelMapMode;
 	LevelMapMode.ptr.prototype.SetActive = function(active) {
@@ -35215,6 +35240,29 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		mode.mapDisplay.SetVisible(active);
 	};
 	LevelMapMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
+	LevelMapMode.ptr.prototype.levelTextures = function() {
+		var $ptr, _i, _r, _r$1, _r$2, _ref, id, ids, index, mode, store, textures, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; id = $f.id; ids = $f.ids; index = $f.index; mode = $f.mode; store = $f.store; textures = $f.textures; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		mode = this;
+		ids = mode.levelAdapter.LevelTextureIDs();
+		textures = $makeSlice(sliceType$1, ids.$length);
+		_r = mode.context.ForGraphics(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = _r.WorldTextureStore("large"); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		store = _r$1;
+		_ref = ids;
+		_i = 0;
+		/* while (true) { */ case 3:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 4; continue; }
+			index = _i;
+			id = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r$2 = store.Texture(graphics.TextureKeyFromInt(id)); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			((index < 0 || index >= textures.$length) ? ($throwRuntimeError("index out of range"), undefined) : textures.$array[textures.$offset + index] = _r$2);
+			_i++;
+		/* } */ $s = 3; continue; case 4:
+		$s = -1; return textures;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.levelTextures }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f.id = id; $f.ids = ids; $f.index = index; $f.mode = mode; $f.store = store; $f.textures = textures; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	LevelMapMode.prototype.levelTextures = function() { return this.$val.levelTextures(); };
 	LevelMapMode.ptr.prototype.onMouseMoved = function(area, event) {
 		var $ptr, _tuple, _tuple$1, _tuple$2, area, consumed, coord, event, mode, mouseEvent, tileX, tileY, worldX, worldY;
 		consumed = false;
@@ -35312,8 +35360,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	};
 	LevelMapMode.prototype.toggleSelectedTile = function(coord) { return this.$val.toggleSelectedTile(coord); };
 	LevelMapMode.ptr.prototype.onSelectedTilesChanged = function() {
-		var $ptr, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _entry$7, _entry$8, _i, _r, _ref, ceilingHeightUnifier, ceilingTextureRotationsUnifier, coord, floorHeightUnifier, floorTextureRotationsUnifier, mode, properties, slopeControlUnifier, slopeHeightUnifier, tile, tileMap, typeUnifier, useAdjacentWallTextureUnifier, wallTextureOffsetUnifier, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _entry$6 = $f._entry$6; _entry$7 = $f._entry$7; _entry$8 = $f._entry$8; _i = $f._i; _r = $f._r; _ref = $f._ref; ceilingHeightUnifier = $f.ceilingHeightUnifier; ceilingTextureRotationsUnifier = $f.ceilingTextureRotationsUnifier; coord = $f.coord; floorHeightUnifier = $f.floorHeightUnifier; floorTextureRotationsUnifier = $f.floorTextureRotationsUnifier; mode = $f.mode; properties = $f.properties; slopeControlUnifier = $f.slopeControlUnifier; slopeHeightUnifier = $f.slopeHeightUnifier; tile = $f.tile; tileMap = $f.tileMap; typeUnifier = $f.typeUnifier; useAdjacentWallTextureUnifier = $f.useAdjacentWallTextureUnifier; wallTextureOffsetUnifier = $f.wallTextureOffsetUnifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _entry$7, _entry$8, _i, _r, _ref, ceilingHeightUnifier, ceilingTextureRotationsUnifier, ceilingTextureUnifier, coord, floorHeightUnifier, floorTextureRotationsUnifier, floorTextureUnifier, mode, properties, slopeControlUnifier, slopeHeightUnifier, tile, tileMap, typeUnifier, useAdjacentWallTextureUnifier, wallTextureOffsetUnifier, wallTextureUnifier, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _entry$6 = $f._entry$6; _entry$7 = $f._entry$7; _entry$8 = $f._entry$8; _i = $f._i; _r = $f._r; _ref = $f._ref; ceilingHeightUnifier = $f.ceilingHeightUnifier; ceilingTextureRotationsUnifier = $f.ceilingTextureRotationsUnifier; ceilingTextureUnifier = $f.ceilingTextureUnifier; coord = $f.coord; floorHeightUnifier = $f.floorHeightUnifier; floorTextureRotationsUnifier = $f.floorTextureRotationsUnifier; floorTextureUnifier = $f.floorTextureUnifier; mode = $f.mode; properties = $f.properties; slopeControlUnifier = $f.slopeControlUnifier; slopeHeightUnifier = $f.slopeHeightUnifier; tile = $f.tile; tileMap = $f.tileMap; typeUnifier = $f.typeUnifier; useAdjacentWallTextureUnifier = $f.useAdjacentWallTextureUnifier; wallTextureOffsetUnifier = $f.wallTextureOffsetUnifier; wallTextureUnifier = $f.wallTextureUnifier; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
 		mode.mapDisplay.SetSelectedTiles(mode.selectedTiles);
 		tileMap = mode.levelAdapter.TileMap();
@@ -35322,8 +35370,11 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		ceilingHeightUnifier = util.NewValueUnifier(new model$1.HeightUnit(-1));
 		slopeHeightUnifier = util.NewValueUnifier(new model$1.HeightUnit(-1));
 		slopeControlUnifier = util.NewValueUnifier(new model$1.SlopeControl(""));
+		floorTextureUnifier = util.NewValueUnifier(new $Int(-1));
 		floorTextureRotationsUnifier = util.NewValueUnifier(new $Int(-1));
+		ceilingTextureUnifier = util.NewValueUnifier(new $Int(-1));
 		ceilingTextureRotationsUnifier = util.NewValueUnifier(new $Int(-1));
+		wallTextureUnifier = util.NewValueUnifier(new $Int(-1));
 		wallTextureOffsetUnifier = util.NewValueUnifier(new model$1.HeightUnit(-1));
 		useAdjacentWallTextureUnifier = util.NewValueUnifier(new $String(""));
 		_ref = mode.selectedTiles;
@@ -35344,8 +35395,11 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 				/* */ if (!(properties.RealWorld === ptrType$16.nil)) { $s = 5; continue; }
 				/* */ $s = 6; continue;
 				/* if (!(properties.RealWorld === ptrType$16.nil)) { */ case 5:
+					floorTextureUnifier.Add(new $Int(properties.RealWorld.FloorTexture.$get()));
 					floorTextureRotationsUnifier.Add(new $Int(properties.RealWorld.FloorTextureRotations.$get()));
+					ceilingTextureUnifier.Add(new $Int(properties.RealWorld.CeilingTexture.$get()));
 					ceilingTextureRotationsUnifier.Add(new $Int(properties.RealWorld.CeilingTextureRotations.$get()));
+					wallTextureUnifier.Add(new $Int(properties.RealWorld.WallTexture.$get()));
 					wallTextureOffsetUnifier.Add(new model$1.HeightUnit(properties.RealWorld.WallTextureOffset.$get()));
 					_r = fmt.Sprintf("%v", new sliceType$3([new $Bool(properties.RealWorld.UseAdjacentWallTexture.$get())])); /* */ $s = 7; case 7: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 					$r = useAdjacentWallTextureUnifier.Add(new $String(_r)); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -35358,29 +35412,87 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		$r = mode.ceilingHeightBox.SetSelectedItem((_entry$2 = mode.ceilingHeightItems[model$1.HeightUnit.keyFor($assertType(ceilingHeightUnifier.Value(), model$1.HeightUnit))], _entry$2 !== undefined ? _entry$2.v : ptrType$17.nil)); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = mode.slopeHeightBox.SetSelectedItem((_entry$3 = mode.slopeHeightItems[model$1.HeightUnit.keyFor($assertType(slopeHeightUnifier.Value(), model$1.HeightUnit))], _entry$3 !== undefined ? _entry$3.v : ptrType$17.nil)); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = mode.slopeControlBox.SetSelectedItem((_entry$4 = mode.slopeControlItems[model$1.SlopeControl.keyFor($assertType(slopeControlUnifier.Value(), model$1.SlopeControl))], _entry$4 !== undefined ? _entry$4.v : ptrType$17.nil)); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		mode.floorTextureSelector.SetSelectedIndex($assertType(floorTextureUnifier.Value(), $Int));
 		$r = mode.floorTextureRotationsBox.SetSelectedItem((_entry$5 = mode.floorTextureRotationsItems[$Int.keyFor($assertType(floorTextureRotationsUnifier.Value(), $Int))], _entry$5 !== undefined ? _entry$5.v : ptrType$17.nil)); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		mode.ceilingTextureSelector.SetSelectedIndex($assertType(ceilingTextureUnifier.Value(), $Int));
 		$r = mode.ceilingTextureRotationsBox.SetSelectedItem((_entry$6 = mode.floorTextureRotationsItems[$Int.keyFor($assertType(ceilingTextureRotationsUnifier.Value(), $Int))], _entry$6 !== undefined ? _entry$6.v : ptrType$17.nil)); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		mode.wallTextureSelector.SetSelectedIndex($assertType(wallTextureUnifier.Value(), $Int));
 		$r = mode.wallTextureOffsetBox.SetSelectedItem((_entry$7 = mode.wallTextureOffsetItems[model$1.HeightUnit.keyFor($assertType(wallTextureOffsetUnifier.Value(), model$1.HeightUnit))], _entry$7 !== undefined ? _entry$7.v : ptrType$17.nil)); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = mode.useAdjacentWallTextureBox.SetSelectedItem((_entry$8 = mode.useAdjacentWallTextureItems[$String.keyFor($assertType(useAdjacentWallTextureUnifier.Value(), $String))], _entry$8 !== undefined ? _entry$8.v : ptrType$17.nil)); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.onSelectedTilesChanged }; } $f.$ptr = $ptr; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._entry$7 = _entry$7; $f._entry$8 = _entry$8; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.ceilingHeightUnifier = ceilingHeightUnifier; $f.ceilingTextureRotationsUnifier = ceilingTextureRotationsUnifier; $f.coord = coord; $f.floorHeightUnifier = floorHeightUnifier; $f.floorTextureRotationsUnifier = floorTextureRotationsUnifier; $f.mode = mode; $f.properties = properties; $f.slopeControlUnifier = slopeControlUnifier; $f.slopeHeightUnifier = slopeHeightUnifier; $f.tile = tile; $f.tileMap = tileMap; $f.typeUnifier = typeUnifier; $f.useAdjacentWallTextureUnifier = useAdjacentWallTextureUnifier; $f.wallTextureOffsetUnifier = wallTextureOffsetUnifier; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.onSelectedTilesChanged }; } $f.$ptr = $ptr; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._entry$7 = _entry$7; $f._entry$8 = _entry$8; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.ceilingHeightUnifier = ceilingHeightUnifier; $f.ceilingTextureRotationsUnifier = ceilingTextureRotationsUnifier; $f.ceilingTextureUnifier = ceilingTextureUnifier; $f.coord = coord; $f.floorHeightUnifier = floorHeightUnifier; $f.floorTextureRotationsUnifier = floorTextureRotationsUnifier; $f.floorTextureUnifier = floorTextureUnifier; $f.mode = mode; $f.properties = properties; $f.slopeControlUnifier = slopeControlUnifier; $f.slopeHeightUnifier = slopeHeightUnifier; $f.tile = tile; $f.tileMap = tileMap; $f.typeUnifier = typeUnifier; $f.useAdjacentWallTextureUnifier = useAdjacentWallTextureUnifier; $f.wallTextureOffsetUnifier = wallTextureOffsetUnifier; $f.wallTextureUnifier = wallTextureUnifier; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelMapMode.prototype.onSelectedTilesChanged = function() { return this.$val.onSelectedTilesChanged(); };
-	LevelMapMode.ptr.prototype.onTilePropertyChangeRequested = function(item) {
-		var $ptr, item, mode, properties, propertyItem, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; item = $f.item; mode = $f.mode; properties = $f.properties; propertyItem = $f.propertyItem; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+	LevelMapMode.ptr.prototype.changeSelectedTileProperties = function(modifier) {
+		var $ptr, mode, modifier, properties, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; mode = $f.mode; modifier = $f.modifier; properties = $f.properties; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
-		propertyItem = $assertType(item, ptrType$17);
 		properties = new model$1.TileProperties.ptr(ptrType$10.nil, ptrType$11.nil, ptrType$11.nil, ptrType$11.nil, ptrType$12.nil, ptrType$18.nil, ptrType$16.nil);
 		if (!mode.levelAdapter.IsCyberspace()) {
 			properties.RealWorld = new model$1.RealWorldTileProperties.ptr(ptrType$13.nil, ptrType$13.nil, ptrType$13.nil, ptrType$13.nil, ptrType$13.nil, ptrType$14.nil, ptrType$11.nil);
 		}
-		$r = propertyItem.setter(properties, propertyItem.value); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = modifier(properties); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = mode.levelAdapter.RequestTilePropertyChange(mode.selectedTiles, properties); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.onTilePropertyChangeRequested }; } $f.$ptr = $ptr; $f.item = item; $f.mode = mode; $f.properties = properties; $f.propertyItem = propertyItem; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.changeSelectedTileProperties }; } $f.$ptr = $ptr; $f.mode = mode; $f.modifier = modifier; $f.properties = properties; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	LevelMapMode.prototype.changeSelectedTileProperties = function(modifier) { return this.$val.changeSelectedTileProperties(modifier); };
+	LevelMapMode.ptr.prototype.onTilePropertyChangeRequested = function(item) {
+		var $ptr, item, mode, propertyItem, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; item = $f.item; mode = $f.mode; propertyItem = $f.propertyItem; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		propertyItem = [propertyItem];
+		mode = this;
+		propertyItem[0] = $assertType(item, ptrType$17);
+		$r = mode.changeSelectedTileProperties((function(propertyItem) { return function $b(properties) {
+			var $ptr, properties, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; properties = $f.properties; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			$r = propertyItem[0].setter(properties, propertyItem[0].value); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = -1; return;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.properties = properties; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(propertyItem)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.onTilePropertyChangeRequested }; } $f.$ptr = $ptr; $f.item = item; $f.mode = mode; $f.propertyItem = propertyItem; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelMapMode.prototype.onTilePropertyChangeRequested = function(item) { return this.$val.onTilePropertyChangeRequested(item); };
+	LevelMapMode.ptr.prototype.onFloorTextureChanged = function(index) {
+		var $ptr, index, mode, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; index = $f.index; mode = $f.mode; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		index = [index];
+		mode = this;
+		$r = mode.changeSelectedTileProperties((function(index) { return function(properties) {
+			var $ptr, properties;
+			properties.RealWorld.FloorTexture = (index.$ptr || (index.$ptr = new ptrType$13(function() { return this.$target[0]; }, function($v) { this.$target[0] = $v; }, index)));
+		}; })(index)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.onFloorTextureChanged }; } $f.$ptr = $ptr; $f.index = index; $f.mode = mode; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	LevelMapMode.prototype.onFloorTextureChanged = function(index) { return this.$val.onFloorTextureChanged(index); };
+	LevelMapMode.ptr.prototype.onCeilingTextureChanged = function(index) {
+		var $ptr, index, mode, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; index = $f.index; mode = $f.mode; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		index = [index];
+		mode = this;
+		$r = mode.changeSelectedTileProperties((function(index) { return function(properties) {
+			var $ptr, properties;
+			properties.RealWorld.CeilingTexture = (index.$ptr || (index.$ptr = new ptrType$13(function() { return this.$target[0]; }, function($v) { this.$target[0] = $v; }, index)));
+		}; })(index)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.onCeilingTextureChanged }; } $f.$ptr = $ptr; $f.index = index; $f.mode = mode; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	LevelMapMode.prototype.onCeilingTextureChanged = function(index) { return this.$val.onCeilingTextureChanged(index); };
+	LevelMapMode.ptr.prototype.onWallTextureChanged = function(index) {
+		var $ptr, index, mode, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; index = $f.index; mode = $f.mode; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		index = [index];
+		mode = this;
+		$r = mode.changeSelectedTileProperties((function(index) { return function(properties) {
+			var $ptr, properties;
+			properties.RealWorld.WallTexture = (index.$ptr || (index.$ptr = new ptrType$13(function() { return this.$target[0]; }, function($v) { this.$target[0] = $v; }, index)));
+		}; })(index)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelMapMode.ptr.prototype.onWallTextureChanged }; } $f.$ptr = $ptr; $f.index = index; $f.mode = mode; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	LevelMapMode.prototype.onWallTextureChanged = function(index) { return this.$val.onWallTextureChanged(index); };
 	NewLevelObjectsMode = function(context, parent, mapDisplay) {
 		var $ptr, _r, _r$1, _r$2, _r$3, builder, builder$1, context, lastGrabX, mapDisplay, maxRight, minRight, mode, parent, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; builder = $f.builder; builder$1 = $f.builder$1; context = $f.context; lastGrabX = $f.lastGrabX; mapDisplay = $f.mapDisplay; maxRight = $f.maxRight; minRight = $f.minRight; mode = $f.mode; parent = $f.parent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -35737,7 +35849,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	ptrType$4.methods = [{prop: "addComboProperty", name: "addComboProperty", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$String, controls.SelectionChangeHandler], [ptrType$1, ptrType$2], false)}, {prop: "addTextureProperty", name: "addTextureProperty", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$String, controls.TextureProvider, controls.TextureSelectionChangeHandler], [ptrType$1, ptrType$3], false)}, {prop: "addSection", name: "addSection", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Bool], [ptrType, ptrType$4], false)}];
 	ptrType$26.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "levelTextures", name: "levelTextures", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [sliceType$1], false)}, {prop: "worldTextures", name: "worldTextures", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [sliceType$1], false)}, {prop: "onSelectedLevelTextureChanged", name: "onSelectedLevelTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}, {prop: "onSelectedWorldTextureChanged", name: "onSelectedWorldTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}];
 	ptrType$17.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
-	ptrType$27.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "setSelectedTiles", name: "setSelectedTiles", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$4], [], false)}, {prop: "toggleSelectedTile", name: "toggleSelectedTile", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([model.TileCoordinate], [], false)}, {prop: "onSelectedTilesChanged", name: "onSelectedTilesChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "onTilePropertyChangeRequested", name: "onTilePropertyChangeRequested", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([controls.ComboBoxItem], [], false)}];
+	ptrType$27.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "levelTextures", name: "levelTextures", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [sliceType$1], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "setSelectedTiles", name: "setSelectedTiles", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$4], [], false)}, {prop: "toggleSelectedTile", name: "toggleSelectedTile", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([model.TileCoordinate], [], false)}, {prop: "onSelectedTilesChanged", name: "onSelectedTilesChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "changeSelectedTileProperties", name: "changeSelectedTileProperties", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([funcType], [], false)}, {prop: "onTilePropertyChangeRequested", name: "onTilePropertyChangeRequested", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([controls.ComboBoxItem], [], false)}, {prop: "onFloorTextureChanged", name: "onFloorTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}, {prop: "onCeilingTextureChanged", name: "onCeilingTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}, {prop: "onWallTextureChanged", name: "onWallTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}];
 	ptrType$28.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "onLevelObjectsChanged", name: "onLevelObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "updateDisplayedObjects", name: "updateDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseScrolled", name: "onMouseScrolled", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "updateClosestDisplayedObjects", name: "updateClosestDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "updateClosestObjectHighlight", name: "updateClosestObjectHighlight", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "setSelectedObjects", name: "setSelectedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$5], [], false)}, {prop: "toggleSelectedObject", name: "toggleSelectedObject", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType$20], [], false)}, {prop: "onSelectedObjectsChanged", name: "onSelectedObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}];
 	ptrType$29.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
 	Context.init([{prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$23], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$24], [ptrType$25], false)}]);
@@ -35745,8 +35857,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	LevelControlMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "activeLevelLabel", name: "activeLevelLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "activeLevelBox", name: "activeLevelBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "levelTexturesLabel", name: "levelTexturesLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "levelTexturesSelector", name: "levelTexturesSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "currentLevelTextureIndex", name: "currentLevelTextureIndex", exported: false, typ: $Int, tag: ""}, {prop: "worldTexturesLabel", name: "worldTexturesLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "worldTexturesSelector", name: "worldTexturesSelector", exported: false, typ: ptrType$3, tag: ""}]);
 	tilePropertySetter.init([ptrType$15, $emptyInterface], [], false);
 	tilePropertyItem.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "value", name: "value", exported: false, typ: $emptyInterface, tag: ""}, {prop: "setter", name: "setter", exported: false, typ: tilePropertySetter, tag: ""}]);
-	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "selectedTiles", name: "selectedTiles", exported: false, typ: sliceType$4, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "tileTypeItems", name: "tileTypeItems", exported: false, typ: mapType, tag: ""}, {prop: "floorHeightLabel", name: "floorHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorHeightBox", name: "floorHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "floorHeightItems", name: "floorHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "ceilingHeightLabel", name: "ceilingHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingHeightBox", name: "ceilingHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingHeightItems", name: "ceilingHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeHeightLabel", name: "slopeHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeHeightBox", name: "slopeHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeHeightItems", name: "slopeHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeControlLabel", name: "slopeControlLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeControlBox", name: "slopeControlBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeControlItems", name: "slopeControlItems", exported: false, typ: mapType$2, tag: ""}, {prop: "realWorldArea", name: "realWorldArea", exported: false, typ: ptrType, tag: ""}, {prop: "floorTextureRotationsLabel", name: "floorTextureRotationsLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorTextureRotationsBox", name: "floorTextureRotationsBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "floorTextureRotationsItems", name: "floorTextureRotationsItems", exported: false, typ: mapType$3, tag: ""}, {prop: "ceilingTextureRotationsLabel", name: "ceilingTextureRotationsLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingTextureRotationsBox", name: "ceilingTextureRotationsBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingTextureRotationsItems", name: "ceilingTextureRotationsItems", exported: false, typ: mapType$3, tag: ""}, {prop: "wallTextureOffsetLabel", name: "wallTextureOffsetLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "wallTextureOffsetBox", name: "wallTextureOffsetBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "wallTextureOffsetItems", name: "wallTextureOffsetItems", exported: false, typ: mapType$1, tag: ""}, {prop: "useAdjacentWallTextureLabel", name: "useAdjacentWallTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "useAdjacentWallTextureBox", name: "useAdjacentWallTextureBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "useAdjacentWallTextureItems", name: "useAdjacentWallTextureItems", exported: false, typ: mapType$4, tag: ""}, {prop: "cyberspaceArea", name: "cyberspaceArea", exported: false, typ: ptrType, tag: ""}]);
-	LevelObjectsMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "objectsAdapter", name: "objectsAdapter", exported: false, typ: ptrType$19, tag: ""}, {prop: "displayFilter", name: "displayFilter", exported: false, typ: funcType, tag: ""}, {prop: "displayedObjects", name: "displayedObjects", exported: false, typ: sliceType$5, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "closestObjects", name: "closestObjects", exported: false, typ: sliceType$5, tag: ""}, {prop: "closestObjectHighlightIndex", name: "closestObjectHighlightIndex", exported: false, typ: $Int, tag: ""}, {prop: "selectedObjects", name: "selectedObjects", exported: false, typ: sliceType$5, tag: ""}]);
+	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "selectedTiles", name: "selectedTiles", exported: false, typ: sliceType$4, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "tileTypeItems", name: "tileTypeItems", exported: false, typ: mapType, tag: ""}, {prop: "floorHeightLabel", name: "floorHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorHeightBox", name: "floorHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "floorHeightItems", name: "floorHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "ceilingHeightLabel", name: "ceilingHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingHeightBox", name: "ceilingHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingHeightItems", name: "ceilingHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeHeightLabel", name: "slopeHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeHeightBox", name: "slopeHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeHeightItems", name: "slopeHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeControlLabel", name: "slopeControlLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeControlBox", name: "slopeControlBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeControlItems", name: "slopeControlItems", exported: false, typ: mapType$2, tag: ""}, {prop: "realWorldArea", name: "realWorldArea", exported: false, typ: ptrType, tag: ""}, {prop: "floorTextureLabel", name: "floorTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorTextureSelector", name: "floorTextureSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "floorTextureRotationsLabel", name: "floorTextureRotationsLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorTextureRotationsBox", name: "floorTextureRotationsBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "floorTextureRotationsItems", name: "floorTextureRotationsItems", exported: false, typ: mapType$3, tag: ""}, {prop: "ceilingTextureLabel", name: "ceilingTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingTextureSelector", name: "ceilingTextureSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "ceilingTextureRotationsLabel", name: "ceilingTextureRotationsLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingTextureRotationsBox", name: "ceilingTextureRotationsBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingTextureRotationsItems", name: "ceilingTextureRotationsItems", exported: false, typ: mapType$3, tag: ""}, {prop: "wallTextureLabel", name: "wallTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "wallTextureSelector", name: "wallTextureSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "wallTextureOffsetLabel", name: "wallTextureOffsetLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "wallTextureOffsetBox", name: "wallTextureOffsetBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "wallTextureOffsetItems", name: "wallTextureOffsetItems", exported: false, typ: mapType$1, tag: ""}, {prop: "useAdjacentWallTextureLabel", name: "useAdjacentWallTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "useAdjacentWallTextureBox", name: "useAdjacentWallTextureBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "useAdjacentWallTextureItems", name: "useAdjacentWallTextureItems", exported: false, typ: mapType$4, tag: ""}, {prop: "cyberspaceArea", name: "cyberspaceArea", exported: false, typ: ptrType, tag: ""}]);
+	LevelObjectsMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "objectsAdapter", name: "objectsAdapter", exported: false, typ: ptrType$19, tag: ""}, {prop: "displayFilter", name: "displayFilter", exported: false, typ: funcType$1, tag: ""}, {prop: "displayedObjects", name: "displayedObjects", exported: false, typ: sliceType$5, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "closestObjects", name: "closestObjects", exported: false, typ: sliceType$5, tag: ""}, {prop: "closestObjectHighlightIndex", name: "closestObjectHighlightIndex", exported: false, typ: $Int, tag: ""}, {prop: "selectedObjects", name: "selectedObjects", exported: false, typ: sliceType$5, tag: ""}]);
 	WelcomeMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "infoArea", name: "infoArea", exported: false, typ: ptrType, tag: ""}, {prop: "infoLabel", name: "infoLabel", exported: false, typ: ptrType$1, tag: ""}]);
 	resultEntry.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "distance", name: "distance", exported: false, typ: $Float32, tag: ""}, {prop: "object", name: "object", exported: false, typ: ptrType$20, tag: ""}]);
 	$init = function() {

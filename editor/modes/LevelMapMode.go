@@ -55,12 +55,18 @@ type LevelMapMode struct {
 	slopeControlItems  map[dataModel.SlopeControl]*tilePropertyItem
 
 	realWorldArea                *ui.Area
+	floorTextureLabel            *controls.Label
+	floorTextureSelector         *controls.TextureSelector
 	floorTextureRotationsLabel   *controls.Label
 	floorTextureRotationsBox     *controls.ComboBox
 	floorTextureRotationsItems   map[int]*tilePropertyItem
+	ceilingTextureLabel          *controls.Label
+	ceilingTextureSelector       *controls.TextureSelector
 	ceilingTextureRotationsLabel *controls.Label
 	ceilingTextureRotationsBox   *controls.ComboBox
 	ceilingTextureRotationsItems map[int]*tilePropertyItem
+	wallTextureLabel             *controls.Label
+	wallTextureSelector          *controls.TextureSelector
 	wallTextureOffsetLabel       *controls.Label
 	wallTextureOffsetBox         *controls.ComboBox
 	wallTextureOffsetItems       map[dataModel.HeightUnit]*tilePropertyItem
@@ -260,7 +266,11 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 					return itemsSlice, propertyItems
 				}
 
+				mode.floorTextureLabel, mode.floorTextureSelector = realWorldPanelBuilder.addTextureProperty("Floor Texture",
+					mode.levelTextures, mode.onFloorTextureChanged)
 				mode.floorTextureRotationsLabel, mode.floorTextureRotationsBox = realWorldPanelBuilder.addComboProperty("Floor Texture Rotations", mode.onTilePropertyChangeRequested)
+				mode.ceilingTextureLabel, mode.ceilingTextureSelector = realWorldPanelBuilder.addTextureProperty("Ceiling Texture",
+					mode.levelTextures, mode.onCeilingTextureChanged)
 				mode.ceilingTextureRotationsLabel, mode.ceilingTextureRotationsBox = realWorldPanelBuilder.addComboProperty("Ceiling Texture Rotations", mode.onTilePropertyChangeRequested)
 
 				var floorTextureRotationsItemsSlice []controls.ComboBoxItem
@@ -277,6 +287,9 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 				mode.ceilingTextureRotationsBox.SetItems(ceilingTextureRotationsItemsSlice)
 			}
 			{
+				mode.wallTextureLabel, mode.wallTextureSelector = realWorldPanelBuilder.addTextureProperty("Wall Texture",
+					mode.levelTextures, mode.onWallTextureChanged)
+
 				var wallTextureOffsetItemsSlice []controls.ComboBoxItem
 				wallTextureOffsetItemsSlice, mode.wallTextureOffsetItems = setupHeightCollections(positiveHeight,
 					func(properties *dataModel.TileProperties, height dataModel.HeightUnit) {
@@ -320,6 +333,18 @@ func (mode *LevelMapMode) SetActive(active bool) {
 	}
 	mode.area.SetVisible(active)
 	mode.mapDisplay.SetVisible(active)
+}
+
+func (mode *LevelMapMode) levelTextures() []*graphics.BitmapTexture {
+	ids := mode.levelAdapter.LevelTextureIDs()
+	textures := make([]*graphics.BitmapTexture, len(ids))
+	store := mode.context.ForGraphics().WorldTextureStore(dataModel.TextureLarge)
+
+	for index, id := range ids {
+		textures[index] = store.Texture(graphics.TextureKeyFromInt(id))
+	}
+
+	return textures
 }
 
 func (mode *LevelMapMode) onMouseMoved(area *ui.Area, event events.Event) (consumed bool) {
@@ -394,8 +419,11 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	ceilingHeightUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
 	slopeHeightUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
 	slopeControlUnifier := util.NewValueUnifier(dataModel.SlopeControl(""))
+	floorTextureUnifier := util.NewValueUnifier(-1)
 	floorTextureRotationsUnifier := util.NewValueUnifier(-1)
+	ceilingTextureUnifier := util.NewValueUnifier(-1)
 	ceilingTextureRotationsUnifier := util.NewValueUnifier(-1)
+	wallTextureUnifier := util.NewValueUnifier(-1)
 	wallTextureOffsetUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
 	useAdjacentWallTextureUnifier := util.NewValueUnifier("")
 
@@ -409,8 +437,11 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 			slopeHeightUnifier.Add(*properties.SlopeHeight)
 			slopeControlUnifier.Add(*properties.SlopeControl)
 			if properties.RealWorld != nil {
+				floorTextureUnifier.Add(*properties.RealWorld.FloorTexture)
 				floorTextureRotationsUnifier.Add(*properties.RealWorld.FloorTextureRotations)
+				ceilingTextureUnifier.Add(*properties.RealWorld.CeilingTexture)
 				ceilingTextureRotationsUnifier.Add(*properties.RealWorld.CeilingTextureRotations)
+				wallTextureUnifier.Add(*properties.RealWorld.WallTexture)
 				wallTextureOffsetUnifier.Add(*properties.RealWorld.WallTextureOffset)
 				useAdjacentWallTextureUnifier.Add(fmt.Sprintf("%v", *properties.RealWorld.UseAdjacentWallTexture))
 			}
@@ -421,20 +452,46 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	mode.ceilingHeightBox.SetSelectedItem(mode.ceilingHeightItems[ceilingHeightUnifier.Value().(dataModel.HeightUnit)])
 	mode.slopeHeightBox.SetSelectedItem(mode.slopeHeightItems[slopeHeightUnifier.Value().(dataModel.HeightUnit)])
 	mode.slopeControlBox.SetSelectedItem(mode.slopeControlItems[slopeControlUnifier.Value().(dataModel.SlopeControl)])
+	mode.floorTextureSelector.SetSelectedIndex(floorTextureUnifier.Value().(int))
 	mode.floorTextureRotationsBox.SetSelectedItem(mode.floorTextureRotationsItems[floorTextureRotationsUnifier.Value().(int)])
+	mode.ceilingTextureSelector.SetSelectedIndex(ceilingTextureUnifier.Value().(int))
 	mode.ceilingTextureRotationsBox.SetSelectedItem(mode.floorTextureRotationsItems[ceilingTextureRotationsUnifier.Value().(int)])
+	mode.wallTextureSelector.SetSelectedIndex(wallTextureUnifier.Value().(int))
 	mode.wallTextureOffsetBox.SetSelectedItem(mode.wallTextureOffsetItems[wallTextureOffsetUnifier.Value().(dataModel.HeightUnit)])
 	mode.useAdjacentWallTextureBox.SetSelectedItem(mode.useAdjacentWallTextureItems[useAdjacentWallTextureUnifier.Value().(string)])
 }
 
-func (mode *LevelMapMode) onTilePropertyChangeRequested(item controls.ComboBoxItem) {
-	propertyItem := item.(*tilePropertyItem)
+func (mode *LevelMapMode) changeSelectedTileProperties(modifier func(*dataModel.TileProperties)) {
 	properties := &dataModel.TileProperties{}
 
 	if !mode.levelAdapter.IsCyberspace() {
 		properties.RealWorld = &dataModel.RealWorldTileProperties{}
 	}
-
-	propertyItem.setter(properties, propertyItem.value)
+	modifier(properties)
 	mode.levelAdapter.RequestTilePropertyChange(mode.selectedTiles, properties)
+}
+
+func (mode *LevelMapMode) onTilePropertyChangeRequested(item controls.ComboBoxItem) {
+	propertyItem := item.(*tilePropertyItem)
+	mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
+		propertyItem.setter(properties, propertyItem.value)
+	})
+}
+
+func (mode *LevelMapMode) onFloorTextureChanged(index int) {
+	mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
+		properties.RealWorld.FloorTexture = &index
+	})
+}
+
+func (mode *LevelMapMode) onCeilingTextureChanged(index int) {
+	mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
+		properties.RealWorld.CeilingTexture = &index
+	})
+}
+
+func (mode *LevelMapMode) onWallTextureChanged(index int) {
+	mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
+		properties.RealWorld.WallTexture = &index
+	})
 }
