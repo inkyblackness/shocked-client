@@ -1,9 +1,11 @@
 package modes
 
 import (
+	"github.com/inkyblackness/shocked-client/editor/display"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
+	"github.com/inkyblackness/shocked-client/ui/events"
 
 	dataModel "github.com/inkyblackness/shocked-model"
 )
@@ -12,20 +14,26 @@ import (
 type LevelControlMode struct {
 	context Context
 
+	mapDisplay *display.MapDisplay
+
 	area *ui.Area
 
 	activeLevelLabel *controls.Label
 	activeLevelBox   *controls.ComboBox
 
-	levelTexturesLabel    *controls.Label
-	levelTexturesSelector *controls.TextureSelector
-	worldTexturesLabel    *controls.Label
-	worldTexturesSelector *controls.TextureSelector
+	levelTexturesLabel       *controls.Label
+	levelTexturesSelector    *controls.TextureSelector
+	currentLevelTextureIndex int
+	worldTexturesLabel       *controls.Label
+	worldTexturesSelector    *controls.TextureSelector
 }
 
 // NewLevelControlMode returns a new instance.
-func NewLevelControlMode(context Context, parent *ui.Area) *LevelControlMode {
-	mode := &LevelControlMode{context: context}
+func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.MapDisplay) *LevelControlMode {
+	mode := &LevelControlMode{
+		context:                  context,
+		mapDisplay:               mapDisplay,
+		currentLevelTextureIndex: -1}
 
 	{
 		builder := ui.NewAreaBuilder()
@@ -38,8 +46,13 @@ func NewLevelControlMode(context Context, parent *ui.Area) *LevelControlMode {
 		builder.OnRender(func(area *ui.Area) {
 			context.ForGraphics().RectangleRenderer().Fill(
 				area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-				graphics.RGBA(0.7, 0.0, 0.7, 0.1))
+				graphics.RGBA(0.7, 0.0, 0.7, 0.3))
 		})
+		builder.OnEvent(events.MouseMoveEventType, ui.SilentConsumer)
+		builder.OnEvent(events.MouseButtonUpEventType, ui.SilentConsumer)
+		builder.OnEvent(events.MouseButtonDownEventType, ui.SilentConsumer)
+		builder.OnEvent(events.MouseButtonClickedEventType, ui.SilentConsumer)
+		builder.OnEvent(events.MouseScrollEventType, ui.SilentConsumer)
 		mode.area = builder.Build()
 	}
 	{
@@ -78,6 +91,7 @@ func NewLevelControlMode(context Context, parent *ui.Area) *LevelControlMode {
 // SetActive implements the Mode interface.
 func (mode *LevelControlMode) SetActive(active bool) {
 	mode.area.SetVisible(active)
+	mode.mapDisplay.SetVisible(active)
 }
 
 func (mode *LevelControlMode) levelTextures() []*graphics.BitmapTexture {
@@ -109,11 +123,21 @@ func (mode *LevelControlMode) onSelectedLevelTextureChanged(index int) {
 
 	if (index >= 0) && (index < len(ids)) {
 		mode.worldTexturesSelector.SetSelectedIndex(ids[index])
+		mode.currentLevelTextureIndex = index
 	} else {
 		mode.worldTexturesSelector.SetSelectedIndex(-1)
+		mode.currentLevelTextureIndex = -1
 	}
 }
 
 func (mode *LevelControlMode) onSelectedWorldTextureChanged(index int) {
+	levelAdapter := mode.context.ModelAdapter().ActiveLevel()
+	ids := levelAdapter.LevelTextureIDs()
 
+	if (mode.currentLevelTextureIndex >= 0) && (mode.currentLevelTextureIndex < len(ids)) {
+		newIDs := make([]int, len(ids))
+		copy(newIDs, ids)
+		newIDs[mode.currentLevelTextureIndex] = index
+		levelAdapter.RequestLevelTexturesChange(newIDs)
+	}
 }

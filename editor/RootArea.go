@@ -65,7 +65,7 @@ func newRootArea(context modes.Context) *ui.Area {
 	}
 
 	root.welcomeMode = root.addMode(modes.NewWelcomeMode(context, root.modeArea), "Welcome")
-	root.levelControlMode = root.addMode(modes.NewLevelControlMode(context, root.modeArea), "Level Control")
+	root.levelControlMode = root.addMode(modes.NewLevelControlMode(context, root.modeArea, mapDisplay), "Level Control")
 	root.levelMapMode = root.addMode(modes.NewLevelMapMode(context, root.modeArea, mapDisplay), "Level Map")
 	root.levelObjectsMode = root.addMode(modes.NewLevelObjectsMode(context, root.modeArea, mapDisplay), "Level Objects")
 

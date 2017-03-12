@@ -40,9 +40,23 @@ func (builder *TextureSelectorBuilder) Build() *TextureSelector {
 		selectionChangeHandler: builder.selectionChangeHandler}
 
 	builder.areaBuilder.OnRender(selector.onRender)
-	builder.areaBuilder.OnEvent(events.MouseScrollEventType, selector.onMouseScroll)
-	builder.areaBuilder.OnEvent(events.MouseButtonClickedEventType, selector.onMouseButtonClicked)
+	builder.areaBuilder.OnEvent(events.MouseMoveEventType, ui.SilentConsumer)
+	builder.areaBuilder.OnEvent(events.MouseButtonDownEventType, ui.SilentConsumer)
+	builder.areaBuilder.OnEvent(events.MouseButtonUpEventType, ui.SilentConsumer)
 	selector.area = builder.areaBuilder.Build()
+	builder.areaBuilder.OnRender(func(*ui.Area) {})
+
+	separator := ui.NewOffsetAnchor(selector.area.Left(), selector.area.Bottom().Value()-selector.area.Top().Value())
+	builder.areaBuilder.SetParent(selector.area)
+	builder.areaBuilder.SetRight(separator)
+	builder.areaBuilder.OnEvent(events.MouseButtonClickedEventType, selector.onDisplayMouseButtonClicked)
+	selector.displayArea = builder.areaBuilder.Build()
+
+	builder.areaBuilder.SetLeft(separator)
+	builder.areaBuilder.SetRight(selector.area.Right())
+	builder.areaBuilder.OnEvent(events.MouseScrollEventType, selector.onListMouseScroll)
+	builder.areaBuilder.OnEvent(events.MouseButtonClickedEventType, selector.onListMouseButtonClicked)
+	selector.listArea = builder.areaBuilder.Build()
 
 	return selector
 }

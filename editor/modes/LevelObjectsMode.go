@@ -130,7 +130,9 @@ func (mode *LevelObjectsMode) SetActive(active bool) {
 }
 
 func (mode *LevelObjectsMode) onLevelObjectsChanged() {
-	mode.updateDisplayedObjects()
+	if mode.area.IsVisible() {
+		mode.updateDisplayedObjects()
+	}
 }
 
 func (mode *LevelObjectsMode) updateDisplayedObjects() {

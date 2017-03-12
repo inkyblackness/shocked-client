@@ -129,6 +129,12 @@ func (adapter *LevelAdapter) OnLevelTexturesChanged(callback func()) {
 	adapter.levelTextures.addObserver(callback)
 }
 
+// RequestLevelTexturesChange requests to change the level textures list
+func (adapter *LevelAdapter) RequestLevelTexturesChange(textureIDs []int) {
+	adapter.store.SetLevelTextures(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.storeLevelID(),
+		textureIDs, adapter.onLevelTextures, adapter.context.simpleStoreFailure("SetLevelTextures"))
+}
+
 // LevelObjects returns a sorted set of objects that match the provided filter.
 func (adapter *LevelAdapter) LevelObjects(filter func(*LevelObject) bool) []*LevelObject {
 	objects := *adapter.levelObjects.get().(*map[int]*LevelObject)
