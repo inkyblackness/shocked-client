@@ -18,7 +18,7 @@ func NewRestTransport(serverBase string, deferrer chan<- func()) *RestTransport 
 	return &RestTransport{
 		serverBase: serverBase,
 		deferrer:   deferrer,
-		client:     new(http.Client)}
+		client:     &http.Client{Transport: &http.Transport{MaxIdleConnsPerHost: 100}}}
 }
 
 // Get retrieves data from the given URL.
@@ -56,7 +56,7 @@ func (rest *RestTransport) handle(request *http.Request, onSuccess func(jsonStri
 			defer response.Body.Close()
 		}
 
-		if (err == nil) && (response.StatusCode == http.StatusOK) || (response.StatusCode == http.StatusCreated) {
+		if (err == nil) && ((response.StatusCode == http.StatusOK) || (response.StatusCode == http.StatusCreated)) {
 			var bodyData []byte
 
 			bodyData, err = ioutil.ReadAll(response.Body)

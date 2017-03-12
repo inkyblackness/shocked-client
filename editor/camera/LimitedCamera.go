@@ -34,13 +34,15 @@ func NewLimited(minZoom, maxZoom float32, minPos, maxPos float32) *LimitedCamera
 
 // SetViewportSize notifies the camera how big the view is.
 func (cam *LimitedCamera) SetViewportSize(width, height float32) {
-	cam.viewportWidth, cam.viewportHeight = width, height
-	cam.updateViewMatrix()
+	if (cam.viewportWidth != width) || (cam.viewportHeight != height) {
+		cam.viewportWidth, cam.viewportHeight = width, height
+		cam.updateViewMatrix()
+	}
 }
 
 // ViewMatrix implements the Viewer interface.
-func (cam *LimitedCamera) ViewMatrix() mgl.Mat4 {
-	return cam.viewMatrix
+func (cam *LimitedCamera) ViewMatrix() *mgl.Mat4 {
+	return &cam.viewMatrix
 }
 
 // MoveBy adjusts the requested view offset by given delta values in world coordinates.
@@ -67,7 +69,7 @@ func (cam *LimitedCamera) ZoomAt(levelDelta float32, x, y float32) {
 
 	newPixel := cam.viewMatrix.Mul4x1(focusPoint)
 	scaleFactor := cam.scaleFactor()
-	cam.MoveBy(-(newPixel[0]-oldPixel[0])/scaleFactor, -(newPixel[1]-oldPixel[1])/scaleFactor)
+	cam.MoveBy(-(newPixel[0]-oldPixel[0])/scaleFactor, +(newPixel[1]-oldPixel[1])/scaleFactor)
 }
 
 func (cam *LimitedCamera) limitValue(value float32, min, max float32) float32 {
@@ -91,6 +93,6 @@ func (cam *LimitedCamera) updateViewMatrix() {
 	scaleFactor := cam.scaleFactor()
 	cam.viewMatrix = mgl.Ident4().
 		Mul4(mgl.Translate3D(cam.viewportWidth/2.0, cam.viewportHeight/2.0, 0)).
-		Mul4(mgl.Scale3D(scaleFactor, scaleFactor, 1.0)).
+		Mul4(mgl.Scale3D(scaleFactor, -scaleFactor, 1.0)).
 		Mul4(mgl.Translate3D(cam.viewOffsetX, cam.viewOffsetY, 0))
 }

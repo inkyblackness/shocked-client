@@ -18,7 +18,7 @@ func NewRestDataStore(transport RestTransport) *RestDataStore {
 	return &RestDataStore{transport: transport}
 }
 
-func (store *RestDataStore) get(url string, responseData interface{}, onSuccess func(), onFailure FailureFunc) {
+func (store *RestDataStore) get(url string, responseData interface{}, onSuccess func(), onFailure model.FailureFunc) {
 	store.transport.Get(url, func(jsonString string) {
 		json.Unmarshal(bytes.NewBufferString(jsonString).Bytes(), responseData)
 		onSuccess()
@@ -27,7 +27,7 @@ func (store *RestDataStore) get(url string, responseData interface{}, onSuccess 
 	})
 }
 
-func (store *RestDataStore) put(url string, requestData interface{}, responseData interface{}, onSuccess func(), onFailure FailureFunc) {
+func (store *RestDataStore) put(url string, requestData interface{}, responseData interface{}, onSuccess func(), onFailure model.FailureFunc) {
 	data, _ := json.Marshal(requestData)
 	store.transport.Put(url, data, func(jsonString string) {
 		json.Unmarshal(bytes.NewBufferString(jsonString).Bytes(), responseData)
@@ -37,7 +37,7 @@ func (store *RestDataStore) put(url string, requestData interface{}, responseDat
 	})
 }
 
-func (store *RestDataStore) post(url string, requestData interface{}, responseData interface{}, onSuccess func(), onFailure FailureFunc) {
+func (store *RestDataStore) post(url string, requestData interface{}, responseData interface{}, onSuccess func(), onFailure model.FailureFunc) {
 	data, _ := json.Marshal(requestData)
 	store.transport.Post(url, data, func(jsonString string) {
 		json.Unmarshal(bytes.NewBufferString(jsonString).Bytes(), responseData)
@@ -48,7 +48,7 @@ func (store *RestDataStore) post(url string, requestData interface{}, responseDa
 }
 
 // NewProject implements the DataStore interface.
-func (store *RestDataStore) NewProject(projectID string, onSuccess func(), onFailure FailureFunc) {
+func (store *RestDataStore) NewProject(projectID string, onSuccess func(), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects")
 	var inData model.ProjectTemplate
 	var outData model.Project
@@ -58,7 +58,7 @@ func (store *RestDataStore) NewProject(projectID string, onSuccess func(), onFai
 }
 
 // Projects implements the DataStore interface.
-func (store *RestDataStore) Projects(onSuccess func(projects []string), onFailure FailureFunc) {
+func (store *RestDataStore) Projects(onSuccess func(projects []string), onFailure model.FailureFunc) {
 	url := "/projects"
 	var data model.Projects
 
@@ -72,7 +72,7 @@ func (store *RestDataStore) Projects(onSuccess func(projects []string), onFailur
 }
 
 // Font implements the DataStore interface.
-func (store *RestDataStore) Font(projectID string, fontID int, onSuccess func(font *model.Font), onFailure FailureFunc) {
+func (store *RestDataStore) Font(projectID string, fontID int, onSuccess func(font *model.Font), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/fonts/%v", projectID, fontID)
 	var data model.Font
 
@@ -83,7 +83,7 @@ func (store *RestDataStore) Font(projectID string, fontID int, onSuccess func(fo
 
 // GameObjectIcon implements the DataStore interface.
 func (store *RestDataStore) GameObjectIcon(projectID string, class, subclass, objType int,
-	onSuccess func(bmp *model.RawBitmap), onFailure FailureFunc) {
+	onSuccess func(bmp *model.RawBitmap), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/objects/%d/%d/%d/icon/raw", projectID, class, subclass, objType)
 	var data model.RawBitmap
 
@@ -94,7 +94,7 @@ func (store *RestDataStore) GameObjectIcon(projectID string, class, subclass, ob
 
 // Palette implements the DataStore interface.
 func (store *RestDataStore) Palette(projectID string, paletteID string,
-	onSuccess func(colors [256]model.Color), onFailure FailureFunc) {
+	onSuccess func(colors [256]model.Color), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/palettes/%s", projectID, paletteID)
 	var data model.Palette
 
@@ -104,7 +104,7 @@ func (store *RestDataStore) Palette(projectID string, paletteID string,
 }
 
 // Levels implements the DataStore interface.
-func (store *RestDataStore) Levels(projectID string, archiveID string, onSuccess func(levels []model.Level), onFailure FailureFunc) {
+func (store *RestDataStore) Levels(projectID string, archiveID string, onSuccess func(levels []model.Level), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/%s/levels", projectID, archiveID)
 	var data model.Levels
 
@@ -115,7 +115,7 @@ func (store *RestDataStore) Levels(projectID string, archiveID string, onSuccess
 
 // LevelTextures implements the DataStore interface.
 func (store *RestDataStore) LevelTextures(projectID string, archiveID string, levelID int,
-	onSuccess func(textureIDs []int), onFailure FailureFunc) {
+	onSuccess func(textureIDs []int), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/%s/levels/%d/textures", projectID, archiveID, levelID)
 	var data model.LevelTextures
 
@@ -126,7 +126,7 @@ func (store *RestDataStore) LevelTextures(projectID string, archiveID string, le
 
 // SetLevelTextures implements the DataStore interface.
 func (store *RestDataStore) SetLevelTextures(projectID string, archiveID string, levelID int, textureIDs []int,
-	onSuccess func(textureIDs []int), onFailure FailureFunc) {
+	onSuccess func(textureIDs []int), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/%s/levels/%d/textures", projectID, archiveID, levelID)
 	var data model.LevelTextures
 
@@ -136,7 +136,7 @@ func (store *RestDataStore) SetLevelTextures(projectID string, archiveID string,
 }
 
 // Textures implements the DataStore interface.
-func (store *RestDataStore) Textures(projectID string, onSuccess func(textures []model.Texture), onFailure FailureFunc) {
+func (store *RestDataStore) Textures(projectID string, onSuccess func(textures []model.Texture), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/textures", projectID)
 	var data model.Textures
 
@@ -147,7 +147,7 @@ func (store *RestDataStore) Textures(projectID string, onSuccess func(textures [
 
 // TextureBitmap implements the DataStore interface.
 func (store *RestDataStore) TextureBitmap(projectID string, textureID int, size string,
-	onSuccess func(bmp *model.RawBitmap), onFailure FailureFunc) {
+	onSuccess func(bmp *model.RawBitmap), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/textures/%d/%s/raw", projectID, textureID, size)
 	var data model.RawBitmap
 
@@ -158,7 +158,7 @@ func (store *RestDataStore) TextureBitmap(projectID string, textureID int, size 
 
 // Tiles implements the DataStore interface.
 func (store *RestDataStore) Tiles(projectID string, archiveID string, levelID int,
-	onSuccess func(tiles model.Tiles), onFailure FailureFunc) {
+	onSuccess func(tiles model.Tiles), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/%s/levels/%d/tiles", projectID, archiveID, levelID)
 	var data model.Tiles
 
@@ -169,7 +169,7 @@ func (store *RestDataStore) Tiles(projectID string, archiveID string, levelID in
 
 // Tile implements the DataStore interface.
 func (store *RestDataStore) Tile(projectID string, archiveID string, levelID int, x, y int,
-	onSuccess func(properties model.TileProperties), onFailure FailureFunc) {
+	onSuccess func(properties model.TileProperties), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/%s/levels/%d/tiles/%d/%d", projectID, archiveID, levelID, y, x)
 	var data model.Tile
 
@@ -180,7 +180,7 @@ func (store *RestDataStore) Tile(projectID string, archiveID string, levelID int
 
 // SetTile implements the DataStore interface.
 func (store *RestDataStore) SetTile(projectID string, archiveID string, levelID int, x, y int, properties model.TileProperties,
-	onSuccess func(properties model.TileProperties), onFailure FailureFunc) {
+	onSuccess func(properties model.TileProperties), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/%s/levels/%d/tiles/%d/%d", projectID, archiveID, levelID, y, x)
 	var data model.Tile
 
@@ -191,7 +191,7 @@ func (store *RestDataStore) SetTile(projectID string, archiveID string, levelID 
 
 // LevelObjects implements the DataStore interface.
 func (store *RestDataStore) LevelObjects(projectID string, archiveID string, levelID int,
-	onSuccess func(objects *model.LevelObjects), onFailure FailureFunc) {
+	onSuccess func(objects *model.LevelObjects), onFailure model.FailureFunc) {
 	url := fmt.Sprintf("/projects/%s/%s/levels/%d/objects", projectID, archiveID, levelID)
 	var data model.LevelObjects
 
