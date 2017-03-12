@@ -26774,7 +26774,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/camera"] = (function()
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-model"] = (function() {
-	var $pkg = {}, $init, CalculatedWallHeights, FailureFunc, DataStore, Font, HeightUnit, Identifiable, Level, LevelObject, LevelObjectHacking, LevelObjectBaseProperties, LevelObjects, LevelProperties, LevelTextures, Levels, Link, Color, Palette, Project, ProjectTemplate, Projects, RawBitmap, RealWorldTileProperties, Referable, SlopeControl, Texture, TextureProperties, TextureSize, Textures, Tile, TileProperties, TileType, Tiles, sliceType, sliceType$1, sliceType$2, ptrType, funcType, ptrType$1, funcType$1, ptrType$2, funcType$2, sliceType$3, funcType$3, sliceType$4, funcType$4, funcType$5, arrayType, funcType$6, sliceType$5, funcType$7, funcType$8, sliceType$6, funcType$9, funcType$10, ptrType$3, arrayType$1, sliceType$7, sliceType$8, sliceType$9, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, sliceType$10, sliceType$11, SlopeControls, TextureSizes, TileTypes;
+	var $pkg = {}, $init, CalculatedWallHeights, FailureFunc, DataStore, Font, HeightUnit, Identifiable, Level, LevelObject, LevelObjectBaseProperties, LevelObjects, LevelProperties, LevelTextures, Levels, Link, Color, Palette, Project, ProjectTemplate, Projects, RawBitmap, RealWorldTileProperties, Referable, SlopeControl, Texture, TextureProperties, TextureSize, Textures, Tile, TileProperties, TileType, Tiles, sliceType, sliceType$1, sliceType$2, ptrType, funcType, ptrType$1, funcType$1, ptrType$2, funcType$2, sliceType$3, funcType$3, sliceType$4, funcType$4, funcType$5, arrayType, funcType$6, sliceType$5, funcType$7, funcType$8, sliceType$6, funcType$9, funcType$10, ptrType$3, arrayType$1, sliceType$7, sliceType$8, sliceType$9, ptrType$4, ptrType$5, ptrType$6, ptrType$7, ptrType$8, ptrType$9, ptrType$10, sliceType$10, sliceType$11, SlopeControls, TextureSizes, TileTypes;
 	CalculatedWallHeights = $pkg.CalculatedWallHeights = $newType(0, $kindStruct, "model.CalculatedWallHeights", true, "github.com/inkyblackness/shocked-model", true, function(North_, East_, West_, South_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -26828,7 +26828,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 		this.Properties = Properties_;
 		this.Links = Links_;
 	});
-	LevelObject = $pkg.LevelObject = $newType(0, $kindStruct, "model.LevelObject", true, "github.com/inkyblackness/shocked-model", true, function(Identifiable_, Class_, Subclass_, Type_, BaseProperties_, Hacking_, Links_) {
+	LevelObject = $pkg.LevelObject = $newType(0, $kindStruct, "model.LevelObject", true, "github.com/inkyblackness/shocked-model", true, function(Identifiable_, Class_, Subclass_, Type_, BaseProperties_, ClassData_, Links_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Identifiable = new Identifiable.ptr(new Referable.ptr(""), "");
@@ -26836,7 +26836,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 			this.Subclass = 0;
 			this.Type = 0;
 			this.BaseProperties = new LevelObjectBaseProperties.ptr(0, 0, 0, 0, 0);
-			this.Hacking = new LevelObjectHacking.ptr(sliceType$3.nil, sliceType$3.nil, sliceType$3.nil, sliceType$3.nil);
+			this.ClassData = sliceType$3.nil;
 			this.Links = sliceType$8.nil;
 			return;
 		}
@@ -26845,22 +26845,8 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 		this.Subclass = Subclass_;
 		this.Type = Type_;
 		this.BaseProperties = BaseProperties_;
-		this.Hacking = Hacking_;
-		this.Links = Links_;
-	});
-	LevelObjectHacking = $pkg.LevelObjectHacking = $newType(0, $kindStruct, "model.LevelObjectHacking", true, "github.com/inkyblackness/shocked-model", true, function(Unknown0013_, Unknown0015_, Unknown0017_, ClassData_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.Unknown0013 = sliceType$3.nil;
-			this.Unknown0015 = sliceType$3.nil;
-			this.Unknown0017 = sliceType$3.nil;
-			this.ClassData = sliceType$3.nil;
-			return;
-		}
-		this.Unknown0013 = Unknown0013_;
-		this.Unknown0015 = Unknown0015_;
-		this.Unknown0017 = Unknown0017_;
 		this.ClassData = ClassData_;
+		this.Links = Links_;
 	});
 	LevelObjectBaseProperties = $pkg.LevelObjectBaseProperties = $newType(0, $kindStruct, "model.LevelObjectBaseProperties", true, "github.com/inkyblackness/shocked-model", true, function(TileX_, FineX_, TileY_, FineY_, Z_) {
 		this.$val = this;
@@ -27142,8 +27128,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 	Font.init("", [{prop: "Monochrome", name: "Monochrome", exported: true, typ: $Bool, tag: "json:\"monochrome\""}, {prop: "Bitmap", name: "Bitmap", exported: true, typ: RawBitmap, tag: "json:\"bitmap\""}, {prop: "FirstCharacter", name: "FirstCharacter", exported: true, typ: $Int, tag: "json:\"firstCharacter\""}, {prop: "GlyphXOffsets", name: "GlyphXOffsets", exported: true, typ: sliceType$3, tag: "json:\"glyphXOffsets\""}]);
 	Identifiable.init("", [{prop: "Referable", name: "", exported: true, typ: Referable, tag: ""}, {prop: "ID", name: "ID", exported: true, typ: $String, tag: "json:\"id\""}]);
 	Level.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Properties", name: "Properties", exported: true, typ: LevelProperties, tag: "json:\"properties\""}, {prop: "Links", name: "Links", exported: true, typ: sliceType$8, tag: "json:\"links\""}]);
-	LevelObject.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Class", name: "Class", exported: true, typ: $Int, tag: "json:\"class\""}, {prop: "Subclass", name: "Subclass", exported: true, typ: $Int, tag: "json:\"subclass\""}, {prop: "Type", name: "Type", exported: true, typ: $Int, tag: "json:\"type\""}, {prop: "BaseProperties", name: "BaseProperties", exported: true, typ: LevelObjectBaseProperties, tag: "json:\"properties\""}, {prop: "Hacking", name: "Hacking", exported: true, typ: LevelObjectHacking, tag: ""}, {prop: "Links", name: "Links", exported: true, typ: sliceType$8, tag: "json:\"links\""}]);
-	LevelObjectHacking.init("", [{prop: "Unknown0013", name: "Unknown0013", exported: true, typ: sliceType$3, tag: ""}, {prop: "Unknown0015", name: "Unknown0015", exported: true, typ: sliceType$3, tag: ""}, {prop: "Unknown0017", name: "Unknown0017", exported: true, typ: sliceType$3, tag: ""}, {prop: "ClassData", name: "ClassData", exported: true, typ: sliceType$3, tag: ""}]);
+	LevelObject.init("", [{prop: "Identifiable", name: "", exported: true, typ: Identifiable, tag: ""}, {prop: "Class", name: "Class", exported: true, typ: $Int, tag: "json:\"class\""}, {prop: "Subclass", name: "Subclass", exported: true, typ: $Int, tag: "json:\"subclass\""}, {prop: "Type", name: "Type", exported: true, typ: $Int, tag: "json:\"type\""}, {prop: "BaseProperties", name: "BaseProperties", exported: true, typ: LevelObjectBaseProperties, tag: "json:\"properties\""}, {prop: "ClassData", name: "ClassData", exported: true, typ: sliceType$3, tag: "json:\"classData\""}, {prop: "Links", name: "Links", exported: true, typ: sliceType$8, tag: "json:\"links\""}]);
 	LevelObjectBaseProperties.init("", [{prop: "TileX", name: "TileX", exported: true, typ: $Int, tag: "json:\"tileX\""}, {prop: "FineX", name: "FineX", exported: true, typ: $Int, tag: "json:\"fineX\""}, {prop: "TileY", name: "TileY", exported: true, typ: $Int, tag: "json:\"tileY\""}, {prop: "FineY", name: "FineY", exported: true, typ: $Int, tag: "json:\"fineY\""}, {prop: "Z", name: "Z", exported: true, typ: $Int, tag: "json:\"z\""}]);
 	LevelObjects.init("", [{prop: "Table", name: "Table", exported: true, typ: sliceType$9, tag: "json:\"table\""}]);
 	LevelProperties.init("", [{prop: "HeightShift", name: "HeightShift", exported: true, typ: $Int, tag: "json:\"heightShift\""}, {prop: "CyberspaceFlag", name: "CyberspaceFlag", exported: true, typ: $Bool, tag: "json:\"cyberspaceFlag\""}]);
@@ -27173,7 +27158,7 @@ $packages["github.com/inkyblackness/shocked-model"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() {
-	var $pkg = {}, $init, fmt, model, sort, strconv, Adapter, Bitmaps, GameObject, LevelAdapter, LevelObject, ObjectID, ObjectsAdapter, observerFunc, observable, projectContext, TextureAdapter, Tile, TileCoordinate, TileMap, archiveContext, ptrType, ptrType$1, ptrType$2, ptrType$3, arrayType, ptrType$4, sliceType, sliceType$1, ptrType$5, ptrType$6, sliceType$2, ptrType$7, ptrType$8, mapType, ptrType$9, sliceType$3, ptrType$10, ptrType$11, ptrType$12, mapType$1, ptrType$13, sliceType$4, ptrType$14, ptrType$15, funcType, sliceType$5, ptrType$16, mapType$2, mapType$3, funcType$1, ptrType$17, sliceType$6, mapType$4, mapType$5, mapType$6, mapType$7, NewAdapter, newBitmaps, newLevelAdapter, newLevelObject, MakeObjectID, ObjectIDFromInt, newObjectsAdapter, newObservable, newTextureAdapter, NewTile, TileCoordinateOf, NewTileMap;
+	var $pkg = {}, $init, fmt, model, sort, strconv, Adapter, Bitmaps, GameObject, LevelAdapter, LevelObject, ObjectID, ObjectsAdapter, observerFunc, observable, projectContext, TextureAdapter, Tile, TileCoordinate, TileMap, archiveContext, ptrType, ptrType$1, ptrType$2, ptrType$3, arrayType, ptrType$4, sliceType, sliceType$1, ptrType$5, ptrType$6, sliceType$2, ptrType$7, ptrType$8, mapType, ptrType$9, sliceType$3, ptrType$10, sliceType$4, ptrType$11, ptrType$12, mapType$1, ptrType$13, sliceType$5, ptrType$14, ptrType$15, funcType, sliceType$6, ptrType$16, mapType$2, mapType$3, funcType$1, ptrType$17, sliceType$7, mapType$4, mapType$5, mapType$6, mapType$7, NewAdapter, newBitmaps, newLevelAdapter, newLevelObject, MakeObjectID, ObjectIDFromInt, newObjectsAdapter, newObservable, newTextureAdapter, NewTile, TileCoordinateOf, NewTileMap;
 	fmt = $packages["fmt"];
 	model = $packages["github.com/inkyblackness/shocked-model"];
 	sort = $packages["sort"];
@@ -27343,21 +27328,22 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 	ptrType$9 = $ptrType(mapType);
 	sliceType$3 = $sliceType(ptrType$8);
 	ptrType$10 = $ptrType(model.LevelObject);
+	sliceType$4 = $sliceType($Uint8);
 	ptrType$11 = $ptrType(Bitmaps);
 	ptrType$12 = $ptrType(GameObject);
 	mapType$1 = $mapType(ObjectID, ptrType$12);
 	ptrType$13 = $ptrType(mapType$1);
-	sliceType$4 = $sliceType(ObjectID);
+	sliceType$5 = $sliceType(ObjectID);
 	ptrType$14 = $ptrType(model.TileProperties);
 	ptrType$15 = $ptrType(Tile);
 	funcType = $funcType([], [], false);
-	sliceType$5 = $sliceType(model.Level);
+	sliceType$6 = $sliceType(model.Level);
 	ptrType$16 = $ptrType(Adapter);
 	mapType$2 = $mapType($String, model.LevelProperties);
 	mapType$3 = $mapType($Int, ptrType);
 	funcType$1 = $funcType([ptrType$8], [$Bool], false);
 	ptrType$17 = $ptrType(model.LevelObjects);
-	sliceType$6 = $sliceType(TileCoordinate);
+	sliceType$7 = $sliceType(TileCoordinate);
 	mapType$4 = $mapType($Int, observerFunc);
 	mapType$5 = $mapType(model.TextureSize, ptrType$11);
 	mapType$6 = $mapType($Int, $Int);
@@ -27968,9 +27954,19 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 	};
 	LevelObject.prototype.ID = function() { return this.$val.ID(); };
 	LevelObject.ptr.prototype.ClassData = function() {
-		var $ptr, obj;
+		var $ptr, _i, _ref, data, index, obj, value;
 		obj = this;
-		return obj.data.Hacking.ClassData;
+		data = $makeSlice(sliceType$4, obj.data.ClassData.$length);
+		_ref = obj.data.ClassData;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			index = _i;
+			value = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			((index < 0 || index >= data.$length) ? ($throwRuntimeError("index out of range"), undefined) : data.$array[data.$offset + index] = (value << 24 >>> 24));
+			_i++;
+		}
+		return data;
 	};
 	LevelObject.prototype.ClassData = function() { return this.$val.ClassData(); };
 	LevelObject.ptr.prototype.Center = function() {
@@ -28071,7 +28067,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 		var $ptr, _entry, _i, _keys, _ref, adapter, key, objectMap, result;
 		adapter = this;
 		objectMap = adapter.objectMap();
-		result = $makeSlice(sliceType$4, 0, $keys(objectMap).length);
+		result = $makeSlice(sliceType$5, 0, $keys(objectMap).length);
 		_ref = objectMap;
 		_i = 0;
 		_keys = $keys(_ref);
@@ -28407,12 +28403,12 @@ $packages["github.com/inkyblackness/shocked-client/editor/model"] = (function() 
 		return (_entry = tileMap.tiles[TileCoordinate.keyFor(coord)], _entry !== undefined ? _entry.v : ptrType$15.nil);
 	};
 	TileMap.prototype.Tile = function(coord) { return this.$val.Tile(coord); };
-	ptrType$16.methods = [{prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [model.FailureFunc], false)}, {prop: "SetMessage", name: "SetMessage", pkg: "", typ: $funcType([$String], [], false)}, {prop: "Message", name: "Message", pkg: "", typ: $funcType([], [$String], false)}, {prop: "OnMessageChanged", name: "OnMessageChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "ActiveProjectID", name: "ActiveProjectID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "RequestProject", name: "RequestProject", pkg: "", typ: $funcType([$String], [], false)}, {prop: "onGamePalette", name: "onGamePalette", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([arrayType], [], false)}, {prop: "GamePalette", name: "GamePalette", pkg: "", typ: $funcType([], [ptrType$4], false)}, {prop: "OnGamePaletteChanged", name: "OnGamePaletteChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "TextureAdapter", name: "TextureAdapter", pkg: "", typ: $funcType([], [ptrType$2], false)}, {prop: "ObjectsAdapter", name: "ObjectsAdapter", pkg: "", typ: $funcType([], [ptrType$3], false)}, {prop: "ActiveArchiveID", name: "ActiveArchiveID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "requestArchive", name: "requestArchive", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [], false)}, {prop: "onLevels", name: "onLevels", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([sliceType$5], [], false)}, {prop: "ActiveLevel", name: "ActiveLevel", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "RequestActiveLevel", name: "RequestActiveLevel", pkg: "", typ: $funcType([$String], [], false)}, {prop: "AvailableLevelIDs", name: "AvailableLevelIDs", pkg: "", typ: $funcType([], [sliceType$1], false)}, {prop: "OnAvailableLevelsChanged", name: "OnAvailableLevelsChanged", pkg: "", typ: $funcType([funcType], [], false)}];
+	ptrType$16.methods = [{prop: "simpleStoreFailure", name: "simpleStoreFailure", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [model.FailureFunc], false)}, {prop: "SetMessage", name: "SetMessage", pkg: "", typ: $funcType([$String], [], false)}, {prop: "Message", name: "Message", pkg: "", typ: $funcType([], [$String], false)}, {prop: "OnMessageChanged", name: "OnMessageChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "ActiveProjectID", name: "ActiveProjectID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "RequestProject", name: "RequestProject", pkg: "", typ: $funcType([$String], [], false)}, {prop: "onGamePalette", name: "onGamePalette", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([arrayType], [], false)}, {prop: "GamePalette", name: "GamePalette", pkg: "", typ: $funcType([], [ptrType$4], false)}, {prop: "OnGamePaletteChanged", name: "OnGamePaletteChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "TextureAdapter", name: "TextureAdapter", pkg: "", typ: $funcType([], [ptrType$2], false)}, {prop: "ObjectsAdapter", name: "ObjectsAdapter", pkg: "", typ: $funcType([], [ptrType$3], false)}, {prop: "ActiveArchiveID", name: "ActiveArchiveID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "requestArchive", name: "requestArchive", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [], false)}, {prop: "onLevels", name: "onLevels", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([sliceType$6], [], false)}, {prop: "ActiveLevel", name: "ActiveLevel", pkg: "", typ: $funcType([], [ptrType$1], false)}, {prop: "RequestActiveLevel", name: "RequestActiveLevel", pkg: "", typ: $funcType([$String], [], false)}, {prop: "AvailableLevelIDs", name: "AvailableLevelIDs", pkg: "", typ: $funcType([], [sliceType$1], false)}, {prop: "OnAvailableLevelsChanged", name: "OnAvailableLevelsChanged", pkg: "", typ: $funcType([funcType], [], false)}];
 	ptrType$11.methods = [{prop: "clear", name: "clear", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [], false)}, {prop: "setRawBitmap", name: "setRawBitmap", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$Int, ptrType$5], [], false)}, {prop: "RawBitmap", name: "RawBitmap", pkg: "", typ: $funcType([$Int], [ptrType$5], false)}, {prop: "OnBitmapChanged", name: "OnBitmapChanged", pkg: "", typ: $funcType([$Int, funcType], [], false)}, {prop: "ensureData", name: "ensureData", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$Int], [ptrType], false)}];
-	ptrType$1.methods = [{prop: "ID", name: "ID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "storeLevelID", name: "storeLevelID", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [$Int], false)}, {prop: "OnIDChanged", name: "OnIDChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "requestByID", name: "requestByID", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [], false)}, {prop: "IsCyberspace", name: "IsCyberspace", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "TileMap", name: "TileMap", pkg: "", typ: $funcType([], [ptrType$6], false)}, {prop: "onTiles", name: "onTiles", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([model.Tiles], [], false)}, {prop: "onTilePropertiesUpdated", name: "onTilePropertiesUpdated", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([TileCoordinate, ptrType$14], [], false)}, {prop: "LevelTextureIDs", name: "LevelTextureIDs", pkg: "", typ: $funcType([], [sliceType$2], false)}, {prop: "LevelTextureID", name: "LevelTextureID", pkg: "", typ: $funcType([$Int], [$Int], false)}, {prop: "onLevelTextures", name: "onLevelTextures", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([sliceType$2], [], false)}, {prop: "OnLevelTexturesChanged", name: "OnLevelTexturesChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "RequestLevelTexturesChange", name: "RequestLevelTexturesChange", pkg: "", typ: $funcType([sliceType$2], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([funcType$1], [sliceType$3], false)}, {prop: "OnLevelObjectsChanged", name: "OnLevelObjectsChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "onLevelObjects", name: "onLevelObjects", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([ptrType$17], [], false)}, {prop: "RequestTilePropertyChange", name: "RequestTilePropertyChange", pkg: "", typ: $funcType([sliceType$6, ptrType$14], [], false)}];
-	ptrType$8.methods = [{prop: "Index", name: "Index", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "ID", name: "ID", pkg: "", typ: $funcType([], [ObjectID], false)}, {prop: "ClassData", name: "ClassData", pkg: "", typ: $funcType([], [sliceType$2], false)}, {prop: "Center", name: "Center", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}];
+	ptrType$1.methods = [{prop: "ID", name: "ID", pkg: "", typ: $funcType([], [$String], false)}, {prop: "storeLevelID", name: "storeLevelID", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [$Int], false)}, {prop: "OnIDChanged", name: "OnIDChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "requestByID", name: "requestByID", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$String], [], false)}, {prop: "IsCyberspace", name: "IsCyberspace", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "TileMap", name: "TileMap", pkg: "", typ: $funcType([], [ptrType$6], false)}, {prop: "onTiles", name: "onTiles", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([model.Tiles], [], false)}, {prop: "onTilePropertiesUpdated", name: "onTilePropertiesUpdated", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([TileCoordinate, ptrType$14], [], false)}, {prop: "LevelTextureIDs", name: "LevelTextureIDs", pkg: "", typ: $funcType([], [sliceType$2], false)}, {prop: "LevelTextureID", name: "LevelTextureID", pkg: "", typ: $funcType([$Int], [$Int], false)}, {prop: "onLevelTextures", name: "onLevelTextures", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([sliceType$2], [], false)}, {prop: "OnLevelTexturesChanged", name: "OnLevelTexturesChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "RequestLevelTexturesChange", name: "RequestLevelTexturesChange", pkg: "", typ: $funcType([sliceType$2], [], false)}, {prop: "LevelObjects", name: "LevelObjects", pkg: "", typ: $funcType([funcType$1], [sliceType$3], false)}, {prop: "OnLevelObjectsChanged", name: "OnLevelObjectsChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "onLevelObjects", name: "onLevelObjects", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([ptrType$17], [], false)}, {prop: "RequestTilePropertyChange", name: "RequestTilePropertyChange", pkg: "", typ: $funcType([sliceType$7, ptrType$14], [], false)}];
+	ptrType$8.methods = [{prop: "Index", name: "Index", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "ID", name: "ID", pkg: "", typ: $funcType([], [ObjectID], false)}, {prop: "ClassData", name: "ClassData", pkg: "", typ: $funcType([], [sliceType$4], false)}, {prop: "Center", name: "Center", pkg: "", typ: $funcType([], [$Float32, $Float32], false)}];
 	ObjectID.methods = [{prop: "ToInt", name: "ToInt", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Class", name: "Class", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Subclass", name: "Subclass", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Type", name: "Type", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
-	ptrType$3.methods = [{prop: "clear", name: "clear", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [], false)}, {prop: "refresh", name: "refresh", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [], false)}, {prop: "objectMap", name: "objectMap", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [mapType$1], false)}, {prop: "Object", name: "Object", pkg: "", typ: $funcType([ObjectID], [ptrType$12], false)}, {prop: "ObjectIDs", name: "ObjectIDs", pkg: "", typ: $funcType([], [sliceType$4], false)}, {prop: "OnObjectsChanged", name: "OnObjectsChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "Icons", name: "Icons", pkg: "", typ: $funcType([], [ptrType$11], false)}, {prop: "RequestIcon", name: "RequestIcon", pkg: "", typ: $funcType([ObjectID], [], false)}];
+	ptrType$3.methods = [{prop: "clear", name: "clear", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [], false)}, {prop: "refresh", name: "refresh", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [], false)}, {prop: "objectMap", name: "objectMap", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [mapType$1], false)}, {prop: "Object", name: "Object", pkg: "", typ: $funcType([ObjectID], [ptrType$12], false)}, {prop: "ObjectIDs", name: "ObjectIDs", pkg: "", typ: $funcType([], [sliceType$5], false)}, {prop: "OnObjectsChanged", name: "OnObjectsChanged", pkg: "", typ: $funcType([funcType], [], false)}, {prop: "Icons", name: "Icons", pkg: "", typ: $funcType([], [ptrType$11], false)}, {prop: "RequestIcon", name: "RequestIcon", pkg: "", typ: $funcType([ObjectID], [], false)}];
 	ptrType.methods = [{prop: "get", name: "get", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [$emptyInterface], false)}, {prop: "orDefault", name: "orDefault", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$emptyInterface], [$emptyInterface], false)}, {prop: "set", name: "set", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$emptyInterface], [], false)}, {prop: "addObserver", name: "addObserver", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([observerFunc], [funcType], false)}, {prop: "notifyObservers", name: "notifyObservers", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [], false)}];
 	ptrType$2.methods = [{prop: "clear", name: "clear", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([], [], false)}, {prop: "WorldTextureCount", name: "WorldTextureCount", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "RequestWorldTextureBitmaps", name: "RequestWorldTextureBitmaps", pkg: "", typ: $funcType([$Int], [], false)}, {prop: "requestWorldTextureBitmapInSize", name: "requestWorldTextureBitmapInSize", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([$Int, model.TextureSize], [], false)}, {prop: "WorldTextures", name: "WorldTextures", pkg: "", typ: $funcType([model.TextureSize], [ptrType$11], false)}];
 	ptrType$15.methods = [{prop: "setProperties", name: "setProperties", pkg: "github.com/inkyblackness/shocked-client/editor/model", typ: $funcType([ptrType$14], [], false)}, {prop: "Properties", name: "Properties", pkg: "", typ: $funcType([], [ptrType$14], false)}, {prop: "OnPropertiesChanged", name: "OnPropertiesChanged", pkg: "", typ: $funcType([funcType], [], false)}];
@@ -34314,7 +34310,7 @@ $packages["github.com/inkyblackness/shocked-client/util"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() {
-	var $pkg = {}, $init, fmt, mgl32, display, model, env, keys, graphics, controls, ui, events, util, model$1, sort, Context, controlPanelBuilder, LevelControlMode, tilePropertySetter, tilePropertyItem, LevelMapMode, LevelObjectsMode, WelcomeMode, resultEntry, ptrType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, ptrType$5, sliceType, ptrType$6, sliceType$1, sliceType$2, sliceType$3, ptrType$7, sliceType$4, ptrType$8, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, ptrType$15, ptrType$16, ptrType$17, ptrType$18, ptrType$19, ptrType$20, sliceType$5, ptrType$21, ptrType$22, sliceType$6, ptrType$23, ptrType$24, ptrType$25, ptrType$26, funcType, ptrType$27, mapType, mapType$1, mapType$2, mapType$3, mapType$4, ptrType$28, funcType$1, ptrType$29, newControlPanelBuilder, NewLevelControlMode, NewLevelMapMode, NewLevelObjectsMode, NewWelcomeMode;
+	var $pkg = {}, $init, fmt, mgl32, display, model, env, keys, graphics, controls, ui, events, util, model$1, sort, Context, controlPanelBuilder, LevelControlMode, tilePropertySetter, tilePropertyItem, LevelMapMode, LevelObjectsMode, WelcomeMode, resultEntry, sliceType, ptrType, ptrType$1, ptrType$2, ptrType$3, ptrType$4, ptrType$5, sliceType$1, ptrType$6, sliceType$2, sliceType$3, sliceType$4, ptrType$7, sliceType$5, ptrType$8, ptrType$9, ptrType$10, ptrType$11, ptrType$12, ptrType$13, ptrType$14, ptrType$15, ptrType$16, ptrType$17, ptrType$18, ptrType$19, ptrType$20, sliceType$6, ptrType$21, ptrType$22, sliceType$7, ptrType$23, ptrType$24, ptrType$25, ptrType$26, funcType, ptrType$27, mapType, mapType$1, mapType$2, mapType$3, mapType$4, ptrType$28, funcType$1, ptrType$29, classNames, newControlPanelBuilder, NewLevelControlMode, NewLevelMapMode, NewLevelObjectsMode, NewWelcomeMode;
 	fmt = $packages["fmt"];
 	mgl32 = $packages["github.com/go-gl/mathgl/mgl32"];
 	display = $packages["github.com/inkyblackness/shocked-client/editor/display"];
@@ -34395,7 +34391,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			this.area = ptrType.nil;
 			this.panel = ptrType.nil;
 			this.panelRight = $ifaceNil;
-			this.selectedTiles = sliceType$4.nil;
+			this.selectedTiles = sliceType$5.nil;
 			this.tileTypeLabel = ptrType$1.nil;
 			this.tileTypeBox = ptrType$2.nil;
 			this.tileTypeItems = false;
@@ -34476,23 +34472,30 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.useAdjacentWallTextureItems = useAdjacentWallTextureItems_;
 		this.cyberspaceArea = cyberspaceArea_;
 	});
-	LevelObjectsMode = $pkg.LevelObjectsMode = $newType(0, $kindStruct, "modes.LevelObjectsMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, levelAdapter_, objectsAdapter_, displayFilter_, displayedObjects_, mapDisplay_, area_, panel_, panelRight_, tileTypeLabel_, tileTypeBox_, closestObjects_, closestObjectHighlightIndex_, selectedObjects_) {
+	LevelObjectsMode = $pkg.LevelObjectsMode = $newType(0, $kindStruct, "modes.LevelObjectsMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, levelAdapter_, objectsAdapter_, displayFilter_, displayedObjects_, mapDisplay_, area_, panel_, panelRight_, closestObjects_, closestObjectHighlightIndex_, selectedObjects_, highlightedObjectIndexTitle_, highlightedObjectIndexValue_, selectedObjectsTitleLabel_, selectedObjectsClassTitleLabel_, selectedObjectsClassInfoLabel_, selectedObjectsSubclassTitleLabel_, selectedObjectsSubclassInfoLabel_, selectedObjectsTypeTitleLabel_, selectedObjectsTypeInfoLabel_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.context = $ifaceNil;
 			this.levelAdapter = ptrType$7.nil;
 			this.objectsAdapter = ptrType$19.nil;
 			this.displayFilter = $throwNilPointerError;
-			this.displayedObjects = sliceType$5.nil;
+			this.displayedObjects = sliceType$6.nil;
 			this.mapDisplay = ptrType$5.nil;
 			this.area = ptrType.nil;
 			this.panel = ptrType.nil;
 			this.panelRight = $ifaceNil;
-			this.tileTypeLabel = ptrType$1.nil;
-			this.tileTypeBox = ptrType$2.nil;
-			this.closestObjects = sliceType$5.nil;
+			this.closestObjects = sliceType$6.nil;
 			this.closestObjectHighlightIndex = 0;
-			this.selectedObjects = sliceType$5.nil;
+			this.selectedObjects = sliceType$6.nil;
+			this.highlightedObjectIndexTitle = ptrType$1.nil;
+			this.highlightedObjectIndexValue = ptrType$1.nil;
+			this.selectedObjectsTitleLabel = ptrType$1.nil;
+			this.selectedObjectsClassTitleLabel = ptrType$1.nil;
+			this.selectedObjectsClassInfoLabel = ptrType$1.nil;
+			this.selectedObjectsSubclassTitleLabel = ptrType$1.nil;
+			this.selectedObjectsSubclassInfoLabel = ptrType$1.nil;
+			this.selectedObjectsTypeTitleLabel = ptrType$1.nil;
+			this.selectedObjectsTypeInfoLabel = ptrType$1.nil;
 			return;
 		}
 		this.context = context_;
@@ -34504,11 +34507,18 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.area = area_;
 		this.panel = panel_;
 		this.panelRight = panelRight_;
-		this.tileTypeLabel = tileTypeLabel_;
-		this.tileTypeBox = tileTypeBox_;
 		this.closestObjects = closestObjects_;
 		this.closestObjectHighlightIndex = closestObjectHighlightIndex_;
 		this.selectedObjects = selectedObjects_;
+		this.highlightedObjectIndexTitle = highlightedObjectIndexTitle_;
+		this.highlightedObjectIndexValue = highlightedObjectIndexValue_;
+		this.selectedObjectsTitleLabel = selectedObjectsTitleLabel_;
+		this.selectedObjectsClassTitleLabel = selectedObjectsClassTitleLabel_;
+		this.selectedObjectsClassInfoLabel = selectedObjectsClassInfoLabel_;
+		this.selectedObjectsSubclassTitleLabel = selectedObjectsSubclassTitleLabel_;
+		this.selectedObjectsSubclassInfoLabel = selectedObjectsSubclassInfoLabel_;
+		this.selectedObjectsTypeTitleLabel = selectedObjectsTypeTitleLabel_;
+		this.selectedObjectsTypeInfoLabel = selectedObjectsTypeInfoLabel_;
 	});
 	WelcomeMode = $pkg.WelcomeMode = $newType(0, $kindStruct, "modes.WelcomeMode", true, "github.com/inkyblackness/shocked-client/editor/modes", true, function(context_, infoArea_, infoLabel_) {
 		this.$val = this;
@@ -34532,19 +34542,20 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		this.distance = distance_;
 		this.object = object_;
 	});
+	sliceType = $sliceType($String);
 	ptrType = $ptrType(ui.Area);
 	ptrType$1 = $ptrType(controls.Label);
 	ptrType$2 = $ptrType(controls.ComboBox);
 	ptrType$3 = $ptrType(controls.TextureSelector);
 	ptrType$4 = $ptrType(controlPanelBuilder);
 	ptrType$5 = $ptrType(display.MapDisplay);
-	sliceType = $sliceType(controls.ComboBoxItem);
+	sliceType$1 = $sliceType(controls.ComboBoxItem);
 	ptrType$6 = $ptrType(graphics.BitmapTexture);
-	sliceType$1 = $sliceType(ptrType$6);
-	sliceType$2 = $sliceType($Int);
-	sliceType$3 = $sliceType($emptyInterface);
+	sliceType$2 = $sliceType(ptrType$6);
+	sliceType$3 = $sliceType($Int);
+	sliceType$4 = $sliceType($emptyInterface);
 	ptrType$7 = $ptrType(model.LevelAdapter);
-	sliceType$4 = $sliceType(model.TileCoordinate);
+	sliceType$5 = $sliceType(model.TileCoordinate);
 	ptrType$8 = $ptrType(events.MouseButtonEvent);
 	ptrType$9 = $ptrType(events.MouseMoveEvent);
 	ptrType$10 = $ptrType(model$1.TileType);
@@ -34558,10 +34569,10 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	ptrType$18 = $ptrType(model$1.CalculatedWallHeights);
 	ptrType$19 = $ptrType(model.ObjectsAdapter);
 	ptrType$20 = $ptrType(model.LevelObject);
-	sliceType$5 = $sliceType(ptrType$20);
+	sliceType$6 = $sliceType(ptrType$20);
 	ptrType$21 = $ptrType(events.MouseScrollEvent);
 	ptrType$22 = $ptrType(resultEntry);
-	sliceType$6 = $sliceType(ptrType$22);
+	sliceType$7 = $sliceType(ptrType$22);
 	ptrType$23 = $ptrType(model.Adapter);
 	ptrType$24 = $ptrType(mgl32.Mat4);
 	ptrType$25 = $ptrType(graphics.RenderContext);
@@ -34589,6 +34600,63 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		panelBuilder.lastBottom = ui.NewOffsetAnchor(parent.Top(), 0);
 		return panelBuilder;
 	};
+	controlPanelBuilder.ptr.prototype.addTitle = function(labelText) {
+		var $ptr, _r, _r$1, bottom, builder, label, labelText, panelBuilder, top, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; bottom = $f.bottom; builder = $f.builder; label = $f.label; labelText = $f.labelText; panelBuilder = $f.panelBuilder; top = $f.top; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		label = ptrType$1.nil;
+		panelBuilder = this;
+		top = ui.NewOffsetAnchor(panelBuilder.lastBottom, 2);
+		bottom = ui.NewOffsetAnchor(top, 25);
+		_r = panelBuilder.controlFactory.ForLabel(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		builder = _r;
+		builder.SetParent(panelBuilder.parent);
+		builder.SetLeft(panelBuilder.listLeft);
+		builder.SetTop(top);
+		builder.SetRight(panelBuilder.listRight);
+		builder.SetBottom(bottom);
+		builder.AlignedHorizontallyBy(controls.CenterAligner);
+		_r$1 = builder.Build(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		label = _r$1;
+		$r = label.SetText(labelText); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		panelBuilder.lastBottom = bottom;
+		$s = -1; return label;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: controlPanelBuilder.ptr.prototype.addTitle }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f.bottom = bottom; $f.builder = builder; $f.label = label; $f.labelText = labelText; $f.panelBuilder = panelBuilder; $f.top = top; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	controlPanelBuilder.prototype.addTitle = function(labelText) { return this.$val.addTitle(labelText); };
+	controlPanelBuilder.ptr.prototype.addInfo = function(labelText) {
+		var $ptr, _r, _r$1, _r$2, _r$3, bottom, builder, builder$1, info, labelText, panelBuilder, title, top, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; bottom = $f.bottom; builder = $f.builder; builder$1 = $f.builder$1; info = $f.info; labelText = $f.labelText; panelBuilder = $f.panelBuilder; title = $f.title; top = $f.top; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		title = ptrType$1.nil;
+		info = ptrType$1.nil;
+		panelBuilder = this;
+		top = ui.NewOffsetAnchor(panelBuilder.lastBottom, 2);
+		bottom = ui.NewOffsetAnchor(top, 25);
+		_r = panelBuilder.controlFactory.ForLabel(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		builder = _r;
+		builder.SetParent(panelBuilder.parent);
+		builder.SetLeft(panelBuilder.listLeft);
+		builder.SetTop(top);
+		builder.SetRight(panelBuilder.listCenterEnd);
+		builder.SetBottom(bottom);
+		builder.AlignedHorizontallyBy(controls.RightAligner);
+		_r$1 = builder.Build(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		title = _r$1;
+		$r = title.SetText(labelText); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r$2 = panelBuilder.controlFactory.ForLabel(); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		builder$1 = _r$2;
+		builder$1.SetParent(panelBuilder.parent);
+		builder$1.SetLeft(panelBuilder.listCenterStart);
+		builder$1.SetTop(top);
+		builder$1.SetRight(panelBuilder.listRight);
+		builder$1.SetBottom(bottom);
+		builder$1.AlignedHorizontallyBy(controls.LeftAligner);
+		_r$3 = builder$1.Build(); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		info = _r$3;
+		panelBuilder.lastBottom = bottom;
+		$s = -1; return [title, info];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: controlPanelBuilder.ptr.prototype.addInfo }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.bottom = bottom; $f.builder = builder; $f.builder$1 = builder$1; $f.info = info; $f.labelText = labelText; $f.panelBuilder = panelBuilder; $f.title = title; $f.top = top; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	controlPanelBuilder.prototype.addInfo = function(labelText) { return this.$val.addInfo(labelText); };
 	controlPanelBuilder.ptr.prototype.addComboProperty = function(labelText, handler) {
 		var $ptr, _r, _r$1, _r$2, _r$3, bottom, box, builder, builder$1, handler, label, labelText, panelBuilder, top, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; bottom = $f.bottom; box = $f.box; builder = $f.builder; builder$1 = $f.builder$1; handler = $f.handler; label = $f.label; labelText = $f.labelText; panelBuilder = $f.panelBuilder; top = $f.top; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -34759,7 +34827,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			var $ptr, _i, _ref, id, ids, index, items, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _ref = $f._ref; id = $f.id; ids = $f.ids; index = $f.index; items = $f.items; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			ids = adapter[0].AvailableLevelIDs();
-			items = $makeSlice(sliceType, ids.$length);
+			items = $makeSlice(sliceType$1, ids.$length);
 			_ref = ids;
 			_i = 0;
 			while (true) {
@@ -34800,7 +34868,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		_r$1 = _r.ActiveLevel(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_r$2 = _r$1.LevelTextureIDs(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		ids = _r$2;
-		textures = $makeSlice(sliceType$1, ids.$length);
+		textures = $makeSlice(sliceType$2, ids.$length);
 		_r$3 = mode.context.ForGraphics(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_r$4 = _r$3.WorldTextureStore("large"); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 		store = _r$4;
@@ -34826,7 +34894,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		_r$1 = _r.TextureAdapter(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_r$2 = _r$1.WorldTextureCount(); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		textureCount = _r$2;
-		textures = $makeSlice(sliceType$1, textureCount);
+		textures = $makeSlice(sliceType$2, textureCount);
 		_r$3 = mode.context.ForGraphics(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_r$4 = _r$3.WorldTextureStore("large"); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 		store = _r$4;
@@ -34871,7 +34939,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		/* */ if ((mode.currentLevelTextureIndex >= 0) && (mode.currentLevelTextureIndex < ids.$length)) { $s = 3; continue; }
 		/* */ $s = 4; continue;
 		/* if ((mode.currentLevelTextureIndex >= 0) && (mode.currentLevelTextureIndex < ids.$length)) { */ case 3:
-			newIDs = $makeSlice(sliceType$2, ids.$length);
+			newIDs = $makeSlice(sliceType$3, ids.$length);
 			$copySlice(newIDs, ids);
 			(x = mode.currentLevelTextureIndex, ((x < 0 || x >= newIDs.$length) ? ($throwRuntimeError("index out of range"), undefined) : newIDs.$array[newIDs.$offset + x] = index));
 			$r = levelAdapter.RequestLevelTexturesChange(newIDs); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
@@ -34884,7 +34952,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		var $ptr, _r, item, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; item = $f.item; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		item = this;
-		_r = fmt.Sprintf("%v", new sliceType$3([item.value])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = fmt.Sprintf("%v", new sliceType$4([item.value])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		$s = -1; return _r;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: tilePropertyItem.ptr.prototype.String }; } $f.$ptr = $ptr; $f._r = _r; $f.item = item; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -34897,7 +34965,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		mode = [mode];
 		_r = context[0].ModelAdapter(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r$1 = _r.ActiveLevel(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		mode[0] = new LevelMapMode.ptr(context[0], _r$1, mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, sliceType$4.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType.nil, ptrType$1.nil, ptrType$3.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$3.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$3.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType.nil);
+		mode[0] = new LevelMapMode.ptr(context[0], _r$1, mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, sliceType$5.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType.nil, ptrType$1.nil, ptrType$3.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$3.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$3.nil, ptrType$1.nil, ptrType$2.nil, false, ptrType$1.nil, ptrType$2.nil, false, ptrType.nil);
 		builder = ui.NewAreaBuilder();
 		builder.SetParent(parent);
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0));
@@ -34988,7 +35056,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			properties.Type = (tileType$24ptr || (tileType$24ptr = new ptrType$10(function() { return tileType; }, function($v) { tileType = $v; })));
 		}; })(context, lastGrabX, mode);
 		tileTypes = model$1.TileTypes();
-		tileTypeItems = $makeSlice(sliceType, tileTypes.$length);
+		tileTypeItems = $makeSlice(sliceType$1, tileTypes.$length);
 		mode[0].tileTypeItems = {};
 		_ref = tileTypes;
 		_i = 0;
@@ -35037,7 +35105,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 				$s = -1; return;
 				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$8 = _r$8; $f.height = height; $f.properties = properties; $f.value = value; $f.$s = $s; $f.$r = $r; return $f;
 			}; })(context, lastGrabX, mapper, mode, setter$1);
-			itemsSlice = $makeSlice(sliceType, 32);
+			itemsSlice = $makeSlice(sliceType$1, 32);
 			heightItems = {};
 			height = 0;
 			/* while (true) { */ case 1:
@@ -35063,7 +35131,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 				$s = -1; return;
 				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.mappedValue = mappedValue; $f.properties = properties; $f.value = value; $f.$s = $s; $f.$r = $r; return $f;
 			}; })(context, lastGrabX, mode);
-			itemsSlice = $makeSlice(sliceType, 2);
+			itemsSlice = $makeSlice(sliceType$1, 2);
 			keyedItems = {};
 			falseItem = new tilePropertyItem.ptr(new $Bool(false), mappingSetter);
 			(0 >= itemsSlice.$length ? ($throwRuntimeError("index out of range"), undefined) : itemsSlice.$array[itemsSlice.$offset + 0] = falseItem);
@@ -35074,9 +35142,9 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			_key$4 = ""; (keyedItems || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$4)] = { k: _key$4, v: new tilePropertyItem.ptr(new $String(""), $throwNilPointerError) };
 			return [itemsSlice, keyedItems];
 		}; })(context, lastGrabX, mode);
-		floorHeightItemsSlice = sliceType.nil;
-		ceilingHeightItemsSlice = sliceType.nil;
-		slopeHeightItemsSlice = sliceType.nil;
+		floorHeightItemsSlice = sliceType$1.nil;
+		ceilingHeightItemsSlice = sliceType$1.nil;
+		slopeHeightItemsSlice = sliceType$1.nil;
 		_r$8 = setupHeightCollections(positiveHeight, (function(context, lastGrabX, mode) { return function(properties, height) {
 			var $ptr, height, height$24ptr, properties;
 			properties.FloorHeight = (height$24ptr || (height$24ptr = new ptrType$11(function() { return height; }, function($v) { height = $v; })));
@@ -35111,7 +35179,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			properties.SlopeControl = (slopeControl$24ptr || (slopeControl$24ptr = new ptrType$12(function() { return slopeControl; }, function($v) { slopeControl = $v; })));
 		}; })(context, lastGrabX, mode);
 		slopeControls = model$1.SlopeControls();
-		slopeControlItems = $makeSlice(sliceType, slopeControls.$length);
+		slopeControlItems = $makeSlice(sliceType$1, slopeControls.$length);
 		mode[0].slopeControlItems = {};
 		_ref$1 = slopeControls;
 		_i$1 = 0;
@@ -35139,7 +35207,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 				$s = -1; return;
 				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f.properties = properties; $f.value = value; $f.$s = $s; $f.$r = $r; return $f;
 			}; })(context, lastGrabX, mode);
-			itemsSlice = $makeSlice(sliceType, 4);
+			itemsSlice = $makeSlice(sliceType$1, 4);
 			propertyItems = {};
 			rotations = 0;
 			while (true) {
@@ -35168,8 +35236,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		_tuple$12 = _r$15;
 		mode[0].ceilingTextureRotationsLabel = _tuple$12[0];
 		mode[0].ceilingTextureRotationsBox = _tuple$12[1];
-		floorTextureRotationsItemsSlice = sliceType.nil;
-		ceilingTextureRotationsItemsSlice = sliceType.nil;
+		floorTextureRotationsItemsSlice = sliceType$1.nil;
+		ceilingTextureRotationsItemsSlice = sliceType$1.nil;
 		_r$16 = setupRotations((function(context, lastGrabX, mode) { return function(properties, value) {
 			var $ptr, properties, value, value$24ptr;
 			properties.RealWorld.FloorTextureRotations = (value$24ptr || (value$24ptr = new ptrType$13(function() { return value; }, function($v) { value = $v; })));
@@ -35190,7 +35258,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		_tuple$15 = _r$18;
 		mode[0].wallTextureLabel = _tuple$15[0];
 		mode[0].wallTextureSelector = _tuple$15[1];
-		wallTextureOffsetItemsSlice = sliceType.nil;
+		wallTextureOffsetItemsSlice = sliceType$1.nil;
 		_r$19 = setupHeightCollections(positiveHeight, (function(context, lastGrabX, mode) { return function(properties, height) {
 			var $ptr, height, height$24ptr, properties;
 			properties.RealWorld.WallTextureOffset = (height$24ptr || (height$24ptr = new ptrType$11(function() { return height; }, function($v) { height = $v; })));
@@ -35203,7 +35271,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		mode[0].wallTextureOffsetLabel = _tuple$17[0];
 		mode[0].wallTextureOffsetBox = _tuple$17[1];
 		$r = mode[0].wallTextureOffsetBox.SetItems(wallTextureOffsetItemsSlice); /* */ $s = 29; case 29: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		useAdjacentWallTextureSlice = sliceType.nil;
+		useAdjacentWallTextureSlice = sliceType$1.nil;
 		_r$21 = setupBooleanCollections((function(context, lastGrabX, mode) { return function(properties, value) {
 			var $ptr, properties, value, value$24ptr;
 			properties.RealWorld.UseAdjacentWallTexture = (value$24ptr || (value$24ptr = new ptrType$14(function() { return value; }, function($v) { value = $v; })));
@@ -35234,7 +35302,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			mode.mapDisplay.SetSelectedTiles(mode.selectedTiles);
 		} else {
 			mode.mapDisplay.ClearHighlightedTile();
-			mode.mapDisplay.SetSelectedTiles(sliceType$4.nil);
+			mode.mapDisplay.SetSelectedTiles(sliceType$5.nil);
 		}
 		mode.area.SetVisible(active);
 		mode.mapDisplay.SetVisible(active);
@@ -35245,7 +35313,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; id = $f.id; ids = $f.ids; index = $f.index; mode = $f.mode; store = $f.store; textures = $f.textures; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
 		ids = mode.levelAdapter.LevelTextureIDs();
-		textures = $makeSlice(sliceType$1, ids.$length);
+		textures = $makeSlice(sliceType$2, ids.$length);
 		_r = mode.context.ForGraphics(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r$1 = _r.WorldTextureStore("large"); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		store = _r$1;
@@ -35313,7 +35381,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 					$r = mode.toggleSelectedTile($clone(coord, model.TileCoordinate)); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					$s = 7; continue;
 				/* } else { */ case 6:
-					$r = mode.setSelectedTiles(new sliceType$4([$clone(coord, model.TileCoordinate)])); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$r = mode.setSelectedTiles(new sliceType$5([$clone(coord, model.TileCoordinate)])); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 				/* } */ case 7:
 				consumed = true;
 			/* } */ case 4:
@@ -35336,7 +35404,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		var $ptr, _i, _ref, coord, mode, newList, other, wasSelected, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _ref = $f._ref; coord = $f.coord; mode = $f.mode; newList = $f.newList; other = $f.other; wasSelected = $f.wasSelected; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
-		newList = new sliceType$4([]);
+		newList = new sliceType$5([]);
 		wasSelected = false;
 		_ref = mode.selectedTiles;
 		_i = 0;
@@ -35401,7 +35469,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 					ceilingTextureRotationsUnifier.Add(new $Int(properties.RealWorld.CeilingTextureRotations.$get()));
 					wallTextureUnifier.Add(new $Int(properties.RealWorld.WallTexture.$get()));
 					wallTextureOffsetUnifier.Add(new model$1.HeightUnit(properties.RealWorld.WallTextureOffset.$get()));
-					_r = fmt.Sprintf("%v", new sliceType$3([new $Bool(properties.RealWorld.UseAdjacentWallTexture.$get())])); /* */ $s = 7; case 7: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+					_r = fmt.Sprintf("%v", new sliceType$4([new $Bool(properties.RealWorld.UseAdjacentWallTexture.$get())])); /* */ $s = 7; case 7: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 					$r = useAdjacentWallTextureUnifier.Add(new $String(_r)); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 				/* } */ case 6:
 			/* } */ case 4:
@@ -35494,8 +35562,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	};
 	LevelMapMode.prototype.onWallTextureChanged = function(index) { return this.$val.onWallTextureChanged(index); };
 	NewLevelObjectsMode = function(context, parent, mapDisplay) {
-		var $ptr, _r, _r$1, _r$2, _r$3, builder, builder$1, context, lastGrabX, mapDisplay, maxRight, minRight, mode, parent, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; builder = $f.builder; builder$1 = $f.builder$1; context = $f.context; lastGrabX = $f.lastGrabX; mapDisplay = $f.mapDisplay; maxRight = $f.maxRight; minRight = $f.minRight; mode = $f.mode; parent = $f.parent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var $ptr, _arg, _arg$1, _r, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, builder, builder$1, context, lastGrabX, mapDisplay, maxRight, minRight, mode, panelBuilder, parent, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; builder = $f.builder; builder$1 = $f.builder$1; context = $f.context; lastGrabX = $f.lastGrabX; mapDisplay = $f.mapDisplay; maxRight = $f.maxRight; minRight = $f.minRight; mode = $f.mode; panelBuilder = $f.panelBuilder; parent = $f.parent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		context = [context];
 		lastGrabX = [lastGrabX];
 		mode = [mode];
@@ -35506,7 +35574,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		mode[0] = new LevelObjectsMode.ptr(context[0], _r$1, _r$3, (function(context, lastGrabX, mode) { return function(param) {
 			var $ptr, param;
 			return true;
-		}; })(context, lastGrabX, mode), sliceType$5.nil, mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, ptrType$1.nil, ptrType$2.nil, sliceType$5.nil, 0, sliceType$5.nil);
+		}; })(context, lastGrabX, mode), sliceType$6.nil, mapDisplay, ptrType.nil, ptrType.nil, $ifaceNil, sliceType$6.nil, 0, sliceType$6.nil, ptrType$1.nil, ptrType$1.nil, ptrType$1.nil, ptrType$1.nil, ptrType$1.nil, ptrType$1.nil, ptrType$1.nil, ptrType$1.nil, ptrType$1.nil);
 		builder = ui.NewAreaBuilder();
 		builder.SetParent(parent);
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0));
@@ -35540,7 +35608,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			_arg$2 = _r$8;
 			_r$9 = area.Bottom().Value(); /* */ $s = 6; case 6: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
 			_arg$3 = _r$9;
-			_arg$4 = graphics.RGBA(0.699999988079071, 0, 0.699999988079071, 0.10000000149011612);
+			_arg$4 = graphics.RGBA(0.699999988079071, 0, 0.699999988079071, 0.30000001192092896);
 			$r = _r$5.Fill(_arg, _arg$1, _arg$2, _arg$3, _arg$4); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			$s = -1; return;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.area = area; $f.$s = $s; $f.$r = $r; return $f;
@@ -35567,9 +35635,8 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			return true;
 		}; })(context, lastGrabX, mode));
 		builder$1.OnEvent("mouse.move", (function(context, lastGrabX, mode) { return function $b(area, event) {
-			var $ptr, _r$4, _tuple, area, consumed, event, moveEvent, newX, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$4 = $f._r$4; _tuple = $f._tuple; area = $f.area; consumed = $f.consumed; event = $f.event; moveEvent = $f.moveEvent; newX = $f.newX; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			consumed = false;
+			var $ptr, _r$4, _tuple, area, event, moveEvent, newX, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r$4 = $f._r$4; _tuple = $f._tuple; area = $f.area; event = $f.event; moveEvent = $f.moveEvent; newX = $f.newX; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			moveEvent = $assertType(event, ptrType$9);
 			/* */ if (area.HasFocus()) { $s = 1; continue; }
 			/* */ $s = 2; continue;
@@ -35579,15 +35646,37 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 				_r$4 = mode[0].panelRight.Value(); /* */ $s = 3; case 3: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 				$r = mode[0].panelRight.RequestValue($fround(_r$4 + ($fround(newX - lastGrabX[0])))); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 				lastGrabX[0] = newX;
-				consumed = true;
 			/* } */ case 2:
-			$s = -1; return consumed;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$4 = _r$4; $f._tuple = _tuple; $f.area = area; $f.consumed = consumed; $f.event = event; $f.moveEvent = moveEvent; $f.newX = newX; $f.$s = $s; $f.$r = $r; return $f;
+			$s = -1; return true;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.$ptr = $ptr; $f._r$4 = _r$4; $f._tuple = _tuple; $f.area = area; $f.event = event; $f.moveEvent = moveEvent; $f.newX = newX; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(context, lastGrabX, mode));
 		mode[0].panel = builder$1.Build();
+		_arg = mode[0].panel;
+		_r$4 = context[0].ControlFactory(); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_arg$1 = _r$4;
+		_r$5 = newControlPanelBuilder(_arg, _arg$1); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		panelBuilder = _r$5;
+		_r$6 = panelBuilder.addInfo("Highlighted Index"); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_tuple = _r$6;
+		mode[0].highlightedObjectIndexTitle = _tuple[0];
+		mode[0].highlightedObjectIndexValue = _tuple[1];
+		_r$7 = panelBuilder.addTitle("Selected Object(s)"); /* */ $s = 8; case 8: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		mode[0].selectedObjectsTitleLabel = _r$7;
+		_r$8 = panelBuilder.addInfo("Class"); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_tuple$1 = _r$8;
+		mode[0].selectedObjectsClassTitleLabel = _tuple$1[0];
+		mode[0].selectedObjectsClassInfoLabel = _tuple$1[1];
+		_r$9 = panelBuilder.addInfo("Subclass"); /* */ $s = 10; case 10: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		_tuple$2 = _r$9;
+		mode[0].selectedObjectsSubclassTitleLabel = _tuple$2[0];
+		mode[0].selectedObjectsSubclassInfoLabel = _tuple$2[1];
+		_r$10 = panelBuilder.addInfo("Type"); /* */ $s = 11; case 11: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		_tuple$3 = _r$10;
+		mode[0].selectedObjectsTypeTitleLabel = _tuple$3[0];
+		mode[0].selectedObjectsTypeInfoLabel = _tuple$3[1];
 		mode[0].levelAdapter.OnLevelObjectsChanged($methodVal(mode[0], "onLevelObjectsChanged"));
 		$s = -1; return mode[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewLevelObjectsMode }; } $f.$ptr = $ptr; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.builder = builder; $f.builder$1 = builder$1; $f.context = context; $f.lastGrabX = lastGrabX; $f.mapDisplay = mapDisplay; $f.maxRight = maxRight; $f.minRight = minRight; $f.mode = mode; $f.parent = parent; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewLevelObjectsMode }; } $f.$ptr = $ptr; $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.builder = builder; $f.builder$1 = builder$1; $f.context = context; $f.lastGrabX = lastGrabX; $f.mapDisplay = mapDisplay; $f.maxRight = maxRight; $f.minRight = minRight; $f.mode = mode; $f.panelBuilder = panelBuilder; $f.parent = parent; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewLevelObjectsMode = NewLevelObjectsMode;
 	LevelObjectsMode.ptr.prototype.SetActive = function(active) {
@@ -35598,12 +35687,12 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		/* */ $s = 2; continue;
 		/* if (active) { */ case 1:
 			$r = mode.updateDisplayedObjects(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			mode.onSelectedObjectsChanged();
+			mode.mapDisplay.SetSelectedObjects(mode.selectedObjects);
 			$s = 3; continue;
 		/* } else { */ case 2:
-			mode.mapDisplay.SetDisplayedObjects(sliceType$5.nil);
+			mode.mapDisplay.SetDisplayedObjects(sliceType$6.nil);
 			mode.mapDisplay.SetHighlightedObject(ptrType$20.nil);
-			mode.mapDisplay.SetSelectedObjects(sliceType$5.nil);
+			mode.mapDisplay.SetSelectedObjects(sliceType$6.nil);
 		/* } */ case 3:
 		mode.area.SetVisible(active);
 		mode.mapDisplay.SetVisible(active);
@@ -35631,9 +35720,9 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		_r = mode.levelAdapter.LevelObjects(mode.displayFilter); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		mode.displayedObjects = _r;
 		mode.mapDisplay.SetDisplayedObjects(mode.displayedObjects);
-		mode.closestObjects = sliceType$5.nil;
+		mode.closestObjects = sliceType$6.nil;
 		mode.closestObjectHighlightIndex = 0;
-		mode.updateClosestObjectHighlight();
+		$r = mode.updateClosestObjectHighlight(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelObjectsMode.ptr.prototype.updateDisplayedObjects }; } $f.$ptr = $ptr; $f._r = _r; $f.mode = mode; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -35659,13 +35748,18 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 	};
 	LevelObjectsMode.prototype.onMouseMoved = function(area, event) { return this.$val.onMouseMoved(area, event); };
 	LevelObjectsMode.ptr.prototype.onMouseScrolled = function(area, event) {
-		var $ptr, _r, _tuple, area, available, consumed, delta, dy, event, mode, mouseEvent;
+		var $ptr, _r, _tuple, area, available, consumed, delta, dy, event, mode, mouseEvent, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; _tuple = $f._tuple; area = $f.area; available = $f.available; consumed = $f.consumed; delta = $f.delta; dy = $f.dy; event = $f.event; mode = $f.mode; mouseEvent = $f.mouseEvent; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		consumed = false;
 		mode = this;
 		mouseEvent = $assertType(event, ptrType$21);
-		if (((mouseEvent.MouseEvent.Buttons() === 0)) && (((mouseEvent.MouseEvent.Modifier() >>> 0) === 2))) {
+		/* */ if (((mouseEvent.MouseEvent.Buttons() === 0)) && (((mouseEvent.MouseEvent.Modifier() >>> 0) === 2))) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (((mouseEvent.MouseEvent.Buttons() === 0)) && (((mouseEvent.MouseEvent.Modifier() >>> 0) === 2))) { */ case 1:
 			available = mode.closestObjects.$length;
-			if (available > 1) {
+			/* */ if (available > 1) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (available > 1) { */ case 3:
 				_tuple = mouseEvent.Deltas();
 				dy = _tuple[1];
 				delta = 1;
@@ -35673,30 +35767,40 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 					delta = -1;
 				}
 				mode.closestObjectHighlightIndex = (_r = (((available + mode.closestObjectHighlightIndex >> 0) + delta >> 0)) % available, _r === _r ? _r : $throwRuntimeError("integer divide by zero"));
-				mode.updateClosestObjectHighlight();
-			}
+				$r = mode.updateClosestObjectHighlight(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* } */ case 4:
 			consumed = true;
-		}
-		return consumed;
+		/* } */ case 2:
+		$s = -1; return consumed;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelObjectsMode.ptr.prototype.onMouseScrolled }; } $f.$ptr = $ptr; $f._r = _r; $f._tuple = _tuple; $f.area = area; $f.available = available; $f.consumed = consumed; $f.delta = delta; $f.dy = dy; $f.event = event; $f.mode = mode; $f.mouseEvent = mouseEvent; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelObjectsMode.prototype.onMouseScrolled = function(area, event) { return this.$val.onMouseScrolled(area, event); };
 	LevelObjectsMode.ptr.prototype.onMouseButtonClicked = function(area, event) {
-		var $ptr, area, consumed, event, mode, mouseEvent, object, x, x$1;
+		var $ptr, area, consumed, event, mode, mouseEvent, object, x, x$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; area = $f.area; consumed = $f.consumed; event = $f.event; mode = $f.mode; mouseEvent = $f.mouseEvent; object = $f.object; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		consumed = false;
 		mode = this;
 		mouseEvent = $assertType(event, ptrType$8);
-		if (mouseEvent.AffectedButtons() === 1) {
-			if (mode.closestObjects.$length > 0) {
+		/* */ if (mouseEvent.AffectedButtons() === 1) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (mouseEvent.AffectedButtons() === 1) { */ case 1:
+			/* */ if (mode.closestObjects.$length > 0) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (mode.closestObjects.$length > 0) { */ case 3:
 				object = (x = mode.closestObjects, x$1 = mode.closestObjectHighlightIndex, ((x$1 < 0 || x$1 >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + x$1]));
-				if ((mouseEvent.MouseEvent.Modifier() >>> 0) === 2) {
-					mode.toggleSelectedObject(object);
-				} else {
-					mode.setSelectedObjects(new sliceType$5([object]));
-				}
-			}
+				/* */ if ((mouseEvent.MouseEvent.Modifier() >>> 0) === 2) { $s = 5; continue; }
+				/* */ $s = 6; continue;
+				/* if ((mouseEvent.MouseEvent.Modifier() >>> 0) === 2) { */ case 5:
+					$r = mode.toggleSelectedObject(object); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$s = 7; continue;
+				/* } else { */ case 6:
+					$r = mode.setSelectedObjects(new sliceType$6([object])); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* } */ case 7:
+			/* } */ case 4:
 			consumed = true;
-		}
-		return consumed;
+		/* } */ case 2:
+		$s = -1; return consumed;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelObjectsMode.ptr.prototype.onMouseButtonClicked }; } $f.$ptr = $ptr; $f.area = area; $f.consumed = consumed; $f.event = event; $f.mode = mode; $f.mouseEvent = mouseEvent; $f.object = object; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelObjectsMode.prototype.onMouseButtonClicked = function(area, event) { return this.$val.onMouseButtonClicked(area, event); };
 	LevelObjectsMode.ptr.prototype.updateClosestDisplayedObjects = function(worldX, worldY) {
@@ -35704,7 +35808,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _i$1 = $f._i$1; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; delta = $f.delta; entries = $f.entries; entry = $f.entry; index = $f.index; len = $f.len; limit = $f.limit; mode = $f.mode; object = $f.object; otherPoint = $f.otherPoint; otherX = $f.otherX; otherY = $f.otherY; refPoint = $f.refPoint; worldX = $f.worldX; worldY = $f.worldY; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		entries = [entries];
 		mode = this;
-		entries[0] = new sliceType$6([]);
+		entries[0] = new sliceType$7([]);
 		refPoint = $toNativeArray($kindFloat32, [worldX, worldY]);
 		limit = 48;
 		_ref = mode.displayedObjects;
@@ -35727,7 +35831,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			var $ptr, a, b;
 			return ((a < 0 || a >= entries[0].$length) ? ($throwRuntimeError("index out of range"), undefined) : entries[0].$array[entries[0].$offset + a]).distance < ((b < 0 || b >= entries[0].$length) ? ($throwRuntimeError("index out of range"), undefined) : entries[0].$array[entries[0].$offset + b]).distance;
 		}; })(entries)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		mode.closestObjects = $makeSlice(sliceType$5, entries[0].$length);
+		mode.closestObjects = $makeSlice(sliceType$6, entries[0].$length);
 		_ref$1 = entries[0];
 		_i$1 = 0;
 		while (true) {
@@ -35738,32 +35842,46 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 			_i$1++;
 		}
 		mode.closestObjectHighlightIndex = 0;
-		mode.updateClosestObjectHighlight();
+		$r = mode.updateClosestObjectHighlight(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelObjectsMode.ptr.prototype.updateClosestDisplayedObjects }; } $f.$ptr = $ptr; $f._i = _i; $f._i$1 = _i$1; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f.delta = delta; $f.entries = entries; $f.entry = entry; $f.index = index; $f.len = len; $f.limit = limit; $f.mode = mode; $f.object = object; $f.otherPoint = otherPoint; $f.otherX = otherX; $f.otherY = otherY; $f.refPoint = refPoint; $f.worldX = worldX; $f.worldY = worldY; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelObjectsMode.prototype.updateClosestDisplayedObjects = function(worldX, worldY) { return this.$val.updateClosestDisplayedObjects(worldX, worldY); };
 	LevelObjectsMode.ptr.prototype.updateClosestObjectHighlight = function() {
-		var $ptr, mode, x, x$1;
+		var $ptr, _r, mode, object, x, x$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _r = $f._r; mode = $f.mode; object = $f.object; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
-		if (mode.closestObjects.$length > 0) {
-			mode.mapDisplay.SetHighlightedObject((x = mode.closestObjects, x$1 = mode.closestObjectHighlightIndex, ((x$1 < 0 || x$1 >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + x$1])));
-		} else {
+		/* */ if (mode.closestObjects.$length > 0) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (mode.closestObjects.$length > 0) { */ case 1:
+			object = (x = mode.closestObjects, x$1 = mode.closestObjectHighlightIndex, ((x$1 < 0 || x$1 >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + x$1]));
+			_r = fmt.Sprintf("%v", new sliceType$4([new $Int(object.Index())])); /* */ $s = 4; case 4: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$r = mode.highlightedObjectIndexValue.SetText(_r); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			mode.mapDisplay.SetHighlightedObject(object);
+			$s = 3; continue;
+		/* } else { */ case 2:
+			$r = mode.highlightedObjectIndexValue.SetText(""); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			mode.mapDisplay.SetHighlightedObject(ptrType$20.nil);
-		}
+		/* } */ case 3:
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelObjectsMode.ptr.prototype.updateClosestObjectHighlight }; } $f.$ptr = $ptr; $f._r = _r; $f.mode = mode; $f.object = object; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelObjectsMode.prototype.updateClosestObjectHighlight = function() { return this.$val.updateClosestObjectHighlight(); };
 	LevelObjectsMode.ptr.prototype.setSelectedObjects = function(objects) {
-		var $ptr, mode, objects;
+		var $ptr, mode, objects, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; mode = $f.mode; objects = $f.objects; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
 		mode.selectedObjects = objects;
-		mode.onSelectedObjectsChanged();
+		$r = mode.onSelectedObjectsChanged(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelObjectsMode.ptr.prototype.setSelectedObjects }; } $f.$ptr = $ptr; $f.mode = mode; $f.objects = objects; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelObjectsMode.prototype.setSelectedObjects = function(objects) { return this.$val.setSelectedObjects(objects); };
 	LevelObjectsMode.ptr.prototype.toggleSelectedObject = function(object) {
-		var $ptr, _i, _ref, mode, newList, object, other, wasSelected;
+		var $ptr, _i, _ref, mode, newList, object, other, wasSelected, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _ref = $f._ref; mode = $f.mode; newList = $f.newList; object = $f.object; other = $f.other; wasSelected = $f.wasSelected; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
-		newList = new sliceType$5([]);
+		newList = new sliceType$6([]);
 		wasSelected = false;
 		_ref = mode.selectedObjects;
 		_i = 0;
@@ -35780,13 +35898,62 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		if (!wasSelected) {
 			newList = $append(newList, object);
 		}
-		mode.setSelectedObjects(newList);
+		$r = mode.setSelectedObjects(newList); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelObjectsMode.ptr.prototype.toggleSelectedObject }; } $f.$ptr = $ptr; $f._i = _i; $f._ref = _ref; $f.mode = mode; $f.newList = newList; $f.object = object; $f.other = other; $f.wasSelected = wasSelected; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelObjectsMode.prototype.toggleSelectedObject = function(object) { return this.$val.toggleSelectedObject(object); };
 	LevelObjectsMode.ptr.prototype.onSelectedObjectsChanged = function() {
-		var $ptr, mode;
+		var $ptr, _i, _r, _r$1, _ref, classUnifier, mode, object, subclassUnifier, typeUnifier, unifiedClass, unifiedSubclass, unifiedType, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $ptr = $f.$ptr; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; classUnifier = $f.classUnifier; mode = $f.mode; object = $f.object; subclassUnifier = $f.subclassUnifier; typeUnifier = $f.typeUnifier; unifiedClass = $f.unifiedClass; unifiedSubclass = $f.unifiedSubclass; unifiedType = $f.unifiedType; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		mode = this;
 		mode.mapDisplay.SetSelectedObjects(mode.selectedObjects);
+		classUnifier = util.NewValueUnifier(new $Int(-1));
+		subclassUnifier = util.NewValueUnifier(new $Int(-1));
+		typeUnifier = util.NewValueUnifier(new $Int(-1));
+		_ref = mode.selectedObjects;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			object = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			classUnifier.Add(new $Int(new model.ObjectID(object.ID()).Class()));
+			subclassUnifier.Add(new $Int(new model.ObjectID(object.ID()).Subclass()));
+			typeUnifier.Add(new $Int(new model.ObjectID(object.ID()).Type()));
+			_i++;
+		}
+		unifiedClass = $assertType(classUnifier.Value(), $Int);
+		unifiedSubclass = $assertType(subclassUnifier.Value(), $Int);
+		unifiedType = $assertType(typeUnifier.Value(), $Int);
+		/* */ if (!((unifiedClass === -1))) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!((unifiedClass === -1))) { */ case 1:
+			$r = mode.selectedObjectsClassInfoLabel.SetText(((unifiedClass < 0 || unifiedClass >= classNames.$length) ? ($throwRuntimeError("index out of range"), undefined) : classNames.$array[classNames.$offset + unifiedClass])); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = 3; continue;
+		/* } else { */ case 2:
+			$r = mode.selectedObjectsClassInfoLabel.SetText(""); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			unifiedSubclass = -1;
+		/* } */ case 3:
+		/* */ if (!((unifiedSubclass === -1))) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (!((unifiedSubclass === -1))) { */ case 6:
+			_r = fmt.Sprintf("%v", new sliceType$4([new $Int(unifiedSubclass)])); /* */ $s = 9; case 9: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$r = mode.selectedObjectsSubclassInfoLabel.SetText(_r); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = 8; continue;
+		/* } else { */ case 7:
+			$r = mode.selectedObjectsSubclassInfoLabel.SetText(""); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			unifiedType = -1;
+		/* } */ case 8:
+		/* */ if (!((unifiedType === -1))) { $s = 12; continue; }
+		/* */ $s = 13; continue;
+		/* if (!((unifiedType === -1))) { */ case 12:
+			_r$1 = fmt.Sprintf("%v", new sliceType$4([new $Int(unifiedType)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$r = mode.selectedObjectsTypeInfoLabel.SetText(_r$1); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = 14; continue;
+		/* } else { */ case 13:
+			$r = mode.selectedObjectsTypeInfoLabel.SetText(""); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ case 14:
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelObjectsMode.ptr.prototype.onSelectedObjectsChanged }; } $f.$ptr = $ptr; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f.classUnifier = classUnifier; $f.mode = mode; $f.object = object; $f.subclassUnifier = subclassUnifier; $f.typeUnifier = typeUnifier; $f.unifiedClass = unifiedClass; $f.unifiedSubclass = unifiedSubclass; $f.unifiedType = unifiedType; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelObjectsMode.prototype.onSelectedObjectsChanged = function() { return this.$val.onSelectedObjectsChanged(); };
 	NewWelcomeMode = function(context, parent) {
@@ -35846,19 +36013,19 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		mode.infoArea.SetVisible(active);
 	};
 	WelcomeMode.prototype.SetActive = function(active) { return this.$val.SetActive(active); };
-	ptrType$4.methods = [{prop: "addComboProperty", name: "addComboProperty", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$String, controls.SelectionChangeHandler], [ptrType$1, ptrType$2], false)}, {prop: "addTextureProperty", name: "addTextureProperty", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$String, controls.TextureProvider, controls.TextureSelectionChangeHandler], [ptrType$1, ptrType$3], false)}, {prop: "addSection", name: "addSection", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Bool], [ptrType, ptrType$4], false)}];
-	ptrType$26.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "levelTextures", name: "levelTextures", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [sliceType$1], false)}, {prop: "worldTextures", name: "worldTextures", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [sliceType$1], false)}, {prop: "onSelectedLevelTextureChanged", name: "onSelectedLevelTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}, {prop: "onSelectedWorldTextureChanged", name: "onSelectedWorldTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}];
+	ptrType$4.methods = [{prop: "addTitle", name: "addTitle", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$String], [ptrType$1], false)}, {prop: "addInfo", name: "addInfo", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$String], [ptrType$1, ptrType$1], false)}, {prop: "addComboProperty", name: "addComboProperty", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$String, controls.SelectionChangeHandler], [ptrType$1, ptrType$2], false)}, {prop: "addTextureProperty", name: "addTextureProperty", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$String, controls.TextureProvider, controls.TextureSelectionChangeHandler], [ptrType$1, ptrType$3], false)}, {prop: "addSection", name: "addSection", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Bool], [ptrType, ptrType$4], false)}];
+	ptrType$26.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "levelTextures", name: "levelTextures", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [sliceType$2], false)}, {prop: "worldTextures", name: "worldTextures", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [sliceType$2], false)}, {prop: "onSelectedLevelTextureChanged", name: "onSelectedLevelTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}, {prop: "onSelectedWorldTextureChanged", name: "onSelectedWorldTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}];
 	ptrType$17.methods = [{prop: "String", name: "String", pkg: "", typ: $funcType([], [$String], false)}];
-	ptrType$27.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "levelTextures", name: "levelTextures", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [sliceType$1], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "setSelectedTiles", name: "setSelectedTiles", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$4], [], false)}, {prop: "toggleSelectedTile", name: "toggleSelectedTile", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([model.TileCoordinate], [], false)}, {prop: "onSelectedTilesChanged", name: "onSelectedTilesChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "changeSelectedTileProperties", name: "changeSelectedTileProperties", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([funcType], [], false)}, {prop: "onTilePropertyChangeRequested", name: "onTilePropertyChangeRequested", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([controls.ComboBoxItem], [], false)}, {prop: "onFloorTextureChanged", name: "onFloorTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}, {prop: "onCeilingTextureChanged", name: "onCeilingTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}, {prop: "onWallTextureChanged", name: "onWallTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}];
-	ptrType$28.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "onLevelObjectsChanged", name: "onLevelObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "updateDisplayedObjects", name: "updateDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseScrolled", name: "onMouseScrolled", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "updateClosestDisplayedObjects", name: "updateClosestDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "updateClosestObjectHighlight", name: "updateClosestObjectHighlight", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "setSelectedObjects", name: "setSelectedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$5], [], false)}, {prop: "toggleSelectedObject", name: "toggleSelectedObject", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType$20], [], false)}, {prop: "onSelectedObjectsChanged", name: "onSelectedObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}];
+	ptrType$27.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "levelTextures", name: "levelTextures", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [sliceType$2], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "setSelectedTiles", name: "setSelectedTiles", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$5], [], false)}, {prop: "toggleSelectedTile", name: "toggleSelectedTile", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([model.TileCoordinate], [], false)}, {prop: "onSelectedTilesChanged", name: "onSelectedTilesChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "changeSelectedTileProperties", name: "changeSelectedTileProperties", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([funcType], [], false)}, {prop: "onTilePropertyChangeRequested", name: "onTilePropertyChangeRequested", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([controls.ComboBoxItem], [], false)}, {prop: "onFloorTextureChanged", name: "onFloorTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}, {prop: "onCeilingTextureChanged", name: "onCeilingTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}, {prop: "onWallTextureChanged", name: "onWallTextureChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Int], [], false)}];
+	ptrType$28.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}, {prop: "onLevelObjectsChanged", name: "onLevelObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "updateDisplayedObjects", name: "updateDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "onMouseMoved", name: "onMouseMoved", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseScrolled", name: "onMouseScrolled", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "onMouseButtonClicked", name: "onMouseButtonClicked", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType, events.Event], [$Bool], false)}, {prop: "updateClosestDisplayedObjects", name: "updateClosestDisplayedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([$Float32, $Float32], [], false)}, {prop: "updateClosestObjectHighlight", name: "updateClosestObjectHighlight", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}, {prop: "setSelectedObjects", name: "setSelectedObjects", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([sliceType$6], [], false)}, {prop: "toggleSelectedObject", name: "toggleSelectedObject", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([ptrType$20], [], false)}, {prop: "onSelectedObjectsChanged", name: "onSelectedObjectsChanged", pkg: "github.com/inkyblackness/shocked-client/editor/modes", typ: $funcType([], [], false)}];
 	ptrType$29.methods = [{prop: "SetActive", name: "SetActive", pkg: "", typ: $funcType([$Bool], [], false)}];
 	Context.init([{prop: "ControlFactory", name: "ControlFactory", pkg: "", typ: $funcType([], [controls.Factory], false)}, {prop: "ForGraphics", name: "ForGraphics", pkg: "", typ: $funcType([], [graphics.Context], false)}, {prop: "ModelAdapter", name: "ModelAdapter", pkg: "", typ: $funcType([], [ptrType$23], false)}, {prop: "NewRenderContext", name: "NewRenderContext", pkg: "", typ: $funcType([ptrType$24], [ptrType$25], false)}]);
 	controlPanelBuilder.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "controlFactory", name: "controlFactory", exported: false, typ: controls.Factory, tag: ""}, {prop: "parent", name: "parent", exported: false, typ: ptrType, tag: ""}, {prop: "listLeft", name: "listLeft", exported: false, typ: ui.Anchor, tag: ""}, {prop: "listRight", name: "listRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "listCenterEnd", name: "listCenterEnd", exported: false, typ: ui.Anchor, tag: ""}, {prop: "listCenterStart", name: "listCenterStart", exported: false, typ: ui.Anchor, tag: ""}, {prop: "lastBottom", name: "lastBottom", exported: false, typ: ui.Anchor, tag: ""}]);
 	LevelControlMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "activeLevelLabel", name: "activeLevelLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "activeLevelBox", name: "activeLevelBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "levelTexturesLabel", name: "levelTexturesLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "levelTexturesSelector", name: "levelTexturesSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "currentLevelTextureIndex", name: "currentLevelTextureIndex", exported: false, typ: $Int, tag: ""}, {prop: "worldTexturesLabel", name: "worldTexturesLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "worldTexturesSelector", name: "worldTexturesSelector", exported: false, typ: ptrType$3, tag: ""}]);
 	tilePropertySetter.init([ptrType$15, $emptyInterface], [], false);
 	tilePropertyItem.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "value", name: "value", exported: false, typ: $emptyInterface, tag: ""}, {prop: "setter", name: "setter", exported: false, typ: tilePropertySetter, tag: ""}]);
-	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "selectedTiles", name: "selectedTiles", exported: false, typ: sliceType$4, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "tileTypeItems", name: "tileTypeItems", exported: false, typ: mapType, tag: ""}, {prop: "floorHeightLabel", name: "floorHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorHeightBox", name: "floorHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "floorHeightItems", name: "floorHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "ceilingHeightLabel", name: "ceilingHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingHeightBox", name: "ceilingHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingHeightItems", name: "ceilingHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeHeightLabel", name: "slopeHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeHeightBox", name: "slopeHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeHeightItems", name: "slopeHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeControlLabel", name: "slopeControlLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeControlBox", name: "slopeControlBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeControlItems", name: "slopeControlItems", exported: false, typ: mapType$2, tag: ""}, {prop: "realWorldArea", name: "realWorldArea", exported: false, typ: ptrType, tag: ""}, {prop: "floorTextureLabel", name: "floorTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorTextureSelector", name: "floorTextureSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "floorTextureRotationsLabel", name: "floorTextureRotationsLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorTextureRotationsBox", name: "floorTextureRotationsBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "floorTextureRotationsItems", name: "floorTextureRotationsItems", exported: false, typ: mapType$3, tag: ""}, {prop: "ceilingTextureLabel", name: "ceilingTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingTextureSelector", name: "ceilingTextureSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "ceilingTextureRotationsLabel", name: "ceilingTextureRotationsLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingTextureRotationsBox", name: "ceilingTextureRotationsBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingTextureRotationsItems", name: "ceilingTextureRotationsItems", exported: false, typ: mapType$3, tag: ""}, {prop: "wallTextureLabel", name: "wallTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "wallTextureSelector", name: "wallTextureSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "wallTextureOffsetLabel", name: "wallTextureOffsetLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "wallTextureOffsetBox", name: "wallTextureOffsetBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "wallTextureOffsetItems", name: "wallTextureOffsetItems", exported: false, typ: mapType$1, tag: ""}, {prop: "useAdjacentWallTextureLabel", name: "useAdjacentWallTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "useAdjacentWallTextureBox", name: "useAdjacentWallTextureBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "useAdjacentWallTextureItems", name: "useAdjacentWallTextureItems", exported: false, typ: mapType$4, tag: ""}, {prop: "cyberspaceArea", name: "cyberspaceArea", exported: false, typ: ptrType, tag: ""}]);
-	LevelObjectsMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "objectsAdapter", name: "objectsAdapter", exported: false, typ: ptrType$19, tag: ""}, {prop: "displayFilter", name: "displayFilter", exported: false, typ: funcType$1, tag: ""}, {prop: "displayedObjects", name: "displayedObjects", exported: false, typ: sliceType$5, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "closestObjects", name: "closestObjects", exported: false, typ: sliceType$5, tag: ""}, {prop: "closestObjectHighlightIndex", name: "closestObjectHighlightIndex", exported: false, typ: $Int, tag: ""}, {prop: "selectedObjects", name: "selectedObjects", exported: false, typ: sliceType$5, tag: ""}]);
+	LevelMapMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "selectedTiles", name: "selectedTiles", exported: false, typ: sliceType$5, tag: ""}, {prop: "tileTypeLabel", name: "tileTypeLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "tileTypeBox", name: "tileTypeBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "tileTypeItems", name: "tileTypeItems", exported: false, typ: mapType, tag: ""}, {prop: "floorHeightLabel", name: "floorHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorHeightBox", name: "floorHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "floorHeightItems", name: "floorHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "ceilingHeightLabel", name: "ceilingHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingHeightBox", name: "ceilingHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingHeightItems", name: "ceilingHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeHeightLabel", name: "slopeHeightLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeHeightBox", name: "slopeHeightBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeHeightItems", name: "slopeHeightItems", exported: false, typ: mapType$1, tag: ""}, {prop: "slopeControlLabel", name: "slopeControlLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "slopeControlBox", name: "slopeControlBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "slopeControlItems", name: "slopeControlItems", exported: false, typ: mapType$2, tag: ""}, {prop: "realWorldArea", name: "realWorldArea", exported: false, typ: ptrType, tag: ""}, {prop: "floorTextureLabel", name: "floorTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorTextureSelector", name: "floorTextureSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "floorTextureRotationsLabel", name: "floorTextureRotationsLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "floorTextureRotationsBox", name: "floorTextureRotationsBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "floorTextureRotationsItems", name: "floorTextureRotationsItems", exported: false, typ: mapType$3, tag: ""}, {prop: "ceilingTextureLabel", name: "ceilingTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingTextureSelector", name: "ceilingTextureSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "ceilingTextureRotationsLabel", name: "ceilingTextureRotationsLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "ceilingTextureRotationsBox", name: "ceilingTextureRotationsBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "ceilingTextureRotationsItems", name: "ceilingTextureRotationsItems", exported: false, typ: mapType$3, tag: ""}, {prop: "wallTextureLabel", name: "wallTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "wallTextureSelector", name: "wallTextureSelector", exported: false, typ: ptrType$3, tag: ""}, {prop: "wallTextureOffsetLabel", name: "wallTextureOffsetLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "wallTextureOffsetBox", name: "wallTextureOffsetBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "wallTextureOffsetItems", name: "wallTextureOffsetItems", exported: false, typ: mapType$1, tag: ""}, {prop: "useAdjacentWallTextureLabel", name: "useAdjacentWallTextureLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "useAdjacentWallTextureBox", name: "useAdjacentWallTextureBox", exported: false, typ: ptrType$2, tag: ""}, {prop: "useAdjacentWallTextureItems", name: "useAdjacentWallTextureItems", exported: false, typ: mapType$4, tag: ""}, {prop: "cyberspaceArea", name: "cyberspaceArea", exported: false, typ: ptrType, tag: ""}]);
+	LevelObjectsMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "levelAdapter", name: "levelAdapter", exported: false, typ: ptrType$7, tag: ""}, {prop: "objectsAdapter", name: "objectsAdapter", exported: false, typ: ptrType$19, tag: ""}, {prop: "displayFilter", name: "displayFilter", exported: false, typ: funcType$1, tag: ""}, {prop: "displayedObjects", name: "displayedObjects", exported: false, typ: sliceType$6, tag: ""}, {prop: "mapDisplay", name: "mapDisplay", exported: false, typ: ptrType$5, tag: ""}, {prop: "area", name: "area", exported: false, typ: ptrType, tag: ""}, {prop: "panel", name: "panel", exported: false, typ: ptrType, tag: ""}, {prop: "panelRight", name: "panelRight", exported: false, typ: ui.Anchor, tag: ""}, {prop: "closestObjects", name: "closestObjects", exported: false, typ: sliceType$6, tag: ""}, {prop: "closestObjectHighlightIndex", name: "closestObjectHighlightIndex", exported: false, typ: $Int, tag: ""}, {prop: "selectedObjects", name: "selectedObjects", exported: false, typ: sliceType$6, tag: ""}, {prop: "highlightedObjectIndexTitle", name: "highlightedObjectIndexTitle", exported: false, typ: ptrType$1, tag: ""}, {prop: "highlightedObjectIndexValue", name: "highlightedObjectIndexValue", exported: false, typ: ptrType$1, tag: ""}, {prop: "selectedObjectsTitleLabel", name: "selectedObjectsTitleLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "selectedObjectsClassTitleLabel", name: "selectedObjectsClassTitleLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "selectedObjectsClassInfoLabel", name: "selectedObjectsClassInfoLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "selectedObjectsSubclassTitleLabel", name: "selectedObjectsSubclassTitleLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "selectedObjectsSubclassInfoLabel", name: "selectedObjectsSubclassInfoLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "selectedObjectsTypeTitleLabel", name: "selectedObjectsTypeTitleLabel", exported: false, typ: ptrType$1, tag: ""}, {prop: "selectedObjectsTypeInfoLabel", name: "selectedObjectsTypeInfoLabel", exported: false, typ: ptrType$1, tag: ""}]);
 	WelcomeMode.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "context", name: "context", exported: false, typ: Context, tag: ""}, {prop: "infoArea", name: "infoArea", exported: false, typ: ptrType, tag: ""}, {prop: "infoLabel", name: "infoLabel", exported: false, typ: ptrType$1, tag: ""}]);
 	resultEntry.init("github.com/inkyblackness/shocked-client/editor/modes", [{prop: "distance", name: "distance", exported: false, typ: $Float32, tag: ""}, {prop: "object", name: "object", exported: false, typ: ptrType$20, tag: ""}]);
 	$init = function() {
@@ -35877,6 +36044,7 @@ $packages["github.com/inkyblackness/shocked-client/editor/modes"] = (function() 
 		$r = util.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = model$1.$init(); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = sort.$init(); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		classNames = new sliceType([" 0: Weapons", " 1: AmmoClips", " 2: Projectiles", " 3: Explosives", " 4: Patches", " 5: Hardware", " 6: Software", " 7: Scenery", " 8: Items", " 9: Panels", "10: Barriers", "11: Animations", "12: Markers", "13: Containers", "14: Critters"]);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;

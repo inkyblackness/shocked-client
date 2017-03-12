@@ -1,6 +1,7 @@
 package modes
 
 import (
+	"fmt"
 	"sort"
 
 	mgl "github.com/go-gl/mathgl/mgl32"
@@ -13,7 +14,25 @@ import (
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
 	"github.com/inkyblackness/shocked-client/ui/events"
+	"github.com/inkyblackness/shocked-client/util"
 )
+
+var classNames = []string{
+	" 0: Weapons",
+	" 1: AmmoClips",
+	" 2: Projectiles",
+	" 3: Explosives",
+	" 4: Patches",
+	" 5: Hardware",
+	" 6: Software",
+	" 7: Scenery",
+	" 8: Items",
+	" 9: Panels",
+	"10: Barriers",
+	"11: Animations",
+	"12: Markers",
+	"13: Containers",
+	"14: Critters"}
 
 // LevelObjectsMode is a mode for level objects.
 type LevelObjectsMode struct {
@@ -30,12 +49,20 @@ type LevelObjectsMode struct {
 	panel      *ui.Area
 	panelRight ui.Anchor
 
-	tileTypeLabel *controls.Label
-	tileTypeBox   *controls.ComboBox
-
 	closestObjects              []*model.LevelObject
 	closestObjectHighlightIndex int
 	selectedObjects             []*model.LevelObject
+
+	highlightedObjectIndexTitle *controls.Label
+	highlightedObjectIndexValue *controls.Label
+
+	selectedObjectsTitleLabel         *controls.Label
+	selectedObjectsClassTitleLabel    *controls.Label
+	selectedObjectsClassInfoLabel     *controls.Label
+	selectedObjectsSubclassTitleLabel *controls.Label
+	selectedObjectsSubclassInfoLabel  *controls.Label
+	selectedObjectsTypeTitleLabel     *controls.Label
+	selectedObjectsTypeInfoLabel      *controls.Label
 }
 
 // NewLevelObjectsMode returns a new instance.
@@ -74,7 +101,7 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 		builder.OnRender(func(area *ui.Area) {
 			context.ForGraphics().RectangleRenderer().Fill(
 				area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
-				graphics.RGBA(0.7, 0.0, 0.7, 0.1))
+				graphics.RGBA(0.7, 0.0, 0.7, 0.3))
 		})
 
 		builder.OnEvent(events.MouseButtonClickedEventType, ui.SilentConsumer)
@@ -96,18 +123,27 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 			}
 			return true
 		})
-		builder.OnEvent(events.MouseMoveEventType, func(area *ui.Area, event events.Event) (consumed bool) {
+		builder.OnEvent(events.MouseMoveEventType, func(area *ui.Area, event events.Event) bool {
 			moveEvent := event.(*events.MouseMoveEvent)
 			if area.HasFocus() {
 				newX, _ := moveEvent.Position()
 				mode.panelRight.RequestValue(mode.panelRight.Value() + (newX - lastGrabX))
 				lastGrabX = newX
-				consumed = true
 			}
-			return
+			return true
 		})
 
 		mode.panel = builder.Build()
+	}
+	{
+		panelBuilder := newControlPanelBuilder(mode.panel, context.ControlFactory())
+
+		mode.highlightedObjectIndexTitle, mode.highlightedObjectIndexValue = panelBuilder.addInfo("Highlighted Index")
+
+		mode.selectedObjectsTitleLabel = panelBuilder.addTitle("Selected Object(s)")
+		mode.selectedObjectsClassTitleLabel, mode.selectedObjectsClassInfoLabel = panelBuilder.addInfo("Class")
+		mode.selectedObjectsSubclassTitleLabel, mode.selectedObjectsSubclassInfoLabel = panelBuilder.addInfo("Subclass")
+		mode.selectedObjectsTypeTitleLabel, mode.selectedObjectsTypeInfoLabel = panelBuilder.addInfo("Type")
 	}
 
 	mode.levelAdapter.OnLevelObjectsChanged(mode.onLevelObjectsChanged)
@@ -119,7 +155,7 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 func (mode *LevelObjectsMode) SetActive(active bool) {
 	if active {
 		mode.updateDisplayedObjects()
-		mode.onSelectedObjectsChanged()
+		mode.mapDisplay.SetSelectedObjects(mode.selectedObjects)
 	} else {
 		mode.mapDisplay.SetDisplayedObjects(nil)
 		mode.mapDisplay.SetHighlightedObject(nil)
@@ -226,8 +262,11 @@ func (mode *LevelObjectsMode) updateClosestDisplayedObjects(worldX, worldY float
 
 func (mode *LevelObjectsMode) updateClosestObjectHighlight() {
 	if len(mode.closestObjects) > 0 {
-		mode.mapDisplay.SetHighlightedObject(mode.closestObjects[mode.closestObjectHighlightIndex])
+		object := mode.closestObjects[mode.closestObjectHighlightIndex]
+		mode.highlightedObjectIndexValue.SetText(fmt.Sprintf("%v", object.Index()))
+		mode.mapDisplay.SetHighlightedObject(object)
 	} else {
+		mode.highlightedObjectIndexValue.SetText("")
 		mode.mapDisplay.SetHighlightedObject(nil)
 	}
 }
@@ -256,4 +295,34 @@ func (mode *LevelObjectsMode) toggleSelectedObject(object *model.LevelObject) {
 
 func (mode *LevelObjectsMode) onSelectedObjectsChanged() {
 	mode.mapDisplay.SetSelectedObjects(mode.selectedObjects)
+
+	classUnifier := util.NewValueUnifier(-1)
+	subclassUnifier := util.NewValueUnifier(-1)
+	typeUnifier := util.NewValueUnifier(-1)
+
+	for _, object := range mode.selectedObjects {
+		classUnifier.Add(object.ID().Class())
+		subclassUnifier.Add(object.ID().Subclass())
+		typeUnifier.Add(object.ID().Type())
+	}
+	unifiedClass := classUnifier.Value().(int)
+	unifiedSubclass := subclassUnifier.Value().(int)
+	unifiedType := typeUnifier.Value().(int)
+	if unifiedClass != -1 {
+		mode.selectedObjectsClassInfoLabel.SetText(classNames[unifiedClass])
+	} else {
+		mode.selectedObjectsClassInfoLabel.SetText("")
+		unifiedSubclass = -1
+	}
+	if unifiedSubclass != -1 {
+		mode.selectedObjectsSubclassInfoLabel.SetText(fmt.Sprintf("%v", unifiedSubclass))
+	} else {
+		mode.selectedObjectsSubclassInfoLabel.SetText("")
+		unifiedType = -1
+	}
+	if unifiedType != -1 {
+		mode.selectedObjectsTypeInfoLabel.SetText(fmt.Sprintf("%v", unifiedType))
+	} else {
+		mode.selectedObjectsTypeInfoLabel.SetText("")
+	}
 }

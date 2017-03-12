@@ -36,8 +36,12 @@ func (obj *LevelObject) ID() ObjectID {
 }
 
 // ClassData returns the raw data for the level object.
-func (obj *LevelObject) ClassData() []int {
-	return obj.data.Hacking.ClassData
+func (obj *LevelObject) ClassData() []byte {
+	data := make([]byte, len(obj.data.ClassData))
+	for index, value := range obj.data.ClassData {
+		data[index] = byte(value)
+	}
+	return data
 }
 
 // Center returns the location of the object within the map

@@ -31,6 +31,54 @@ func newControlPanelBuilder(parent *ui.Area, controlFactory controls.Factory) *c
 	return panelBuilder
 }
 
+func (panelBuilder *controlPanelBuilder) addTitle(labelText string) (label *controls.Label) {
+	top := ui.NewOffsetAnchor(panelBuilder.lastBottom, 2)
+	bottom := ui.NewOffsetAnchor(top, 25)
+	{
+		builder := panelBuilder.controlFactory.ForLabel()
+		builder.SetParent(panelBuilder.parent)
+		builder.SetLeft(panelBuilder.listLeft)
+		builder.SetTop(top)
+		builder.SetRight(panelBuilder.listRight)
+		builder.SetBottom(bottom)
+		builder.AlignedHorizontallyBy(controls.CenterAligner)
+		label = builder.Build()
+		label.SetText(labelText)
+	}
+	panelBuilder.lastBottom = bottom
+
+	return
+}
+
+func (panelBuilder *controlPanelBuilder) addInfo(labelText string) (title *controls.Label, info *controls.Label) {
+	top := ui.NewOffsetAnchor(panelBuilder.lastBottom, 2)
+	bottom := ui.NewOffsetAnchor(top, 25)
+	{
+		builder := panelBuilder.controlFactory.ForLabel()
+		builder.SetParent(panelBuilder.parent)
+		builder.SetLeft(panelBuilder.listLeft)
+		builder.SetTop(top)
+		builder.SetRight(panelBuilder.listCenterEnd)
+		builder.SetBottom(bottom)
+		builder.AlignedHorizontallyBy(controls.RightAligner)
+		title = builder.Build()
+		title.SetText(labelText)
+	}
+	{
+		builder := panelBuilder.controlFactory.ForLabel()
+		builder.SetParent(panelBuilder.parent)
+		builder.SetLeft(panelBuilder.listCenterStart)
+		builder.SetTop(top)
+		builder.SetRight(panelBuilder.listRight)
+		builder.SetBottom(bottom)
+		builder.AlignedHorizontallyBy(controls.LeftAligner)
+		info = builder.Build()
+	}
+	panelBuilder.lastBottom = bottom
+
+	return
+}
+
 func (panelBuilder *controlPanelBuilder) addComboProperty(labelText string, handler controls.SelectionChangeHandler) (label *controls.Label, box *controls.ComboBox) {
 	top := ui.NewOffsetAnchor(panelBuilder.lastBottom, 2)
 	bottom := ui.NewOffsetAnchor(top, 25)
