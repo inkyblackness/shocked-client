@@ -14,6 +14,7 @@ type controlPanelBuilder struct {
 	listCenterEnd   ui.Anchor
 	listCenterStart ui.Anchor
 
+	initialTop ui.Anchor
 	lastBottom ui.Anchor
 }
 
@@ -26,9 +27,18 @@ func newControlPanelBuilder(parent *ui.Area, controlFactory controls.Factory) *c
 	listCenter := ui.NewRelativeAnchor(panelBuilder.listLeft, panelBuilder.listRight, 0.5)
 	panelBuilder.listCenterEnd = ui.NewOffsetAnchor(listCenter, -1)
 	panelBuilder.listCenterStart = ui.NewOffsetAnchor(listCenter, 1)
-	panelBuilder.lastBottom = ui.NewOffsetAnchor(parent.Top(), 0)
+	panelBuilder.initialTop = ui.NewOffsetAnchor(parent.Top(), 0)
+	panelBuilder.lastBottom = panelBuilder.initialTop
 
 	return panelBuilder
+}
+
+func (panelBuilder *controlPanelBuilder) reset() {
+	panelBuilder.lastBottom = panelBuilder.initialTop
+}
+
+func (panelBuilder *controlPanelBuilder) bottom() ui.Anchor {
+	return panelBuilder.lastBottom
 }
 
 func (panelBuilder *controlPanelBuilder) addTitle(labelText string) (label *controls.Label) {
@@ -140,13 +150,19 @@ func (panelBuilder *controlPanelBuilder) addTextureProperty(labelText string, pr
 }
 
 func (panelBuilder *controlPanelBuilder) addSection(visible bool) (sectionArea *ui.Area, sectionBuilder *controlPanelBuilder) {
+	sectionArea, sectionBuilder = panelBuilder.addDynamicSection(visible, func() ui.Anchor { return sectionBuilder.lastBottom })
+	return
+}
+
+func (panelBuilder *controlPanelBuilder) addDynamicSection(visible bool, bottom func() ui.Anchor) (sectionArea *ui.Area, sectionBuilder *controlPanelBuilder) {
 	sectionBuilder = &controlPanelBuilder{}
 	sectionBuilder.controlFactory = panelBuilder.controlFactory
 	sectionBuilder.listLeft = panelBuilder.listLeft
 	sectionBuilder.listRight = panelBuilder.listRight
 	sectionBuilder.listCenterEnd = panelBuilder.listCenterEnd
 	sectionBuilder.listCenterStart = panelBuilder.listCenterStart
-	sectionBuilder.lastBottom = panelBuilder.lastBottom
+	sectionBuilder.initialTop = panelBuilder.lastBottom
+	sectionBuilder.lastBottom = sectionBuilder.initialTop
 	{
 		builder := ui.NewAreaBuilder()
 		builder.SetParent(panelBuilder.parent)
@@ -154,9 +170,9 @@ func (panelBuilder *controlPanelBuilder) addSection(visible bool) (sectionArea *
 		builder.SetTop(ui.NewOffsetAnchor(panelBuilder.lastBottom, 0))
 		builder.SetRight(ui.NewOffsetAnchor(panelBuilder.parent.Right(), 0))
 		builder.SetBottom(ui.NewResolvingAnchor(func() ui.Anchor {
-			anchor := sectionBuilder.lastBottom
-			if !sectionArea.IsVisible() {
-				anchor = sectionArea.Top()
+			anchor := sectionArea.Top()
+			if sectionArea.IsVisible() {
+				anchor = bottom()
 			}
 			return anchor
 		}))

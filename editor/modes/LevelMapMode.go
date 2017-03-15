@@ -99,7 +99,7 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 	{
 		minRight := ui.NewOffsetAnchor(mode.area.Left(), 100)
 		maxRight := ui.NewRelativeAnchor(mode.area.Left(), mode.area.Right(), 0.5)
-		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(mode.area.Left(), 200))
+		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(mode.area.Left(), 400))
 		builder := ui.NewAreaBuilder()
 		builder.SetParent(mode.area)
 		builder.SetLeft(ui.NewOffsetAnchor(mode.area.Left(), 0))

@@ -6,6 +6,10 @@ import (
 
 	mgl "github.com/go-gl/mathgl/mgl32"
 
+	"github.com/inkyblackness/res"
+	"github.com/inkyblackness/res/data/interpreters"
+	"github.com/inkyblackness/res/data/levelobj"
+
 	"github.com/inkyblackness/shocked-client/editor/display"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/env"
@@ -33,6 +37,11 @@ var classNames = []string{
 	"12: Markers",
 	"13: Containers",
 	"14: Critters"}
+
+type levelObjectProperty struct {
+	title *controls.Label
+	value *controls.Label
+}
 
 // LevelObjectsMode is a mode for level objects.
 type LevelObjectsMode struct {
@@ -63,6 +72,11 @@ type LevelObjectsMode struct {
 	selectedObjectsSubclassInfoLabel  *controls.Label
 	selectedObjectsTypeTitleLabel     *controls.Label
 	selectedObjectsTypeInfoLabel      *controls.Label
+
+	selectedObjectsPropertiesArea         *ui.Area
+	selectedObjectsPropertiesPanelBuilder *controlPanelBuilder
+	selectedObjectsPropertiesBottom       ui.Anchor
+	selectedObjectsProperties             []*levelObjectProperty
 }
 
 // NewLevelObjectsMode returns a new instance.
@@ -91,7 +105,7 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 	{
 		minRight := ui.NewOffsetAnchor(mode.area.Left(), 100)
 		maxRight := ui.NewRelativeAnchor(mode.area.Left(), mode.area.Right(), 0.5)
-		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(mode.area.Left(), 200))
+		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(mode.area.Left(), 400))
 		builder := ui.NewAreaBuilder()
 		builder.SetParent(mode.area)
 		builder.SetLeft(ui.NewOffsetAnchor(mode.area.Left(), 0))
@@ -144,6 +158,10 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 		mode.selectedObjectsClassTitleLabel, mode.selectedObjectsClassInfoLabel = panelBuilder.addInfo("Class")
 		mode.selectedObjectsSubclassTitleLabel, mode.selectedObjectsSubclassInfoLabel = panelBuilder.addInfo("Subclass")
 		mode.selectedObjectsTypeTitleLabel, mode.selectedObjectsTypeInfoLabel = panelBuilder.addInfo("Type")
+
+		mode.selectedObjectsPropertiesArea, mode.selectedObjectsPropertiesPanelBuilder =
+			panelBuilder.addDynamicSection(true, func() ui.Anchor { return mode.selectedObjectsPropertiesBottom })
+		mode.selectedObjectsPropertiesBottom = mode.selectedObjectsPropertiesArea.Top()
 	}
 
 	mode.levelAdapter.OnLevelObjectsChanged(mode.onLevelObjectsChanged)
@@ -325,4 +343,74 @@ func (mode *LevelObjectsMode) onSelectedObjectsChanged() {
 	} else {
 		mode.selectedObjectsTypeInfoLabel.SetText("")
 	}
+	mode.recreateLevelObjectProperties()
+}
+
+func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
+	for _, oldProperty := range mode.selectedObjectsProperties {
+		oldProperty.title.Dispose()
+		oldProperty.value.Dispose()
+	}
+	mode.selectedObjectsPropertiesPanelBuilder.reset()
+	mode.selectedObjectsPropertiesBottom = mode.selectedObjectsPropertiesArea.Top()
+
+	var newProperties = []*levelObjectProperty{}
+	if len(mode.selectedObjects) > 0 {
+		propertyUnifier := make(map[string]*util.ValueUnifier)
+		propertyOrder := []string{}
+
+		var unifyInterpreter func(string, *interpreters.Instance, bool, map[string]bool)
+		unifyInterpreter = func(path string, interpreter *interpreters.Instance, first bool, thisKeys map[string]bool) {
+			for _, key := range interpreter.Keys() {
+				fullPath := path + key
+				thisKeys[fullPath] = true
+				if unifier, existing := propertyUnifier[fullPath]; existing || first {
+					if !existing {
+						unifier = util.NewValueUnifier(uint32(0xFFFFFFFF))
+						propertyUnifier[fullPath] = unifier
+						propertyOrder = append(propertyOrder, fullPath)
+					}
+					unifier.Add(interpreter.Get(key))
+				}
+			}
+			for _, key := range interpreter.ActiveRefinements() {
+				unifyInterpreter(path+key+".", interpreter.Refined(key), first, thisKeys)
+			}
+		}
+
+		interpreterFactory := levelobj.ForRealWorld
+		if mode.levelAdapter.IsCyberspace() {
+			interpreterFactory = levelobj.ForCyberspace
+		}
+
+		for index, object := range mode.selectedObjects {
+			objID := object.ID()
+			resID := res.MakeObjectID(res.ObjectClass(objID.Class()), res.ObjectSubclass(objID.Subclass()), res.ObjectType(objID.Type()))
+			interpreter := interpreterFactory(resID, object.ClassData())
+			thisKeys := make(map[string]bool)
+			unifyInterpreter("", interpreter, index == 0, thisKeys)
+			{
+				toRemove := []string{}
+				for previousKey := range propertyUnifier {
+					if !thisKeys[previousKey] {
+						toRemove = append(toRemove, previousKey)
+					}
+				}
+				for _, key := range toRemove {
+					delete(propertyUnifier, key)
+				}
+			}
+		}
+
+		for _, key := range propertyOrder {
+			if unifier, existing := propertyUnifier[key]; existing {
+				property := &levelObjectProperty{}
+				newProperties = append(newProperties, property)
+				property.title, property.value = mode.selectedObjectsPropertiesPanelBuilder.addInfo(key)
+				property.value.SetText(fmt.Sprintf("%v", unifier.Value().(uint32)))
+				mode.selectedObjectsPropertiesBottom = mode.selectedObjectsPropertiesPanelBuilder.bottom()
+			}
+		}
+	}
+	mode.selectedObjectsProperties = newProperties
 }

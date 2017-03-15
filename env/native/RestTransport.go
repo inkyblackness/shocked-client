@@ -18,7 +18,7 @@ func NewRestTransport(serverBase string, deferrer chan<- func()) *RestTransport 
 	return &RestTransport{
 		serverBase: serverBase,
 		deferrer:   deferrer,
-		client:     &http.Client{Transport: &http.Transport{MaxIdleConnsPerHost: 100}}}
+		client:     &http.Client{Transport: &http.Transport{MaxIdleConnsPerHost: 50}}}
 }
 
 // Get retrieves data from the given URL.
