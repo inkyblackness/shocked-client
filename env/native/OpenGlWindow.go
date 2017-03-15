@@ -41,7 +41,7 @@ func NewOpenGlWindow() (window *OpenGlWindow, err error) {
 		glfw.WindowHint(glfw.OpenGLProfile, glfw.OpenGLCoreProfile)
 		glfw.WindowHint(glfw.OpenGLForwardCompatible, glfw.True)
 		var glfwWindow *glfw.Window
-		glfwWindow, err = glfw.CreateWindow(320, 200, "shocked", nil, nil)
+		glfwWindow, err = glfw.CreateWindow(1280, 720, "shocked", nil, nil)
 		if err == nil {
 			glfwWindow.MakeContextCurrent()
 
