@@ -47,8 +47,8 @@ func (store *BufferedTextureStore) Texture(id TextureKey) *BitmapTexture {
 	texture, existing := store.textures[id]
 
 	if !existing {
-		store.query(id)
 		store.textures[id] = nil
+		store.query(id)
 	}
 
 	return texture
