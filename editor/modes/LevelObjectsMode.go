@@ -2,6 +2,7 @@ package modes
 
 import (
 	"fmt"
+	"math"
 	"sort"
 
 	mgl "github.com/go-gl/mathgl/mgl32"
@@ -38,9 +39,13 @@ var classNames = []string{
 	"13: Containers",
 	"14: Critters"}
 
+type disposableControl interface {
+	Dispose()
+}
+
 type levelObjectProperty struct {
 	title *controls.Label
-	value *controls.Label
+	value disposableControl
 }
 
 // LevelObjectsMode is a mode for level objects.
@@ -366,11 +371,11 @@ func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
 				thisKeys[fullPath] = true
 				if unifier, existing := propertyUnifier[fullPath]; existing || first {
 					if !existing {
-						unifier = util.NewValueUnifier(uint32(0xFFFFFFFF))
+						unifier = util.NewValueUnifier(int64(math.MinInt64))
 						propertyUnifier[fullPath] = unifier
 						propertyOrder = append(propertyOrder, fullPath)
 					}
-					unifier.Add(interpreter.Get(key))
+					unifier.Add(int64(interpreter.Get(key)))
 				}
 			}
 			for _, key := range interpreter.ActiveRefinements() {
@@ -405,9 +410,14 @@ func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
 		for _, key := range propertyOrder {
 			if unifier, existing := propertyUnifier[key]; existing {
 				property := &levelObjectProperty{}
+				title, value := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key, func(int64) {})
+				unifiedValue := unifier.Value().(int64)
+
+				if unifiedValue != math.MinInt64 {
+					value.SetValue(unifiedValue)
+				}
+				property.title, property.value = title, value
 				newProperties = append(newProperties, property)
-				property.title, property.value = mode.selectedObjectsPropertiesPanelBuilder.addInfo(key)
-				property.value.SetText(fmt.Sprintf("%v", unifier.Value().(uint32)))
 				mode.selectedObjectsPropertiesBottom = mode.selectedObjectsPropertiesPanelBuilder.bottom()
 			}
 		}
