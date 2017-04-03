@@ -364,6 +364,9 @@ func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
 		propertyUnifier := make(map[string]*util.ValueUnifier)
 		propertyDescribers := make(map[string]func(*interpreters.Simplifier))
 		propertyOrder := []string{}
+		describer := func(interpreter *interpreters.Instance, key string) func(simpl *interpreters.Simplifier) {
+			return func(simpl *interpreters.Simplifier) { interpreter.Describe(key, simpl) }
+		}
 
 		var unifyInterpreter func(string, *interpreters.Instance, bool, map[string]bool)
 		unifyInterpreter = func(path string, interpreter *interpreters.Instance, first bool, thisKeys map[string]bool) {
@@ -374,7 +377,7 @@ func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
 					if !existing {
 						unifier = util.NewValueUnifier(int64(math.MinInt64))
 						propertyUnifier[fullPath] = unifier
-						propertyDescribers[fullPath] = func(simpl *interpreters.Simplifier) { interpreter.Describe(key, simpl) }
+						propertyDescribers[fullPath] = describer(interpreter, key)
 						propertyOrder = append(propertyOrder, fullPath)
 					}
 					unifier.Add(int64(interpreter.Get(key)))
@@ -446,6 +449,22 @@ func (mode *LevelObjectsMode) createPropertyControls(property *levelObjectProper
 		for index, valueKey := range valueKeys {
 			items[index] = values[valueKey]
 			if int64(valueKey) == unifiedValue {
+				selectedItem = items[index]
+			}
+		}
+		box.SetItems(items)
+		box.SetSelectedItem(selectedItem)
+		property.title, property.value = title, box
+	})
+
+	simplifier.SetObjectIndexHandler(func() {
+		title, box := mode.selectedObjectsPropertiesPanelBuilder.addComboProperty(key, func(controls.ComboBoxItem) {})
+		maxItems := 872
+		items := make([]controls.ComboBoxItem, maxItems)
+		var selectedItem controls.ComboBoxItem
+		for index := 0; index < len(items); index++ {
+			items[index] = fmt.Sprintf("%v", index)
+			if int64(index) == unifiedValue {
 				selectedItem = items[index]
 			}
 		}
