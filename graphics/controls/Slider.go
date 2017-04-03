@@ -35,6 +35,11 @@ func (slider *Slider) Dispose() {
 	slider.area.Remove()
 }
 
+// SetRange sets the minimum and maximum of valid values.
+func (slider *Slider) SetRange(min, max int64) {
+	slider.valueMin, slider.valueMax = min, max
+}
+
 // SetValueUndefined clears the current value.
 func (slider *Slider) SetValueUndefined() {
 	slider.valueUndefined = true

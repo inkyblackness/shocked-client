@@ -362,6 +362,7 @@ func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
 	var newProperties = []*levelObjectProperty{}
 	if len(mode.selectedObjects) > 0 {
 		propertyUnifier := make(map[string]*util.ValueUnifier)
+		propertyDescribers := make(map[string]func(*interpreters.Simplifier))
 		propertyOrder := []string{}
 
 		var unifyInterpreter func(string, *interpreters.Instance, bool, map[string]bool)
@@ -373,6 +374,7 @@ func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
 					if !existing {
 						unifier = util.NewValueUnifier(int64(math.MinInt64))
 						propertyUnifier[fullPath] = unifier
+						propertyDescribers[fullPath] = func(simpl *interpreters.Simplifier) { interpreter.Describe(key, simpl) }
 						propertyOrder = append(propertyOrder, fullPath)
 					}
 					unifier.Add(int64(interpreter.Get(key)))
@@ -410,17 +412,47 @@ func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
 		for _, key := range propertyOrder {
 			if unifier, existing := propertyUnifier[key]; existing {
 				property := &levelObjectProperty{}
-				title, value := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key, func(int64) {})
-				unifiedValue := unifier.Value().(int64)
-
-				if unifiedValue != math.MinInt64 {
-					value.SetValue(unifiedValue)
-				}
-				property.title, property.value = title, value
+				mode.createPropertyControls(property, key, unifier, propertyDescribers[key])
 				newProperties = append(newProperties, property)
 				mode.selectedObjectsPropertiesBottom = mode.selectedObjectsPropertiesPanelBuilder.bottom()
 			}
 		}
 	}
 	mode.selectedObjectsProperties = newProperties
+}
+
+func (mode *LevelObjectsMode) createPropertyControls(property *levelObjectProperty, key string,
+	unifier *util.ValueUnifier, describer func(*interpreters.Simplifier)) {
+	unifiedValue := unifier.Value().(int64)
+
+	simplifier := interpreters.NewSimplifier(func(minValue, maxValue int64) {
+		title, slider := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key, func(int64) {})
+		slider.SetRange(minValue, maxValue)
+		if unifiedValue != math.MinInt64 {
+			slider.SetValue(unifiedValue)
+		}
+		property.title, property.value = title, slider
+	})
+
+	simplifier.SetEnumValueHandler(func(values map[uint32]string) {
+		title, box := mode.selectedObjectsPropertiesPanelBuilder.addComboProperty(key, func(controls.ComboBoxItem) {})
+		valueKeys := make([]uint32, 0, len(values))
+		for valueKey := range values {
+			valueKeys = append(valueKeys, valueKey)
+		}
+		sort.Slice(valueKeys, func(indexA, indexB int) bool { return valueKeys[indexA] < valueKeys[indexB] })
+		items := make([]controls.ComboBoxItem, len(valueKeys))
+		var selectedItem controls.ComboBoxItem
+		for index, valueKey := range valueKeys {
+			items[index] = values[valueKey]
+			if int64(valueKey) == unifiedValue {
+				selectedItem = items[index]
+			}
+		}
+		box.SetItems(items)
+		box.SetSelectedItem(selectedItem)
+		property.title, property.value = title, box
+	})
+
+	describer(simplifier)
 }
