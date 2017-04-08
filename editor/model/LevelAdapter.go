@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
 
@@ -135,9 +136,13 @@ func (adapter *LevelAdapter) RequestLevelTexturesChange(textureIDs []int) {
 		textureIDs, adapter.onLevelTextures, adapter.context.simpleStoreFailure("SetLevelTextures"))
 }
 
+func (adapter *LevelAdapter) levelObjectsMap() map[int]*LevelObject {
+	return *adapter.levelObjects.get().(*map[int]*LevelObject)
+}
+
 // LevelObjects returns a sorted set of objects that match the provided filter.
 func (adapter *LevelAdapter) LevelObjects(filter func(*LevelObject) bool) []*LevelObject {
-	objects := *adapter.levelObjects.get().(*map[int]*LevelObject)
+	objects := adapter.levelObjectsMap()
 	indexList := make([]int, 0, len(objects))
 
 	for key, obj := range objects {
@@ -166,6 +171,24 @@ func (adapter *LevelAdapter) onLevelObjects(objects *model.LevelObjects) {
 		newMap[obj.Index()] = obj
 	}
 	adapter.levelObjects.set(&newMap)
+}
+
+// RequestRemoveObjects requests to remove all identified objects.
+func (adapter *LevelAdapter) RequestRemoveObjects(objectIndices []int) {
+	levelID := adapter.storeLevelID()
+	objects := adapter.levelObjectsMap()
+	successHandler := func(objectIndex int) func() {
+		return func() {
+			delete(objects, objectIndex)
+			adapter.levelObjects.notifyObservers()
+		}
+	}
+
+	for _, objectIndex := range objectIndices {
+		adapter.store.RemoveLevelObject(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), levelID,
+			objectIndex, successHandler(objectIndex),
+			adapter.context.simpleStoreFailure(fmt.Sprintf("RemoveLevelObject %v", objectIndex)))
+	}
 }
 
 // RequestTilePropertyChange requests the tiles at given coordinates to set provided properties.
