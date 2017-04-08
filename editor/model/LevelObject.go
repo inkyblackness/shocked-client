@@ -44,6 +44,11 @@ func (obj *LevelObject) ClassData() []byte {
 	return data
 }
 
+// Z returns the z-coordinate (placement height) of the object
+func (obj *LevelObject) Z() int {
+	return obj.data.BaseProperties.Z
+}
+
 // Center returns the location of the object within the map
 func (obj *LevelObject) Center() (x, y float32) {
 	return obj.centerX, obj.centerY

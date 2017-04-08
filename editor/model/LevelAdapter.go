@@ -173,6 +173,40 @@ func (adapter *LevelAdapter) onLevelObjects(objects *model.LevelObjects) {
 	adapter.levelObjects.set(&newMap)
 }
 
+// RequestNewObject requests to add a new object at the given coordinate.
+func (adapter *LevelAdapter) RequestNewObject(worldX, worldY float32, objectID ObjectID) {
+	integerX, integerY := int(worldX), int(worldY)
+	tileX, fineX := integerX>>8, integerX&0xFF
+	tileY, fineY := integerY>>8, integerY&0xFF
+
+	if (tileX >= 0) && (tileX < 64) && (tileY >= 0) && (tileY < 64) {
+		tile := adapter.tileMap.Tile(TileCoordinateOf(tileX, tileY))
+		z := int(*tile.Properties().FloorHeight) // TODO: take level.heightShift into account
+
+		template := model.LevelObjectTemplate{
+			Class:    objectID.Class(),
+			Subclass: objectID.Subclass(),
+			Type:     objectID.Type(),
+
+			TileX: tileX,
+			FineX: fineX,
+			TileY: tileY,
+			FineY: fineY,
+			Z:     z}
+
+		adapter.store.AddLevelObject(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.storeLevelID(),
+			template, adapter.onLevelObjectAdded,
+			adapter.context.simpleStoreFailure("AddLevelObject"))
+	}
+}
+
+func (adapter *LevelAdapter) onLevelObjectAdded(object model.LevelObject) {
+	objects := adapter.levelObjectsMap()
+	obj := newLevelObject(&object)
+	objects[obj.Index()] = obj
+	adapter.levelObjects.notifyObservers()
+}
+
 // RequestRemoveObjects requests to remove all identified objects.
 func (adapter *LevelAdapter) RequestRemoveObjects(objectIndices []int) {
 	levelID := adapter.storeLevelID()
