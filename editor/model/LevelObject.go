@@ -8,7 +8,8 @@ import (
 
 // LevelObject describes one object within a level
 type LevelObject struct {
-	data             *model.LevelObject
+	class            int
+	properties       *model.LevelObjectProperties
 	centerX, centerY float32
 	index            int
 }
@@ -16,13 +17,17 @@ type LevelObject struct {
 func newLevelObject(data *model.LevelObject) *LevelObject {
 	index, _ := strconv.ParseInt(data.ID, 10, 32)
 	obj := &LevelObject{
-		data:  data,
+		class: data.Class,
 		index: int(index)}
-
-	obj.centerX = float32((obj.data.BaseProperties.TileX << 8) + obj.data.BaseProperties.FineX)
-	obj.centerY = float32((obj.data.BaseProperties.TileY << 8) + obj.data.BaseProperties.FineY)
+	obj.onPropertiesChanged(&data.Properties)
 
 	return obj
+}
+
+func (obj *LevelObject) onPropertiesChanged(properties *model.LevelObjectProperties) {
+	obj.properties = properties
+	obj.centerX = float32((*obj.properties.TileX << 8) + *obj.properties.FineX)
+	obj.centerY = float32((*obj.properties.TileY << 8) + *obj.properties.FineY)
 }
 
 // Index returns the object's index within the level.
@@ -32,21 +37,17 @@ func (obj *LevelObject) Index() int {
 
 // ID returns the object ID of the object
 func (obj *LevelObject) ID() ObjectID {
-	return MakeObjectID(obj.data.Class, obj.data.Subclass, obj.data.Type)
+	return MakeObjectID(obj.class, *obj.properties.Subclass, *obj.properties.Type)
 }
 
 // ClassData returns the raw data for the level object.
 func (obj *LevelObject) ClassData() []byte {
-	data := make([]byte, len(obj.data.ClassData))
-	for index, value := range obj.data.ClassData {
-		data[index] = byte(value)
-	}
-	return data
+	return obj.properties.ClassData
 }
 
 // Z returns the z-coordinate (placement height) of the object
 func (obj *LevelObject) Z() int {
-	return obj.data.BaseProperties.Z
+	return *obj.properties.Z
 }
 
 // Center returns the location of the object within the map

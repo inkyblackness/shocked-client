@@ -225,6 +225,24 @@ func (adapter *LevelAdapter) RequestRemoveObjects(objectIndices []int) {
 	}
 }
 
+// RequestObjectPropertiesChange requests to modify identified objects.
+func (adapter *LevelAdapter) RequestObjectPropertiesChange(objectIndices []int, properties *model.LevelObjectProperties) {
+	levelID := adapter.storeLevelID()
+	objects := adapter.levelObjectsMap()
+	successHandler := func(objectIndex int) func(newProperties *model.LevelObjectProperties) {
+		return func(newProperties *model.LevelObjectProperties) {
+			objects[objectIndex].onPropertiesChanged(newProperties)
+			adapter.levelObjects.notifyObservers()
+		}
+	}
+
+	for _, objectIndex := range objectIndices {
+		adapter.store.SetLevelObject(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), levelID,
+			objectIndex, properties, successHandler(objectIndex),
+			adapter.context.simpleStoreFailure(fmt.Sprintf("SetLevelObject %v", objectIndex)))
+	}
+}
+
 // RequestTilePropertyChange requests the tiles at given coordinates to set provided properties.
 func (adapter *LevelAdapter) RequestTilePropertyChange(coordinates []TileCoordinate, properties *model.TileProperties) {
 	additionalQueries := make(map[TileCoordinate]bool)
