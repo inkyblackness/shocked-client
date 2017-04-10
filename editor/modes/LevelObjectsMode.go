@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"sort"
+	"strings"
 
 	mgl "github.com/go-gl/mathgl/mgl32"
 
@@ -66,6 +67,15 @@ type tabItem struct {
 }
 
 func (item *tabItem) String() string {
+	return item.displayName
+}
+
+type enumItem struct {
+	value       uint32
+	displayName string
+}
+
+func (item *enumItem) String() string {
 	return item.displayName
 }
 
@@ -245,7 +255,7 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 		mode.selectedObjectsIDTitleLabel, mode.selectedObjectsIDInfoLabel = panelBuilder.addInfo("Object ID")
 		mode.selectedObjectsTypeLabel, mode.selectedObjectsTypeBox = panelBuilder.addComboProperty("Type", func(item controls.ComboBoxItem) {
 			typeItem := item.(*objectTypeItem)
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.Subclass = intAsPointer(typeItem.id.Subclass())
 				properties.Type = intAsPointer(typeItem.id.Type())
 			})
@@ -256,59 +266,59 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 		var basePropertiesPanelBuilder *controlPanelBuilder
 		mode.selectedObjectsBasePropertiesArea, basePropertiesPanelBuilder = panelBuilder.addSection(false)
 		mode.selectedObjectsZTitle, mode.selectedObjectsZValue = basePropertiesPanelBuilder.addSliderProperty("Z", func(newValue int64) {
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.Z = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsZValue.SetRange(0, 255)
 
 		mode.selectedObjectsTileXTitle, mode.selectedObjectsTileXValue = basePropertiesPanelBuilder.addSliderProperty("TileX", func(newValue int64) {
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.TileX = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsTileXValue.SetRange(0, 63)
 		mode.selectedObjectsFineXTitle, mode.selectedObjectsFineXValue = basePropertiesPanelBuilder.addSliderProperty("FineX", func(newValue int64) {
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.FineX = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsFineXValue.SetRange(0, 255)
 
 		mode.selectedObjectsTileYTitle, mode.selectedObjectsTileYValue = basePropertiesPanelBuilder.addSliderProperty("TileY", func(newValue int64) {
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.TileY = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsTileYValue.SetRange(0, 63)
 		mode.selectedObjectsFineYTitle, mode.selectedObjectsFineYValue = basePropertiesPanelBuilder.addSliderProperty("FineY", func(newValue int64) {
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.FineY = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsFineYValue.SetRange(0, 255)
 
 		mode.selectedObjectsRotationXTitle, mode.selectedObjectsRotationXValue = basePropertiesPanelBuilder.addSliderProperty("RotationX", func(newValue int64) {
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.RotationX = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsRotationXValue.SetRange(0, 255)
 		mode.selectedObjectsRotationYTitle, mode.selectedObjectsRotationYValue = basePropertiesPanelBuilder.addSliderProperty("RotationY", func(newValue int64) {
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.RotationY = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsRotationYValue.SetRange(0, 255)
 		mode.selectedObjectsRotationZTitle, mode.selectedObjectsRotationZValue = basePropertiesPanelBuilder.addSliderProperty("RotationZ", func(newValue int64) {
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.RotationZ = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsRotationZValue.SetRange(0, 255)
 
 		mode.selectedObjectsHitpointsTitle, mode.selectedObjectsHitpointsValue = basePropertiesPanelBuilder.addSliderProperty("Hitpoints", func(newValue int64) {
-			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.Hitpoints = intAsPointer(int(newValue))
 			})
 		})
@@ -641,10 +651,7 @@ func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
 			}
 		}
 
-		interpreterFactory := levelobj.ForRealWorld
-		if mode.levelAdapter.IsCyberspace() {
-			interpreterFactory = levelobj.ForCyberspace
-		}
+		interpreterFactory := mode.interpreterFactory()
 
 		for index, object := range mode.selectedObjects {
 			objID := object.ID()
@@ -677,12 +684,22 @@ func (mode *LevelObjectsMode) recreateLevelObjectProperties() {
 	mode.selectedObjectsProperties = newProperties
 }
 
+func (mode *LevelObjectsMode) interpreterFactory() func(resID res.ObjectID, classData []byte) *interpreters.Instance {
+	factory := levelobj.ForRealWorld
+	if mode.levelAdapter.IsCyberspace() {
+		factory = levelobj.ForCyberspace
+	}
+	return factory
+}
+
 func (mode *LevelObjectsMode) createPropertyControls(property *levelObjectProperty, key string,
 	unifier *util.ValueUnifier, describer func(*interpreters.Simplifier)) {
 	unifiedValue := unifier.Value().(int64)
 
 	simplifier := interpreters.NewSimplifier(func(minValue, maxValue int64) {
-		title, slider := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key, func(int64) {})
+		title, slider := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key, func(newValue int64) {
+			mode.updateSelectedObjectsClassProperties(key, uint32(newValue))
+		})
 		slider.SetRange(minValue, maxValue)
 		if unifiedValue != math.MinInt64 {
 			slider.SetValue(unifiedValue)
@@ -691,7 +708,10 @@ func (mode *LevelObjectsMode) createPropertyControls(property *levelObjectProper
 	})
 
 	simplifier.SetEnumValueHandler(func(values map[uint32]string) {
-		title, box := mode.selectedObjectsPropertiesPanelBuilder.addComboProperty(key, func(controls.ComboBoxItem) {})
+		title, box := mode.selectedObjectsPropertiesPanelBuilder.addComboProperty(key, func(item controls.ComboBoxItem) {
+			enumItem := item.(*enumItem)
+			mode.updateSelectedObjectsClassProperties(key, enumItem.value)
+		})
 		valueKeys := make([]uint32, 0, len(values))
 		for valueKey := range values {
 			valueKeys = append(valueKeys, valueKey)
@@ -700,7 +720,7 @@ func (mode *LevelObjectsMode) createPropertyControls(property *levelObjectProper
 		items := make([]controls.ComboBoxItem, len(valueKeys))
 		var selectedItem controls.ComboBoxItem
 		for index, valueKey := range valueKeys {
-			items[index] = values[valueKey]
+			items[index] = &enumItem{valueKey, values[valueKey]}
 			if int64(valueKey) == unifiedValue {
 				selectedItem = items[index]
 			}
@@ -711,19 +731,14 @@ func (mode *LevelObjectsMode) createPropertyControls(property *levelObjectProper
 	})
 
 	simplifier.SetObjectIndexHandler(func() {
-		title, box := mode.selectedObjectsPropertiesPanelBuilder.addComboProperty(key, func(controls.ComboBoxItem) {})
-		maxItems := 872
-		items := make([]controls.ComboBoxItem, maxItems)
-		var selectedItem controls.ComboBoxItem
-		for index := 0; index < len(items); index++ {
-			items[index] = fmt.Sprintf("%v", index)
-			if int64(index) == unifiedValue {
-				selectedItem = items[index]
-			}
+		title, slider := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key, func(newValue int64) {
+			mode.updateSelectedObjectsClassProperties(key, uint32(newValue))
+		})
+		slider.SetRange(0, 871)
+		if unifiedValue != math.MinInt64 {
+			slider.SetValue(unifiedValue)
 		}
-		box.SetItems(items)
-		box.SetSelectedItem(selectedItem)
-		property.title, property.value = title, box
+		property.title, property.value = title, slider
 	})
 
 	describer(simplifier)
@@ -737,10 +752,30 @@ func (mode *LevelObjectsMode) selectedObjectIndices() []int {
 	return objectIndices
 }
 
-func (mode *LevelObjectsMode) updateSelectedObjectsProperties(modifier func(properties *dataModel.LevelObjectProperties)) {
+func (mode *LevelObjectsMode) updateSelectedObjectsBaseProperties(modifier func(properties *dataModel.LevelObjectProperties)) {
 	var properties dataModel.LevelObjectProperties
 	modifier(&properties)
 	mode.levelAdapter.RequestObjectPropertiesChange(mode.selectedObjectIndices(), &properties)
+}
+
+func (mode *LevelObjectsMode) updateSelectedObjectsClassProperties(key string, value uint32) {
+	interpreterFactory := mode.interpreterFactory()
+
+	for _, object := range mode.selectedObjects {
+		objID := object.ID()
+		resID := res.MakeObjectID(res.ObjectClass(objID.Class()), res.ObjectSubclass(objID.Subclass()), res.ObjectType(objID.Type()))
+		var properties dataModel.LevelObjectProperties
+
+		properties.ClassData = object.ClassData()
+		interpreter := interpreterFactory(resID, properties.ClassData)
+		subKeys := strings.Split(key, ".")
+		valueIndex := len(subKeys) - 1
+		for subIndex := 0; subIndex < valueIndex; subIndex++ {
+			interpreter = interpreter.Refined(subKeys[subIndex])
+		}
+		interpreter.Set(subKeys[valueIndex], value)
+		mode.levelAdapter.RequestObjectPropertiesChange([]int{object.Index()}, &properties)
+	}
 }
 
 func (mode *LevelObjectsMode) deleteSelectedObjects() {
