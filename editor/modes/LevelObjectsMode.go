@@ -60,6 +60,15 @@ func (item *objectTypeItem) String() string {
 	return item.displayName + " (" + item.id.String() + ")"
 }
 
+type tabItem struct {
+	area        *ui.Area
+	displayName string
+}
+
+func (item *tabItem) String() string {
+	return item.displayName
+}
+
 type disposableControl interface {
 	Dispose()
 }
@@ -108,16 +117,33 @@ type LevelObjectsMode struct {
 	selectedObjectsTypeLabel    *controls.Label
 	selectedObjectsTypeBox      *controls.ComboBox
 
-	selectedObjectsBasePropertiesToggleTitle  *controls.Label
-	selectedObjectsBasePropertiesToggleButton *controls.TextButton
-	selectedObjectsBasePropertiesArea         *ui.Area
-	selectedObjectsBasePropertiesTitle        *controls.Label
-	selectedObjectsZTitle                     *controls.Label
-	selectedObjectsZValue                     *controls.Slider
+	selectedObjectsPropertiesTitle *controls.Label
+	selectedObjectsPropertiesBox   *controls.ComboBox
 
+	selectedObjectsBasePropertiesItem *tabItem
+	selectedObjectsBasePropertiesArea *ui.Area
+	selectedObjectsZTitle             *controls.Label
+	selectedObjectsZValue             *controls.Slider
+	selectedObjectsTileXTitle         *controls.Label
+	selectedObjectsTileXValue         *controls.Slider
+	selectedObjectsFineXTitle         *controls.Label
+	selectedObjectsFineXValue         *controls.Slider
+	selectedObjectsTileYTitle         *controls.Label
+	selectedObjectsTileYValue         *controls.Slider
+	selectedObjectsFineYTitle         *controls.Label
+	selectedObjectsFineYValue         *controls.Slider
+	selectedObjectsRotationXTitle     *controls.Label
+	selectedObjectsRotationXValue     *controls.Slider
+	selectedObjectsRotationYTitle     *controls.Label
+	selectedObjectsRotationYValue     *controls.Slider
+	selectedObjectsRotationZTitle     *controls.Label
+	selectedObjectsRotationZValue     *controls.Slider
+	selectedObjectsHitpointsTitle     *controls.Label
+	selectedObjectsHitpointsValue     *controls.Slider
+
+	selectedObjectsClassPropertiesItem    *tabItem
 	selectedObjectsPropertiesMainArea     *ui.Area
 	selectedObjectsPropertiesHeaderArea   *ui.Area
-	selectedObjectsClassPropertiesTitle   *controls.Label
 	selectedObjectsPropertiesArea         *ui.Area
 	selectedObjectsPropertiesPanelBuilder *controlPanelBuilder
 	selectedObjectsPropertiesBottom       ui.Anchor
@@ -225,12 +251,10 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 			})
 		})
 
-		mode.selectedObjectsBasePropertiesToggleTitle, mode.selectedObjectsBasePropertiesToggleButton = panelBuilder.addTextButton("Base Properties", "Show/Hide", func() {
-			mode.selectedObjectsBasePropertiesArea.SetVisible(!mode.selectedObjectsBasePropertiesArea.IsVisible())
-		})
+		mode.selectedObjectsPropertiesTitle, mode.selectedObjectsPropertiesBox = panelBuilder.addComboProperty("Show Properties", mode.onSelectedPropertiesDisplayChanged)
+
 		var basePropertiesPanelBuilder *controlPanelBuilder
 		mode.selectedObjectsBasePropertiesArea, basePropertiesPanelBuilder = panelBuilder.addSection(false)
-		mode.selectedObjectsBasePropertiesToggleTitle = basePropertiesPanelBuilder.addTitle("Base Properties")
 		mode.selectedObjectsZTitle, mode.selectedObjectsZValue = basePropertiesPanelBuilder.addSliderProperty("Z", func(newValue int64) {
 			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.Z = intAsPointer(int(newValue))
@@ -238,17 +262,73 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 		})
 		mode.selectedObjectsZValue.SetRange(0, 255)
 
+		mode.selectedObjectsTileXTitle, mode.selectedObjectsTileXValue = basePropertiesPanelBuilder.addSliderProperty("TileX", func(newValue int64) {
+			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+				properties.TileX = intAsPointer(int(newValue))
+			})
+		})
+		mode.selectedObjectsTileXValue.SetRange(0, 63)
+		mode.selectedObjectsFineXTitle, mode.selectedObjectsFineXValue = basePropertiesPanelBuilder.addSliderProperty("FineX", func(newValue int64) {
+			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+				properties.FineX = intAsPointer(int(newValue))
+			})
+		})
+		mode.selectedObjectsFineXValue.SetRange(0, 255)
+
+		mode.selectedObjectsTileYTitle, mode.selectedObjectsTileYValue = basePropertiesPanelBuilder.addSliderProperty("TileY", func(newValue int64) {
+			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+				properties.TileY = intAsPointer(int(newValue))
+			})
+		})
+		mode.selectedObjectsTileYValue.SetRange(0, 63)
+		mode.selectedObjectsFineYTitle, mode.selectedObjectsFineYValue = basePropertiesPanelBuilder.addSliderProperty("FineY", func(newValue int64) {
+			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+				properties.FineY = intAsPointer(int(newValue))
+			})
+		})
+		mode.selectedObjectsFineYValue.SetRange(0, 255)
+
+		mode.selectedObjectsRotationXTitle, mode.selectedObjectsRotationXValue = basePropertiesPanelBuilder.addSliderProperty("RotationX", func(newValue int64) {
+			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+				properties.RotationX = intAsPointer(int(newValue))
+			})
+		})
+		mode.selectedObjectsRotationXValue.SetRange(0, 255)
+		mode.selectedObjectsRotationYTitle, mode.selectedObjectsRotationYValue = basePropertiesPanelBuilder.addSliderProperty("RotationY", func(newValue int64) {
+			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+				properties.RotationY = intAsPointer(int(newValue))
+			})
+		})
+		mode.selectedObjectsRotationYValue.SetRange(0, 255)
+		mode.selectedObjectsRotationZTitle, mode.selectedObjectsRotationZValue = basePropertiesPanelBuilder.addSliderProperty("RotationZ", func(newValue int64) {
+			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+				properties.RotationZ = intAsPointer(int(newValue))
+			})
+		})
+		mode.selectedObjectsRotationZValue.SetRange(0, 255)
+
+		mode.selectedObjectsHitpointsTitle, mode.selectedObjectsHitpointsValue = basePropertiesPanelBuilder.addSliderProperty("Hitpoints", func(newValue int64) {
+			mode.updateSelectedObjectsProperties(func(properties *dataModel.LevelObjectProperties) {
+				properties.Hitpoints = intAsPointer(int(newValue))
+			})
+		})
+		mode.selectedObjectsHitpointsValue.SetRange(0, 32767)
+
 		classPropertiesBottomResolver := func() ui.Anchor { return mode.selectedObjectsPropertiesBottom }
 		var mainClassPanelBuilder *controlPanelBuilder
 		mode.selectedObjectsPropertiesMainArea, mainClassPanelBuilder =
 			panelBuilder.addDynamicSection(true, classPropertiesBottomResolver)
-		var headerBuilder *controlPanelBuilder
-		mode.selectedObjectsPropertiesHeaderArea, headerBuilder = mainClassPanelBuilder.addSection(true)
-		mode.selectedObjectsClassPropertiesTitle = headerBuilder.addTitle("Class Properties")
+		mode.selectedObjectsPropertiesHeaderArea, _ = mainClassPanelBuilder.addSection(true)
 
 		mode.selectedObjectsPropertiesArea, mode.selectedObjectsPropertiesPanelBuilder =
 			mainClassPanelBuilder.addDynamicSection(true, classPropertiesBottomResolver)
 		mode.selectedObjectsPropertiesBottom = mode.selectedObjectsPropertiesHeaderArea.Bottom()
+
+		mode.selectedObjectsBasePropertiesItem = &tabItem{mode.selectedObjectsBasePropertiesArea, "Base Properties"}
+		mode.selectedObjectsClassPropertiesItem = &tabItem{mode.selectedObjectsPropertiesMainArea, "Class Properties"}
+		propertiesTabItems := []controls.ComboBoxItem{mode.selectedObjectsBasePropertiesItem, mode.selectedObjectsClassPropertiesItem}
+		mode.selectedObjectsPropertiesBox.SetItems(propertiesTabItems)
+		mode.selectedObjectsPropertiesBox.SetSelectedItem(mode.selectedObjectsClassPropertiesItem)
 	}
 
 	mode.levelAdapter.OnLevelObjectsChanged(mode.onLevelObjectsChanged)
@@ -276,6 +356,14 @@ func (mode *LevelObjectsMode) onLevelObjectsChanged() {
 	if mode.area.IsVisible() {
 		mode.updateDisplayedObjects()
 	}
+}
+
+func (mode *LevelObjectsMode) onSelectedPropertiesDisplayChanged(item controls.ComboBoxItem) {
+	tabItem := item.(*tabItem)
+
+	mode.selectedObjectsBasePropertiesItem.area.SetVisible(false)
+	mode.selectedObjectsClassPropertiesItem.area.SetVisible(false)
+	tabItem.area.SetVisible(true)
 }
 
 func (mode *LevelObjectsMode) updateDisplayedObjects() {
@@ -430,13 +518,29 @@ func (mode *LevelObjectsMode) onSelectedObjectsChanged() {
 	classUnifier := util.NewValueUnifier(-1)
 	subclassUnifier := util.NewValueUnifier(-1)
 	typeUnifier := util.NewValueUnifier(-1)
+	tileXUnifier := util.NewValueUnifier(-1)
+	fineXUnifier := util.NewValueUnifier(-1)
+	tileYUnifier := util.NewValueUnifier(-1)
+	fineYUnifier := util.NewValueUnifier(-1)
 	zUnifier := util.NewValueUnifier(-1)
+	rotationXUnifier := util.NewValueUnifier(-1)
+	rotationYUnifier := util.NewValueUnifier(-1)
+	rotationZUnifier := util.NewValueUnifier(-1)
+	hitpointsUnifier := util.NewValueUnifier(-1)
 
 	for _, object := range mode.selectedObjects {
 		classUnifier.Add(object.ID().Class())
 		subclassUnifier.Add(object.ID().Subclass())
 		typeUnifier.Add(object.ID().Type())
 		zUnifier.Add(object.Z())
+		tileXUnifier.Add(object.TileX())
+		fineXUnifier.Add(object.FineX())
+		tileYUnifier.Add(object.TileY())
+		fineYUnifier.Add(object.FineY())
+		rotationXUnifier.Add(object.RotationX())
+		rotationYUnifier.Add(object.RotationY())
+		rotationZUnifier.Add(object.RotationZ())
+		hitpointsUnifier.Add(object.Hitpoints())
 	}
 	unifiedClass := classUnifier.Value().(int)
 	unifiedSubclass := subclassUnifier.Value().(int)
@@ -478,12 +582,24 @@ func (mode *LevelObjectsMode) onSelectedObjectsChanged() {
 		mode.selectedObjectsTypeBox.SetSelectedItem(nil)
 	}
 
-	unifiedZ := zUnifier.Value().(int)
-	if unifiedZ >= 0 {
-		mode.selectedObjectsZValue.SetValue(int64(unifiedZ))
-	} else {
-		mode.selectedObjectsZValue.SetValueUndefined()
+	setSliderValue := func(slider *controls.Slider, unifier *util.ValueUnifier) {
+		value := unifier.Value().(int)
+		if value >= 0 {
+			slider.SetValue(int64(value))
+		} else {
+			slider.SetValueUndefined()
+		}
 	}
+
+	setSliderValue(mode.selectedObjectsTileXValue, tileXUnifier)
+	setSliderValue(mode.selectedObjectsFineXValue, fineXUnifier)
+	setSliderValue(mode.selectedObjectsTileYValue, tileYUnifier)
+	setSliderValue(mode.selectedObjectsFineYValue, fineYUnifier)
+	setSliderValue(mode.selectedObjectsZValue, zUnifier)
+	setSliderValue(mode.selectedObjectsRotationXValue, rotationXUnifier)
+	setSliderValue(mode.selectedObjectsRotationYValue, rotationYUnifier)
+	setSliderValue(mode.selectedObjectsRotationZValue, rotationZUnifier)
+	setSliderValue(mode.selectedObjectsHitpointsValue, hitpointsUnifier)
 
 	mode.recreateLevelObjectProperties()
 }
