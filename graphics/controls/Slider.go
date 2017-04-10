@@ -67,7 +67,7 @@ func (slider *Slider) onRender(area *ui.Area) {
 	}
 
 	if !slider.valueUndefined && withinLimits {
-		sliderCenter := areaLeft + (float32(slider.value)/float32(slider.valueMax-slider.valueMin))*(areaRight-areaLeft)
+		sliderCenter := areaLeft + (float32(slider.value-slider.valueMin)/float32(slider.valueMax-slider.valueMin))*(areaRight-areaLeft)
 		if (sliderCenter - 1) >= areaLeft {
 			slider.rectRenderer.Fill(sliderCenter-1, areaTop, sliderCenter, areaBottom, graphics.RGBA(1.0, 0.0, 0.34, 0.5))
 		}
