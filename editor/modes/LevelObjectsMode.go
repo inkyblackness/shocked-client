@@ -488,16 +488,22 @@ func (mode *LevelObjectsMode) updateClosestDisplayedObjects(worldX, worldY float
 func (mode *LevelObjectsMode) updateClosestObjectHighlight() {
 	if len(mode.closestObjects) > 0 {
 		object := mode.closestObjects[mode.closestObjectHighlightIndex]
-		displayName := "unknown"
-		if gameObject := mode.context.ModelAdapter().ObjectsAdapter().Object(object.ID()); gameObject != nil {
-			displayName = gameObject.DisplayName()
-		}
-		mode.highlightedObjectInfoValue.SetText(fmt.Sprintf("%v: %v (%v)", object.Index(), object.ID(), displayName))
+		mode.highlightedObjectInfoValue.SetText(fmt.Sprintf("%v: %v (%v)", object.Index(), object.ID(), mode.objectDisplayName(object.ID())))
 		mode.mapDisplay.SetHighlightedObject(object)
 	} else {
 		mode.highlightedObjectInfoValue.SetText("")
 		mode.mapDisplay.SetHighlightedObject(nil)
 	}
+}
+
+func (mode *LevelObjectsMode) objectDisplayName(id model.ObjectID) string {
+	displayName := "unknown"
+
+	if gameObject := mode.context.ModelAdapter().ObjectsAdapter().Object(id); gameObject != nil {
+		displayName = gameObject.DisplayName()
+	}
+
+	return displayName
 }
 
 func (mode *LevelObjectsMode) setSelectedObjects(objects []*model.LevelObject) {
@@ -585,8 +591,7 @@ func (mode *LevelObjectsMode) onSelectedObjectsChanged() {
 	}
 	if (unifiedClass != -1) && (unifiedSubclass != -1) && (unifiedType != -1) {
 		objectID := model.MakeObjectID(unifiedClass, unifiedSubclass, unifiedType)
-		gameObject := mode.objectsAdapter.Object(objectID)
-		item := &objectTypeItem{objectID, gameObject.DisplayName()}
+		item := &objectTypeItem{objectID, mode.objectDisplayName(objectID)}
 		mode.selectedObjectsTypeBox.SetSelectedItem(item)
 	} else {
 		mode.selectedObjectsTypeBox.SetSelectedItem(nil)
