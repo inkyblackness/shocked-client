@@ -183,7 +183,7 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 				heightUnit := mapper(height)
 				item := &tilePropertyItem{heightUnit, mappingSetter}
 				itemsSlice[height] = item
-				heightItems[heightUnit] = item
+				heightItems[dataModel.HeightUnit(height)] = item
 			}
 			heightItems[dataModel.HeightUnit(-1)] = &tilePropertyItem{"", nil}
 			return itemsSlice, heightItems
