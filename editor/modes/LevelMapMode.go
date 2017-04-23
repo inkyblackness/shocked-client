@@ -74,6 +74,10 @@ type LevelMapMode struct {
 	useAdjacentWallTextureBox    *controls.ComboBox
 	useAdjacentWallTextureItems  map[string]*tilePropertyItem
 
+	musicIndexLabel *controls.Label
+	musicIndexBox   *controls.ComboBox
+	musicIndexItems map[int]*tilePropertyItem
+
 	cyberspaceArea *ui.Area
 }
 
@@ -246,6 +250,22 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			mode.slopeControlItems[dataModel.SlopeControl("")] = &tilePropertyItem{"", nil}
 			mode.slopeControlBox.SetItems(slopeControlItems)
 		}
+
+		{
+			mode.musicIndexLabel, mode.musicIndexBox = panelBuilder.addComboProperty("Music Index", mode.onTilePropertyChangeRequested)
+			setter := func(properties *dataModel.TileProperties, value interface{}) {
+				properties.MusicIndex = intAsPointer(value.(int))
+			}
+			musicIndexItems := make([]controls.ComboBoxItem, 16)
+			mode.musicIndexItems = make(map[int]*tilePropertyItem)
+			for musicIndex := 0; musicIndex < 16; musicIndex++ {
+				item := &tilePropertyItem{musicIndex, setter}
+				musicIndexItems[musicIndex] = item
+				mode.musicIndexItems[musicIndex] = item
+			}
+			mode.musicIndexBox.SetItems(musicIndexItems)
+		}
+
 		{
 			var realWorldPanelBuilder *controlPanelBuilder
 			mode.realWorldArea, realWorldPanelBuilder = panelBuilder.addSection(false)
@@ -426,6 +446,7 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	wallTextureUnifier := util.NewValueUnifier(-1)
 	wallTextureOffsetUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
 	useAdjacentWallTextureUnifier := util.NewValueUnifier("")
+	musicIndexUnifier := util.NewValueUnifier(-1)
 
 	for _, coord := range mode.selectedTiles {
 		tile := tileMap.Tile(coord)
@@ -436,6 +457,7 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 			ceilingHeightUnifier.Add(*properties.CeilingHeight)
 			slopeHeightUnifier.Add(*properties.SlopeHeight)
 			slopeControlUnifier.Add(*properties.SlopeControl)
+			musicIndexUnifier.Add(*properties.MusicIndex)
 			if properties.RealWorld != nil {
 				floorTextureUnifier.Add(*properties.RealWorld.FloorTexture)
 				floorTextureRotationsUnifier.Add(*properties.RealWorld.FloorTextureRotations)
@@ -452,6 +474,7 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	mode.ceilingHeightBox.SetSelectedItem(mode.ceilingHeightItems[ceilingHeightUnifier.Value().(dataModel.HeightUnit)])
 	mode.slopeHeightBox.SetSelectedItem(mode.slopeHeightItems[slopeHeightUnifier.Value().(dataModel.HeightUnit)])
 	mode.slopeControlBox.SetSelectedItem(mode.slopeControlItems[slopeControlUnifier.Value().(dataModel.SlopeControl)])
+	mode.musicIndexBox.SetSelectedItem(mode.musicIndexItems[musicIndexUnifier.Value().(int)])
 	mode.floorTextureSelector.SetSelectedIndex(floorTextureUnifier.Value().(int))
 	mode.floorTextureRotationsBox.SetSelectedItem(mode.floorTextureRotationsItems[floorTextureRotationsUnifier.Value().(int)])
 	mode.ceilingTextureSelector.SetSelectedIndex(ceilingTextureUnifier.Value().(int))
