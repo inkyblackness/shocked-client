@@ -78,6 +78,13 @@ type LevelMapMode struct {
 	musicIndexBox   *controls.ComboBox
 	musicIndexItems map[int]*tilePropertyItem
 
+	floorHazardLabel   *controls.Label
+	floorHazardBox     *controls.ComboBox
+	floorHazardItems   map[string]*tilePropertyItem
+	ceilingHazardLabel *controls.Label
+	ceilingHazardBox   *controls.ComboBox
+	ceilingHazardItems map[string]*tilePropertyItem
+
 	cyberspaceArea *ui.Area
 }
 
@@ -329,6 +336,26 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 				mode.useAdjacentWallTextureLabel, mode.useAdjacentWallTextureBox = realWorldPanelBuilder.addComboProperty("Use Adjacent Wall Texture", mode.onTilePropertyChangeRequested)
 				mode.useAdjacentWallTextureBox.SetItems(useAdjacentWallTextureSlice)
 			}
+			{
+				var boxItems []controls.ComboBoxItem
+				boxItems, mode.floorHazardItems = setupBooleanCollections(
+					func(properties *dataModel.TileProperties, value bool) {
+						properties.RealWorld.FloorHazard = &value
+					})
+
+				mode.floorHazardLabel, mode.floorHazardBox = realWorldPanelBuilder.addComboProperty("Floor Hazard", mode.onTilePropertyChangeRequested)
+				mode.floorHazardBox.SetItems(boxItems)
+			}
+			{
+				var boxItems []controls.ComboBoxItem
+				boxItems, mode.ceilingHazardItems = setupBooleanCollections(
+					func(properties *dataModel.TileProperties, value bool) {
+						properties.RealWorld.CeilingHazard = &value
+					})
+
+				mode.ceilingHazardLabel, mode.ceilingHazardBox = realWorldPanelBuilder.addComboProperty("Ceiling Hazard", mode.onTilePropertyChangeRequested)
+				mode.ceilingHazardBox.SetItems(boxItems)
+			}
 		}
 		{
 			mode.cyberspaceArea, _ = panelBuilder.addSection(false)
@@ -447,6 +474,8 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	wallTextureOffsetUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
 	useAdjacentWallTextureUnifier := util.NewValueUnifier("")
 	musicIndexUnifier := util.NewValueUnifier(-1)
+	floorHazardUnifier := util.NewValueUnifier("")
+	ceilingHazardUnifier := util.NewValueUnifier("")
 
 	for _, coord := range mode.selectedTiles {
 		tile := tileMap.Tile(coord)
@@ -466,6 +495,8 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 				wallTextureUnifier.Add(*properties.RealWorld.WallTexture)
 				wallTextureOffsetUnifier.Add(*properties.RealWorld.WallTextureOffset)
 				useAdjacentWallTextureUnifier.Add(fmt.Sprintf("%v", *properties.RealWorld.UseAdjacentWallTexture))
+				floorHazardUnifier.Add(fmt.Sprintf("%v", *properties.RealWorld.FloorHazard))
+				ceilingHazardUnifier.Add(fmt.Sprintf("%v", *properties.RealWorld.CeilingHazard))
 			}
 		}
 	}
@@ -482,6 +513,8 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	mode.wallTextureSelector.SetSelectedIndex(wallTextureUnifier.Value().(int))
 	mode.wallTextureOffsetBox.SetSelectedItem(mode.wallTextureOffsetItems[wallTextureOffsetUnifier.Value().(dataModel.HeightUnit)])
 	mode.useAdjacentWallTextureBox.SetSelectedItem(mode.useAdjacentWallTextureItems[useAdjacentWallTextureUnifier.Value().(string)])
+	mode.floorHazardBox.SetSelectedItem(mode.floorHazardItems[floorHazardUnifier.Value().(string)])
+	mode.ceilingHazardBox.SetSelectedItem(mode.ceilingHazardItems[ceilingHazardUnifier.Value().(string)])
 }
 
 func (mode *LevelMapMode) changeSelectedTileProperties(modifier func(*dataModel.TileProperties)) {
