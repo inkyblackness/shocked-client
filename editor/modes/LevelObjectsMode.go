@@ -322,7 +322,7 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 				properties.Hitpoints = intAsPointer(int(newValue))
 			})
 		})
-		mode.selectedObjectsHitpointsValue.SetRange(0, 32767)
+		mode.selectedObjectsHitpointsValue.SetRange(0, 10000)
 
 		classPropertiesBottomResolver := func() ui.Anchor { return mode.selectedObjectsPropertiesBottom }
 		var mainClassPanelBuilder *controlPanelBuilder
