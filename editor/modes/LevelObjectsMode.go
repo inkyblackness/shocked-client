@@ -734,6 +734,33 @@ func (mode *LevelObjectsMode) createPropertyControls(key string,
 		properties = append(properties, &levelObjectProperty{title, box})
 	})
 
+	simplifier.SetBitfieldHandler(func(values map[uint32]string) {
+		masks := make([]uint32, 0, len(values))
+
+		for mask := range values {
+			masks = append(masks, mask)
+		}
+		sort.Slice(masks, func(a, b int) bool { return masks[a] < masks[b] })
+		for _, mask := range masks {
+			maskName := values[mask]
+			max := mask
+			shift := uint32(0)
+
+			for (max & 1) == 0 {
+				shift++
+				max >>= 1
+			}
+			title, slider := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key+"-"+maskName, func(newValue int64) {
+				mode.updateSelectedObjectsClassPropertiesFiltered(key, uint32(newValue), shift, mask)
+			})
+			slider.SetRange(0, int64(max))
+			if unifiedValue != math.MinInt64 {
+				slider.SetValue((unifiedValue & int64(mask)) >> shift)
+			}
+			properties = append(properties, &levelObjectProperty{title, slider})
+		}
+	})
+
 	simplifier.SetObjectIndexHandler(func() {
 		title, slider := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key, func(newValue int64) {
 			mode.updateSelectedObjectsClassProperties(key, uint32(newValue))
@@ -834,25 +861,6 @@ func (mode *LevelObjectsMode) updateSelectedObjectsBaseProperties(modifier func(
 
 func (mode *LevelObjectsMode) updateSelectedObjectsClassProperties(key string, value uint32) {
 	mode.updateSelectedObjectsClassPropertiesFiltered(key, value, 0, 0xFFFFFFFF)
-	/*
-		interpreterFactory := mode.interpreterFactory()
-
-		for _, object := range mode.selectedObjects {
-			objID := object.ID()
-			resID := res.MakeObjectID(res.ObjectClass(objID.Class()), res.ObjectSubclass(objID.Subclass()), res.ObjectType(objID.Type()))
-			var properties dataModel.LevelObjectProperties
-
-			properties.ClassData = object.ClassData()
-			interpreter := interpreterFactory(resID, properties.ClassData)
-			subKeys := strings.Split(key, ".")
-			valueIndex := len(subKeys) - 1
-			for subIndex := 0; subIndex < valueIndex; subIndex++ {
-				interpreter = interpreter.Refined(subKeys[subIndex])
-			}
-			interpreter.Set(subKeys[valueIndex], value)
-			mode.levelAdapter.RequestObjectPropertiesChange([]int{object.Index()}, &properties)
-		}
-	*/
 }
 
 func (mode *LevelObjectsMode) updateSelectedObjectsClassPropertiesFiltered(key string, value uint32, offset uint32, mask uint32) {
