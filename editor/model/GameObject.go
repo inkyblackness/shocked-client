@@ -3,6 +3,7 @@ package model
 import (
 	"strings"
 
+	"github.com/inkyblackness/res/objprop"
 	"github.com/inkyblackness/shocked-model"
 )
 
@@ -12,6 +13,8 @@ type GameObject struct {
 
 	longName  [model.LanguageCount]string
 	shortName [model.LanguageCount]string
+
+	data objprop.ObjectData
 }
 
 // ID returns the identification of the object.

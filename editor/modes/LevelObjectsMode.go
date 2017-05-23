@@ -52,15 +52,6 @@ func (item *newObjectClassItem) String() string {
 	return classNames[item.class]
 }
 
-type objectTypeItem struct {
-	id          model.ObjectID
-	displayName string
-}
-
-func (item *objectTypeItem) String() string {
-	return item.displayName + " (" + item.id.String() + ")"
-}
-
 type tabItem struct {
 	area        *ui.Area
 	displayName string
