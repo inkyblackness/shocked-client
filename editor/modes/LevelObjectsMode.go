@@ -736,6 +736,11 @@ func (mode *LevelObjectsMode) createPropertyControls(key string,
 
 	simplifier.SetBitfieldHandler(func(values map[uint32]string) {
 		masks := make([]uint32, 0, len(values))
+		valueHandler := func(shift, mask uint32) func(newValue int64) {
+			return func(newValue int64) {
+				mode.updateSelectedObjectsClassPropertiesFiltered(key, uint32(newValue), shift, mask)
+			}
+		}
 
 		for mask := range values {
 			masks = append(masks, mask)
@@ -750,12 +755,10 @@ func (mode *LevelObjectsMode) createPropertyControls(key string,
 				shift++
 				max >>= 1
 			}
-			title, slider := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key+"-"+maskName, func(newValue int64) {
-				mode.updateSelectedObjectsClassPropertiesFiltered(key, uint32(newValue), shift, mask)
-			})
+			title, slider := mode.selectedObjectsPropertiesPanelBuilder.addSliderProperty(key+"-"+maskName, valueHandler(shift, mask))
 			slider.SetRange(0, int64(max))
 			if unifiedValue != math.MinInt64 {
-				slider.SetValue((unifiedValue & int64(mask)) >> shift)
+				slider.SetValue(int64((uint32(unifiedValue) & mask) >> shift))
 			}
 			properties = append(properties, &levelObjectProperty{title, slider})
 		}
