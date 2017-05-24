@@ -57,6 +57,10 @@ func newPropertyPanel(parentBuilder *controlPanelBuilder, changeHandler property
 	return panel
 }
 
+func (panel *propertyPanel) SetVisible(visible bool) {
+	panel.area.SetVisible(visible)
+}
+
 func (panel *propertyPanel) Bottom() ui.Anchor {
 	return panel.builder.bottom()
 }

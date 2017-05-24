@@ -26,3 +26,18 @@ func (object *GameObject) ID() ObjectID {
 func (object *GameObject) DisplayName() string {
 	return strings.Replace(object.longName[0], "\n", " ", -1)
 }
+
+// CommonData returns the common data for this object
+func (object *GameObject) CommonData() []byte {
+	return object.data.Common
+}
+
+// GenericData returns the generic data for this object
+func (object *GameObject) GenericData() []byte {
+	return object.data.Generic
+}
+
+// SpecificData returns the specific data for this object
+func (object *GameObject) SpecificData() []byte {
+	return object.data.Specific
+}

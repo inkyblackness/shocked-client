@@ -52,20 +52,6 @@ func (item *newObjectClassItem) String() string {
 	return classNames[item.class]
 }
 
-type tabItem struct {
-	area        *ui.Area
-	displayName string
-}
-
-func (item *tabItem) String() string {
-	return item.displayName
-}
-
-type levelObjectProperty struct {
-	title *controls.Label
-	value disposableControl
-}
-
 // LevelObjectsMode is a mode for level objects.
 type LevelObjectsMode struct {
 	context        Context
@@ -344,9 +330,9 @@ func (mode *LevelObjectsMode) onLevelObjectsChanged() {
 func (mode *LevelObjectsMode) onSelectedPropertiesDisplayChanged(item controls.ComboBoxItem) {
 	tabItem := item.(*tabItem)
 
-	mode.selectedObjectsBasePropertiesItem.area.SetVisible(false)
-	mode.selectedObjectsClassPropertiesItem.area.SetVisible(false)
-	tabItem.area.SetVisible(true)
+	mode.selectedObjectsBasePropertiesItem.page.SetVisible(false)
+	mode.selectedObjectsClassPropertiesItem.page.SetVisible(false)
+	tabItem.page.SetVisible(true)
 }
 
 func (mode *LevelObjectsMode) updateDisplayedObjects() {

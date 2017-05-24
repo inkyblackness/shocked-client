@@ -1,11 +1,18 @@
 package modes
 
 import (
+	"strings"
+
+	"github.com/inkyblackness/res"
+	"github.com/inkyblackness/res/data/gameobj"
+	"github.com/inkyblackness/res/data/interpreters"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
 	"github.com/inkyblackness/shocked-client/ui/events"
+
+	datamodel "github.com/inkyblackness/shocked-model"
 )
 
 // GameObjectsMode is a mode for archive level control.
@@ -18,6 +25,16 @@ type GameObjectsMode struct {
 	selectedObjectLabel *controls.Label
 	selectedObjectBox   *controls.ComboBox
 	selectedObjectID    model.ObjectID
+
+	selectedPropertiesTitle *controls.Label
+	selectedPropertiesBox   *controls.ComboBox
+
+	commonPropertiesItem    *tabItem
+	commonPropertiesPanel   *propertyPanel
+	genericPropertiesItem   *tabItem
+	genericPropertiesPanel  *propertyPanel
+	specificPropertiesItem  *tabItem
+	specificPropertiesPanel *propertyPanel
 }
 
 // NewGameObjectsMode returns a new instance.
@@ -59,6 +76,20 @@ func NewGameObjectsMode(context Context, parent *ui.Area) *GameObjectsMode {
 
 			mode.objectsAdapter.OnObjectsChanged(mode.onObjectsChanged)
 		}
+
+		mode.selectedPropertiesTitle, mode.selectedPropertiesBox = panelBuilder.addComboProperty("Show Properties", mode.onSelectedPropertiesDisplayChanged)
+
+		mode.commonPropertiesPanel = newPropertyPanel(panelBuilder, mode.updateCommonProperty)
+		mode.genericPropertiesPanel = newPropertyPanel(panelBuilder, mode.updateGenericProperty)
+		mode.specificPropertiesPanel = newPropertyPanel(panelBuilder, mode.updateSpecificProperty)
+
+		mode.commonPropertiesItem = &tabItem{mode.commonPropertiesPanel, "Common Properties"}
+		mode.genericPropertiesItem = &tabItem{mode.genericPropertiesPanel, "Generic Properties"}
+		mode.specificPropertiesItem = &tabItem{mode.specificPropertiesPanel, "Specific Properties"}
+		propertiesTabItems := []controls.ComboBoxItem{mode.commonPropertiesItem, mode.genericPropertiesItem, mode.specificPropertiesItem}
+		mode.selectedPropertiesBox.SetItems(propertiesTabItems)
+		mode.selectedPropertiesBox.SetSelectedItem(mode.commonPropertiesItem)
+		mode.onSelectedPropertiesDisplayChanged(mode.commonPropertiesItem)
 	}
 
 	return mode
@@ -91,5 +122,93 @@ func (mode *GameObjectsMode) onObjectsChanged() {
 }
 
 func (mode *GameObjectsMode) onSelectedObjectTypeChanged(id model.ObjectID) {
+	mode.selectedObjectID = id
+	mode.recreatePropertyControls()
+}
 
+func (mode *GameObjectsMode) recreatePropertyControls() {
+	object := mode.objectsAdapter.Object(mode.selectedObjectID)
+
+	mode.commonPropertiesPanel.Reset()
+	mode.genericPropertiesPanel.Reset()
+	mode.specificPropertiesPanel.Reset()
+	if object != nil {
+		mode.createPropertyControls(gameobj.CommonProperties(object.CommonData()), mode.commonPropertiesPanel)
+		mode.createPropertyControls(gameobj.GenericProperties(res.ObjectClass(mode.selectedObjectID.Class()),
+			object.GenericData()), mode.genericPropertiesPanel)
+		mode.createPropertyControls(gameobj.SpecificProperties(
+			res.MakeObjectID(res.ObjectClass(mode.selectedObjectID.Class()), res.ObjectSubclass(mode.selectedObjectID.Subclass()), res.ObjectType(mode.selectedObjectID.Type())),
+			object.SpecificData()), mode.specificPropertiesPanel)
+	}
+}
+
+func (mode *GameObjectsMode) createPropertyControls(rootInterpreter *interpreters.Instance, panel *propertyPanel) {
+	var processInterpreter func(string, *interpreters.Instance)
+	processInterpreter = func(path string, interpreter *interpreters.Instance) {
+		for _, key := range interpreter.Keys() {
+			fullPath := path + key
+			simplifier := panel.NewSimplifier(fullPath, int64(interpreter.Get(key)))
+
+			interpreter.Describe(key, simplifier)
+		}
+		for _, key := range interpreter.ActiveRefinements() {
+			processInterpreter(path+key+".", interpreter.Refined(key))
+		}
+	}
+	processInterpreter("", rootInterpreter)
+}
+
+func (mode *GameObjectsMode) onSelectedPropertiesDisplayChanged(item controls.ComboBoxItem) {
+	tabItem := item.(*tabItem)
+
+	mode.commonPropertiesItem.page.SetVisible(false)
+	mode.genericPropertiesItem.page.SetVisible(false)
+	mode.specificPropertiesItem.page.SetVisible(false)
+	tabItem.page.SetVisible(true)
+}
+
+func (mode *GameObjectsMode) updateCommonProperty(fullPath string, parameter uint32, update propertyUpdateFunction) {
+	mode.requestObjectPropertiesChange(func(object *model.GameObject, properties *datamodel.GameObjectProperties) {
+		properties.Data.Common = cloneBytes(object.CommonData())
+		interpreter := gameobj.CommonProperties(properties.Data.Common)
+		mode.updateObjectProperty(interpreter, fullPath, parameter, update)
+	})
+}
+
+func (mode *GameObjectsMode) updateGenericProperty(fullPath string, parameter uint32, update propertyUpdateFunction) {
+	mode.requestObjectPropertiesChange(func(object *model.GameObject, properties *datamodel.GameObjectProperties) {
+		properties.Data.Generic = cloneBytes(object.GenericData())
+		interpreter := gameobj.GenericProperties(res.ObjectClass(object.ID().Class()), properties.Data.Generic)
+		mode.updateObjectProperty(interpreter, fullPath, parameter, update)
+	})
+}
+
+func (mode *GameObjectsMode) updateSpecificProperty(fullPath string, parameter uint32, update propertyUpdateFunction) {
+	mode.requestObjectPropertiesChange(func(object *model.GameObject, properties *datamodel.GameObjectProperties) {
+		properties.Data.Specific = cloneBytes(object.SpecificData())
+		interpreter := gameobj.SpecificProperties(
+			res.MakeObjectID(res.ObjectClass(object.ID().Class()), res.ObjectSubclass(object.ID().Subclass()), res.ObjectType(object.ID().Type())),
+			properties.Data.Specific)
+		mode.updateObjectProperty(interpreter, fullPath, parameter, update)
+	})
+}
+
+func (mode *GameObjectsMode) requestObjectPropertiesChange(modifier func(*model.GameObject, *datamodel.GameObjectProperties)) {
+	object := mode.objectsAdapter.Object(mode.selectedObjectID)
+	var properties datamodel.GameObjectProperties
+
+	modifier(object, &properties)
+	mode.objectsAdapter.RequestObjectPropertiesChange(object.ID(), &properties)
+}
+
+func (mode *GameObjectsMode) updateObjectProperty(interpreter *interpreters.Instance,
+	fullPath string, parameter uint32, update propertyUpdateFunction) {
+	keys := strings.Split(fullPath, ".")
+	valueIndex := len(keys) - 1
+
+	for subIndex := 0; subIndex < valueIndex; subIndex++ {
+		interpreter = interpreter.Refined(keys[subIndex])
+	}
+	subKey := keys[valueIndex]
+	interpreter.Set(subKey, update(interpreter.Get(subKey), parameter))
 }
