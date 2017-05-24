@@ -57,11 +57,16 @@ type propertyPanel struct {
 	builder       *controlPanelBuilder
 	changeHandler propertyChangeHandler
 	entries       []*propertyEntry
+
+	// selectionCache keeps the most recently selected mask of a bitfield, per key.
+	// This helps re-selecting the same entry on re-creation.
+	selectionCache map[string]uint32
 }
 
 func newPropertyPanel(parentBuilder *controlPanelBuilder, changeHandler propertyChangeHandler) *propertyPanel {
 	panel := &propertyPanel{
-		changeHandler: changeHandler}
+		changeHandler:  changeHandler,
+		selectionCache: make(map[string]uint32)}
 
 	panel.area, panel.builder = parentBuilder.addDynamicSection(true, panel.Bottom)
 
@@ -128,6 +133,8 @@ func (panel *propertyPanel) NewSimplifier(key string, unifiedValue int64) *inter
 			} else {
 				valueSlider.SetValueUndefined()
 			}
+
+			panel.selectionCache[key] = item.mask
 		}
 
 		selectionTitle, selectionBox := panel.builder.addComboProperty(key+"-Part", onFieldSelectionChanged)
@@ -141,6 +148,7 @@ func (panel *propertyPanel) NewSimplifier(key string, unifiedValue int64) *inter
 		}
 		sort.Slice(masks, func(indexA, indexB int) bool { return masks[indexA] < masks[indexB] })
 		var items []controls.ComboBoxItem
+		var selectedItem controls.ComboBoxItem
 		for _, mask := range masks {
 			item := &bitfieldItem{
 				displayName: values[mask],
@@ -153,10 +161,13 @@ func (panel *propertyPanel) NewSimplifier(key string, unifiedValue int64) *inter
 				item.maxValue >>= 1
 			}
 			items = append(items, item)
+			if (selectedItem == nil) || (panel.selectionCache[key] == mask) {
+				selectedItem = item
+			}
 		}
 		selectionBox.SetItems(items)
-		selectionBox.SetSelectedItem(items[0])
-		onFieldSelectionChanged(items[0])
+		selectionBox.SetSelectedItem(selectedItem)
+		onFieldSelectionChanged(selectedItem)
 	})
 
 	return simplifier

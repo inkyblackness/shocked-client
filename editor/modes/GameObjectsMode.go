@@ -22,9 +22,11 @@ type GameObjectsMode struct {
 
 	area *ui.Area
 
-	selectedObjectLabel *controls.Label
-	selectedObjectBox   *controls.ComboBox
-	selectedObjectID    model.ObjectID
+	selectedObjectClassLabel *controls.Label
+	selectedObjectClassBox   *controls.ComboBox
+	selectedObjectLabel      *controls.Label
+	selectedObjectBox        *controls.ComboBox
+	selectedObjectID         model.ObjectID
 
 	selectedPropertiesTitle *controls.Label
 	selectedPropertiesBox   *controls.ComboBox
@@ -41,9 +43,7 @@ type GameObjectsMode struct {
 func NewGameObjectsMode(context Context, parent *ui.Area) *GameObjectsMode {
 	mode := &GameObjectsMode{
 		context:        context,
-		objectsAdapter: context.ModelAdapter().ObjectsAdapter(),
-
-		selectedObjectID: model.ObjectID(0xFFFFFF)}
+		objectsAdapter: context.ModelAdapter().ObjectsAdapter()}
 
 	{
 		builder := ui.NewAreaBuilder()
@@ -69,6 +69,7 @@ func NewGameObjectsMode(context Context, parent *ui.Area) *GameObjectsMode {
 		panelBuilder := newControlPanelBuilder(mode.area, context.ControlFactory())
 
 		{
+			mode.selectedObjectClassLabel, mode.selectedObjectClassBox = panelBuilder.addComboProperty("Object Class", mode.onSelectedObjectClassChanged)
 			mode.selectedObjectLabel, mode.selectedObjectBox = panelBuilder.addComboProperty("Selected Object", func(item controls.ComboBoxItem) {
 				typeItem := item.(*objectTypeItem)
 				mode.onSelectedObjectTypeChanged(typeItem.id)
@@ -101,24 +102,53 @@ func (mode *GameObjectsMode) SetActive(active bool) {
 }
 
 func (mode *GameObjectsMode) onObjectsChanged() {
-	var items []controls.ComboBoxItem
-	var selectedItem *objectTypeItem
+	classItems := make([]controls.ComboBoxItem, len(classNames))
 
-	objects := mode.objectsAdapter.Objects()
-	for _, object := range objects {
-		newItem := &objectTypeItem{object.ID(), object.DisplayName()}
-		items = append(items, newItem)
-		if object.ID() == mode.selectedObjectID {
-			selectedItem = newItem
+	for index := range classNames {
+		classItems[index] = &objectClassItem{index}
+	}
+	mode.selectedObjectClassBox.SetItems(classItems)
+	mode.selectedObjectClassBox.SetSelectedItem(classItems[mode.selectedObjectID.Class()])
+	mode.updateSelectedObjectClass(mode.selectedObjectID.Class())
+}
+
+func (mode *GameObjectsMode) onSelectedObjectClassChanged(item controls.ComboBoxItem) {
+	classItem := item.(*objectClassItem)
+	mode.updateSelectedObjectClass(classItem.class)
+}
+
+func (mode *GameObjectsMode) updateSelectedObjectClass(objectClass int) {
+	typeItems := mode.objectItemsForClass(objectClass)
+	selectedIndex := -1
+
+	mode.selectedObjectBox.SetItems(typeItems)
+	for index, item := range typeItems {
+		typeItem := item.(*objectTypeItem)
+		if typeItem.id == mode.selectedObjectID {
+			selectedIndex = index
 		}
 	}
-	mode.selectedObjectBox.SetItems(items)
-	if selectedItem != nil {
-		mode.selectedObjectBox.SetSelectedItem(selectedItem)
-		mode.onSelectedObjectTypeChanged(selectedItem.id)
+
+	if selectedIndex >= 0 {
+		mode.selectedObjectBox.SetSelectedItem(typeItems[selectedIndex])
+		mode.recreatePropertyControls()
 	} else {
 		mode.selectedObjectBox.SetSelectedItem(nil)
+		mode.commonPropertiesPanel.Reset()
+		mode.genericPropertiesPanel.Reset()
+		mode.specificPropertiesPanel.Reset()
 	}
+}
+
+func (mode *GameObjectsMode) objectItemsForClass(objectClass int) []controls.ComboBoxItem {
+	availableGameObjects := mode.objectsAdapter.ObjectsOfClass(objectClass)
+	typeItems := make([]controls.ComboBoxItem, len(availableGameObjects))
+
+	for index, gameObject := range availableGameObjects {
+		typeItems[index] = &objectTypeItem{gameObject.ID(), gameObject.DisplayName()}
+	}
+
+	return typeItems
 }
 
 func (mode *GameObjectsMode) onSelectedObjectTypeChanged(id model.ObjectID) {
