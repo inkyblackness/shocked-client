@@ -22,6 +22,17 @@ func (item *enumItem) String() string {
 	return item.displayName
 }
 
+type bitfieldItem struct {
+	displayName string
+	shift       uint32
+	mask        uint32
+	maxValue    uint32
+}
+
+func (item *bitfieldItem) String() string {
+	return item.displayName
+}
+
 type propertyEntry struct {
 	title   *controls.Label
 	control disposableControl
@@ -104,26 +115,48 @@ func (panel *propertyPanel) NewSimplifier(key string, unifiedValue int64) *inter
 
 	simplifier.SetBitfieldHandler(func(values map[uint32]string) {
 		masks := make([]uint32, 0, len(values))
+		var valueSlider *controls.Slider
+		var currentUpdate propertyUpdateFunction
+
+		onFieldSelectionChanged := func(boxItem controls.ComboBoxItem) {
+			item := boxItem.(*bitfieldItem)
+
+			currentUpdate = maskedUpdate(item.shift, item.mask)
+			valueSlider.SetRange(0, int64(item.maxValue))
+			if unifiedValue != math.MinInt64 {
+				valueSlider.SetValue(int64((uint32(unifiedValue) & item.mask) >> item.shift))
+			} else {
+				valueSlider.SetValueUndefined()
+			}
+		}
+
+		selectionTitle, selectionBox := panel.builder.addComboProperty(key+"-Part", onFieldSelectionChanged)
+		panel.entries = append(panel.entries, &propertyEntry{selectionTitle, selectionBox})
+		valueSlider = panel.NewSlider(key, "PartValue", func(currentValue, parameter uint32) uint32 {
+			return currentUpdate(currentValue, parameter)
+		})
 
 		for mask := range values {
 			masks = append(masks, mask)
 		}
 		sort.Slice(masks, func(indexA, indexB int) bool { return masks[indexA] < masks[indexB] })
+		var items []controls.ComboBoxItem
 		for _, mask := range masks {
-			maskName := values[mask]
-			max := mask
-			shift := uint32(0)
+			item := &bitfieldItem{
+				displayName: values[mask],
+				mask:        mask,
+				shift:       0,
+				maxValue:    mask}
 
-			for (max & 1) == 0 {
-				shift++
-				max >>= 1
+			for (item.maxValue & 1) == 0 {
+				item.shift++
+				item.maxValue >>= 1
 			}
-			slider := panel.NewSlider(key, maskName, maskedUpdate(shift, mask))
-			slider.SetRange(0, int64(max))
-			if unifiedValue != math.MinInt64 {
-				slider.SetValue(int64((uint32(unifiedValue) & mask) >> shift))
-			}
+			items = append(items, item)
 		}
+		selectionBox.SetItems(items)
+		selectionBox.SetSelectedItem(items[0])
+		onFieldSelectionChanged(items[0])
 	})
 
 	return simplifier
