@@ -3,6 +3,7 @@ package model
 import (
 	"strings"
 
+	"github.com/inkyblackness/res/data/gameobj"
 	"github.com/inkyblackness/res/objprop"
 	"github.com/inkyblackness/shocked-model"
 )
@@ -40,4 +41,9 @@ func (object *GameObject) GenericData() []byte {
 // SpecificData returns the specific data for this object
 func (object *GameObject) SpecificData() []byte {
 	return object.data.Specific
+}
+
+// CommonHitpoints returns the common value for hitpoints
+func (object *GameObject) CommonHitpoints() int {
+	return int(gameobj.CommonProperties(object.CommonData()).Get("DefaultHitpoints"))
 }
