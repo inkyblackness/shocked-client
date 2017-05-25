@@ -687,7 +687,26 @@ func (mode *LevelObjectsMode) createPropertyControls(key string, unifiedValue in
 		}
 	})
 
+	simplifier.SetSpecialHandler("LevelTexture", func() {
+		selector := mode.selectedObjectsPropertiesPanel.NewTextureSelector(key, "", setUpdate(), mode.levelTextures)
+		if unifiedValue != math.MinInt64 {
+			selector.SetSelectedIndex(int(unifiedValue))
+		}
+	})
+
 	describer(simplifier)
+}
+
+func (mode *LevelObjectsMode) levelTextures() []*graphics.BitmapTexture {
+	ids := mode.levelAdapter.LevelTextureIDs()
+	textures := make([]*graphics.BitmapTexture, len(ids))
+	store := mode.context.ForGraphics().WorldTextureStore(dataModel.TextureLarge)
+
+	for index, id := range ids {
+		textures[index] = store.Texture(graphics.TextureKeyFromInt(id))
+	}
+
+	return textures
 }
 
 func (mode *LevelObjectsMode) selectedObjectIndices() []int {

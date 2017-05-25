@@ -203,3 +203,15 @@ func (panel *propertyPanel) NewComboBox(key string, nameSuffix string, update pr
 
 	return control
 }
+
+func (panel *propertyPanel) NewTextureSelector(key string, nameSuffix string,
+	update propertyUpdateFunction, textureProvider controls.TextureProvider) *controls.TextureSelector {
+	fullName := panel.fullName(key, nameSuffix)
+	title, control := panel.builder.addTextureProperty(fullName, textureProvider, func(newIndex int) {
+		panel.changeHandler(key, uint32(newIndex), update)
+	})
+
+	panel.entries = append(panel.entries, &propertyEntry{title, control})
+
+	return control
+}
