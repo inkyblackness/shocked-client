@@ -264,7 +264,8 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 			panelBuilder.addDynamicSection(true, classPropertiesBottomResolver)
 		mode.selectedObjectsPropertiesHeaderArea, _ = mainClassPanelBuilder.addSection(true)
 
-		mode.selectedObjectsPropertiesPanel = newPropertyPanel(mainClassPanelBuilder, mode.updateSelectedObjectsClassPropertiesFiltered)
+		mode.selectedObjectsPropertiesPanel = newPropertyPanel(mainClassPanelBuilder,
+			mode.updateSelectedObjectsClassPropertiesFiltered, mode.objectItemsForClass)
 
 		mode.selectedObjectsBasePropertiesItem = &tabItem{mode.selectedObjectsBasePropertiesArea, "Base Properties"}
 		mode.selectedObjectsClassPropertiesItem = &tabItem{mode.selectedObjectsPropertiesMainArea, "Class Properties"}
