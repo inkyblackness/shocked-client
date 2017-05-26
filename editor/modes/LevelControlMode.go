@@ -1,7 +1,10 @@
 package modes
 
 import (
+	"fmt"
+
 	"github.com/inkyblackness/shocked-client/editor/display"
+	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
@@ -12,7 +15,8 @@ import (
 
 // LevelControlMode is a mode for archive level control.
 type LevelControlMode struct {
-	context Context
+	context      Context
+	levelAdapter *model.LevelAdapter
 
 	mapDisplay *display.MapDisplay
 
@@ -26,14 +30,24 @@ type LevelControlMode struct {
 	currentLevelTextureIndex int
 	worldTexturesLabel       *controls.Label
 	worldTexturesSelector    *controls.TextureSelector
+
+	selectedSurveillanceIndex    int
+	surveillanceIndexLabel       *controls.Label
+	surveillanceIndexBox         *controls.ComboBox
+	surveillanceSourceLabel      *controls.Label
+	surveillanceSourceSlider     *controls.Slider
+	surveillanceDeathwatchLabel  *controls.Label
+	surveillanceDeathwatchSlider *controls.Slider
 }
 
 // NewLevelControlMode returns a new instance.
 func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.MapDisplay) *LevelControlMode {
 	mode := &LevelControlMode{
-		context:                  context,
-		mapDisplay:               mapDisplay,
-		currentLevelTextureIndex: -1}
+		context:                   context,
+		levelAdapter:              context.ModelAdapter().ActiveLevel(),
+		mapDisplay:                mapDisplay,
+		currentLevelTextureIndex:  -1,
+		selectedSurveillanceIndex: -1}
 
 	{
 		builder := ui.NewAreaBuilder()
@@ -82,6 +96,18 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 				mode.levelTextures, mode.onSelectedLevelTextureChanged)
 			mode.worldTexturesLabel, mode.worldTexturesSelector = panelBuilder.addTextureProperty("World Textures",
 				mode.worldTextures, mode.onSelectedWorldTextureChanged)
+		}
+		{
+			mode.surveillanceIndexLabel, mode.surveillanceIndexBox =
+				panelBuilder.addComboProperty("Surveillance Object", mode.onSurveillanceIndexChanged)
+			mode.surveillanceSourceLabel, mode.surveillanceSourceSlider =
+				panelBuilder.addSliderProperty("Surveillance Source", mode.onSurveillanceSourceChanged)
+			mode.surveillanceDeathwatchLabel, mode.surveillanceDeathwatchSlider =
+				panelBuilder.addSliderProperty("Surveillance Deathwatch", mode.onSurveillanceDeathwatchChanged)
+			mode.surveillanceSourceSlider.SetRange(0, 871)
+			mode.surveillanceDeathwatchSlider.SetRange(0, 871)
+
+			mode.levelAdapter.OnLevelSurveillanceChanged(mode.onLevelSurveillanceChanged)
 		}
 	}
 
@@ -140,4 +166,46 @@ func (mode *LevelControlMode) onSelectedWorldTextureChanged(index int) {
 		newIDs[mode.currentLevelTextureIndex] = index
 		levelAdapter.RequestLevelTexturesChange(newIDs)
 	}
+}
+
+func (mode *LevelControlMode) onLevelSurveillanceChanged() {
+	surveillanceCount := mode.levelAdapter.ObjectSurveillanceCount()
+	items := make([]controls.ComboBoxItem, surveillanceCount)
+	var selectedItem controls.ComboBoxItem
+
+	for index := 0; index < surveillanceCount; index++ {
+		item := &enumItem{uint32(index), fmt.Sprintf("Object %v", index)}
+		items[index] = item
+		if index == mode.selectedSurveillanceIndex {
+			selectedItem = item
+		}
+	}
+
+	mode.surveillanceIndexBox.SetItems(items)
+	mode.surveillanceIndexBox.SetSelectedItem(selectedItem)
+	mode.onSurveillanceIndexChanged(selectedItem)
+}
+
+func (mode *LevelControlMode) onSurveillanceIndexChanged(boxItem controls.ComboBoxItem) {
+	if boxItem != nil {
+		item := boxItem.(*enumItem)
+		mode.selectedSurveillanceIndex = int(item.value)
+		sourceIndex, deathwatchIndex := mode.levelAdapter.ObjectSurveillanceInfo(mode.selectedSurveillanceIndex)
+		mode.surveillanceSourceSlider.SetValue(int64(sourceIndex))
+		mode.surveillanceDeathwatchSlider.SetValue(int64(deathwatchIndex))
+	} else {
+		mode.surveillanceSourceSlider.SetValueUndefined()
+		mode.surveillanceDeathwatchSlider.SetValueUndefined()
+		mode.selectedSurveillanceIndex = -1
+	}
+}
+
+func (mode *LevelControlMode) onSurveillanceSourceChanged(newValue int64) {
+	newIndex := int(newValue)
+	mode.levelAdapter.RequestObjectSurveillance(mode.selectedSurveillanceIndex, &newIndex, nil)
+}
+
+func (mode *LevelControlMode) onSurveillanceDeathwatchChanged(newValue int64) {
+	newIndex := int(newValue)
+	mode.levelAdapter.RequestObjectSurveillance(mode.selectedSurveillanceIndex, nil, &newIndex)
 }

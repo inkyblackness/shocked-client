@@ -21,6 +21,8 @@ type LevelAdapter struct {
 	levelTextures *observable
 
 	levelObjects *observable
+
+	levelSurveillance *observable
 }
 
 func newLevelAdapter(context archiveContext, store model.DataStore, objectsAdapter *ObjectsAdapter) *LevelAdapter {
@@ -32,8 +34,9 @@ func newLevelAdapter(context archiveContext, store model.DataStore, objectsAdapt
 		id:      newObservable(),
 		tileMap: NewTileMap(64, 64),
 
-		levelTextures: newObservable(),
-		levelObjects:  newObservable()}
+		levelTextures:     newObservable(),
+		levelObjects:      newObservable(),
+		levelSurveillance: newObservable()}
 
 	adapter.id.set("")
 
@@ -69,6 +72,8 @@ func (adapter *LevelAdapter) requestByID(levelID string) {
 	adapter.levelTextures.set(&textures)
 	objects := make(map[int]*LevelObject)
 	adapter.levelObjects.set(&objects)
+	objectIndices := []model.SurveillanceObject{}
+	adapter.levelSurveillance.set(&objectIndices)
 
 	adapter.id.set(levelID)
 	if levelID != "" {
@@ -79,6 +84,8 @@ func (adapter *LevelAdapter) requestByID(levelID string) {
 			adapter.onLevelTextures, adapter.context.simpleStoreFailure("LevelTextures"))
 		adapter.store.LevelObjects(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
 			adapter.onLevelObjects, adapter.context.simpleStoreFailure("LevelObjects"))
+		adapter.store.LevelSurveillanceObjects(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
+			adapter.onLevelSurveillance, adapter.context.simpleStoreFailure("LevelSurveillance"))
 	}
 }
 
@@ -276,4 +283,44 @@ func (adapter *LevelAdapter) RequestTilePropertyChange(coordinates []TileCoordin
 				x, y, tileUpdateHandler(coord), adapter.context.simpleStoreFailure("Tile"))
 		}
 	}
+}
+
+// OnLevelSurveillanceChanged registers for updates about the surveillance.
+func (adapter *LevelAdapter) OnLevelSurveillanceChanged(callback func()) {
+	adapter.levelSurveillance.addObserver(callback)
+}
+
+func (adapter *LevelAdapter) onLevelSurveillance(objects []model.SurveillanceObject) {
+	adapter.levelSurveillance.set(&objects)
+}
+
+// ObjectSurveillanceCount returns how many surveillance objects there are.
+func (adapter *LevelAdapter) ObjectSurveillanceCount() int {
+	objects := *adapter.levelSurveillance.get().(*[]model.SurveillanceObject)
+
+	return len(objects)
+}
+
+// ObjectSurveillanceInfo returns the current source and deathwatch indices for given surveillance index.
+func (adapter *LevelAdapter) ObjectSurveillanceInfo(index int) (source int, deathwatch int) {
+	objects := *adapter.levelSurveillance.get().(*[]model.SurveillanceObject)
+
+	if (index >= 0) && (index < len(objects)) {
+		source = *objects[index].SourceIndex
+		deathwatch = *objects[index].DeathwatchIndex
+	}
+
+	return
+}
+
+// RequestObjectSurveillance requests to modify the surveillance information of identified object.
+func (adapter *LevelAdapter) RequestObjectSurveillance(surveillanceIndex int, sourceObject *int, deathwatchObject *int) {
+	var data model.SurveillanceObject
+
+	data.SourceIndex = sourceObject
+	data.DeathwatchIndex = deathwatchObject
+
+	adapter.store.SetLevelSurveillanceObject(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.storeLevelID(),
+		surveillanceIndex, data,
+		adapter.onLevelSurveillance, adapter.context.simpleStoreFailure("SetLevelSurveillanceObject"))
 }
