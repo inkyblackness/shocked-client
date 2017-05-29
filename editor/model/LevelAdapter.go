@@ -17,8 +17,6 @@ type LevelAdapter struct {
 	tileMap *TileMap
 
 	levelProperties *observable
-	heightShift     int
-	isCyberspace    bool
 
 	levelTextures *observable
 
@@ -36,6 +34,7 @@ func newLevelAdapter(context archiveContext, store model.DataStore, objectsAdapt
 		id:      newObservable(),
 		tileMap: NewTileMap(64, 64),
 
+		levelProperties:   newObservable(),
 		levelTextures:     newObservable(),
 		levelObjects:      newObservable(),
 		levelSurveillance: newObservable()}
@@ -79,9 +78,26 @@ func (adapter *LevelAdapter) requestByID(levelID int) {
 	}
 }
 
+func (adapter *LevelAdapter) properties() (properties *model.LevelProperties) {
+	value := adapter.levelProperties.get()
+
+	if value != nil {
+		properties = value.(*model.LevelProperties)
+	}
+	return
+}
+
+// OnLevelPropertiesChanged registers for updates of the level properties.
+func (adapter *LevelAdapter) OnLevelPropertiesChanged(callback func()) {
+	adapter.levelProperties.addObserver(callback)
+}
+
 // IsCyberspace returns true for cyberspace levels.
-func (adapter *LevelAdapter) IsCyberspace() bool {
-	return adapter.isCyberspace
+func (adapter *LevelAdapter) IsCyberspace() (result bool) {
+	if properties := adapter.properties(); properties != nil {
+		result = *properties.CyberspaceFlag
+	}
+	return
 }
 
 // TileMap returns the map of tiles of the level.

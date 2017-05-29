@@ -154,11 +154,9 @@ func (adapter *Adapter) ActiveLevel() *LevelAdapter {
 func (adapter *Adapter) RequestActiveLevel(levelID int) {
 	levelProp, existing := adapter.availableLevels[levelID]
 	if existing {
-		adapter.activeLevel.isCyberspace = *levelProp.CyberspaceFlag
-		adapter.activeLevel.heightShift = *levelProp.HeightShift
+		adapter.activeLevel.levelProperties.set(&levelProp)
 	} else {
-		adapter.activeLevel.isCyberspace = false
-		adapter.activeLevel.heightShift = 0
+		adapter.activeLevel.levelProperties.set(nil)
 	}
 	adapter.activeLevel.requestByID(levelID)
 }

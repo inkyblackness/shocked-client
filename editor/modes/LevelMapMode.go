@@ -380,7 +380,7 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			mode.cyberspaceArea, _ = panelBuilder.addSection(false)
 
 		}
-		mode.levelAdapter.OnIDChanged(func() {
+		mode.levelAdapter.OnLevelPropertiesChanged(func() {
 			mode.realWorldArea.SetVisible(!mode.levelAdapter.IsCyberspace())
 			mode.cyberspaceArea.SetVisible(mode.levelAdapter.IsCyberspace())
 		})
