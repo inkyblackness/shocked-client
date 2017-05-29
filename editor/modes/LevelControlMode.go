@@ -74,7 +74,7 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 
 		{
 			mode.activeLevelLabel, mode.activeLevelBox = panelBuilder.addComboProperty("Active Level", func(item controls.ComboBoxItem) {
-				context.ModelAdapter().RequestActiveLevel(item.(string))
+				context.ModelAdapter().RequestActiveLevel(item.(int))
 			})
 
 			adapter := context.ModelAdapter()

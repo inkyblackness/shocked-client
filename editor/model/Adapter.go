@@ -17,7 +17,7 @@ type Adapter struct {
 	activeArchiveID     *observable
 	activeLevel         *LevelAdapter
 
-	availableLevels   map[string]model.LevelProperties
+	availableLevels   map[int]model.LevelProperties
 	availableLevelIDs *observable
 
 	palette        *observable
@@ -35,7 +35,7 @@ func NewAdapter(store model.DataStore) *Adapter {
 		availableArchiveIDs: newObservable(),
 		activeArchiveID:     newObservable(),
 
-		availableLevels:   make(map[string]model.LevelProperties),
+		availableLevels:   make(map[int]model.LevelProperties),
 		availableLevelIDs: newObservable(),
 
 		palette: newObservable()}
@@ -122,8 +122,8 @@ func (adapter *Adapter) ActiveArchiveID() string {
 }
 
 func (adapter *Adapter) requestArchive(archiveID string) {
-	adapter.RequestActiveLevel("")
-	adapter.availableLevels = make(map[string]model.LevelProperties)
+	adapter.RequestActiveLevel(-1)
+	adapter.availableLevels = make(map[int]model.LevelProperties)
 	adapter.availableLevelIDs.set(nil)
 
 	adapter.activeArchiveID.set(archiveID)
@@ -135,9 +135,9 @@ func (adapter *Adapter) requestArchive(archiveID string) {
 }
 
 func (adapter *Adapter) onLevels(levels []model.Level) {
-	availableLevelIDs := make([]string, len(levels))
+	availableLevelIDs := make([]int, len(levels))
 
-	adapter.availableLevels = make(map[string]model.LevelProperties)
+	adapter.availableLevels = make(map[int]model.LevelProperties)
 	for index, entry := range levels {
 		availableLevelIDs[index] = entry.ID
 		adapter.availableLevels[entry.ID] = entry.Properties
@@ -151,15 +151,21 @@ func (adapter *Adapter) ActiveLevel() *LevelAdapter {
 }
 
 // RequestActiveLevel requests to set the specified level as the active one.
-func (adapter *Adapter) RequestActiveLevel(levelID string) {
+func (adapter *Adapter) RequestActiveLevel(levelID int) {
 	levelProp, existing := adapter.availableLevels[levelID]
-	adapter.activeLevel.isCyberspace = existing && levelProp.CyberspaceFlag
+	if existing {
+		adapter.activeLevel.isCyberspace = *levelProp.CyberspaceFlag
+		adapter.activeLevel.heightShift = *levelProp.HeightShift
+	} else {
+		adapter.activeLevel.isCyberspace = false
+		adapter.activeLevel.heightShift = 0
+	}
 	adapter.activeLevel.requestByID(levelID)
 }
 
 // AvailableLevelIDs returns the list of identifier of available levels.
-func (adapter *Adapter) AvailableLevelIDs() []string {
-	return adapter.availableLevelIDs.get().([]string)
+func (adapter *Adapter) AvailableLevelIDs() []int {
+	return adapter.availableLevelIDs.get().([]int)
 }
 
 // OnAvailableLevelsChanged registers a callback for changes of available levels.

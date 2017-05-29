@@ -3,7 +3,6 @@ package model
 import (
 	"fmt"
 	"sort"
-	"strconv"
 
 	"github.com/inkyblackness/shocked-model"
 )
@@ -14,9 +13,12 @@ type LevelAdapter struct {
 	store          model.DataStore
 	objectsAdapter *ObjectsAdapter
 
-	id           *observable
-	isCyberspace bool
-	tileMap      *TileMap
+	id      *observable
+	tileMap *TileMap
+
+	levelProperties *observable
+	heightShift     int
+	isCyberspace    bool
 
 	levelTextures *observable
 
@@ -38,26 +40,14 @@ func newLevelAdapter(context archiveContext, store model.DataStore, objectsAdapt
 		levelObjects:      newObservable(),
 		levelSurveillance: newObservable()}
 
-	adapter.id.set("")
+	adapter.id.set(-1)
 
 	return adapter
 }
 
 // ID returns the ID of the level.
-func (adapter *LevelAdapter) ID() string {
-	return adapter.id.orDefault("").(string)
-}
-
-func (adapter *LevelAdapter) storeLevelID() int {
-	idAsString := adapter.ID()
-	id := -1
-
-	if idAsString != "" {
-		parsed, _ := strconv.ParseInt(idAsString, 10, 16)
-		id = int(parsed)
-	}
-
-	return id
+func (adapter *LevelAdapter) ID() int {
+	return adapter.id.orDefault(-1).(int)
 }
 
 // OnIDChanged registers a callback for changed IDs.
@@ -65,8 +55,8 @@ func (adapter *LevelAdapter) OnIDChanged(callback func()) {
 	adapter.id.addObserver(callback)
 }
 
-func (adapter *LevelAdapter) requestByID(levelID string) {
-	adapter.id.set("")
+func (adapter *LevelAdapter) requestByID(levelID int) {
+	adapter.id.set(-1)
 	adapter.tileMap.clear()
 	textures := []int{}
 	adapter.levelTextures.set(&textures)
@@ -76,8 +66,8 @@ func (adapter *LevelAdapter) requestByID(levelID string) {
 	adapter.levelSurveillance.set(&objectIndices)
 
 	adapter.id.set(levelID)
-	if levelID != "" {
-		storeLevelID := adapter.storeLevelID()
+	if levelID >= 0 {
+		storeLevelID := adapter.ID()
 		adapter.store.Tiles(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
 			adapter.onTiles, adapter.context.simpleStoreFailure("Tiles"))
 		adapter.store.LevelTextures(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
@@ -141,7 +131,7 @@ func (adapter *LevelAdapter) OnLevelTexturesChanged(callback func()) {
 
 // RequestLevelTexturesChange requests to change the level textures list
 func (adapter *LevelAdapter) RequestLevelTexturesChange(textureIDs []int) {
-	adapter.store.SetLevelTextures(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.storeLevelID(),
+	adapter.store.SetLevelTextures(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.ID(),
 		textureIDs, adapter.onLevelTextures, adapter.context.simpleStoreFailure("SetLevelTextures"))
 }
 
@@ -205,7 +195,7 @@ func (adapter *LevelAdapter) RequestNewObject(worldX, worldY float32, objectID O
 
 			Hitpoints: adapter.objectsAdapter.Object(objectID).CommonHitpoints()}
 
-		adapter.store.AddLevelObject(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.storeLevelID(),
+		adapter.store.AddLevelObject(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.ID(),
 			template, adapter.onLevelObjectAdded,
 			adapter.context.simpleStoreFailure("AddLevelObject"))
 	}
@@ -220,7 +210,7 @@ func (adapter *LevelAdapter) onLevelObjectAdded(object model.LevelObject) {
 
 // RequestRemoveObjects requests to remove all identified objects.
 func (adapter *LevelAdapter) RequestRemoveObjects(objectIndices []int) {
-	levelID := adapter.storeLevelID()
+	levelID := adapter.ID()
 	objects := adapter.levelObjectsMap()
 	successHandler := func(objectIndex int) func() {
 		return func() {
@@ -238,7 +228,7 @@ func (adapter *LevelAdapter) RequestRemoveObjects(objectIndices []int) {
 
 // RequestObjectPropertiesChange requests to modify identified objects.
 func (adapter *LevelAdapter) RequestObjectPropertiesChange(objectIndices []int, properties *model.LevelObjectProperties) {
-	levelID := adapter.storeLevelID()
+	levelID := adapter.ID()
 	objects := adapter.levelObjectsMap()
 	successHandler := func(objectIndex int) func(newProperties *model.LevelObjectProperties) {
 		return func(newProperties *model.LevelObjectProperties) {
@@ -257,7 +247,7 @@ func (adapter *LevelAdapter) RequestObjectPropertiesChange(objectIndices []int, 
 // RequestTilePropertyChange requests the tiles at given coordinates to set provided properties.
 func (adapter *LevelAdapter) RequestTilePropertyChange(coordinates []TileCoordinate, properties *model.TileProperties) {
 	additionalQueries := make(map[TileCoordinate]bool)
-	storeLevelID := adapter.storeLevelID()
+	storeLevelID := adapter.ID()
 	tileUpdateHandler := func(coord TileCoordinate) func(model.TileProperties) {
 		return func(newProperties model.TileProperties) {
 			adapter.onTilePropertiesUpdated(coord, &newProperties)
@@ -320,7 +310,7 @@ func (adapter *LevelAdapter) RequestObjectSurveillance(surveillanceIndex int, so
 	data.SourceIndex = sourceObject
 	data.DeathwatchIndex = deathwatchObject
 
-	adapter.store.SetLevelSurveillanceObject(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.storeLevelID(),
+	adapter.store.SetLevelSurveillanceObject(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.ID(),
 		surveillanceIndex, data,
 		adapter.onLevelSurveillance, adapter.context.simpleStoreFailure("SetLevelSurveillanceObject"))
 }
