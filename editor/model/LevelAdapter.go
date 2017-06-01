@@ -57,6 +57,7 @@ func (adapter *LevelAdapter) OnIDChanged(callback func()) {
 func (adapter *LevelAdapter) requestByID(levelID int) {
 	adapter.id.set(-1)
 	adapter.tileMap.clear()
+	adapter.levelProperties.set(nil)
 	textures := []int{}
 	adapter.levelTextures.set(&textures)
 	objects := make(map[int]*LevelObject)
@@ -67,6 +68,8 @@ func (adapter *LevelAdapter) requestByID(levelID int) {
 	adapter.id.set(levelID)
 	if levelID >= 0 {
 		storeLevelID := adapter.ID()
+		adapter.store.LevelProperties(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
+			adapter.onLevelProperties, adapter.context.simpleStoreFailure("LevelProperties"))
 		adapter.store.Tiles(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
 			adapter.onTiles, adapter.context.simpleStoreFailure("Tiles"))
 		adapter.store.LevelTextures(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
@@ -76,6 +79,10 @@ func (adapter *LevelAdapter) requestByID(levelID int) {
 		adapter.store.LevelSurveillanceObjects(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
 			adapter.onLevelSurveillance, adapter.context.simpleStoreFailure("LevelSurveillance"))
 	}
+}
+
+func (adapter *LevelAdapter) onLevelProperties(properties model.LevelProperties) {
+	adapter.levelProperties.set(&properties)
 }
 
 func (adapter *LevelAdapter) properties() (properties *model.LevelProperties) {

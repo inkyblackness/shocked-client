@@ -17,7 +17,6 @@ type Adapter struct {
 	activeArchiveID     *observable
 	activeLevel         *LevelAdapter
 
-	availableLevels   map[int]model.LevelProperties
 	availableLevelIDs *observable
 
 	palette        *observable
@@ -35,7 +34,6 @@ func NewAdapter(store model.DataStore) *Adapter {
 		availableArchiveIDs: newObservable(),
 		activeArchiveID:     newObservable(),
 
-		availableLevels:   make(map[int]model.LevelProperties),
 		availableLevelIDs: newObservable(),
 
 		palette: newObservable()}
@@ -123,7 +121,6 @@ func (adapter *Adapter) ActiveArchiveID() string {
 
 func (adapter *Adapter) requestArchive(archiveID string) {
 	adapter.RequestActiveLevel(-1)
-	adapter.availableLevels = make(map[int]model.LevelProperties)
 	adapter.availableLevelIDs.set(nil)
 
 	adapter.activeArchiveID.set(archiveID)
@@ -137,10 +134,8 @@ func (adapter *Adapter) requestArchive(archiveID string) {
 func (adapter *Adapter) onLevels(levels []model.Level) {
 	availableLevelIDs := make([]int, len(levels))
 
-	adapter.availableLevels = make(map[int]model.LevelProperties)
 	for index, entry := range levels {
 		availableLevelIDs[index] = entry.ID
-		adapter.availableLevels[entry.ID] = entry.Properties
 	}
 	adapter.availableLevelIDs.set(availableLevelIDs)
 }
@@ -152,12 +147,6 @@ func (adapter *Adapter) ActiveLevel() *LevelAdapter {
 
 // RequestActiveLevel requests to set the specified level as the active one.
 func (adapter *Adapter) RequestActiveLevel(levelID int) {
-	levelProp, existing := adapter.availableLevels[levelID]
-	if existing {
-		adapter.activeLevel.levelProperties.set(&levelProp)
-	} else {
-		adapter.activeLevel.levelProperties.set(nil)
-	}
 	adapter.activeLevel.requestByID(levelID)
 }
 
