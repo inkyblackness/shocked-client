@@ -94,6 +94,15 @@ func (adapter *LevelAdapter) properties() (properties *model.LevelProperties) {
 	return
 }
 
+// RequestLevelPropertiesChange requests to change the properties of the level.
+func (adapter *LevelAdapter) RequestLevelPropertiesChange(modifier func(properties *model.LevelProperties)) {
+	var properties model.LevelProperties
+
+	modifier(&properties)
+	adapter.store.SetLevelProperties(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.ID(),
+		properties, adapter.onLevelProperties, adapter.context.simpleStoreFailure("SetLevelProperties"))
+}
+
 // OnLevelPropertiesChanged registers for updates of the level properties.
 func (adapter *LevelAdapter) OnLevelPropertiesChanged(callback func()) {
 	adapter.levelProperties.addObserver(callback)
@@ -105,6 +114,15 @@ func (adapter *LevelAdapter) IsCyberspace() (result bool) {
 		result = *properties.CyberspaceFlag
 	}
 	return
+}
+
+// HeightShift returns the height shift value, or -1 if not known.
+func (adapter *LevelAdapter) HeightShift() int {
+	result := -1
+	if properties := adapter.properties(); properties != nil {
+		result = *properties.HeightShift
+	}
+	return result
 }
 
 // TileMap returns the map of tiles of the level.

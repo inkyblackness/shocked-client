@@ -25,6 +25,9 @@ type LevelControlMode struct {
 	activeLevelLabel *controls.Label
 	activeLevelBox   *controls.ComboBox
 
+	heightShiftLabel *controls.Label
+	heightShiftBox   *controls.ComboBox
+
 	levelTexturesLabel       *controls.Label
 	levelTexturesSelector    *controls.TextureSelector
 	currentLevelTextureIndex int
@@ -92,6 +95,28 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 			})
 		}
 		{
+			mode.heightShiftLabel, mode.heightShiftBox = panelBuilder.addComboProperty("Tile Height", mode.onHeightShiftChanged)
+			heightShiftItems := make([]controls.ComboBoxItem, 8)
+
+			heightShiftItems[0] = &enumItem{0, "32 Tiles"}
+			heightShiftItems[1] = &enumItem{1, "16 Tiles"}
+			heightShiftItems[2] = &enumItem{2, "8 Tiles"}
+			heightShiftItems[3] = &enumItem{3, "4 Tiles"}
+			heightShiftItems[4] = &enumItem{4, "2 Tiles"}
+			heightShiftItems[5] = &enumItem{5, "1 Tile"}
+			heightShiftItems[6] = &enumItem{6, "1/2 Tile"}
+			heightShiftItems[7] = &enumItem{7, "1/4 Tile"}
+			mode.heightShiftBox.SetItems(heightShiftItems)
+			mode.levelAdapter.OnLevelPropertiesChanged(func() {
+				heightShift := mode.levelAdapter.HeightShift()
+				if (heightShift >= 0) && (heightShift < len(heightShiftItems)) {
+					mode.heightShiftBox.SetSelectedItem(heightShiftItems[heightShift])
+				} else {
+					mode.heightShiftBox.SetSelectedItem(nil)
+				}
+			})
+		}
+		{
 			mode.levelTexturesLabel, mode.levelTexturesSelector = panelBuilder.addTextureProperty("Level Textures",
 				mode.levelTextures, mode.onSelectedLevelTextureChanged)
 			mode.worldTexturesLabel, mode.worldTexturesSelector = panelBuilder.addTextureProperty("World Textures",
@@ -142,6 +167,13 @@ func (mode *LevelControlMode) worldTextures() []*graphics.BitmapTexture {
 	}
 
 	return textures
+}
+
+func (mode *LevelControlMode) onHeightShiftChanged(boxItem controls.ComboBoxItem) {
+	item := boxItem.(*enumItem)
+	mode.levelAdapter.RequestLevelPropertiesChange(func(properties *dataModel.LevelProperties) {
+		properties.HeightShift = intAsPointer(int(item.value))
+	})
 }
 
 func (mode *LevelControlMode) onSelectedLevelTextureChanged(index int) {
