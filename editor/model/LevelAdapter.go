@@ -125,6 +125,27 @@ func (adapter *LevelAdapter) HeightShift() int {
 	return result
 }
 
+// CeilingEffect returns whether radiation is enabled and what its level is.
+func (adapter *LevelAdapter) CeilingEffect() (radiation bool, level int) {
+	level = -1
+	if properties := adapter.properties(); properties != nil {
+		radiation = *properties.CeilingHasRadiation
+		level = *properties.CeilingEffectLevel
+	}
+	return
+}
+
+// FloorEffect returns whether biohazard is enabled, floor has gravity, and what the level is.
+func (adapter *LevelAdapter) FloorEffect() (biohazard bool, gravity bool, level int) {
+	level = -1
+	if properties := adapter.properties(); properties != nil {
+		biohazard = *properties.FloorHasBiohazard
+		gravity = *properties.FloorHasGravity
+		level = *properties.FloorEffectLevel
+	}
+	return
+}
+
 // TileMap returns the map of tiles of the level.
 func (adapter *LevelAdapter) TileMap() *TileMap {
 	return adapter.tileMap

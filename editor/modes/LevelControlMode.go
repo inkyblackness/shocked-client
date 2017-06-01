@@ -13,6 +13,15 @@ import (
 	dataModel "github.com/inkyblackness/shocked-model"
 )
 
+type levelPropertyItem struct {
+	displayString string
+	modifier      func(properties *dataModel.LevelProperties)
+}
+
+func (item *levelPropertyItem) String() string {
+	return item.displayString
+}
+
 // LevelControlMode is a mode for archive level control.
 type LevelControlMode struct {
 	context      Context
@@ -41,6 +50,16 @@ type LevelControlMode struct {
 	surveillanceSourceSlider     *controls.Slider
 	surveillanceDeathwatchLabel  *controls.Label
 	surveillanceDeathwatchSlider *controls.Slider
+
+	ceilingEffectLabel       *controls.Label
+	ceilingEffectBox         *controls.ComboBox
+	ceilingEffectLevelLabel  *controls.Label
+	ceilingEffectLevelSlider *controls.Slider
+
+	floorEffectLabel       *controls.Label
+	floorEffectBox         *controls.ComboBox
+	floorEffectLevelLabel  *controls.Label
+	floorEffectLevelSlider *controls.Slider
 }
 
 // NewLevelControlMode returns a new instance.
@@ -133,6 +152,68 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 			mode.surveillanceDeathwatchSlider.SetRange(0, 871)
 
 			mode.levelAdapter.OnLevelSurveillanceChanged(mode.onLevelSurveillanceChanged)
+		}
+		{
+			mode.ceilingEffectLabel, mode.ceilingEffectBox =
+				panelBuilder.addComboProperty("Ceiling Effect", mode.onLevelPropertyBoxChanged)
+			mode.ceilingEffectLevelLabel, mode.ceilingEffectLevelSlider =
+				panelBuilder.addSliderProperty("Ceiling Effect Level", mode.onCeilingEffectLevelChanged)
+
+			noEffectItem := &levelPropertyItem{"None",
+				func(properties *dataModel.LevelProperties) { properties.CeilingHasRadiation = boolAsPointer(false) }}
+			radiationEffectItem := &levelPropertyItem{"Radiation",
+				func(properties *dataModel.LevelProperties) { properties.CeilingHasRadiation = boolAsPointer(true) }}
+			ceilingItems := []controls.ComboBoxItem{noEffectItem, radiationEffectItem}
+
+			mode.ceilingEffectBox.SetItems(ceilingItems)
+			mode.ceilingEffectLevelSlider.SetRange(0, 255)
+
+			mode.levelAdapter.OnLevelPropertiesChanged(func() {
+				radiation, level := mode.levelAdapter.CeilingEffect()
+
+				if radiation {
+					mode.ceilingEffectBox.SetSelectedItem(radiationEffectItem)
+				} else {
+					mode.ceilingEffectBox.SetSelectedItem(noEffectItem)
+				}
+				mode.ceilingEffectLevelSlider.SetValue(int64(level))
+			})
+		}
+		{
+			mode.floorEffectLabel, mode.floorEffectBox =
+				panelBuilder.addComboProperty("Floor Effect", mode.onLevelPropertyBoxChanged)
+			mode.floorEffectLevelLabel, mode.floorEffectLevelSlider =
+				panelBuilder.addSliderProperty("Floor Effect Level", mode.onFloorEffectLevelChanged)
+
+			noEffectItem := &levelPropertyItem{"None", func(properties *dataModel.LevelProperties) {
+				properties.FloorHasBiohazard = boolAsPointer(false)
+				properties.FloorHasGravity = boolAsPointer(false)
+			}}
+			gravityEffectItem := &levelPropertyItem{"Gravity", func(properties *dataModel.LevelProperties) {
+				properties.FloorHasBiohazard = boolAsPointer(false)
+				properties.FloorHasGravity = boolAsPointer(true)
+			}}
+			biohazardEffectItem := &levelPropertyItem{"Biohazard", func(properties *dataModel.LevelProperties) {
+				properties.FloorHasBiohazard = boolAsPointer(true)
+				properties.FloorHasGravity = boolAsPointer(false)
+			}}
+			floorItems := []controls.ComboBoxItem{noEffectItem, gravityEffectItem, biohazardEffectItem}
+
+			mode.floorEffectBox.SetItems(floorItems)
+			mode.floorEffectLevelSlider.SetRange(0, 255)
+
+			mode.levelAdapter.OnLevelPropertiesChanged(func() {
+				biohazard, gravity, level := mode.levelAdapter.FloorEffect()
+
+				if gravity {
+					mode.floorEffectBox.SetSelectedItem(gravityEffectItem)
+				} else if biohazard {
+					mode.floorEffectBox.SetSelectedItem(biohazardEffectItem)
+				} else {
+					mode.floorEffectBox.SetSelectedItem(noEffectItem)
+				}
+				mode.floorEffectLevelSlider.SetValue(int64(level))
+			})
 		}
 	}
 
@@ -240,4 +321,21 @@ func (mode *LevelControlMode) onSurveillanceSourceChanged(newValue int64) {
 func (mode *LevelControlMode) onSurveillanceDeathwatchChanged(newValue int64) {
 	newIndex := int(newValue)
 	mode.levelAdapter.RequestObjectSurveillance(mode.selectedSurveillanceIndex, nil, &newIndex)
+}
+
+func (mode *LevelControlMode) onLevelPropertyBoxChanged(boxItem controls.ComboBoxItem) {
+	item := boxItem.(*levelPropertyItem)
+	mode.levelAdapter.RequestLevelPropertiesChange(item.modifier)
+}
+
+func (mode *LevelControlMode) onCeilingEffectLevelChanged(newValue int64) {
+	mode.levelAdapter.RequestLevelPropertiesChange(func(properties *dataModel.LevelProperties) {
+		properties.CeilingEffectLevel = intAsPointer(int(newValue))
+	})
+}
+
+func (mode *LevelControlMode) onFloorEffectLevelChanged(newValue int64) {
+	mode.levelAdapter.RequestLevelPropertiesChange(func(properties *dataModel.LevelProperties) {
+		properties.FloorEffectLevel = intAsPointer(int(newValue))
+	})
 }

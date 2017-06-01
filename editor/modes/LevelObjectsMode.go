@@ -94,12 +94,6 @@ type LevelObjectsMode struct {
 	selectedObjectsPropertiesPanel      *propertyPanel
 }
 
-func intAsPointer(value int) (ptr *int) {
-	ptr = new(int)
-	*ptr = value
-	return
-}
-
 // NewLevelObjectsMode returns a new instance.
 func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.MapDisplay) *LevelObjectsMode {
 	mode := &LevelObjectsMode{
