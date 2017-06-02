@@ -15,6 +15,15 @@ import (
 	dataModel "github.com/inkyblackness/shocked-model"
 )
 
+type textureViewItem struct {
+	displayString string
+	query         display.TextureIndexQuery
+}
+
+func (item *textureViewItem) String() string {
+	return item.displayString
+}
+
 type tilePropertySetter func(properties *dataModel.TileProperties, value interface{})
 type tilePropertyItem struct {
 	value  interface{}
@@ -55,6 +64,8 @@ type LevelMapMode struct {
 	slopeControlItems  map[dataModel.SlopeControl]*tilePropertyItem
 
 	realWorldArea                *ui.Area
+	textureViewLabel             *controls.Label
+	textureViewBox               *controls.ComboBox
 	floorTextureLabel            *controls.Label
 	floorTextureSelector         *controls.TextureSelector
 	floorTextureRotationsLabel   *controls.Label
@@ -282,6 +293,17 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			var realWorldPanelBuilder *controlPanelBuilder
 			mode.realWorldArea, realWorldPanelBuilder = panelBuilder.addSection(false)
 
+			{
+				mode.textureViewLabel, mode.textureViewBox = realWorldPanelBuilder.addComboProperty("Map Texture View", mode.onTextureViewChanged)
+				items := make([]controls.ComboBoxItem, 3)
+
+				items[0] = &textureViewItem{"Floor", display.FloorTexture}
+				items[1] = &textureViewItem{"Ceiling", display.CeilingTexture}
+				items[2] = &textureViewItem{"Wall", display.WallTexture}
+
+				mode.textureViewBox.SetItems(items)
+				mode.textureViewBox.SetSelectedItem(items[0])
+			}
 			{
 				setupRotations := func(setter func(*dataModel.TileProperties, int)) ([]controls.ComboBoxItem, map[int]*tilePropertyItem) {
 					mappingSetter := func(properties *dataModel.TileProperties, value interface{}) {
@@ -566,6 +588,11 @@ func (mode *LevelMapMode) onTilePropertyChangeRequested(item controls.ComboBoxIt
 	mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
 		propertyItem.setter(properties, propertyItem.value)
 	})
+}
+
+func (mode *LevelMapMode) onTextureViewChanged(boxItem controls.ComboBoxItem) {
+	item := boxItem.(*textureViewItem)
+	mode.mapDisplay.SetTextureIndexQuery(item.query)
 }
 
 func (mode *LevelMapMode) onFloorTextureChanged(index int) {
