@@ -15,7 +15,7 @@ import (
 	datamodel "github.com/inkyblackness/shocked-model"
 )
 
-// GameObjectsMode is a mode for archive level control.
+// GameObjectsMode is a mode for game object properties.
 type GameObjectsMode struct {
 	context        Context
 	objectsAdapter *model.ObjectsAdapter
