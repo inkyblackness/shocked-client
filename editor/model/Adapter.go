@@ -87,6 +87,7 @@ func (adapter *Adapter) RequestProject(projectID string) {
 		adapter.store.Palette(adapter.ActiveProjectID(), "game",
 			adapter.onGamePalette, adapter.simpleStoreFailure("Palette"))
 		adapter.objectsAdapter.refresh()
+		adapter.textureAdapter.refresh()
 	}
 }
 
