@@ -470,7 +470,7 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 					"Weak East", "Weak West", "Weak North", "Weak South",
 					"Medium East", "Medium West", "Medium North", "Medium South",
 					"Strong East", "Strong West", "Strong North", "Strong South",
-					"Medium Ceiling", "Medium Floor", "Strong Ceiling"}
+					"Medium Ceiling", "Medium Floor", "Strong Ceiling", "Strong Floor"}
 
 				mode.flightPullTypeLabel, mode.flightPullTypeBox = cyberspacePanelBuilder.addComboProperty("Flight Pull Type", func(boxItem controls.ComboBoxItem) {
 					item := boxItem.(*enumItem)
