@@ -23,9 +23,20 @@ type GameTexturesMode struct {
 	selectedTextureIDSlider *controls.Slider
 	selectedTextureID       int
 
+	propertiesHeader *controls.Label
+
 	climbableLabel *controls.Label
 	climbableBox   *controls.ComboBox
 	climbableItems []controls.ComboBoxItem
+
+	transparencyControlLabel *controls.Label
+	transparencyControlBox   *controls.ComboBox
+	transparencyControlItems []controls.ComboBoxItem
+
+	animationGroupLabel  *controls.Label
+	animationGroupSlider *controls.Slider
+	animationIndexLabel  *controls.Label
+	animationIndexSlider *controls.Slider
 }
 
 // NewGameTexturesMode returns a new instance.
@@ -70,10 +81,22 @@ func NewGameTexturesMode(context Context, parent *ui.Area) *GameTexturesMode {
 					mode.onTextureSelected(newValue)
 				})
 		}
+		mode.propertiesHeader = panelBuilder.addTitle("Properties")
 		{
 			mode.climbableLabel, mode.climbableBox = panelBuilder.addComboProperty("Climbable", mode.onClimbableChanged)
 			mode.climbableItems = []controls.ComboBoxItem{&enumItem{0, "No"}, &enumItem{1, "Yes"}}
 			mode.climbableBox.SetItems(mode.climbableItems)
+		}
+		{
+			mode.transparencyControlLabel, mode.transparencyControlBox = panelBuilder.addComboProperty("Transparency Control", mode.onTransparencyControlChanged)
+			mode.transparencyControlItems = []controls.ComboBoxItem{&enumItem{0, "Opaque"}, &enumItem{1, "Space"}, &enumItem{2, "Transparent"}}
+			mode.transparencyControlBox.SetItems(mode.transparencyControlItems)
+		}
+		{
+			mode.animationGroupLabel, mode.animationGroupSlider = panelBuilder.addSliderProperty("Animation Group", mode.onAnimationGroupChanged)
+			mode.animationGroupSlider.SetRange(0, 3)
+			mode.animationIndexLabel, mode.animationIndexSlider = panelBuilder.addSliderProperty("Animation Index", mode.onAnimationIndexChanged)
+			mode.animationIndexSlider.SetRange(0, 3)
 		}
 	}
 	mode.textureAdapter.OnGameTexturesChanged(mode.onGameTexturesChanged)
@@ -113,18 +136,42 @@ func (mode *GameTexturesMode) onTextureSelected(id int) {
 	} else {
 		mode.climbableBox.SetSelectedItem(mode.climbableItems[0])
 	}
+	mode.transparencyControlBox.SetSelectedItem(mode.transparencyControlItems[texture.TransparencyControl()])
+	mode.animationGroupSlider.SetValue(int64(texture.AnimationGroup()))
+	mode.animationIndexSlider.SetValue(int64(texture.AnimationIndex()))
 }
 
 func (mode *GameTexturesMode) requestTexturePropertiesChange(modifier func(*dataModel.TextureProperties)) {
-	var properties dataModel.TextureProperties
+	if mode.selectedTextureID >= 0 {
+		var properties dataModel.TextureProperties
 
-	modifier(&properties)
-	mode.textureAdapter.RequestTexturePropertiesChange(mode.selectedTextureID, &properties)
+		modifier(&properties)
+		mode.textureAdapter.RequestTexturePropertiesChange(mode.selectedTextureID, &properties)
+	}
 }
 
 func (mode *GameTexturesMode) onClimbableChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
 	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
 		properties.Climbable = boolAsPointer(item.value != 0)
+	})
+}
+
+func (mode *GameTexturesMode) onTransparencyControlChanged(boxItem controls.ComboBoxItem) {
+	item := boxItem.(*enumItem)
+	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
+		properties.TransparencyControl = intAsPointer(int(item.value))
+	})
+}
+
+func (mode *GameTexturesMode) onAnimationGroupChanged(newValue int64) {
+	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
+		properties.AnimationGroup = intAsPointer(int(newValue))
+	})
+}
+
+func (mode *GameTexturesMode) onAnimationIndexChanged(newValue int64) {
+	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
+		properties.AnimationIndex = intAsPointer(int(newValue))
 	})
 }

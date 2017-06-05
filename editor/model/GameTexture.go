@@ -24,3 +24,18 @@ func (texture *GameTexture) ID() int {
 func (texture *GameTexture) Climbable() bool {
 	return *texture.properties.Climbable
 }
+
+// TransparencyControl returns how the pixel data shall be interpreted.
+func (texture *GameTexture) TransparencyControl() int {
+	return *texture.properties.TransparencyControl
+}
+
+// AnimationGroup associates textures of an animation.
+func (texture *GameTexture) AnimationGroup() int {
+	return *texture.properties.AnimationGroup
+}
+
+// AnimationIndex places the texture within the group.
+func (texture *GameTexture) AnimationIndex() int {
+	return *texture.properties.AnimationIndex
+}
