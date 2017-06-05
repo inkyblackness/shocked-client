@@ -15,7 +15,8 @@ type GameTexturesMode struct {
 	context        Context
 	textureAdapter *model.TextureAdapter
 
-	area *ui.Area
+	area           *ui.Area
+	propertiesArea *ui.Area
 
 	selectedTextureLabel    *controls.Label
 	selectedTextureSelector *controls.TextureSelector
@@ -45,6 +46,8 @@ type GameTexturesMode struct {
 	nameValue     *controls.Label
 	useTextTitle  *controls.Label
 	useTextValue  *controls.Label
+
+	imageDisplays map[dataModel.TextureSize]*controls.ImageDisplay
 }
 
 // NewGameTexturesMode returns a new instance.
@@ -52,16 +55,27 @@ func NewGameTexturesMode(context Context, parent *ui.Area) *GameTexturesMode {
 	mode := &GameTexturesMode{
 		context:           context,
 		textureAdapter:    context.ModelAdapter().TextureAdapter(),
-		selectedTextureID: -1}
+		selectedTextureID: -1,
+		imageDisplays:     make(map[dataModel.TextureSize]*controls.ImageDisplay)}
 
 	{
 		builder := ui.NewAreaBuilder()
 		builder.SetParent(parent)
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0))
 		builder.SetTop(ui.NewOffsetAnchor(parent.Top(), 0))
-		builder.SetRight(ui.NewRelativeAnchor(parent.Left(), parent.Right(), 0.5))
+		builder.SetRight(ui.NewOffsetAnchor(parent.Right(), 0))
 		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0))
 		builder.SetVisible(false)
+		mode.area = builder.Build()
+	}
+	{
+		builder := ui.NewAreaBuilder()
+		builder.SetParent(mode.area)
+		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0))
+		builder.SetTop(ui.NewOffsetAnchor(parent.Top(), 0))
+		builder.SetRight(ui.NewRelativeAnchor(parent.Left(), parent.Right(), 0.5))
+		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0))
+		builder.SetVisible(true)
 		builder.OnRender(func(area *ui.Area) {
 			context.ForGraphics().RectangleRenderer().Fill(
 				area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
@@ -72,10 +86,10 @@ func NewGameTexturesMode(context Context, parent *ui.Area) *GameTexturesMode {
 		builder.OnEvent(events.MouseButtonDownEventType, ui.SilentConsumer)
 		builder.OnEvent(events.MouseButtonClickedEventType, ui.SilentConsumer)
 		builder.OnEvent(events.MouseScrollEventType, ui.SilentConsumer)
-		mode.area = builder.Build()
+		mode.propertiesArea = builder.Build()
 	}
 	{
-		panelBuilder := newControlPanelBuilder(mode.area, context.ControlFactory())
+		panelBuilder := newControlPanelBuilder(mode.propertiesArea, context.ControlFactory())
 
 		{
 			mode.selectedTextureIDLabel, mode.selectedTextureIDSlider = panelBuilder.addSliderProperty("Selected Texture ID",
@@ -116,6 +130,31 @@ func NewGameTexturesMode(context Context, parent *ui.Area) *GameTexturesMode {
 			mode.animationIndexSlider.SetRange(0, 3)
 		}
 	}
+	{
+		padding := float32(5.0)
+		runningLeft := mode.propertiesArea.Right()
+		pixelSizes := map[dataModel.TextureSize]float32{
+			dataModel.TextureLarge:  128,
+			dataModel.TextureMedium: 64,
+			dataModel.TextureSmall:  32,
+			dataModel.TextureIcon:   16}
+
+		for _, textureSize := range dataModel.TextureSizes() {
+			builder := mode.context.ControlFactory().ForImageDisplay()
+			left := ui.NewOffsetAnchor(runningLeft, padding)
+			right := ui.NewOffsetAnchor(left, pixelSizes[textureSize])
+			top := ui.NewOffsetAnchor(mode.area.Top(), padding)
+
+			builder.SetParent(mode.area)
+			builder.SetLeft(left)
+			builder.SetRight(right)
+			builder.SetTop(top)
+			builder.SetBottom(ui.NewOffsetAnchor(top, pixelSizes[dataModel.TextureLarge]))
+			builder.WithProvider(mode.imageProvider(textureSize))
+			mode.imageDisplays[textureSize] = builder.Build()
+			runningLeft = right
+		}
+	}
 	mode.textureAdapter.OnGameTexturesChanged(mode.onGameTexturesChanged)
 
 	return mode
@@ -136,6 +175,16 @@ func (mode *GameTexturesMode) worldTextures() []*graphics.BitmapTexture {
 	}
 
 	return textures
+}
+
+func (mode *GameTexturesMode) imageProvider(size dataModel.TextureSize) controls.ImageProvider {
+	store := mode.context.ForGraphics().WorldTextureStore(size)
+	return func() (texture *graphics.BitmapTexture) {
+		if mode.selectedTextureID >= 0 {
+			texture = store.Texture(graphics.TextureKeyFromInt(mode.selectedTextureID))
+		}
+		return
+	}
 }
 
 func (mode *GameTexturesMode) onGameTexturesChanged() {
