@@ -161,7 +161,7 @@ func (adapter *LevelAdapter) onTiles(tiles model.Tiles) {
 	for y := 0; y < len(tiles.Table); y++ {
 		row := tiles.Table[y]
 		for x := 0; x < len(row); x++ {
-			adapter.onTilePropertiesUpdated(TileCoordinateOf(x, y), &row[x].Properties)
+			adapter.onTilePropertiesUpdated(TileCoordinateOf(x, y), &row[x])
 		}
 	}
 }
