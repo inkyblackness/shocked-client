@@ -3,6 +3,7 @@ package modes
 import (
 	"fmt"
 
+	"github.com/inkyblackness/res/data"
 	"github.com/inkyblackness/shocked-client/editor/display"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
@@ -60,16 +61,28 @@ type LevelControlMode struct {
 	floorEffectBox         *controls.ComboBox
 	floorEffectLevelLabel  *controls.Label
 	floorEffectLevelSlider *controls.Slider
+
+	selectedAnimationGroupIndex int
+	animationGroupIndexLabel    *controls.Label
+	animationGroupIndexBox      *controls.ComboBox
+	animationGroupTimeLabel     *controls.Label
+	animationGroupTimeSlider    *controls.Slider
+	animationGroupFramesLabel   *controls.Label
+	animationGroupFramesSlider  *controls.Slider
+	animationGroupTypeLabel     *controls.Label
+	animationGroupTypeBox       *controls.ComboBox
+	animationGroupTypeItems     map[int]controls.ComboBoxItem
 }
 
 // NewLevelControlMode returns a new instance.
 func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.MapDisplay) *LevelControlMode {
 	mode := &LevelControlMode{
-		context:                   context,
-		levelAdapter:              context.ModelAdapter().ActiveLevel(),
-		mapDisplay:                mapDisplay,
-		currentLevelTextureIndex:  -1,
-		selectedSurveillanceIndex: -1}
+		context:                     context,
+		levelAdapter:                context.ModelAdapter().ActiveLevel(),
+		mapDisplay:                  mapDisplay,
+		currentLevelTextureIndex:    -1,
+		selectedSurveillanceIndex:   -1,
+		selectedAnimationGroupIndex: -1}
 
 	{
 		builder := ui.NewAreaBuilder()
@@ -215,6 +228,30 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 				mode.floorEffectLevelSlider.SetValue(int64(level))
 			})
 		}
+		{
+			mode.animationGroupIndexLabel, mode.animationGroupIndexBox =
+				panelBuilder.addComboProperty("Texture Animation Group", mode.onAnimationGroupIndexChanged)
+			mode.animationGroupTimeLabel, mode.animationGroupTimeSlider =
+				panelBuilder.addSliderProperty("Texture Animation Time", mode.onAnimationGroupTimeChanged)
+			mode.animationGroupTimeSlider.SetRange(0, 1000)
+			mode.animationGroupFramesLabel, mode.animationGroupFramesSlider =
+				panelBuilder.addSliderProperty("Texture Animation Frame Count", mode.onAnimationGroupFramesChanged)
+			mode.animationGroupFramesSlider.SetRange(0, 10)
+			mode.animationGroupTypeLabel, mode.animationGroupTypeBox =
+				panelBuilder.addComboProperty("Texture Animation Type", mode.onAnimationGroupTypeChanged)
+			items := []controls.ComboBoxItem{
+				&enumItem{uint32(data.TextureAnimationForward), "Forward"},
+				&enumItem{uint32(data.TextureAnimationForthAndBack), "Forth-And-Back"},
+				&enumItem{uint32(data.TextureAnimationBackAndForth), "Back-And-Forth"}}
+			mode.animationGroupTypeItems = make(map[int]controls.ComboBoxItem)
+			for _, boxItem := range items {
+				item := boxItem.(*enumItem)
+				mode.animationGroupTypeItems[int(item.value)] = item
+			}
+			mode.animationGroupTypeBox.SetItems(items)
+
+			mode.levelAdapter.OnLevelTextureAnimationsChanged(mode.onLevelTextureAnimationsChanged)
+		}
 	}
 
 	return mode
@@ -309,7 +346,6 @@ func (mode *LevelControlMode) onSurveillanceIndexChanged(boxItem controls.ComboB
 	} else {
 		mode.surveillanceSourceSlider.SetValueUndefined()
 		mode.surveillanceDeathwatchSlider.SetValueUndefined()
-		mode.selectedSurveillanceIndex = -1
 	}
 }
 
@@ -337,5 +373,66 @@ func (mode *LevelControlMode) onCeilingEffectLevelChanged(newValue int64) {
 func (mode *LevelControlMode) onFloorEffectLevelChanged(newValue int64) {
 	mode.levelAdapter.RequestLevelPropertiesChange(func(properties *dataModel.LevelProperties) {
 		properties.FloorEffectLevel = intAsPointer(int(newValue))
+	})
+}
+
+func (mode *LevelControlMode) onLevelTextureAnimationsChanged() {
+	groupCount := mode.levelAdapter.TextureAnimationGroupCount()
+	items := []controls.ComboBoxItem{}
+	var selectedItem controls.ComboBoxItem
+
+	for index := 1; index < groupCount; index++ {
+		item := &enumItem{uint32(index), fmt.Sprintf("Group %v", index)}
+		items = append(items, item)
+		if index == mode.selectedAnimationGroupIndex {
+			selectedItem = item
+		}
+	}
+	mode.animationGroupIndexBox.SetItems(items)
+	mode.animationGroupIndexBox.SetSelectedItem(selectedItem)
+	mode.onAnimationGroupIndexChanged(selectedItem)
+}
+
+func (mode *LevelControlMode) onAnimationGroupIndexChanged(boxItem controls.ComboBoxItem) {
+	if boxItem != nil {
+		item := boxItem.(*enumItem)
+		group := mode.levelAdapter.TextureAnimationGroup(int(item.value))
+		mode.selectedAnimationGroupIndex = int(item.value)
+
+		mode.animationGroupFramesSlider.SetValue(int64(group.FrameCount()))
+		mode.animationGroupTimeSlider.SetValue(int64(group.FrameTime()))
+		mode.animationGroupTypeBox.SetSelectedItem(mode.animationGroupTypeItems[group.LoopType()])
+	} else {
+		mode.animationGroupFramesSlider.SetValueUndefined()
+		mode.animationGroupTimeSlider.SetValueUndefined()
+		mode.animationGroupTypeBox.SetSelectedItem(nil)
+	}
+}
+
+func (mode *LevelControlMode) requestAnimationGroupChange(modifier func(*dataModel.TextureAnimation)) {
+	if mode.selectedAnimationGroupIndex > 0 {
+		var properties dataModel.TextureAnimation
+
+		modifier(&properties)
+		mode.levelAdapter.RequestLevelTextureAnimationGroupChange(mode.selectedAnimationGroupIndex, properties)
+	}
+}
+
+func (mode *LevelControlMode) onAnimationGroupTimeChanged(newValue int64) {
+	mode.requestAnimationGroupChange(func(properties *dataModel.TextureAnimation) {
+		properties.FrameTime = intAsPointer(int(newValue))
+	})
+}
+
+func (mode *LevelControlMode) onAnimationGroupFramesChanged(newValue int64) {
+	mode.requestAnimationGroupChange(func(properties *dataModel.TextureAnimation) {
+		properties.FrameCount = intAsPointer(int(newValue))
+	})
+}
+
+func (mode *LevelControlMode) onAnimationGroupTypeChanged(boxItem controls.ComboBoxItem) {
+	item := boxItem.(*enumItem)
+	mode.requestAnimationGroupChange(func(properties *dataModel.TextureAnimation) {
+		properties.LoopType = intAsPointer(int(item.value))
 	})
 }

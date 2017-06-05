@@ -18,7 +18,8 @@ type LevelAdapter struct {
 
 	levelProperties *observable
 
-	levelTextures *observable
+	levelTextures               *observable
+	levelTextureAnimationGroups *observable
 
 	levelObjects *observable
 
@@ -34,10 +35,11 @@ func newLevelAdapter(context archiveContext, store model.DataStore, objectsAdapt
 		id:      newObservable(),
 		tileMap: NewTileMap(64, 64),
 
-		levelProperties:   newObservable(),
-		levelTextures:     newObservable(),
-		levelObjects:      newObservable(),
-		levelSurveillance: newObservable()}
+		levelProperties:             newObservable(),
+		levelTextures:               newObservable(),
+		levelTextureAnimationGroups: newObservable(),
+		levelObjects:                newObservable(),
+		levelSurveillance:           newObservable()}
 
 	adapter.id.set(-1)
 
@@ -60,6 +62,8 @@ func (adapter *LevelAdapter) requestByID(levelID int) {
 	adapter.levelProperties.set(nil)
 	textures := []int{}
 	adapter.levelTextures.set(&textures)
+	animationGroups := []*LevelTextureAnimationGroup{}
+	adapter.levelTextureAnimationGroups.set(&animationGroups)
 	objects := make(map[int]*LevelObject)
 	adapter.levelObjects.set(&objects)
 	objectIndices := []model.SurveillanceObject{}
@@ -74,6 +78,8 @@ func (adapter *LevelAdapter) requestByID(levelID int) {
 			adapter.onTiles, adapter.context.simpleStoreFailure("Tiles"))
 		adapter.store.LevelTextures(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
 			adapter.onLevelTextures, adapter.context.simpleStoreFailure("LevelTextures"))
+		adapter.store.LevelTextureAnimations(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
+			adapter.onLevelTextureAnimations, adapter.context.simpleStoreFailure("LevelTextureAnimations"))
 		adapter.store.LevelObjects(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
 			adapter.onLevelObjects, adapter.context.simpleStoreFailure("LevelObjects"))
 		adapter.store.LevelSurveillanceObjects(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), storeLevelID,
@@ -195,6 +201,42 @@ func (adapter *LevelAdapter) OnLevelTexturesChanged(callback func()) {
 func (adapter *LevelAdapter) RequestLevelTexturesChange(textureIDs []int) {
 	adapter.store.SetLevelTextures(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.ID(),
 		textureIDs, adapter.onLevelTextures, adapter.context.simpleStoreFailure("SetLevelTextures"))
+}
+
+func (adapter *LevelAdapter) onLevelTextureAnimations(animations []model.TextureAnimation) {
+	count := len(animations)
+	groups := make([]*LevelTextureAnimationGroup, count)
+	for index, animation := range animations {
+		group := newLevelTextureAnimationGroup(index)
+		groups[index] = group
+		group.properties = animation
+	}
+	adapter.levelTextureAnimationGroups.set(&groups)
+}
+
+// OnLevelTextureAnimationsChanged registers for updates of the animation groups.
+func (adapter *LevelAdapter) OnLevelTextureAnimationsChanged(callback func()) {
+	adapter.levelTextureAnimationGroups.addObserver(callback)
+}
+
+func (adapter *LevelAdapter) levelTextureAnimationGroupList() []*LevelTextureAnimationGroup {
+	return *adapter.levelTextureAnimationGroups.get().(*[]*LevelTextureAnimationGroup)
+}
+
+// TextureAnimationGroupCount returns how many groups are available.
+func (adapter *LevelAdapter) TextureAnimationGroupCount() int {
+	return len(adapter.levelTextureAnimationGroupList())
+}
+
+// TextureAnimationGroup returns the group instance for given group ID.
+func (adapter *LevelAdapter) TextureAnimationGroup(id int) *LevelTextureAnimationGroup {
+	return adapter.levelTextureAnimationGroupList()[id]
+}
+
+// RequestLevelTextureAnimationGroupChange requests the change properties of a texture animation group.
+func (adapter *LevelAdapter) RequestLevelTextureAnimationGroupChange(id int, properties model.TextureAnimation) {
+	adapter.store.SetLevelTextureAnimation(adapter.context.ActiveProjectID(), adapter.context.ActiveArchiveID(), adapter.ID(),
+		id, properties, adapter.onLevelTextureAnimations, adapter.context.simpleStoreFailure("SetLevelTextureAnimation"))
 }
 
 func (adapter *LevelAdapter) levelObjectsMap() map[int]*LevelObject {
