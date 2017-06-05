@@ -39,3 +39,13 @@ func (texture *GameTexture) AnimationGroup() int {
 func (texture *GameTexture) AnimationIndex() int {
 	return *texture.properties.AnimationIndex
 }
+
+// Name returns the name of the texture in given language.
+func (texture *GameTexture) Name(language int) string {
+	return *texture.properties.Name[language]
+}
+
+// UseText returns the usage text of the texture in given language.
+func (texture *GameTexture) UseText(language int) string {
+	return *texture.properties.CantBeUsed[language]
+}

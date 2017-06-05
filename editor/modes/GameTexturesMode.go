@@ -37,6 +37,14 @@ type GameTexturesMode struct {
 	animationGroupSlider *controls.Slider
 	animationIndexLabel  *controls.Label
 	animationIndexSlider *controls.Slider
+
+	languageLabel *controls.Label
+	languageBox   *controls.ComboBox
+	languageIndex int
+	nameTitle     *controls.Label
+	nameValue     *controls.Label
+	useTextTitle  *controls.Label
+	useTextValue  *controls.Label
 }
 
 // NewGameTexturesMode returns a new instance.
@@ -51,7 +59,7 @@ func NewGameTexturesMode(context Context, parent *ui.Area) *GameTexturesMode {
 		builder.SetParent(parent)
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0))
 		builder.SetTop(ui.NewOffsetAnchor(parent.Top(), 0))
-		builder.SetRight(ui.NewRelativeAnchor(parent.Left(), parent.Right(), 0.66))
+		builder.SetRight(ui.NewRelativeAnchor(parent.Left(), parent.Right(), 0.5))
 		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0))
 		builder.SetVisible(false)
 		builder.OnRender(func(area *ui.Area) {
@@ -82,6 +90,15 @@ func NewGameTexturesMode(context Context, parent *ui.Area) *GameTexturesMode {
 				})
 		}
 		mode.propertiesHeader = panelBuilder.addTitle("Properties")
+		{
+			mode.languageLabel, mode.languageBox = panelBuilder.addComboProperty("Language", mode.onLanguageChanged)
+			items := []controls.ComboBoxItem{&enumItem{0, "STD"}, &enumItem{1, "FRA"}, &enumItem{2, "GER"}}
+			mode.languageBox.SetItems(items)
+			mode.languageBox.SetSelectedItem(items[0])
+
+			mode.nameTitle, mode.nameValue = panelBuilder.addInfo("Name")
+			mode.useTextTitle, mode.useTextValue = panelBuilder.addInfo("Use Text")
+		}
 		{
 			mode.climbableLabel, mode.climbableBox = panelBuilder.addComboProperty("Climbable", mode.onClimbableChanged)
 			mode.climbableItems = []controls.ComboBoxItem{&enumItem{0, "No"}, &enumItem{1, "Yes"}}
@@ -139,6 +156,7 @@ func (mode *GameTexturesMode) onTextureSelected(id int) {
 	mode.transparencyControlBox.SetSelectedItem(mode.transparencyControlItems[texture.TransparencyControl()])
 	mode.animationGroupSlider.SetValue(int64(texture.AnimationGroup()))
 	mode.animationIndexSlider.SetValue(int64(texture.AnimationIndex()))
+	mode.updateTextureText()
 }
 
 func (mode *GameTexturesMode) requestTexturePropertiesChange(modifier func(*dataModel.TextureProperties)) {
@@ -148,6 +166,26 @@ func (mode *GameTexturesMode) requestTexturePropertiesChange(modifier func(*data
 		modifier(&properties)
 		mode.textureAdapter.RequestTexturePropertiesChange(mode.selectedTextureID, &properties)
 	}
+}
+
+func (mode *GameTexturesMode) onLanguageChanged(boxItem controls.ComboBoxItem) {
+	item := boxItem.(*enumItem)
+	mode.languageIndex = int(item.value)
+	mode.updateTextureText()
+}
+
+func (mode *GameTexturesMode) updateTextureText() {
+	name := ""
+	useText := ""
+
+	if mode.selectedTextureID >= 0 {
+		texture := mode.textureAdapter.GameTexture(mode.selectedTextureID)
+
+		name = texture.Name(mode.languageIndex)
+		useText = texture.UseText(mode.languageIndex)
+	}
+	mode.nameValue.SetText(name)
+	mode.useTextValue.SetText(useText)
 }
 
 func (mode *GameTexturesMode) onClimbableChanged(boxItem controls.ComboBoxItem) {
