@@ -25,13 +25,14 @@ type rootArea struct {
 	modeBox      *controls.ComboBox
 	messageLabel *controls.Label
 
-	welcomeMode      *modeSelector
-	levelControlMode *modeSelector
-	levelMapMode     *modeSelector
-	levelObjectsMode *modeSelector
-	gameObjectsMode  *modeSelector
-	gameTexturesMode *modeSelector
-	allModes         []*modeSelector
+	welcomeMode            *modeSelector
+	levelControlMode       *modeSelector
+	levelMapMode           *modeSelector
+	levelObjectsMode       *modeSelector
+	gameObjectsMode        *modeSelector
+	gameTexturesMode       *modeSelector
+	electronicMessagesMode *modeSelector
+	allModes               []*modeSelector
 }
 
 func newRootArea(context modes.Context) *ui.Area {
@@ -70,6 +71,7 @@ func newRootArea(context modes.Context) *ui.Area {
 	root.levelControlMode = root.addMode(modes.NewLevelControlMode(context, root.modeArea, mapDisplay), "Level Control")
 	root.levelMapMode = root.addMode(modes.NewLevelMapMode(context, root.modeArea, mapDisplay), "Level Map")
 	root.levelObjectsMode = root.addMode(modes.NewLevelObjectsMode(context, root.modeArea, mapDisplay), "Level Objects")
+	root.electronicMessagesMode = root.addMode(modes.NewElectronicMessagesMode(context, root.modeArea), "Electronic Messages")
 	root.gameObjectsMode = root.addMode(modes.NewGameObjectsMode(context, root.modeArea), "Game Objects")
 	root.gameTexturesMode = root.addMode(modes.NewGameTexturesMode(context, root.modeArea), "Game Textures")
 

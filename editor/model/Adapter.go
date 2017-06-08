@@ -19,9 +19,10 @@ type Adapter struct {
 
 	availableLevelIDs *observable
 
-	palette        *observable
-	textureAdapter *TextureAdapter
-	objectsAdapter *ObjectsAdapter
+	palette            *observable
+	textureAdapter     *TextureAdapter
+	objectsAdapter     *ObjectsAdapter
+	electronicMessages *ElectronicMessageAdapter
 }
 
 // NewAdapter returns a new model adapter.
@@ -42,6 +43,7 @@ func NewAdapter(store model.DataStore) *Adapter {
 	adapter.textureAdapter = newTextureAdapter(adapter, store)
 	adapter.objectsAdapter = newObjectsAdapter(adapter, store)
 	adapter.activeLevel = newLevelAdapter(adapter, store, adapter.objectsAdapter)
+	adapter.electronicMessages = newElectronicMessageAdapter(adapter, store)
 	adapter.palette.set(&[256]model.Color{})
 
 	return adapter
@@ -113,6 +115,11 @@ func (adapter *Adapter) TextureAdapter() *TextureAdapter {
 // ObjectsAdapter returns the adapter for game objects.
 func (adapter *Adapter) ObjectsAdapter() *ObjectsAdapter {
 	return adapter.objectsAdapter
+}
+
+// ElectronicMessageAdapter returns the adapter for electronic messages.
+func (adapter *Adapter) ElectronicMessageAdapter() *ElectronicMessageAdapter {
+	return adapter.electronicMessages
 }
 
 // ActiveArchiveID returns the identifier of the current archive.
