@@ -66,3 +66,8 @@ func (adapter *ElectronicMessageAdapter) onMessageData(messageType model.Electro
 func (adapter *ElectronicMessageAdapter) VerboseText(language int) string {
 	return safeString(adapter.messageData().VerboseText[language])
 }
+
+// TerseText returns the text in short form of the message.
+func (adapter *ElectronicMessageAdapter) TerseText(language int) string {
+	return safeString(adapter.messageData().TerseText[language])
+}
