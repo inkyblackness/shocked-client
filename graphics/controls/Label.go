@@ -14,6 +14,9 @@ type BitmapTexturizer func(*graphics.Bitmap) *graphics.BitmapTexture
 type Label struct {
 	area *ui.Area
 
+	fitToWidth      bool
+	lastWidth       float32
+	text            string
 	textPainter     graphics.TextPainter
 	texturizer      BitmapTexturizer
 	textureRenderer graphics.TextureRenderer
@@ -37,12 +40,20 @@ func (label *Label) Dispose() {
 
 // SetText updates the current label text.
 func (label *Label) SetText(text string) {
+	label.text = text
+	label.updateTextBitmap()
+}
+
+func (label *Label) updateTextBitmap() {
 	if label.texture != nil {
 		label.texture.Dispose()
 		label.texture = nil
 	}
-
-	label.bitmap = label.textPainter.Paint(text)
+	widthLimit := 0
+	if label.fitToWidth {
+		widthLimit = int(label.lastWidth / label.scale)
+	}
+	label.bitmap = label.textPainter.Paint(label.text, widthLimit)
 	label.texture = label.texturizer(&label.bitmap.Bitmap)
 }
 
@@ -52,14 +63,22 @@ func (label *Label) onRender(area *ui.Area) {
 	fromTop := float32(0.0)
 	fromRight := u
 	fromBottom := v
-	textWidth, textHeight := label.texture.Size()
-	scaledWidth, scaledHeight := textWidth*label.scale, textHeight*label.scale
 	areaLeft := area.Left().Value()
 	areaRight := area.Right().Value()
 	areaWidth := areaRight - areaLeft
+	if label.fitToWidth && ((areaWidth - 2) != label.lastWidth) {
+		if areaWidth > 2 {
+			label.lastWidth = areaWidth - 2
+		} else {
+			label.lastWidth = 0
+		}
+		label.updateTextBitmap()
+	}
 	areaTop := area.Top().Value()
 	areaBottom := area.Bottom().Value()
 	areaHeight := areaBottom - areaTop
+	textWidth, textHeight := label.texture.Size()
+	scaledWidth, scaledHeight := textWidth*label.scale, textHeight*label.scale
 
 	toLeft := areaLeft + label.horizontalAligner(areaWidth, scaledWidth)
 	toTop := areaTop + label.verticalAligner(areaHeight, scaledHeight)

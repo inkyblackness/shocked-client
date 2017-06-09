@@ -13,6 +13,7 @@ type LabelBuilder struct {
 	texturizer      BitmapTexturizer
 	textureRenderer graphics.TextureRenderer
 
+	fitToWidth        bool
 	scale             float32
 	horizontalAligner Aligner
 	verticalAligner   Aligner
@@ -39,6 +40,7 @@ func (builder *LabelBuilder) Build() *Label {
 		textPainter:       builder.textPainter,
 		texturizer:        builder.texturizer,
 		textureRenderer:   builder.textureRenderer,
+		fitToWidth:        builder.fitToWidth,
 		scale:             builder.scale,
 		horizontalAligner: builder.horizontalAligner,
 		verticalAligner:   builder.verticalAligner}
@@ -95,5 +97,11 @@ func (builder *LabelBuilder) AlignedHorizontallyBy(aligner Aligner) *LabelBuilde
 // AlignedVerticallyBy sets the aligner for the vertical axis. Default: Center.
 func (builder *LabelBuilder) AlignedVerticallyBy(aligner Aligner) *LabelBuilder {
 	builder.verticalAligner = aligner
+	return builder
+}
+
+// SetFitToWidth has the label always fit its text into the width.
+func (builder *LabelBuilder) SetFitToWidth() *LabelBuilder {
+	builder.fitToWidth = true
 	return builder
 }
