@@ -84,8 +84,9 @@ func (painter *bitmapTextPainter) mapCharactersToIndex(text string, widthLimit i
 		for _, charIndexByte := range encoded {
 			charIndex := int(charIndexByte)
 			if (charIndex >= painter.font.FirstCharacter) && (charIndex < painter.lastCharacterIndex) {
-				result.indices = append(result.indices, charIndex-painter.font.FirstCharacter)
-				result.totalSize += painter.font.GlyphXOffsets[charIndex+1] - painter.font.GlyphXOffsets[charIndex]
+				offsetIndex := charIndex - painter.font.FirstCharacter
+				result.indices = append(result.indices, offsetIndex)
+				result.totalSize += painter.font.GlyphXOffsets[offsetIndex+1] - painter.font.GlyphXOffsets[offsetIndex]
 			}
 		}
 		return
