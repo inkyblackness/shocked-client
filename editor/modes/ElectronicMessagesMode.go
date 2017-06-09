@@ -41,10 +41,14 @@ type ElectronicMessagesMode struct {
 	variantLabel  *controls.Label
 	variantBox    *controls.ComboBox
 	variantTerse  bool
+	titleLabel    *controls.Label
+	titleValue    *controls.Label
 
 	displayArea *ui.Area
 
-	textValue *controls.Label
+	textValue    *controls.Label
+	subjectValue *controls.Label
+	senderValue  *controls.Label
 }
 
 // NewElectronicMessagesMode returns a new instance.
@@ -119,6 +123,7 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 			mode.variantBox.SetItems(items)
 			mode.variantBox.SetSelectedItem(items[0])
 		}
+		mode.titleLabel, mode.titleValue = panelBuilder.addInfo("Title")
 	}
 	{
 		builder := ui.NewAreaBuilder()
@@ -152,6 +157,32 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		labelBuilder.AlignedVerticallyBy(controls.LeftAligner)
 		labelBuilder.SetFitToWidth()
 		mode.textValue = labelBuilder.Build()
+	}
+	{
+		labelBuilder := mode.context.ControlFactory().ForLabel()
+
+		labelBuilder.SetParent(mode.displayArea)
+		labelBuilder.SetTop(ui.NewOffsetAnchor(mode.displayArea.Top(), 5))
+		labelBuilder.SetBottom(ui.NewOffsetAnchor(mode.displayArea.Bottom(), -5))
+		labelBuilder.SetLeft(ui.NewOffsetAnchor(mode.displayArea.Left(), 5))
+		labelBuilder.SetRight(ui.NewOffsetAnchor(ui.NewRelativeAnchor(mode.displayArea.Left(), mode.displayArea.Right(), 0.25), -5))
+		labelBuilder.AlignedHorizontallyBy(controls.LeftAligner)
+		labelBuilder.AlignedVerticallyBy(controls.LeftAligner)
+		labelBuilder.SetFitToWidth()
+		mode.senderValue = labelBuilder.Build()
+	}
+	{
+		labelBuilder := mode.context.ControlFactory().ForLabel()
+
+		labelBuilder.SetParent(mode.displayArea)
+		labelBuilder.SetTop(ui.NewOffsetAnchor(mode.displayArea.Top(), 5))
+		labelBuilder.SetBottom(ui.NewOffsetAnchor(mode.displayArea.Bottom(), -5))
+		labelBuilder.SetLeft(ui.NewOffsetAnchor(mode.displayArea.Left(), 5))
+		labelBuilder.SetRight(ui.NewOffsetAnchor(ui.NewRelativeAnchor(mode.displayArea.Left(), mode.displayArea.Right(), 0.25), -5))
+		labelBuilder.AlignedHorizontallyBy(controls.LeftAligner)
+		labelBuilder.AlignedVerticallyBy(controls.RightAligner)
+		labelBuilder.SetFitToWidth()
+		mode.subjectValue = labelBuilder.Build()
 	}
 	mode.messageAdapter.OnMessageDataChanged(mode.onMessageDataChanged)
 
@@ -200,4 +231,8 @@ func (mode *ElectronicMessagesMode) updateMessageText() {
 		text = mode.messageAdapter.VerboseText(mode.languageIndex)
 	}
 	mode.textValue.SetText(text)
+
+	mode.subjectValue.SetText(mode.messageAdapter.Subject(mode.languageIndex))
+	mode.titleValue.SetText(mode.messageAdapter.Title(mode.languageIndex))
+	mode.senderValue.SetText(mode.messageAdapter.Sender(mode.languageIndex))
 }

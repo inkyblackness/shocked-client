@@ -62,6 +62,21 @@ func (adapter *ElectronicMessageAdapter) onMessageData(messageType model.Electro
 	}
 }
 
+// Title returns the title of the message.
+func (adapter *ElectronicMessageAdapter) Title(language int) string {
+	return safeString(adapter.messageData().Title[language])
+}
+
+// Sender returns the sender of the message.
+func (adapter *ElectronicMessageAdapter) Sender(language int) string {
+	return safeString(adapter.messageData().Sender[language])
+}
+
+// Subject returns the subject of the message.
+func (adapter *ElectronicMessageAdapter) Subject(language int) string {
+	return safeString(adapter.messageData().Subject[language])
+}
+
 // VerboseText returns the text in long form of the message.
 func (adapter *ElectronicMessageAdapter) VerboseText(language int) string {
 	return safeString(adapter.messageData().VerboseText[language])
