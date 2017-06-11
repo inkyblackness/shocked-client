@@ -6,3 +6,11 @@ func safeString(value *string) (result string) {
 	}
 	return
 }
+
+func safeInt(value *int, defaultValue int) (result int) {
+	result = defaultValue
+	if value != nil {
+		result = *value
+	}
+	return
+}

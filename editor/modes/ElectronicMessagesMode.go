@@ -35,14 +35,25 @@ type ElectronicMessagesMode struct {
 
 	propertiesHeader *controls.Label
 
-	languageLabel *controls.Label
-	languageBox   *controls.ComboBox
-	languageIndex int
-	variantLabel  *controls.Label
-	variantBox    *controls.ComboBox
-	variantTerse  bool
-	titleLabel    *controls.Label
-	titleValue    *controls.Label
+	languageLabel     *controls.Label
+	languageBox       *controls.ComboBox
+	languageIndex     int
+	variantLabel      *controls.Label
+	variantBox        *controls.ComboBox
+	variantTerse      bool
+	titleLabel        *controls.Label
+	titleValue        *controls.Label
+	nextMessageLabel  *controls.Label
+	nextMessageValue  *controls.Slider
+	isInterruptLabel  *controls.Label
+	isInterruptBox    *controls.ComboBox
+	isInterruptItems  map[bool]controls.ComboBoxItem
+	colorLabel        *controls.Label
+	colorValue        *controls.Slider
+	leftDisplayLabel  *controls.Label
+	leftDisplayValue  *controls.Slider
+	rightDisplayLabel *controls.Label
+	rightDisplayValue *controls.Slider
 
 	displayArea *ui.Area
 
@@ -57,7 +68,8 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		context:            context,
 		messageAdapter:     context.ModelAdapter().ElectronicMessageAdapter(),
 		messageTypeByIndex: make(map[uint32]dataModel.ElectronicMessageType),
-		selectedMessageID:  -1}
+		selectedMessageID:  -1,
+		isInterruptItems:   make(map[bool]controls.ComboBoxItem)}
 
 	indexByMessageType := make(map[dataModel.ElectronicMessageType]uint32)
 	for index, messageType := range dataModel.ElectronicMessageTypes() {
@@ -124,6 +136,24 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 			mode.variantBox.SetSelectedItem(items[0])
 		}
 		mode.titleLabel, mode.titleValue = panelBuilder.addInfo("Title")
+		mode.nextMessageLabel, mode.nextMessageValue = panelBuilder.addSliderProperty("Next Message", mode.onNextMessageChanged)
+		mode.nextMessageValue.SetRange(-1, 0xFF)
+		{
+			mode.isInterruptLabel, mode.isInterruptBox = panelBuilder.addComboProperty("Is Interrupt", mode.onIsInterruptChanged)
+			items := []controls.ComboBoxItem{
+				&enumItem{0, "false"},
+				&enumItem{1, "true"}}
+			mode.isInterruptItems[false] = items[0]
+			mode.isInterruptItems[true] = items[1]
+			mode.isInterruptBox.SetItems(items)
+			mode.isInterruptBox.SetSelectedItem(items[0])
+		}
+		mode.colorLabel, mode.colorValue = panelBuilder.addSliderProperty("Color Index", mode.onColorIndexChanged)
+		mode.colorValue.SetRange(-1, 0xFF)
+		mode.leftDisplayLabel, mode.leftDisplayValue = panelBuilder.addSliderProperty("Left Display", mode.onLeftDisplayChanged)
+		mode.leftDisplayValue.SetRange(-1, 0xFF)
+		mode.rightDisplayLabel, mode.rightDisplayValue = panelBuilder.addSliderProperty("Right Display", mode.onRightDisplayChanged)
+		mode.rightDisplayValue.SetRange(-1, 0xFF)
 	}
 	{
 		builder := ui.NewAreaBuilder()
@@ -194,10 +224,6 @@ func (mode *ElectronicMessagesMode) SetActive(active bool) {
 	mode.area.SetVisible(active)
 }
 
-func (mode *ElectronicMessagesMode) onMessageDataChanged() {
-	mode.updateMessageText()
-}
-
 func (mode *ElectronicMessagesMode) onMessageTypeChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
 	mode.messageType = mode.messageTypeByIndex[item.value]
@@ -209,6 +235,16 @@ func (mode *ElectronicMessagesMode) onMessageTypeChanged(boxItem controls.ComboB
 func (mode *ElectronicMessagesMode) onMessageSelected(id int) {
 	mode.selectedMessageID = id
 	mode.messageAdapter.RequestMessage(mode.messageType, id)
+}
+
+func (mode *ElectronicMessagesMode) onMessageDataChanged() {
+	mode.updateMessageText()
+
+	mode.nextMessageValue.SetValue(int64(mode.messageAdapter.NextMessage()))
+	mode.isInterruptBox.SetSelectedItem(mode.isInterruptItems[mode.messageAdapter.IsInterrupt()])
+	mode.colorValue.SetValue(int64(mode.messageAdapter.ColorIndex()))
+	mode.leftDisplayValue.SetValue(int64(mode.messageAdapter.LeftDisplay()))
+	mode.rightDisplayValue.SetValue(int64(mode.messageAdapter.RightDisplay()))
 }
 
 func (mode *ElectronicMessagesMode) onLanguageChanged(boxItem controls.ComboBoxItem) {
@@ -235,4 +271,41 @@ func (mode *ElectronicMessagesMode) updateMessageText() {
 	mode.subjectValue.SetText(mode.messageAdapter.Subject(mode.languageIndex))
 	mode.titleValue.SetText(mode.messageAdapter.Title(mode.languageIndex))
 	mode.senderValue.SetText(mode.messageAdapter.Sender(mode.languageIndex))
+}
+
+func (mode *ElectronicMessagesMode) updateMessageData(modifier func(*dataModel.ElectronicMessage)) {
+	var properties dataModel.ElectronicMessage
+	modifier(&properties)
+	mode.messageAdapter.RequestMessageChange(properties)
+}
+
+func (mode *ElectronicMessagesMode) onNextMessageChanged(newValue int64) {
+	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		properties.NextMessage = intAsPointer(int(newValue))
+	})
+}
+
+func (mode *ElectronicMessagesMode) onIsInterruptChanged(boxItem controls.ComboBoxItem) {
+	item := boxItem.(*enumItem)
+	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		properties.IsInterrupt = boolAsPointer(item.value != 0)
+	})
+}
+
+func (mode *ElectronicMessagesMode) onColorIndexChanged(newValue int64) {
+	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		properties.ColorIndex = intAsPointer(int(newValue))
+	})
+}
+
+func (mode *ElectronicMessagesMode) onLeftDisplayChanged(newValue int64) {
+	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		properties.LeftDisplay = intAsPointer(int(newValue))
+	})
+}
+
+func (mode *ElectronicMessagesMode) onRightDisplayChanged(newValue int64) {
+	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		properties.RightDisplay = intAsPointer(int(newValue))
+	})
 }

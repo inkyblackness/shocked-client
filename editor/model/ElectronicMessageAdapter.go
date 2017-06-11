@@ -46,7 +46,7 @@ func (adapter *ElectronicMessageAdapter) ID() int {
 	return adapter.id
 }
 
-// RequestMessage requests to load the message data of specified ID
+// RequestMessage requests to load the message data of specified ID.
 func (adapter *ElectronicMessageAdapter) RequestMessage(messageType model.ElectronicMessageType, id int) {
 	adapter.clear()
 	adapter.id = id
@@ -54,6 +54,16 @@ func (adapter *ElectronicMessageAdapter) RequestMessage(messageType model.Electr
 	adapter.store.ElectronicMessage(adapter.context.ActiveProjectID(), messageType, id,
 		func(message model.ElectronicMessage) { adapter.onMessageData(messageType, id, message) },
 		adapter.context.simpleStoreFailure("ElectronicMessage"))
+}
+
+// RequestMessageChange requests to change the properties of the current message.
+func (adapter *ElectronicMessageAdapter) RequestMessageChange(properties model.ElectronicMessage) {
+	if adapter.id >= 0 {
+		adapter.store.SetElectronicMessage(adapter.context.ActiveProjectID(), adapter.messageType, adapter.id,
+			properties,
+			func(message model.ElectronicMessage) { adapter.onMessageData(adapter.messageType, adapter.id, message) },
+			adapter.context.simpleStoreFailure("SetElectronicMessage"))
+	}
 }
 
 func (adapter *ElectronicMessageAdapter) onMessageData(messageType model.ElectronicMessageType, id int, message model.ElectronicMessage) {
@@ -85,4 +95,30 @@ func (adapter *ElectronicMessageAdapter) VerboseText(language int) string {
 // TerseText returns the text in short form of the message.
 func (adapter *ElectronicMessageAdapter) TerseText(language int) string {
 	return safeString(adapter.messageData().TerseText[language])
+}
+
+// NextMessage returns the identifier of an interrupting message. Or -1 if no interrupt.
+func (adapter *ElectronicMessageAdapter) NextMessage() int {
+	return safeInt(adapter.messageData().NextMessage, -1)
+}
+
+// IsInterrupt returns true if this message is an interrupt of another.
+func (adapter *ElectronicMessageAdapter) IsInterrupt() bool {
+	var isInterrupt = adapter.messageData().IsInterrupt
+	return (isInterrupt != nil) && *isInterrupt
+}
+
+// ColorIndex returns the color index for the header text. -1 for default color.
+func (adapter *ElectronicMessageAdapter) ColorIndex() int {
+	return safeInt(adapter.messageData().ColorIndex, -1)
+}
+
+// LeftDisplay returns the display index for the left side. -1 for no display.
+func (adapter *ElectronicMessageAdapter) LeftDisplay() int {
+	return safeInt(adapter.messageData().LeftDisplay, -1)
+}
+
+// RightDisplay returns the display index for the right side. -1 for no display.
+func (adapter *ElectronicMessageAdapter) RightDisplay() int {
+	return safeInt(adapter.messageData().RightDisplay, -1)
 }
