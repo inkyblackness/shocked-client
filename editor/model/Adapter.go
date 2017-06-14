@@ -20,6 +20,7 @@ type Adapter struct {
 	availableLevelIDs *observable
 
 	palette            *observable
+	bitmapsAdapter     *BitmapsAdapter
 	textureAdapter     *TextureAdapter
 	objectsAdapter     *ObjectsAdapter
 	electronicMessages *ElectronicMessageAdapter
@@ -40,6 +41,7 @@ func NewAdapter(store model.DataStore) *Adapter {
 		palette: newObservable()}
 
 	adapter.message.set("")
+	adapter.bitmapsAdapter = newBitmapsAdapter(adapter, store)
 	adapter.textureAdapter = newTextureAdapter(adapter, store)
 	adapter.objectsAdapter = newObjectsAdapter(adapter, store)
 	adapter.activeLevel = newLevelAdapter(adapter, store, adapter.objectsAdapter)
@@ -77,6 +79,7 @@ func (adapter *Adapter) ActiveProjectID() string {
 
 // RequestProject sets the project to work on.
 func (adapter *Adapter) RequestProject(projectID string) {
+	adapter.bitmapsAdapter.clear()
 	adapter.textureAdapter.clear()
 	adapter.objectsAdapter.clear()
 	adapter.requestArchive("")
@@ -90,6 +93,7 @@ func (adapter *Adapter) RequestProject(projectID string) {
 			adapter.onGamePalette, adapter.simpleStoreFailure("Palette"))
 		adapter.objectsAdapter.refresh()
 		adapter.textureAdapter.refresh()
+		adapter.bitmapsAdapter.refresh()
 	}
 }
 
@@ -105,6 +109,11 @@ func (adapter *Adapter) GamePalette() *[256]model.Color {
 // OnGamePaletteChanged registers a callback for updates.
 func (adapter *Adapter) OnGamePaletteChanged(callback func()) {
 	adapter.palette.addObserver(callback)
+}
+
+// BitmapsAdapter returns the adapter for bitmaps.
+func (adapter *Adapter) BitmapsAdapter() *BitmapsAdapter {
+	return adapter.bitmapsAdapter
 }
 
 // TextureAdapter returns the adapter for textures.

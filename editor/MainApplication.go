@@ -42,6 +42,7 @@ type MainApplication struct {
 	rectRenderer       *graphics.RectangleRenderer
 	uiTextRenderer     *graphics.BitmapTextureRenderer
 
+	bitmaps              *graphics.BufferedTextureStore
 	worldTextures        map[dataModel.TextureSize]*graphics.BufferedTextureStore
 	gameObjectIcons      *graphics.BufferedTextureStore
 	worldPalette         *graphics.PaletteTexture
@@ -124,6 +125,7 @@ func (app *MainApplication) initResources() {
 	for _, size := range dataModel.TextureSizes() {
 		app.initWorldTextureBuffer(size)
 	}
+	app.initBitmaps()
 	app.initGameObjectIconsBuffer()
 	app.initWorldPalette()
 }
@@ -132,6 +134,13 @@ func (app *MainApplication) initWorldTextureBuffer(size dataModel.TextureSize) {
 	textureAdapter := app.modelAdapter.TextureAdapter()
 	app.worldTextures[size] = app.createTextureStore(textureAdapter.WorldTextures(size), func(keyAsInt int) {
 		textureAdapter.RequestWorldTextureBitmaps(keyAsInt)
+	})
+}
+
+func (app *MainApplication) initBitmaps() {
+	bitmapsAdapter := app.modelAdapter.BitmapsAdapter()
+	app.bitmaps = app.createTextureStore(bitmapsAdapter.Bitmaps(), func(keyAsInt int) {
+		bitmapsAdapter.RequestBitmap(dataModel.ResourceKeyFromInt(keyAsInt))
 	})
 }
 
@@ -319,6 +328,11 @@ func (app *MainApplication) WorldTextureStore(size dataModel.TextureSize) *graph
 // GameObjectIconsStore implements the graphics.Context interface.
 func (app *MainApplication) GameObjectIconsStore() *graphics.BufferedTextureStore {
 	return app.gameObjectIcons
+}
+
+// BitmapsStore implements the graphics.Context interface.
+func (app *MainApplication) BitmapsStore() *graphics.BufferedTextureStore {
+	return app.bitmaps
 }
 
 // ControlFactory implements the Context interface.

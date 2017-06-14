@@ -57,6 +57,8 @@ type ElectronicMessagesMode struct {
 
 	displayArea *ui.Area
 
+	leftDisplay  *controls.ImageDisplay
+	rightDisplay *controls.ImageDisplay
 	textValue    *controls.Label
 	subjectValue *controls.Label
 	senderValue  *controls.Label
@@ -93,7 +95,7 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0))
 		builder.SetTop(ui.NewOffsetAnchor(parent.Top(), 0))
 		builder.SetRight(ui.NewRelativeAnchor(parent.Left(), parent.Right(), 0.5))
-		builder.SetBottom(ui.NewRelativeAnchor(parent.Top(), parent.Bottom(), 0.5))
+		builder.SetBottom(ui.NewRelativeAnchor(parent.Top(), parent.Bottom(), 0.66))
 		builder.SetVisible(true)
 		builder.OnRender(func(area *ui.Area) {
 			context.ForGraphics().RectangleRenderer().Fill(
@@ -159,7 +161,7 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		builder := ui.NewAreaBuilder()
 		builder.SetParent(mode.area)
 		builder.SetLeft(ui.NewOffsetAnchor(parent.Left(), 0))
-		builder.SetTop(ui.NewRelativeAnchor(parent.Top(), parent.Bottom(), 0.5))
+		builder.SetTop(ui.NewRelativeAnchor(parent.Top(), parent.Bottom(), 0.66))
 		builder.SetRight(ui.NewOffsetAnchor(parent.Right(), 0))
 		builder.SetBottom(ui.NewOffsetAnchor(parent.Bottom(), 0))
 		builder.SetVisible(true)
@@ -187,6 +189,28 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		labelBuilder.AlignedVerticallyBy(controls.LeftAligner)
 		labelBuilder.SetFitToWidth()
 		mode.textValue = labelBuilder.Build()
+	}
+	{
+		builder := mode.context.ControlFactory().ForImageDisplay()
+
+		builder.SetParent(mode.displayArea)
+		builder.SetTop(ui.NewOffsetAnchor(mode.displayArea.Top(), 5))
+		builder.SetBottom(ui.NewOffsetAnchor(mode.displayArea.Bottom(), -5))
+		builder.SetLeft(ui.NewOffsetAnchor(mode.displayArea.Left(), 5))
+		builder.SetRight(ui.NewOffsetAnchor(ui.NewRelativeAnchor(mode.displayArea.Left(), mode.displayArea.Right(), 0.25), -5))
+		builder.WithProvider(mode.leftDisplayImage)
+		mode.leftDisplay = builder.Build()
+	}
+	{
+		builder := mode.context.ControlFactory().ForImageDisplay()
+
+		builder.SetParent(mode.displayArea)
+		builder.SetTop(ui.NewOffsetAnchor(mode.displayArea.Top(), 5))
+		builder.SetBottom(ui.NewOffsetAnchor(mode.displayArea.Bottom(), -5))
+		builder.SetLeft(ui.NewOffsetAnchor(ui.NewRelativeAnchor(mode.displayArea.Left(), mode.displayArea.Right(), 0.75), 5))
+		builder.SetRight(ui.NewOffsetAnchor(mode.displayArea.Right(), -5))
+		builder.WithProvider(mode.rightDisplayImage)
+		mode.rightDisplay = builder.Build()
 	}
 	{
 		labelBuilder := mode.context.ControlFactory().ForLabel()
@@ -222,6 +246,22 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 // SetActive implements the Mode interface.
 func (mode *ElectronicMessagesMode) SetActive(active bool) {
 	mode.area.SetVisible(active)
+}
+
+func (mode *ElectronicMessagesMode) leftDisplayImage() (texture *graphics.BitmapTexture) {
+	return mode.displayImage(mode.messageAdapter.LeftDisplay())
+}
+
+func (mode *ElectronicMessagesMode) rightDisplayImage() (texture *graphics.BitmapTexture) {
+	return mode.displayImage(mode.messageAdapter.RightDisplay())
+}
+
+func (mode *ElectronicMessagesMode) displayImage(index int) (texture *graphics.BitmapTexture) {
+	if index >= 0 {
+		resourceKey := dataModel.MakeResourceKey(dataModel.ResourceTypeMfdDataImages, uint16(index))
+		texture = mode.context.ForGraphics().BitmapsStore().Texture(graphics.TextureKeyFromInt(resourceKey.ToInt()))
+	}
+	return
 }
 
 func (mode *ElectronicMessagesMode) onMessageTypeChanged(boxItem controls.ComboBoxItem) {
