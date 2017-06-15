@@ -18,3 +18,9 @@ func boolAsPointer(value bool) (ptr *bool) {
 	*ptr = value
 	return
 }
+
+func stringAsPointer(value string) (ptr *string) {
+	ptr = new(string)
+	*ptr = value
+	return
+}

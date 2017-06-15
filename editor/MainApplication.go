@@ -90,6 +90,7 @@ func (app *MainApplication) setWindow(glWindow env.OpenGlWindow) {
 	glWindow.OnKey(app.onKey)
 	glWindow.OnModifier(app.onModifier)
 	glWindow.OnCharCallback(app.onChar)
+	glWindow.OnFileDropCallback(app.onFileDrop)
 }
 
 func (app *MainApplication) setDebugOpenGl() {
@@ -271,6 +272,13 @@ func (app *MainApplication) onMouseScroll(dx float32, dy float32) {
 
 func (app *MainApplication) onKey(key keys.Key, modifier keys.Modifier) {
 	app.keyModifier = modifier
+	if key == keys.KeyCopy {
+		app.rootArea.DispatchPositionalEvent(events.NewClipboardEvent(events.ClipboardCopyEventType,
+			app.mouseX, app.mouseY, app.glWindow.Clipboard()))
+	} else if key == keys.KeyPaste {
+		app.rootArea.DispatchPositionalEvent(events.NewClipboardEvent(events.ClipboardPasteEventType,
+			app.mouseX, app.mouseY, app.glWindow.Clipboard()))
+	}
 }
 
 func (app *MainApplication) onModifier(modifier keys.Modifier) {
@@ -278,6 +286,15 @@ func (app *MainApplication) onModifier(modifier keys.Modifier) {
 }
 
 func (app *MainApplication) onChar(char rune) {
+}
+
+func (app *MainApplication) onFileDrop(filePaths []string) {
+	app.sendFileDropEvent(filePaths)
+}
+
+func (app *MainApplication) sendFileDropEvent(filePaths []string) {
+	app.rootArea.DispatchPositionalEvent(events.NewFileDropEvent(
+		app.mouseX, app.mouseY, filePaths))
 }
 
 // ModelAdapter implements the Context interface.

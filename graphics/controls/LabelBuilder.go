@@ -3,6 +3,7 @@ package controls
 import (
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/ui"
+	"github.com/inkyblackness/shocked-client/ui/events"
 )
 
 // LabelBuilder creates new label controls.
@@ -46,6 +47,9 @@ func (builder *LabelBuilder) Build() *Label {
 		verticalAligner:   builder.verticalAligner}
 
 	builder.areaBuilder.OnRender(label.onRender)
+	builder.areaBuilder.OnEvent(events.ClipboardCopyEventType, label.onClipboardCopy)
+	builder.areaBuilder.OnEvent(events.ClipboardPasteEventType, label.onClipboardPaste)
+	builder.areaBuilder.OnEvent(events.FileDropEventType, label.onFileDrop)
 	label.area = builder.areaBuilder.Build()
 	label.SetText("")
 

@@ -138,6 +138,7 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 			mode.variantBox.SetSelectedItem(items[0])
 		}
 		mode.titleLabel, mode.titleValue = panelBuilder.addInfo("Title")
+		mode.titleValue.AllowTextChange(mode.onTitleChangeRequested)
 		mode.nextMessageLabel, mode.nextMessageValue = panelBuilder.addSliderProperty("Next Message", mode.onNextMessageChanged)
 		mode.nextMessageValue.SetRange(-1, 0xFF)
 		{
@@ -189,6 +190,7 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		labelBuilder.AlignedVerticallyBy(controls.LeftAligner)
 		labelBuilder.SetFitToWidth()
 		mode.textValue = labelBuilder.Build()
+		mode.textValue.AllowTextChange(mode.onMessageTextChangeRequested)
 	}
 	{
 		builder := mode.context.ControlFactory().ForImageDisplay()
@@ -217,19 +219,20 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 
 		labelBuilder.SetParent(mode.displayArea)
 		labelBuilder.SetTop(ui.NewOffsetAnchor(mode.displayArea.Top(), 5))
-		labelBuilder.SetBottom(ui.NewOffsetAnchor(mode.displayArea.Bottom(), -5))
+		labelBuilder.SetBottom(ui.NewRelativeAnchor(mode.displayArea.Top(), mode.displayArea.Bottom(), 0.5))
 		labelBuilder.SetLeft(ui.NewOffsetAnchor(mode.displayArea.Left(), 5))
 		labelBuilder.SetRight(ui.NewOffsetAnchor(ui.NewRelativeAnchor(mode.displayArea.Left(), mode.displayArea.Right(), 0.25), -5))
 		labelBuilder.AlignedHorizontallyBy(controls.LeftAligner)
 		labelBuilder.AlignedVerticallyBy(controls.LeftAligner)
 		labelBuilder.SetFitToWidth()
 		mode.senderValue = labelBuilder.Build()
+		mode.senderValue.AllowTextChange(mode.onSenderChangeRequested)
 	}
 	{
 		labelBuilder := mode.context.ControlFactory().ForLabel()
 
 		labelBuilder.SetParent(mode.displayArea)
-		labelBuilder.SetTop(ui.NewOffsetAnchor(mode.displayArea.Top(), 5))
+		labelBuilder.SetTop(ui.NewRelativeAnchor(mode.displayArea.Top(), mode.displayArea.Bottom(), 0.5))
 		labelBuilder.SetBottom(ui.NewOffsetAnchor(mode.displayArea.Bottom(), -5))
 		labelBuilder.SetLeft(ui.NewOffsetAnchor(mode.displayArea.Left(), 5))
 		labelBuilder.SetRight(ui.NewOffsetAnchor(ui.NewRelativeAnchor(mode.displayArea.Left(), mode.displayArea.Right(), 0.25), -5))
@@ -237,6 +240,7 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		labelBuilder.AlignedVerticallyBy(controls.RightAligner)
 		labelBuilder.SetFitToWidth()
 		mode.subjectValue = labelBuilder.Build()
+		mode.subjectValue.AllowTextChange(mode.onSubjectChangeRequested)
 	}
 	mode.messageAdapter.OnMessageDataChanged(mode.onMessageDataChanged)
 
@@ -347,5 +351,33 @@ func (mode *ElectronicMessagesMode) onLeftDisplayChanged(newValue int64) {
 func (mode *ElectronicMessagesMode) onRightDisplayChanged(newValue int64) {
 	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
 		properties.RightDisplay = intAsPointer(int(newValue))
+	})
+}
+
+func (mode *ElectronicMessagesMode) onMessageTextChangeRequested(newText string) {
+	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		if mode.variantTerse {
+			properties.TerseText[mode.languageIndex] = stringAsPointer(newText)
+		} else {
+			properties.VerboseText[mode.languageIndex] = stringAsPointer(newText)
+		}
+	})
+}
+
+func (mode *ElectronicMessagesMode) onSubjectChangeRequested(newText string) {
+	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		properties.Subject[mode.languageIndex] = stringAsPointer(newText)
+	})
+}
+
+func (mode *ElectronicMessagesMode) onSenderChangeRequested(newText string) {
+	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		properties.Sender[mode.languageIndex] = stringAsPointer(newText)
+	})
+}
+
+func (mode *ElectronicMessagesMode) onTitleChangeRequested(newText string) {
+	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		properties.Title[mode.languageIndex] = stringAsPointer(newText)
 	})
 }
