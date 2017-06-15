@@ -31,6 +31,7 @@ type rootArea struct {
 	levelObjectsMode       *modeSelector
 	gameObjectsMode        *modeSelector
 	gameTexturesMode       *modeSelector
+	bitmapsMode            *modeSelector
 	electronicMessagesMode *modeSelector
 	allModes               []*modeSelector
 }
@@ -74,6 +75,7 @@ func newRootArea(context modes.Context) *ui.Area {
 	root.electronicMessagesMode = root.addMode(modes.NewElectronicMessagesMode(context, root.modeArea), "Electronic Messages")
 	root.gameObjectsMode = root.addMode(modes.NewGameObjectsMode(context, root.modeArea), "Game Objects")
 	root.gameTexturesMode = root.addMode(modes.NewGameTexturesMode(context, root.modeArea), "Game Textures")
+	root.bitmapsMode = root.addMode(modes.NewGameBitmapsMode(context, root.modeArea), "Bitmaps")
 
 	boxMessageSeparator := ui.NewOffsetAnchor(topLine.Left(), 250)
 	{

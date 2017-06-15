@@ -33,6 +33,17 @@ func (adapter *BitmapsAdapter) clear() {
 func (adapter *BitmapsAdapter) refresh() {
 }
 
+// RequestBitmapChange will update the bitmap data for identified key.
+func (adapter *BitmapsAdapter) RequestBitmapChange(key model.ResourceKey, newBitmap *model.RawBitmap) {
+	adapter.store.SetBitmap(adapter.context.ActiveProjectID(), key, newBitmap,
+		func(resultKey model.ResourceKey, bmp *model.RawBitmap) {
+			adapter.bitmaps.setRawBitmap(key.ToInt(), bmp)
+		},
+		func() {
+			adapter.context.simpleStoreFailure(fmt.Sprintf("SetBitmap[%v]", key))()
+		})
+}
+
 // RequestBitmap will load the bitmap data for identified key.
 func (adapter *BitmapsAdapter) RequestBitmap(key model.ResourceKey) {
 	if !adapter.bitmapRequestsPending[key] {
@@ -44,7 +55,7 @@ func (adapter *BitmapsAdapter) RequestBitmap(key model.ResourceKey) {
 			},
 			func() {
 				adapter.bitmapRequestsPending[key] = false
-				adapter.context.simpleStoreFailure(fmt.Sprintf("bitmap[%v]", key))()
+				adapter.context.simpleStoreFailure(fmt.Sprintf("Bitmap[%v]", key))()
 			})
 	}
 }
