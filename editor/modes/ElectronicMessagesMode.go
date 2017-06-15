@@ -35,9 +35,10 @@ type ElectronicMessagesMode struct {
 
 	propertiesHeader *controls.Label
 
-	languageLabel     *controls.Label
-	languageBox       *controls.ComboBox
-	languageIndex     int
+	languageLabel *controls.Label
+	languageBox   *controls.ComboBox
+	language      dataModel.ResourceLanguage
+
 	variantLabel      *controls.Label
 	variantBox        *controls.ComboBox
 	variantTerse      bool
@@ -70,6 +71,7 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		context:            context,
 		messageAdapter:     context.ModelAdapter().ElectronicMessageAdapter(),
 		messageTypeByIndex: make(map[uint32]dataModel.ElectronicMessageType),
+		language:           dataModel.ResourceLanguageStandard,
 		selectedMessageID:  -1,
 		isInterruptItems:   make(map[bool]controls.ComboBoxItem)}
 
@@ -127,7 +129,10 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		mode.propertiesHeader = panelBuilder.addTitle("Properties")
 		{
 			mode.languageLabel, mode.languageBox = panelBuilder.addComboProperty("Language", mode.onLanguageChanged)
-			items := []controls.ComboBoxItem{&enumItem{0, "STD"}, &enumItem{1, "FRA"}, &enumItem{2, "GER"}}
+			items := []controls.ComboBoxItem{
+				&enumItem{uint32(dataModel.ResourceLanguageStandard), "STD"},
+				&enumItem{uint32(dataModel.ResourceLanguageFrench), "FRN"},
+				&enumItem{uint32(dataModel.ResourceLanguageGerman), "GER"}}
 			mode.languageBox.SetItems(items)
 			mode.languageBox.SetSelectedItem(items[0])
 		}
@@ -262,7 +267,7 @@ func (mode *ElectronicMessagesMode) rightDisplayImage() (texture *graphics.Bitma
 
 func (mode *ElectronicMessagesMode) displayImage(index int) (texture *graphics.BitmapTexture) {
 	if index >= 0 {
-		resourceKey := dataModel.MakeResourceKey(dataModel.ResourceTypeMfdDataImages, uint16(index))
+		resourceKey := dataModel.MakeLocalizedResourceKey(dataModel.ResourceTypeMfdDataImages, mode.language, uint16(index))
 		texture = mode.context.ForGraphics().BitmapsStore().Texture(graphics.TextureKeyFromInt(resourceKey.ToInt()))
 	}
 	return
@@ -293,7 +298,7 @@ func (mode *ElectronicMessagesMode) onMessageDataChanged() {
 
 func (mode *ElectronicMessagesMode) onLanguageChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.languageIndex = int(item.value)
+	mode.language = dataModel.ResourceLanguage(item.value)
 	mode.updateMessageText()
 }
 
@@ -304,17 +309,18 @@ func (mode *ElectronicMessagesMode) onVariantChanged(boxItem controls.ComboBoxIt
 }
 
 func (mode *ElectronicMessagesMode) updateMessageText() {
+	languageIndex := mode.language.ToIndex()
 	text := ""
 	if mode.variantTerse {
-		text = mode.messageAdapter.TerseText(mode.languageIndex)
+		text = mode.messageAdapter.TerseText(languageIndex)
 	} else {
-		text = mode.messageAdapter.VerboseText(mode.languageIndex)
+		text = mode.messageAdapter.VerboseText(languageIndex)
 	}
 	mode.textValue.SetText(text)
 
-	mode.subjectValue.SetText(mode.messageAdapter.Subject(mode.languageIndex))
-	mode.titleValue.SetText(mode.messageAdapter.Title(mode.languageIndex))
-	mode.senderValue.SetText(mode.messageAdapter.Sender(mode.languageIndex))
+	mode.subjectValue.SetText(mode.messageAdapter.Subject(languageIndex))
+	mode.titleValue.SetText(mode.messageAdapter.Title(languageIndex))
+	mode.senderValue.SetText(mode.messageAdapter.Sender(languageIndex))
 }
 
 func (mode *ElectronicMessagesMode) updateMessageData(modifier func(*dataModel.ElectronicMessage)) {
@@ -356,28 +362,32 @@ func (mode *ElectronicMessagesMode) onRightDisplayChanged(newValue int64) {
 
 func (mode *ElectronicMessagesMode) onMessageTextChangeRequested(newText string) {
 	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+		languageIndex := mode.language.ToIndex()
 		if mode.variantTerse {
-			properties.TerseText[mode.languageIndex] = stringAsPointer(newText)
+			properties.TerseText[languageIndex] = stringAsPointer(newText)
 		} else {
-			properties.VerboseText[mode.languageIndex] = stringAsPointer(newText)
+			properties.VerboseText[languageIndex] = stringAsPointer(newText)
 		}
 	})
 }
 
 func (mode *ElectronicMessagesMode) onSubjectChangeRequested(newText string) {
 	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
-		properties.Subject[mode.languageIndex] = stringAsPointer(newText)
+		languageIndex := mode.language.ToIndex()
+		properties.Subject[languageIndex] = stringAsPointer(newText)
 	})
 }
 
 func (mode *ElectronicMessagesMode) onSenderChangeRequested(newText string) {
 	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
-		properties.Sender[mode.languageIndex] = stringAsPointer(newText)
+		languageIndex := mode.language.ToIndex()
+		properties.Sender[languageIndex] = stringAsPointer(newText)
 	})
 }
 
 func (mode *ElectronicMessagesMode) onTitleChangeRequested(newText string) {
 	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
-		properties.Title[mode.languageIndex] = stringAsPointer(newText)
+		languageIndex := mode.language.ToIndex()
+		properties.Title[languageIndex] = stringAsPointer(newText)
 	})
 }

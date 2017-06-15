@@ -114,7 +114,7 @@ func NewGameTexturesMode(context Context, parent *ui.Area) *GameTexturesMode {
 		mode.propertiesHeader = panelBuilder.addTitle("Properties")
 		{
 			mode.languageLabel, mode.languageBox = panelBuilder.addComboProperty("Language", mode.onLanguageChanged)
-			items := []controls.ComboBoxItem{&enumItem{0, "STD"}, &enumItem{1, "FRA"}, &enumItem{2, "GER"}}
+			items := []controls.ComboBoxItem{&enumItem{0, "STD"}, &enumItem{1, "FRN"}, &enumItem{2, "GER"}}
 			mode.languageBox.SetItems(items)
 			mode.languageBox.SetSelectedItem(items[0])
 
