@@ -308,10 +308,10 @@ func (mode *GameTexturesMode) textureDropHandler(textureSize dataModel.TextureSi
 				defer file.Close()
 				img, _, err = image.Decode(file)
 				if err != nil {
-					mode.context.ModelAdapter().SetMessage(fmt.Sprintf("File <%v> has unknown image format\n", filePaths[0]))
+					mode.context.ModelAdapter().SetMessage(fmt.Sprintf("File <%v> has unknown image format", filePaths[0]))
 				}
 			} else {
-				mode.context.ModelAdapter().SetMessage(fmt.Sprintf("Could not open file <%v>\n", filePaths[0]))
+				mode.context.ModelAdapter().SetMessage(fmt.Sprintf("Could not open file <%v>", filePaths[0]))
 			}
 			if err == nil {
 				mode.setTextureBitmap(textureSize, img)
