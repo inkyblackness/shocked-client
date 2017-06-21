@@ -29,6 +29,7 @@ type MapDisplay struct {
 	background  *GridRenderable
 	mapGrid     *TileGridMapRenderable
 	textures    *TileTextureMapRenderable
+	slopeGrid   *TileSlopeMapRenderable
 	objects     *PlacedIconsRenderable
 
 	selectedTileAreas   []Area
@@ -90,6 +91,7 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 		id := display.levelAdapter.LevelTextureID(index)
 		return display.context.ForGraphics().WorldTextureStore(dataModel.TextureLarge).Texture(graphics.TextureKeyFromInt(id))
 	})
+	display.slopeGrid = NewTileSlopeMapRenderable(display.renderContext)
 	display.objects = NewPlacedIconsRenderable(display.renderContext, display.paletteTexture)
 
 	linkTileProperties := func(coord model.TileCoordinate) {
@@ -99,6 +101,7 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 			properties := tile.Properties()
 			display.mapGrid.SetTile(x, y, properties)
 			display.textures.SetTile(x, y, properties)
+			display.slopeGrid.SetTile(x, y, properties)
 		})
 	}
 
@@ -207,6 +210,7 @@ func (display *MapDisplay) render() {
 	if !display.levelAdapter.IsCyberspace() {
 		display.textures.Render()
 	}
+	display.slopeGrid.Render()
 	display.highlighter.Render(display.selectedTileAreas, graphics.RGBA(0.0, 0.8, 0.2, 0.5))
 	if display.highlightedTileArea != nil {
 		display.highlighter.Render([]Area{display.highlightedTileArea}, graphics.RGBA(0.0, 0.2, 0.8, 0.3))
