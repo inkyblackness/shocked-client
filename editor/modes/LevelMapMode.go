@@ -15,6 +15,15 @@ import (
 	dataModel "github.com/inkyblackness/shocked-model"
 )
 
+type coloringItem struct {
+	displayString string
+	colorQuery    display.ColorQuery
+}
+
+func (item *coloringItem) String() string {
+	return item.displayString
+}
+
 type textureViewItem struct {
 	displayString string
 	query         display.TextureIndexQuery
@@ -46,6 +55,10 @@ type LevelMapMode struct {
 	panelRight ui.Anchor
 
 	selectedTiles []model.TileCoordinate
+
+	coloringLabel *controls.Label
+	coloringBox   *controls.ComboBox
+	coloringItem  controls.ComboBoxItem
 
 	tileTypeLabel       *controls.Label
 	tileTypeBox         *controls.ComboBox
@@ -194,6 +207,16 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			unitValue := dataModel.HeightUnit(value)
 			unit = &unitValue
 			return unit
+		}
+
+		{
+			mode.coloringLabel, mode.coloringBox = panelBuilder.addComboProperty("Tile Coloring", mode.onTileColoringChanged)
+			items := []controls.ComboBoxItem{
+				&coloringItem{"None", nil},
+				&coloringItem{"Floor Shadow", display.FloorShadow},
+				&coloringItem{"Ceiling Shadow", display.CeilingShadow}}
+			mode.coloringBox.SetItems(items)
+			mode.coloringBox.SetSelectedItem(items[0])
 		}
 
 		mode.tileTypeLabel, mode.tileTypeBox = panelBuilder.addComboProperty("Tile Type", mode.onTilePropertyChangeRequested)
@@ -488,9 +511,11 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 func (mode *LevelMapMode) SetActive(active bool) {
 	if active {
 		mode.mapDisplay.SetSelectedTiles(mode.selectedTiles)
+		mode.onTileColoringChanged(mode.coloringItem)
 	} else {
 		mode.mapDisplay.ClearHighlightedTile()
 		mode.mapDisplay.SetSelectedTiles(nil)
+		mode.mapDisplay.SetTileColoring(nil)
 	}
 	mode.area.SetVisible(active)
 	mode.mapDisplay.SetVisible(active)
@@ -691,6 +716,16 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	setSlider(mode.ceilingShadowSlider, ceilingShadowUnifier)
 	setSlider(mode.floorColorSlider, floorColorUnifier)
 	setSlider(mode.ceilingColorSlider, ceilingColorUnifier)
+}
+
+func (mode *LevelMapMode) onTileColoringChanged(boxItem controls.ComboBoxItem) {
+	var colorQuery display.ColorQuery
+	mode.coloringItem = boxItem
+	if boxItem != nil {
+		item := boxItem.(*coloringItem)
+		colorQuery = item.colorQuery
+	}
+	mode.mapDisplay.SetTileColoring(colorQuery)
 }
 
 func (mode *LevelMapMode) changeSelectedTileProperties(modifier func(*dataModel.TileProperties)) {

@@ -29,6 +29,7 @@ type MapDisplay struct {
 	background  *GridRenderable
 	mapGrid     *TileGridMapRenderable
 	textures    *TileTextureMapRenderable
+	colors      *TileColorMapRenderable
 	slopeGrid   *TileSlopeMapRenderable
 	objects     *PlacedIconsRenderable
 
@@ -91,6 +92,7 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 		id := display.levelAdapter.LevelTextureID(index)
 		return display.context.ForGraphics().WorldTextureStore(dataModel.TextureLarge).Texture(graphics.TextureKeyFromInt(id))
 	})
+	display.colors = NewTileColorMapRenderable(display.renderContext)
 	display.slopeGrid = NewTileSlopeMapRenderable(display.renderContext)
 	display.objects = NewPlacedIconsRenderable(display.renderContext, display.paletteTexture)
 
@@ -101,6 +103,7 @@ func NewMapDisplay(context Context, parent *ui.Area) *MapDisplay {
 			properties := tile.Properties()
 			display.mapGrid.SetTile(x, y, properties)
 			display.textures.SetTile(x, y, properties)
+			display.colors.SetTile(x, y, properties)
 			display.slopeGrid.SetTile(x, y, properties)
 		})
 	}
@@ -195,6 +198,11 @@ func (display *MapDisplay) SetHighlightedObject(object *model.LevelObject) {
 	}
 }
 
+// SetTileColoring sets the query function for coloring tiles.
+func (display *MapDisplay) SetTileColoring(colorQuery ColorQuery) {
+	display.colors.SetColorQuery(colorQuery)
+}
+
 func (display *MapDisplay) iconForObject(object *model.LevelObject) *referringPlacedIcon {
 	return &referringPlacedIcon{
 		center: func() (float32, float32) { return object.Center() },
@@ -210,6 +218,7 @@ func (display *MapDisplay) render() {
 	if !display.levelAdapter.IsCyberspace() {
 		display.textures.Render()
 	}
+	display.colors.Render()
 	display.slopeGrid.Render()
 	display.highlighter.Render(display.selectedTileAreas, graphics.RGBA(0.0, 0.8, 0.2, 0.5))
 	if display.highlightedTileArea != nil {
