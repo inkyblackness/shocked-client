@@ -47,21 +47,18 @@ type LevelMapMode struct {
 
 	selectedTiles []model.TileCoordinate
 
-	tileTypeLabel      *controls.Label
-	tileTypeBox        *controls.ComboBox
-	tileTypeItems      map[dataModel.TileType]*tilePropertyItem
-	floorHeightLabel   *controls.Label
-	floorHeightBox     *controls.ComboBox
-	floorHeightItems   map[dataModel.HeightUnit]*tilePropertyItem
-	ceilingHeightLabel *controls.Label
-	ceilingHeightBox   *controls.ComboBox
-	ceilingHeightItems map[dataModel.HeightUnit]*tilePropertyItem
-	slopeHeightLabel   *controls.Label
-	slopeHeightBox     *controls.ComboBox
-	slopeHeightItems   map[dataModel.HeightUnit]*tilePropertyItem
-	slopeControlLabel  *controls.Label
-	slopeControlBox    *controls.ComboBox
-	slopeControlItems  map[dataModel.SlopeControl]*tilePropertyItem
+	tileTypeLabel       *controls.Label
+	tileTypeBox         *controls.ComboBox
+	tileTypeItems       map[dataModel.TileType]*tilePropertyItem
+	floorHeightLabel    *controls.Label
+	floorHeightSlider   *controls.Slider
+	ceilingHeightLabel  *controls.Label
+	ceilingHeightSlider *controls.Slider
+	slopeHeightLabel    *controls.Label
+	slopeHeightSlider   *controls.Slider
+	slopeControlLabel   *controls.Label
+	slopeControlBox     *controls.ComboBox
+	slopeControlItems   map[dataModel.SlopeControl]*tilePropertyItem
 
 	musicIndexLabel *controls.Label
 	musicIndexBox   *controls.ComboBox
@@ -83,8 +80,7 @@ type LevelMapMode struct {
 	wallTextureLabel             *controls.Label
 	wallTextureSelector          *controls.TextureSelector
 	wallTextureOffsetLabel       *controls.Label
-	wallTextureOffsetBox         *controls.ComboBox
-	wallTextureOffsetItems       map[dataModel.HeightUnit]*tilePropertyItem
+	wallTextureOffsetSlider      *controls.Slider
 	useAdjacentWallTextureLabel  *controls.Label
 	useAdjacentWallTextureBox    *controls.ComboBox
 	useAdjacentWallTextureItems  map[string]controls.ComboBoxItem
@@ -193,6 +189,13 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 	{
 		panelBuilder := newControlPanelBuilder(mode.panel, context.ControlFactory())
 
+		heightUnitAsPointer := func(value int) *dataModel.HeightUnit {
+			unit := new(dataModel.HeightUnit)
+			unitValue := dataModel.HeightUnit(value)
+			unit = &unitValue
+			return unit
+		}
+
 		mode.tileTypeLabel, mode.tileTypeBox = panelBuilder.addComboProperty("Tile Type", mode.onTilePropertyChangeRequested)
 		{
 			setter := func(properties *dataModel.TileProperties, value interface{}) {
@@ -211,29 +214,24 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			mode.tileTypeBox.SetItems(tileTypeItems)
 		}
 
-		mode.floorHeightLabel, mode.floorHeightBox = panelBuilder.addComboProperty("Floor Height", mode.onTilePropertyChangeRequested)
-		mode.ceilingHeightLabel, mode.ceilingHeightBox = panelBuilder.addComboProperty("Ceiling Height", mode.onTilePropertyChangeRequested)
-		mode.slopeHeightLabel, mode.slopeHeightBox = panelBuilder.addComboProperty("Slope Height", mode.onTilePropertyChangeRequested)
-
-		positiveHeight := func(value int) dataModel.HeightUnit { return dataModel.HeightUnit(value) }
-		negativeHeight := func(value int) dataModel.HeightUnit { return dataModel.HeightUnit(31 - value) }
-		setupHeightCollections := func(mapper func(int) dataModel.HeightUnit,
-			setter func(*dataModel.TileProperties, dataModel.HeightUnit)) ([]controls.ComboBoxItem, map[dataModel.HeightUnit]*tilePropertyItem) {
-			mappingSetter := func(properties *dataModel.TileProperties, value interface{}) {
-				height := mapper(int(value.(dataModel.HeightUnit)))
-				setter(properties, height)
-			}
-			itemsSlice := make([]controls.ComboBoxItem, 32)
-			heightItems := make(map[dataModel.HeightUnit]*tilePropertyItem)
-			for height := 0; height < 32; height++ {
-				heightUnit := mapper(height)
-				item := &tilePropertyItem{heightUnit, mappingSetter}
-				itemsSlice[height] = item
-				heightItems[dataModel.HeightUnit(height)] = item
-			}
-			heightItems[dataModel.HeightUnit(-1)] = &tilePropertyItem{"", nil}
-			return itemsSlice, heightItems
-		}
+		mode.floorHeightLabel, mode.floorHeightSlider = panelBuilder.addSliderProperty("Floor Height", func(newValue int64) {
+			mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
+				properties.FloorHeight = heightUnitAsPointer(int(newValue))
+			})
+		})
+		mode.floorHeightSlider.SetRange(0, 31)
+		mode.ceilingHeightLabel, mode.ceilingHeightSlider = panelBuilder.addSliderProperty("Ceiling Height", func(newValue int64) {
+			mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
+				properties.CeilingHeight = heightUnitAsPointer(31 - int(newValue))
+			})
+		})
+		mode.ceilingHeightSlider.SetRange(0, 31)
+		mode.slopeHeightLabel, mode.slopeHeightSlider = panelBuilder.addSliderProperty("Slope Height", func(newValue int64) {
+			mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
+				properties.SlopeHeight = heightUnitAsPointer(int(newValue))
+			})
+		})
+		mode.slopeHeightSlider.SetRange(0, 31)
 
 		setupBooleanCollections := func(
 			setter func(*dataModel.TileProperties, bool)) ([]controls.ComboBoxItem, map[string]controls.ComboBoxItem) {
@@ -251,28 +249,6 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			keyedItems["true"] = trueItem
 			keyedItems[""] = &tilePropertyItem{"", nil}
 			return itemsSlice, keyedItems
-		}
-
-		{
-			var floorHeightItemsSlice []controls.ComboBoxItem
-			var ceilingHeightItemsSlice []controls.ComboBoxItem
-			var slopeHeightItemsSlice []controls.ComboBoxItem
-			floorHeightItemsSlice, mode.floorHeightItems = setupHeightCollections(positiveHeight,
-				func(properties *dataModel.TileProperties, height dataModel.HeightUnit) {
-					properties.FloorHeight = &height
-				})
-			ceilingHeightItemsSlice, mode.ceilingHeightItems = setupHeightCollections(negativeHeight,
-				func(properties *dataModel.TileProperties, height dataModel.HeightUnit) {
-					properties.CeilingHeight = &height
-				})
-			slopeHeightItemsSlice, mode.slopeHeightItems = setupHeightCollections(positiveHeight,
-				func(properties *dataModel.TileProperties, height dataModel.HeightUnit) {
-					properties.SlopeHeight = &height
-				})
-
-			mode.floorHeightBox.SetItems(floorHeightItemsSlice)
-			mode.ceilingHeightBox.SetItems(ceilingHeightItemsSlice)
-			mode.slopeHeightBox.SetItems(slopeHeightItemsSlice)
 		}
 
 		mode.slopeControlLabel, mode.slopeControlBox = panelBuilder.addComboProperty("Slope Control", mode.onTilePropertyChangeRequested)
@@ -363,14 +339,13 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 				mode.wallTextureLabel, mode.wallTextureSelector = realWorldPanelBuilder.addTextureProperty("Wall Texture",
 					mode.levelTextures, mode.onWallTextureChanged)
 
-				var wallTextureOffsetItemsSlice []controls.ComboBoxItem
-				wallTextureOffsetItemsSlice, mode.wallTextureOffsetItems = setupHeightCollections(positiveHeight,
-					func(properties *dataModel.TileProperties, height dataModel.HeightUnit) {
-						properties.RealWorld.WallTextureOffset = &height
+				mode.wallTextureOffsetLabel, mode.wallTextureOffsetSlider =
+					realWorldPanelBuilder.addSliderProperty("Wall Texture Offset", func(newValue int64) {
+						mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
+							properties.RealWorld.WallTextureOffset = heightUnitAsPointer(int(newValue))
+						})
 					})
-
-				mode.wallTextureOffsetLabel, mode.wallTextureOffsetBox = realWorldPanelBuilder.addComboProperty("Wall Texture Offset", mode.onTilePropertyChangeRequested)
-				mode.wallTextureOffsetBox.SetItems(wallTextureOffsetItemsSlice)
+				mode.wallTextureOffsetSlider.SetRange(0, 31)
 			}
 			{
 				var useAdjacentWallTextureSlice []controls.ComboBoxItem
@@ -629,16 +604,16 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	mode.mapDisplay.SetSelectedTiles(mode.selectedTiles)
 	tileMap := mode.levelAdapter.TileMap()
 	typeUnifier := util.NewValueUnifier(dataModel.TileType(""))
-	floorHeightUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
-	ceilingHeightUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
-	slopeHeightUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
+	floorHeightUnifier := util.NewValueUnifier(-1)
+	ceilingHeightUnifier := util.NewValueUnifier(-1)
+	slopeHeightUnifier := util.NewValueUnifier(-1)
 	slopeControlUnifier := util.NewValueUnifier(dataModel.SlopeControl(""))
 	floorTextureUnifier := util.NewValueUnifier(-1)
 	floorTextureRotationsUnifier := util.NewValueUnifier(-1)
 	ceilingTextureUnifier := util.NewValueUnifier(-1)
 	ceilingTextureRotationsUnifier := util.NewValueUnifier(-1)
 	wallTextureUnifier := util.NewValueUnifier(-1)
-	wallTextureOffsetUnifier := util.NewValueUnifier(dataModel.HeightUnit(-1))
+	wallTextureOffsetUnifier := util.NewValueUnifier(-1)
 	useAdjacentWallTextureUnifier := util.NewValueUnifier("")
 	wallTexturePatternUnifier := util.NewValueUnifier(-1)
 	spookyMusicUnifier := util.NewValueUnifier("")
@@ -651,15 +626,23 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	ceilingColorUnifier := util.NewValueUnifier(-1)
 	flightPullTypeUnifier := util.NewValueUnifier(-1)
 	gameOfLifeSetUnifier := util.NewValueUnifier("")
+	setSlider := func(slider *controls.Slider, unifier *util.ValueUnifier) {
+		value := unifier.Value().(int)
+		if value != -1 {
+			slider.SetValue(int64(value))
+		} else {
+			slider.SetValueUndefined()
+		}
+	}
 
 	for _, coord := range mode.selectedTiles {
 		tile := tileMap.Tile(coord)
 		properties := tile.Properties()
 		if properties != nil {
 			typeUnifier.Add(*properties.Type)
-			floorHeightUnifier.Add(*properties.FloorHeight)
-			ceilingHeightUnifier.Add(*properties.CeilingHeight)
-			slopeHeightUnifier.Add(*properties.SlopeHeight)
+			floorHeightUnifier.Add(int(*properties.FloorHeight))
+			ceilingHeightUnifier.Add(31 - int(*properties.CeilingHeight))
+			slopeHeightUnifier.Add(int(*properties.SlopeHeight))
 			slopeControlUnifier.Add(*properties.SlopeControl)
 			musicIndexUnifier.Add(*properties.MusicIndex)
 			if properties.RealWorld != nil {
@@ -668,7 +651,7 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 				ceilingTextureUnifier.Add(*properties.RealWorld.CeilingTexture)
 				ceilingTextureRotationsUnifier.Add(*properties.RealWorld.CeilingTextureRotations)
 				wallTextureUnifier.Add(*properties.RealWorld.WallTexture)
-				wallTextureOffsetUnifier.Add(*properties.RealWorld.WallTextureOffset)
+				wallTextureOffsetUnifier.Add(int(*properties.RealWorld.WallTextureOffset))
 				useAdjacentWallTextureUnifier.Add(fmt.Sprintf("%v", *properties.RealWorld.UseAdjacentWallTexture))
 				wallTexturePatternUnifier.Add(*properties.RealWorld.WallTexturePattern)
 				spookyMusicUnifier.Add(fmt.Sprintf("%v", *properties.RealWorld.SpookyMusic))
@@ -685,9 +668,9 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 		}
 	}
 	mode.tileTypeBox.SetSelectedItem(mode.tileTypeItems[typeUnifier.Value().(dataModel.TileType)])
-	mode.floorHeightBox.SetSelectedItem(mode.floorHeightItems[floorHeightUnifier.Value().(dataModel.HeightUnit)])
-	mode.ceilingHeightBox.SetSelectedItem(mode.ceilingHeightItems[ceilingHeightUnifier.Value().(dataModel.HeightUnit)])
-	mode.slopeHeightBox.SetSelectedItem(mode.slopeHeightItems[slopeHeightUnifier.Value().(dataModel.HeightUnit)])
+	setSlider(mode.floorHeightSlider, floorHeightUnifier)
+	setSlider(mode.ceilingHeightSlider, ceilingHeightUnifier)
+	setSlider(mode.slopeHeightSlider, slopeHeightUnifier)
 	mode.slopeControlBox.SetSelectedItem(mode.slopeControlItems[slopeControlUnifier.Value().(dataModel.SlopeControl)])
 	mode.musicIndexBox.SetSelectedItem(mode.musicIndexItems[musicIndexUnifier.Value().(int)])
 	mode.floorTextureSelector.SetSelectedIndex(floorTextureUnifier.Value().(int))
@@ -695,7 +678,7 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	mode.ceilingTextureSelector.SetSelectedIndex(ceilingTextureUnifier.Value().(int))
 	mode.ceilingTextureRotationsBox.SetSelectedItem(mode.floorTextureRotationsItems[ceilingTextureRotationsUnifier.Value().(int)])
 	mode.wallTextureSelector.SetSelectedIndex(wallTextureUnifier.Value().(int))
-	mode.wallTextureOffsetBox.SetSelectedItem(mode.wallTextureOffsetItems[wallTextureOffsetUnifier.Value().(dataModel.HeightUnit)])
+	setSlider(mode.wallTextureOffsetSlider, wallTextureOffsetUnifier)
 	mode.wallTexturePatternBox.SetSelectedItem(mode.wallTexturePatternItems[wallTexturePatternUnifier.Value().(int)])
 	mode.spookyMusicBox.SetSelectedItem(mode.spookyMusicItems[spookyMusicUnifier.Value().(string)])
 	mode.useAdjacentWallTextureBox.SetSelectedItem(mode.useAdjacentWallTextureItems[useAdjacentWallTextureUnifier.Value().(string)])
@@ -704,14 +687,6 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	mode.flightPullTypeBox.SetSelectedItem(mode.flightPullTypeItems[flightPullTypeUnifier.Value().(int)])
 	mode.gameOfLifeSetBox.SetSelectedItem(mode.gameOfLifeSetItems[gameOfLifeSetUnifier.Value().(string)])
 
-	setSlider := func(slider *controls.Slider, unifier *util.ValueUnifier) {
-		value := unifier.Value().(int)
-		if value != -1 {
-			slider.SetValue(int64(value))
-		} else {
-			slider.SetValueUndefined()
-		}
-	}
 	setSlider(mode.floorShadowSlider, floorShadowUnifier)
 	setSlider(mode.ceilingShadowSlider, ceilingShadowUnifier)
 	setSlider(mode.floorColorSlider, floorColorUnifier)
