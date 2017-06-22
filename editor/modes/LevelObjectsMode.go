@@ -36,9 +36,16 @@ type LevelObjectsMode struct {
 
 	mapDisplay *display.MapDisplay
 
-	area       *ui.Area
-	panel      *ui.Area
-	panelRight ui.Anchor
+	area *ui.Area
+
+	limitsPanel   *ui.Area
+	limitsHeader1 *controls.Label
+	limitsHeader2 *controls.Label
+	limitTitles   []*controls.Label
+	limitValues   []*controls.Label
+
+	propertiesPanel      *ui.Area
+	propertiesPanelRight ui.Anchor
 
 	closestObjects              []*model.LevelObject
 	closestObjectHighlightIndex int
@@ -46,12 +53,10 @@ type LevelObjectsMode struct {
 
 	newObjectID model.ObjectID
 
-	newObjectClassLabel        *controls.Label
-	newObjectClassBox          *controls.ComboBox
-	objectClassUsageTitleLabel *controls.Label
-	objectClassUsageInfoLabel  *controls.Label
-	newObjectTypeLabel         *controls.Label
-	newObjectTypeBox           *controls.ComboBox
+	newObjectClassLabel *controls.Label
+	newObjectClassBox   *controls.ComboBox
+	newObjectTypeLabel  *controls.Label
+	newObjectTypeBox    *controls.ComboBox
 
 	highlightedObjectInfoTitle *controls.Label
 	highlightedObjectInfoValue *controls.Label
@@ -122,12 +127,12 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 	{
 		minRight := ui.NewOffsetAnchor(mode.area.Left(), 100)
 		maxRight := ui.NewRelativeAnchor(mode.area.Left(), mode.area.Right(), 0.5)
-		mode.panelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(mode.area.Left(), 400))
+		mode.propertiesPanelRight = ui.NewLimitedAnchor(minRight, maxRight, ui.NewOffsetAnchor(mode.area.Left(), 400))
 		builder := ui.NewAreaBuilder()
 		builder.SetParent(mode.area)
 		builder.SetLeft(ui.NewOffsetAnchor(mode.area.Left(), 0))
 		builder.SetTop(ui.NewOffsetAnchor(mode.area.Top(), 0))
-		builder.SetRight(mode.panelRight)
+		builder.SetRight(mode.propertiesPanelRight)
 		builder.SetBottom(ui.NewOffsetAnchor(mode.area.Bottom(), 0))
 		builder.OnRender(func(area *ui.Area) {
 			context.ForGraphics().RectangleRenderer().Fill(
@@ -161,19 +166,18 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 			moveEvent := event.(*events.MouseMoveEvent)
 			if grabbing {
 				newX, _ := moveEvent.Position()
-				mode.panelRight.RequestValue(mode.panelRight.Value() + (newX - lastGrabX))
+				mode.propertiesPanelRight.RequestValue(mode.propertiesPanelRight.Value() + (newX - lastGrabX))
 				lastGrabX = newX
 			}
 			return true
 		})
 
-		mode.panel = builder.Build()
+		mode.propertiesPanel = builder.Build()
 	}
 	{
-		panelBuilder := newControlPanelBuilder(mode.panel, context.ControlFactory())
+		panelBuilder := newControlPanelBuilder(mode.propertiesPanel, context.ControlFactory())
 
 		mode.newObjectClassLabel, mode.newObjectClassBox = panelBuilder.addComboProperty("New Object Class", mode.onNewObjectClassChanged)
-		mode.objectClassUsageTitleLabel, mode.objectClassUsageInfoLabel = panelBuilder.addInfo("Class Usage")
 		mode.newObjectTypeLabel, mode.newObjectTypeBox = panelBuilder.addComboProperty("New Object Type", mode.onNewObjectTypeChanged)
 
 		mode.highlightedObjectInfoTitle, mode.highlightedObjectInfoValue = panelBuilder.addInfo("Highlighted Object")
@@ -266,6 +270,38 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 		propertiesTabItems := []controls.ComboBoxItem{mode.selectedObjectsBasePropertiesItem, mode.selectedObjectsClassPropertiesItem}
 		mode.selectedObjectsPropertiesBox.SetItems(propertiesTabItems)
 		mode.selectedObjectsPropertiesBox.SetSelectedItem(mode.selectedObjectsClassPropertiesItem)
+	}
+	{
+		builder := ui.NewAreaBuilder()
+		builder.SetParent(mode.area)
+		builder.SetLeft(ui.NewOffsetAnchor(mode.area.Right(), -126))
+		builder.SetTop(ui.NewOffsetAnchor(mode.area.Top(), 0))
+		builder.SetRight(ui.NewOffsetAnchor(mode.area.Right(), 0))
+		builder.SetBottom(ui.NewOffsetAnchor(mode.area.Bottom(), 0))
+		builder.SetVisible(true)
+		builder.OnRender(func(area *ui.Area) {
+			context.ForGraphics().RectangleRenderer().Fill(
+				area.Left().Value(), area.Top().Value(), area.Right().Value(), area.Bottom().Value(),
+				graphics.RGBA(0.7, 0.0, 0.7, 0.3))
+		})
+		builder.OnEvent(events.MouseMoveEventType, ui.SilentConsumer)
+		builder.OnEvent(events.MouseButtonUpEventType, ui.SilentConsumer)
+		builder.OnEvent(events.MouseButtonDownEventType, ui.SilentConsumer)
+		builder.OnEvent(events.MouseButtonClickedEventType, ui.SilentConsumer)
+		builder.OnEvent(events.MouseScrollEventType, ui.SilentConsumer)
+		mode.limitsPanel = builder.Build()
+	}
+	{
+		panelBuilder := newControlPanelBuilder(mode.limitsPanel, context.ControlFactory())
+		mode.limitsHeader1, mode.limitsHeader2 = panelBuilder.addInfo("Class")
+		mode.limitsHeader2.SetText("Usage")
+		classes := len(maxObjectsPerClass)
+		mode.limitTitles = make([]*controls.Label, classes+1)
+		mode.limitValues = make([]*controls.Label, classes+1)
+		for class := 0; class < classes; class++ {
+			mode.limitTitles[class], mode.limitValues[class] = panelBuilder.addInfo(fmt.Sprintf("%d", class))
+		}
+		mode.limitTitles[classes], mode.limitValues[classes] = panelBuilder.addInfo("Total")
 	}
 
 	mode.levelAdapter.OnLevelObjectsChanged(mode.onLevelObjectsChanged)
@@ -774,12 +810,16 @@ func (mode *LevelObjectsMode) updateNewObjectClass(objectClass int) {
 }
 
 func (mode *LevelObjectsMode) updateNewObjectClassQuota() {
-	maxCount := maxObjectsPerClass[mode.newObjectID.Class()] - 1 // zero entry can never be used, so it's one less
-	currentClassObjects := mode.levelAdapter.LevelObjects(func(object *model.LevelObject) bool {
-		return object.ID().Class() == mode.newObjectID.Class()
+	classes := len(maxObjectsPerClass)
+	objectsPerClass := make(map[int]int)
+	allObjects := mode.levelAdapter.LevelObjects(func(object *model.LevelObject) bool {
+		objectsPerClass[object.ID().Class()]++
+		return true
 	})
-
-	mode.objectClassUsageInfoLabel.SetText(fmt.Sprintf("%3d/%3d", len(currentClassObjects), maxCount))
+	for class := 0; class < classes; class++ {
+		mode.limitValues[class].SetText(fmt.Sprintf("%03d/%03d", objectsPerClass[class], maxObjectsPerClass[class]-1))
+	}
+	mode.limitValues[classes].SetText(fmt.Sprintf("%03d/%03d", len(allObjects), 871))
 }
 
 func (mode *LevelObjectsMode) onNewObjectTypeChanged(item controls.ComboBoxItem) {
