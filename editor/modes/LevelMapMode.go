@@ -214,7 +214,9 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			items := []controls.ComboBoxItem{
 				&coloringItem{"None", nil},
 				&coloringItem{"Floor Shadow", display.FloorShadow},
-				&coloringItem{"Ceiling Shadow", display.CeilingShadow}}
+				&coloringItem{"Ceiling Shadow", display.CeilingShadow},
+				&coloringItem{"Floor Cyber Color", mode.cyberspaceFloorColor},
+				&coloringItem{"Ceiling Cyber Color", mode.cyberspaceCeilingColor}}
 			mode.coloringBox.SetItems(items)
 			mode.coloringBox.SetSelectedItem(items[0])
 		}
@@ -505,6 +507,41 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 	}
 
 	return mode
+}
+
+func (mode *LevelMapMode) cyberspaceColorOfSingleTile(properties *dataModel.TileProperties,
+	resolver func(*dataModel.TileProperties) int) graphics.Color {
+	palette := mode.context.ModelAdapter().GamePalette()
+	r := float32(0.0)
+	g := float32(0.0)
+	b := float32(0.0)
+
+	if (properties != nil) && (properties.Cyberspace != nil) {
+		entry := palette[resolver(properties)]
+		r = float32(entry.Red) / float32(0xFF)
+		g = float32(entry.Green) / float32(0xFF)
+		b = float32(entry.Blue) / float32(0xFF)
+	}
+
+	return graphics.RGBA(r, g, b, 1.0)
+}
+
+func (mode *LevelMapMode) cyberspaceFloorColor(x, y int, properties *dataModel.TileProperties, query display.TilePropertiesQuery) [4]graphics.Color {
+	resolver := func(properties *dataModel.TileProperties) int { return *properties.Cyberspace.FloorColorIndex }
+	return [4]graphics.Color{
+		mode.cyberspaceColorOfSingleTile(properties, resolver),
+		mode.cyberspaceColorOfSingleTile(query(x, y+1), resolver),
+		mode.cyberspaceColorOfSingleTile(query(x+1, y+1), resolver),
+		mode.cyberspaceColorOfSingleTile(query(x+1, y), resolver)}
+}
+
+func (mode *LevelMapMode) cyberspaceCeilingColor(x, y int, properties *dataModel.TileProperties, query display.TilePropertiesQuery) [4]graphics.Color {
+	resolver := func(properties *dataModel.TileProperties) int { return *properties.Cyberspace.CeilingColorIndex }
+	return [4]graphics.Color{
+		mode.cyberspaceColorOfSingleTile(properties, resolver),
+		mode.cyberspaceColorOfSingleTile(query(x, y+1), resolver),
+		mode.cyberspaceColorOfSingleTile(query(x+1, y+1), resolver),
+		mode.cyberspaceColorOfSingleTile(query(x+1, y), resolver)}
 }
 
 // SetActive implements the Mode interface.
