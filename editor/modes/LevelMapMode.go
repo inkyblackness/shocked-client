@@ -341,10 +341,10 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 				}
 
 				mode.floorTextureLabel, mode.floorTextureSelector = realWorldPanelBuilder.addTextureProperty("Floor Texture",
-					mode.levelTextures, mode.onFloorTextureChanged)
+					mode.floorCeilingTextures, mode.onFloorTextureChanged)
 				mode.floorTextureRotationsLabel, mode.floorTextureRotationsBox = realWorldPanelBuilder.addComboProperty("Floor Texture Rotations", mode.onTilePropertyChangeRequested)
 				mode.ceilingTextureLabel, mode.ceilingTextureSelector = realWorldPanelBuilder.addTextureProperty("Ceiling Texture",
-					mode.levelTextures, mode.onCeilingTextureChanged)
+					mode.floorCeilingTextures, mode.onCeilingTextureChanged)
 				mode.ceilingTextureRotationsLabel, mode.ceilingTextureRotationsBox = realWorldPanelBuilder.addComboProperty("Ceiling Texture Rotations", mode.onTilePropertyChangeRequested)
 
 				var floorTextureRotationsItemsSlice []controls.ComboBoxItem
@@ -362,7 +362,7 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			}
 			{
 				mode.wallTextureLabel, mode.wallTextureSelector = realWorldPanelBuilder.addTextureProperty("Wall Texture",
-					mode.levelTextures, mode.onWallTextureChanged)
+					mode.wallTextures, mode.onWallTextureChanged)
 
 				mode.wallTextureOffsetLabel, mode.wallTextureOffsetSlider =
 					realWorldPanelBuilder.addSliderProperty("Wall Texture Offset", func(newValue int64) {
@@ -568,6 +568,20 @@ func (mode *LevelMapMode) levelTextures() []*graphics.BitmapTexture {
 	}
 
 	return textures
+}
+
+func (mode *LevelMapMode) wallTextures() []*graphics.BitmapTexture {
+	return mode.levelTextures()
+}
+
+func (mode *LevelMapMode) floorCeilingTextures() []*graphics.BitmapTexture {
+	textures := mode.levelTextures()
+	result := textures
+	if len(textures) > 32 {
+		result = textures[0:32]
+	}
+
+	return result
 }
 
 func (mode *LevelMapMode) onMouseMoved(area *ui.Area, event events.Event) (consumed bool) {
