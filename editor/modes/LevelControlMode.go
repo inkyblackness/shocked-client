@@ -252,6 +252,9 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 			mode.animationGroupTimeLabel, mode.animationGroupTimeSlider =
 				panelBuilder.addSliderProperty("Texture Animation Time", mode.onAnimationGroupTimeChanged)
 			mode.animationGroupTimeSlider.SetRange(0, 1000)
+			mode.animationGroupTimeSlider.SetValueFormatter(func(value int64) string {
+				return fmt.Sprintf("%v msec", value)
+			})
 			mode.animationGroupFramesLabel, mode.animationGroupFramesSlider =
 				panelBuilder.addSliderProperty("Texture Animation Frame Count", mode.onAnimationGroupFramesChanged)
 			mode.animationGroupFramesSlider.SetRange(0, 10)
