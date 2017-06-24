@@ -553,7 +553,7 @@ func (mode *LevelMapMode) heightUnitToString(value int64) string {
 	tileHeights := []float64{32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25}
 	heightShift := mode.levelAdapter.HeightShift()
 
-	return fmt.Sprintf("%v = %.3f tile(s)", value, (float64(value)*tileHeights[heightShift])/32.0)
+	return fmt.Sprintf("%.3f tile(s)  - raw: %v", (float64(value)*tileHeights[heightShift])/32.0, value)
 }
 
 // SetActive implements the Mode interface.
