@@ -236,18 +236,21 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 			})
 		})
 		mode.selectedObjectsRotationXValue.SetRange(0, 255)
+		mode.selectedObjectsRotationXValue.SetValueFormatter(mode.rotationToString)
 		mode.selectedObjectsRotationYTitle, mode.selectedObjectsRotationYValue = basePropertiesPanelBuilder.addSliderProperty("RotationY", func(newValue int64) {
 			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.RotationY = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsRotationYValue.SetRange(0, 255)
+		mode.selectedObjectsRotationYValue.SetValueFormatter(mode.rotationToString)
 		mode.selectedObjectsRotationZTitle, mode.selectedObjectsRotationZValue = basePropertiesPanelBuilder.addSliderProperty("RotationZ", func(newValue int64) {
 			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
 				properties.RotationZ = intAsPointer(int(newValue))
 			})
 		})
 		mode.selectedObjectsRotationZValue.SetRange(0, 255)
+		mode.selectedObjectsRotationZValue.SetValueFormatter(mode.rotationToString)
 
 		mode.selectedObjectsHitpointsTitle, mode.selectedObjectsHitpointsValue = basePropertiesPanelBuilder.addSliderProperty("Hitpoints", func(newValue int64) {
 			mode.updateSelectedObjectsBaseProperties(func(properties *dataModel.LevelObjectProperties) {
@@ -304,10 +307,24 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 		mode.limitTitles[classes], mode.limitValues[classes] = panelBuilder.addInfo("Total")
 	}
 
+	mode.levelAdapter.OnLevelPropertiesChanged(func() {
+		mode.selectedObjectsZValue.SetValueFormatter(mode.objectZToString)
+	})
 	mode.levelAdapter.OnLevelObjectsChanged(mode.onLevelObjectsChanged)
 	mode.context.ModelAdapter().ObjectsAdapter().OnObjectsChanged(mode.onGameObjectsChanged)
 
 	return mode
+}
+
+func (mode *LevelObjectsMode) objectZToString(value int64) string {
+	tileHeights := []float64{32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25}
+	heightShift := mode.levelAdapter.HeightShift()
+
+	return fmt.Sprintf("%.3f tile(s)  - raw: %v", (float64(value)*tileHeights[heightShift])/256.0, value)
+}
+
+func (mode *LevelObjectsMode) rotationToString(value int64) string {
+	return fmt.Sprintf("%.3f degrees  - raw: %v", (float64(value)*360.0)/256.0, value)
 }
 
 // SetActive implements the Mode interface.
