@@ -60,18 +60,18 @@ type LevelMapMode struct {
 	coloringBox   *controls.ComboBox
 	coloringItem  controls.ComboBoxItem
 
-	tileTypeLabel       *controls.Label
-	tileTypeBox         *controls.ComboBox
-	tileTypeItems       map[dataModel.TileType]*tilePropertyItem
-	floorHeightLabel    *controls.Label
-	floorHeightSlider   *controls.Slider
-	ceilingHeightLabel  *controls.Label
-	ceilingHeightSlider *controls.Slider
-	slopeHeightLabel    *controls.Label
-	slopeHeightSlider   *controls.Slider
-	slopeControlLabel   *controls.Label
-	slopeControlBox     *controls.ComboBox
-	slopeControlItems   map[dataModel.SlopeControl]*tilePropertyItem
+	tileTypeLabel          *controls.Label
+	tileTypeBox            *controls.ComboBox
+	tileTypeItems          map[dataModel.TileType]*tilePropertyItem
+	floorHeightLabel       *controls.Label
+	floorHeightSlider      *controls.Slider
+	ceilingHeightAbsLabel  *controls.Label
+	ceilingHeightAbsSlider *controls.Slider
+	slopeHeightLabel       *controls.Label
+	slopeHeightSlider      *controls.Slider
+	slopeControlLabel      *controls.Label
+	slopeControlBox        *controls.ComboBox
+	slopeControlItems      map[dataModel.SlopeControl]*tilePropertyItem
 
 	musicIndexLabel *controls.Label
 	musicIndexBox   *controls.ComboBox
@@ -245,12 +245,12 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 			})
 		})
 		mode.floorHeightSlider.SetRange(0, 31)
-		mode.ceilingHeightLabel, mode.ceilingHeightSlider = panelBuilder.addSliderProperty("Ceiling Height", func(newValue int64) {
+		mode.ceilingHeightAbsLabel, mode.ceilingHeightAbsSlider = panelBuilder.addSliderProperty("Ceiling Height (abs)", func(newValue int64) {
 			mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
-				properties.CeilingHeight = heightUnitAsPointer(31 - int(newValue))
+				properties.CeilingHeight = heightUnitAsPointer(32 - int(newValue))
 			})
 		})
-		mode.ceilingHeightSlider.SetRange(0, 31)
+		mode.ceilingHeightAbsSlider.SetRange(1, 32)
 		mode.slopeHeightLabel, mode.slopeHeightSlider = panelBuilder.addSliderProperty("Slope Height", func(newValue int64) {
 			mode.changeSelectedTileProperties(func(properties *dataModel.TileProperties) {
 				properties.SlopeHeight = heightUnitAsPointer(int(newValue))
@@ -503,6 +503,11 @@ func NewLevelMapMode(context Context, parent *ui.Area, mapDisplay *display.MapDi
 		mode.levelAdapter.OnLevelPropertiesChanged(func() {
 			mode.realWorldArea.SetVisible(!mode.levelAdapter.IsCyberspace())
 			mode.cyberspaceArea.SetVisible(mode.levelAdapter.IsCyberspace())
+
+			mode.floorHeightSlider.SetValueFormatter(mode.heightUnitToString)
+			mode.ceilingHeightAbsSlider.SetValueFormatter(mode.heightUnitToString)
+			mode.slopeHeightSlider.SetValueFormatter(mode.heightUnitToString)
+			mode.wallTextureOffsetSlider.SetValueFormatter(mode.heightUnitToString)
 		})
 	}
 
@@ -542,6 +547,13 @@ func (mode *LevelMapMode) cyberspaceCeilingColor(x, y int, properties *dataModel
 		mode.cyberspaceColorOfSingleTile(query(x, y+1), resolver),
 		mode.cyberspaceColorOfSingleTile(query(x+1, y+1), resolver),
 		mode.cyberspaceColorOfSingleTile(query(x+1, y), resolver)}
+}
+
+func (mode *LevelMapMode) heightUnitToString(value int64) string {
+	tileHeights := []float64{32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25}
+	heightShift := mode.levelAdapter.HeightShift()
+
+	return fmt.Sprintf("%v = %.3f tile(s)", value, (float64(value)*tileHeights[heightShift])/32.0)
 }
 
 // SetActive implements the Mode interface.
@@ -717,7 +729,7 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 		if properties != nil {
 			typeUnifier.Add(*properties.Type)
 			floorHeightUnifier.Add(int(*properties.FloorHeight))
-			ceilingHeightUnifier.Add(31 - int(*properties.CeilingHeight))
+			ceilingHeightUnifier.Add(32 - int(*properties.CeilingHeight))
 			slopeHeightUnifier.Add(int(*properties.SlopeHeight))
 			slopeControlUnifier.Add(*properties.SlopeControl)
 			musicIndexUnifier.Add(*properties.MusicIndex)
@@ -745,7 +757,7 @@ func (mode *LevelMapMode) onSelectedTilesChanged() {
 	}
 	mode.tileTypeBox.SetSelectedItem(mode.tileTypeItems[typeUnifier.Value().(dataModel.TileType)])
 	setSlider(mode.floorHeightSlider, floorHeightUnifier)
-	setSlider(mode.ceilingHeightSlider, ceilingHeightUnifier)
+	setSlider(mode.ceilingHeightAbsSlider, ceilingHeightUnifier)
 	setSlider(mode.slopeHeightSlider, slopeHeightUnifier)
 	mode.slopeControlBox.SetSelectedItem(mode.slopeControlItems[slopeControlUnifier.Value().(dataModel.SlopeControl)])
 	mode.musicIndexBox.SetSelectedItem(mode.musicIndexItems[musicIndexUnifier.Value().(int)])
