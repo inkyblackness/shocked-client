@@ -83,8 +83,9 @@ func NewGameTextsMode(context Context, parent *ui.Area) *GameTextsMode {
 				&enumItem{uint32(dataModel.ResourceTypeWords), "Words"},
 				&enumItem{uint32(dataModel.ResourceTypeLogCategories), "Log Categories"},
 				&enumItem{uint32(dataModel.ResourceTypeScreenMessages), "Screen Messages"},
+				&enumItem{uint32(dataModel.ResourceTypeInfoNodeMessages), "Info Node Messages (8/5/6)"},
 				&enumItem{uint32(dataModel.ResourceTypeAccessCardNames), "Access Card Names"},
-				&enumItem{uint32(dataModel.ResourceTypeDataletMessages), "Datalet Messages"},
+				&enumItem{uint32(dataModel.ResourceTypeDataletMessages), "Datalet Messages (8/5/8)"},
 				&enumItem{uint32(dataModel.ResourceTypePaperTexts), "Paper Texts"}}
 
 			mode.typeBox.SetItems(items)
