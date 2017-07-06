@@ -2,11 +2,13 @@ package modes
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"path"
 
-	wavExport "github.com/youpy/go-wav"
+	wavLib "github.com/youpy/go-wav"
 
+	wavMem "github.com/inkyblackness/res/audio/mem"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
@@ -308,7 +310,7 @@ func (mode *ElectronicMessagesMode) onAudioFileDropped(area *ui.Area, event even
 			if fileInfo.IsDir() {
 				mode.exportAudio(filePath)
 			} else {
-
+				mode.importAudio(filePath)
 			}
 		} else {
 			mode.context.ModelAdapter().SetMessage(fmt.Sprintf("File is not found/recognized %s", filePath))
@@ -333,10 +335,10 @@ func (mode *ElectronicMessagesMode) exportAudio(filePath string) {
 			numChannels := uint16(1)
 			bitsPerSample := uint16(8)
 			sampleRate := uint32(soundData.SampleRate())
-			writer := wavExport.NewWriter(file, uint32(numSamples), numChannels, sampleRate, bitsPerSample)
+			writer := wavLib.NewWriter(file, uint32(numSamples), numChannels, sampleRate, bitsPerSample)
 
 			inSamples := soundData.Samples(0, numSamples)
-			outSamples := make([]wavExport.Sample, numSamples)
+			outSamples := make([]wavLib.Sample, numSamples)
 			for index, sample := range inSamples {
 				outSamples[index].Values[0] = int(sample)
 			}
@@ -345,6 +347,48 @@ func (mode *ElectronicMessagesMode) exportAudio(filePath string) {
 		} else {
 			mode.context.ModelAdapter().SetMessage("Could not create file for export.")
 		}
+	}
+}
+
+func l16ToL8(sample int) byte {
+	return byte(sample>>8 + 0x80)
+}
+
+func l8ToL8(sample int) byte {
+	return byte(sample)
+}
+
+func (mode *ElectronicMessagesMode) importAudio(filePath string) {
+	file, fileErr := os.Open(filePath)
+
+	if (fileErr == nil) && (file != nil) {
+		defer file.Close()
+		reader := wavLib.NewReader(file)
+		format, formatErr := reader.Format()
+
+		if (formatErr == nil) && ((format.BitsPerSample == 8) || (format.BitsPerSample == 16)) {
+			converter := l16ToL8
+			eof := false
+
+			if format.BitsPerSample == 8 {
+				converter = l8ToL8
+			}
+			var samples []byte
+			for !eof {
+				frame, readErr := reader.ReadSamples(1)
+				if readErr == io.EOF {
+					eof = true
+				} else {
+					samples = append(samples, converter(frame[0].Values[0]))
+				}
+			}
+			data := wavMem.NewL8SoundData(float32(format.SampleRate), samples)
+			mode.messageAdapter.RequestAudioChange(mode.language, data)
+		} else {
+			mode.context.ModelAdapter().SetMessage("File not supported. Only .wav files with 16bit or 8bit LPCM possible.")
+		}
+	} else {
+		mode.context.ModelAdapter().SetMessage(fmt.Sprintf("File could not be opened: %s", filePath))
 	}
 }
 

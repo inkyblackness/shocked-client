@@ -95,6 +95,15 @@ func (adapter *ElectronicMessageAdapter) RequestMessageChange(properties model.E
 	}
 }
 
+// RequestAudioChange requests to change the audio of the current message.
+func (adapter *ElectronicMessageAdapter) RequestAudioChange(language model.ResourceLanguage, data audio.SoundData) {
+	if adapter.id >= 0 {
+		adapter.store.SetElectronicMessageAudio(adapter.context.ActiveProjectID(), adapter.messageType, adapter.id, language, data,
+			func() { adapter.audio[language.ToIndex()].set(data) },
+			adapter.context.simpleStoreFailure("SetElectronicMessageAudio"))
+	}
+}
+
 func (adapter *ElectronicMessageAdapter) onMessageData(messageType model.ElectronicMessageType, id int, message model.ElectronicMessage) {
 	if (adapter.messageType == messageType) && (adapter.id == id) {
 		adapter.data.set(&message)
