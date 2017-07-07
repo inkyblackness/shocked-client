@@ -52,7 +52,7 @@ func (adapter *TextAdapter) RequestText(key model.ResourceKey) {
 		adapter.context.simpleStoreFailure("Text"))
 }
 
-// RequestTextChange requests to change the properties of the current message.
+// RequestTextChange requests to change the properties of the current text.
 func (adapter *TextAdapter) RequestTextChange(text string) {
 	if adapter.resourceKey.ToInt() > 0 {
 		adapter.store.SetText(adapter.context.ActiveProjectID(), adapter.resourceKey, text, adapter.onText,
