@@ -174,7 +174,7 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		mode.rightDisplayValue.SetRange(-1, 0xFF)
 
 		var audioBuilder *controlPanelBuilder
-		mode.audioArea, audioBuilder = panelBuilder.addSection(true)
+		mode.audioArea, audioBuilder = panelBuilder.addSection(false)
 		mode.audioLabel, mode.audioInfo = audioBuilder.addInfo("Audio")
 		audioDropTargetBuilder := ui.NewAreaBuilder()
 		audioDropTargetBuilder.SetParent(mode.audioArea)
@@ -289,7 +289,7 @@ func (mode *ElectronicMessagesMode) rightDisplayImage() (texture *graphics.Bitma
 }
 
 func (mode *ElectronicMessagesMode) displayImage(index int) (texture *graphics.BitmapTexture) {
-	if index >= 0 {
+	if (index >= 0) && (index < 0x100) {
 		resourceKey := dataModel.MakeLocalizedResourceKey(dataModel.ResourceTypeMfdDataImages, mode.language, uint16(index))
 		texture = mode.context.ForGraphics().BitmapsStore().Texture(graphics.TextureKeyFromInt(resourceKey.ToInt()))
 	}
@@ -356,6 +356,7 @@ func (mode *ElectronicMessagesMode) importAudio(filePath string) {
 func (mode *ElectronicMessagesMode) onMessageTypeChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
 	mode.messageType = mode.messageTypeByIndex[item.value]
+	mode.audioArea.SetVisible(mode.messageType != dataModel.ElectronicMessageTypeFragment)
 	mode.selectedMessageIDSlider.SetValue(0)
 	mode.selectedMessageIDSlider.SetRange(0, messageRanges[mode.messageType]-1)
 	mode.onMessageSelected(0)
