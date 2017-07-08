@@ -1,6 +1,11 @@
 package modes
 
 import (
+	"fmt"
+	"os"
+	"path"
+
+	"github.com/inkyblackness/res/audio/wav"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
@@ -12,8 +17,9 @@ import (
 
 // GameTextsMode is a mode for arbitrary game texts.
 type GameTextsMode struct {
-	context     Context
-	textAdapter *model.TextAdapter
+	context      Context
+	textAdapter  *model.TextAdapter
+	soundAdapter *model.SoundAdapter
 
 	area           *ui.Area
 	propertiesArea *ui.Area
@@ -32,6 +38,11 @@ type GameTextsMode struct {
 
 	textDrop  *ui.Area
 	textValue *controls.Label
+
+	audioArea       *ui.Area
+	audioLabel      *controls.Label
+	audioInfo       *controls.Label
+	audioDropTarget *ui.Area
 }
 
 // NewGameTextsMode returns a new instance.
@@ -39,6 +50,7 @@ func NewGameTextsMode(context Context, parent *ui.Area) *GameTextsMode {
 	mode := &GameTextsMode{
 		context:        context,
 		textAdapter:    context.ModelAdapter().TextAdapter(),
+		soundAdapter:   context.ModelAdapter().SoundAdapter(),
 		selectedTextID: -1}
 
 	{
@@ -106,6 +118,21 @@ func NewGameTextsMode(context Context, parent *ui.Area) *GameTextsMode {
 					mode.onTextSelected(int(newValue))
 				})
 		}
+		{
+			var audioBuilder *controlPanelBuilder
+			mode.audioArea, audioBuilder = panelBuilder.addSection(false)
+			mode.audioLabel, mode.audioInfo = audioBuilder.addInfo("Audio")
+			audioDropTargetBuilder := ui.NewAreaBuilder()
+			audioDropTargetBuilder.SetParent(mode.audioArea)
+			audioDropTargetBuilder.SetLeft(ui.NewOffsetAnchor(mode.audioArea.Left(), 0))
+			audioDropTargetBuilder.SetTop(ui.NewOffsetAnchor(mode.audioArea.Top(), 0))
+			audioDropTargetBuilder.SetRight(ui.NewOffsetAnchor(mode.audioArea.Right(), 0))
+			audioDropTargetBuilder.SetBottom(ui.NewOffsetAnchor(mode.audioArea.Bottom(), 0))
+			audioDropTargetBuilder.OnEvent(events.FileDropEventType, mode.onAudioFileDropped)
+			mode.audioDropTarget = audioDropTargetBuilder.Build()
+
+			mode.soundAdapter.OnAudioChanged(mode.onAudioChanged)
+		}
 		mode.languageBox.SetSelectedItem(initialLanguageItem)
 		mode.onLanguageChanged(initialLanguageItem)
 		mode.typeBox.SetSelectedItem(initialTypeItem)
@@ -141,7 +168,7 @@ func NewGameTextsMode(context Context, parent *ui.Area) *GameTextsMode {
 		}
 	}
 	mode.context.ModelAdapter().OnProjectChanged(func() {
-		mode.requestText()
+		mode.onTextSelected(mode.selectedTextID)
 	})
 	mode.textAdapter.OnTextChanged(mode.onTextChanged)
 
@@ -157,26 +184,31 @@ func (mode *GameTextsMode) onTextTypeChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
 	mode.selectedResourceType = dataModel.ResourceType(item.value)
 
+	mode.audioArea.SetVisible(mode.selectedResourceType == dataModel.ResourceTypeTrapMessages)
 	mode.onTextSelected(0)
 	mode.selectedTextIDSlider.SetRange(0, int64(dataModel.MaxEntriesFor(mode.selectedResourceType))-1)
 	mode.selectedTextIDSlider.SetValue(0)
-	mode.requestText()
+	mode.requestData()
 }
 
 func (mode *GameTextsMode) onLanguageChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
 	mode.language = dataModel.ResourceLanguage(item.value)
-	mode.requestText()
+	mode.requestData()
 }
 
 func (mode *GameTextsMode) onTextSelected(id int) {
 	mode.selectedTextID = id
-	mode.requestText()
+	mode.requestData()
 }
 
-func (mode *GameTextsMode) requestText() {
+func (mode *GameTextsMode) requestData() {
 	key := dataModel.MakeLocalizedResourceKey(mode.selectedResourceType, mode.language, uint16(mode.selectedTextID))
 	mode.textAdapter.RequestText(key)
+
+	if mode.selectedResourceType == dataModel.ResourceTypeTrapMessages {
+		mode.requestAudio(dataModel.ResourceTypeTrapAudio)
+	}
 }
 
 func (mode *GameTextsMode) onTextChanged() {
@@ -185,4 +217,78 @@ func (mode *GameTextsMode) onTextChanged() {
 
 func (mode *GameTextsMode) onTextModified(newText string) {
 	mode.textAdapter.RequestTextChange(newText)
+}
+
+func (mode *GameTextsMode) requestAudio(resourceType dataModel.ResourceType) {
+	key := dataModel.MakeLocalizedResourceKey(resourceType, mode.language, uint16(mode.selectedTextID))
+	mode.context.ModelAdapter().SoundAdapter().RequestAudio(key)
+}
+
+func (mode *GameTextsMode) onAudioChanged() {
+	data := mode.soundAdapter.Audio()
+	info := ""
+
+	if data != nil {
+		info = fmt.Sprintf("%.02f sec", float32(data.SampleCount())/data.SampleRate())
+	} else {
+		info = "(no audio)"
+	}
+
+	mode.audioInfo.SetText(info)
+}
+
+func (mode *GameTextsMode) onAudioFileDropped(area *ui.Area, event events.Event) (consumed bool) {
+	dropEvent := event.(*events.FileDropEvent)
+
+	if len(dropEvent.FilePaths()) == 1 {
+		filePath := dropEvent.FilePaths()[0]
+		fileInfo, err := os.Stat(filePath)
+
+		if err == nil {
+			if fileInfo.IsDir() {
+				mode.exportAudio(filePath)
+			} else {
+				mode.importAudio(filePath)
+			}
+		} else {
+			mode.context.ModelAdapter().SetMessage(fmt.Sprintf("File is not found/recognized %s", filePath))
+		}
+		consumed = true
+	}
+
+	return
+}
+
+func (mode *GameTextsMode) exportAudio(filePath string) {
+	soundData := mode.soundAdapter.Audio()
+
+	if soundData != nil {
+		fileName := path.Join(filePath, fmt.Sprintf("traps_%02d_%v.wav", mode.selectedTextID, mode.language.ShortName()))
+		file, err := os.Create(fileName)
+
+		if err == nil {
+			defer file.Close()
+			wav.Save(file, soundData.SampleRate(), soundData.Samples(0, soundData.SampleCount()))
+			mode.context.ModelAdapter().SetMessage(fmt.Sprintf("Exported %s", fileName))
+		} else {
+			mode.context.ModelAdapter().SetMessage("Could not create file for export.")
+		}
+	}
+}
+
+func (mode *GameTextsMode) importAudio(filePath string) {
+	file, fileErr := os.Open(filePath)
+
+	if (fileErr == nil) && (file != nil) {
+		defer file.Close()
+		data, dataErr := wav.Load(file)
+
+		if dataErr == nil {
+			mode.soundAdapter.RequestAudioChange(data)
+		} else {
+			mode.context.ModelAdapter().SetMessage("File not supported. Only .wav files with 16bit or 8bit LPCM possible.")
+		}
+	} else {
+		mode.context.ModelAdapter().SetMessage(fmt.Sprintf("File could not be opened: %s", filePath))
+	}
 }

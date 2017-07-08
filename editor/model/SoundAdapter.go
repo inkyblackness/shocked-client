@@ -68,7 +68,7 @@ func (adapter *SoundAdapter) onAudio(resourceKey model.ResourceKey, data audio.S
 }
 
 // Audio returns the current audio.
-func (adapter *TextAdapter) Audio() (data audio.SoundData) {
+func (adapter *SoundAdapter) Audio() (data audio.SoundData) {
 	ptr := adapter.data.get()
 	if ptr != nil {
 		data = ptr.(audio.SoundData)
