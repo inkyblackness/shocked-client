@@ -269,7 +269,7 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 			extraPropertiesBottomResolver := func() ui.Anchor { return mode.selectedObjectsPropertiesExtraPanel.Bottom() }
 			var extraPanelBuilder *controlPanelBuilder
 			mode.selectedObjectsPropertiesExtraArea, extraPanelBuilder =
-				panelBuilder.addDynamicSection(true, extraPropertiesBottomResolver)
+				panelBuilder.addDynamicSection(false, extraPropertiesBottomResolver)
 
 			mode.selectedObjectsPropertiesExtraPanel = newPropertyPanel(extraPanelBuilder,
 				mode.updateSelectedObjectsExtraProperties, mode.objectItemsForClass)
@@ -279,7 +279,7 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 			classPropertiesBottomResolver := func() ui.Anchor { return mode.selectedObjectsPropertiesPanel.Bottom() }
 			var mainClassPanelBuilder *controlPanelBuilder
 			mode.selectedObjectsPropertiesMainArea, mainClassPanelBuilder =
-				panelBuilder.addDynamicSection(true, classPropertiesBottomResolver)
+				panelBuilder.addDynamicSection(false, classPropertiesBottomResolver)
 			mode.selectedObjectsPropertiesHeaderArea, _ = mainClassPanelBuilder.addSection(true)
 
 			mode.selectedObjectsPropertiesPanel = newPropertyPanel(mainClassPanelBuilder,
@@ -294,7 +294,9 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 			mode.selectedObjectsExtraPropertiesItem,
 			mode.selectedObjectsClassPropertiesItem}
 		mode.selectedObjectsPropertiesBox.SetItems(propertiesTabItems)
-		mode.selectedObjectsPropertiesBox.SetSelectedItem(mode.selectedObjectsBasePropertiesItem)
+		initialItem := mode.selectedObjectsBasePropertiesItem
+		mode.selectedObjectsPropertiesBox.SetSelectedItem(initialItem)
+		mode.onSelectedPropertiesDisplayChanged(initialItem)
 	}
 	{
 		builder := ui.NewAreaBuilder()
