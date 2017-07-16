@@ -197,6 +197,11 @@ func NewLevelObjectsMode(context Context, parent *ui.Area, mapDisplay *display.M
 				properties.Subclass = intAsPointer(typeItem.id.Subclass())
 				properties.Type = intAsPointer(typeItem.id.Type())
 			})
+			mode.updateSelectedObjectsClassPropertiesRaw(func(objectID model.ObjectID, classData []byte) {
+				for index := range classData {
+					classData[index] = 0x00
+				}
+			})
 		})
 
 		mode.selectedObjectsPropertiesTitle, mode.selectedObjectsPropertiesBox = panelBuilder.addComboProperty("Show Properties", mode.onSelectedPropertiesDisplayChanged)
@@ -855,11 +860,17 @@ func (mode *LevelObjectsMode) updateSelectedObjectsBaseProperties(modifier func(
 func (mode *LevelObjectsMode) updateSelectedObjectsClassProperties(key string, value uint32, update propertyUpdateFunction) {
 	interpreterFactory := mode.classInterpreterFactory()
 
+	mode.updateSelectedObjectsClassPropertiesRaw(func(objectID model.ObjectID, classData []byte) {
+		mode.setInterpreterValue(interpreterFactory, objectID, classData, key, value, update)
+	})
+}
+
+func (mode *LevelObjectsMode) updateSelectedObjectsClassPropertiesRaw(modifier func(objectID model.ObjectID, classData []byte)) {
 	for _, object := range mode.selectedObjects {
 		var properties dataModel.LevelObjectProperties
 
 		properties.ClassData = object.ClassData()
-		mode.setInterpreterValue(interpreterFactory, object.ID(), properties.ClassData, key, value, update)
+		modifier(object.ID(), properties.ClassData)
 		mode.levelAdapter.RequestObjectPropertiesChange([]int{object.Index()}, &properties)
 	}
 }
