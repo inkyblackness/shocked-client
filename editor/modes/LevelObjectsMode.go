@@ -798,6 +798,33 @@ func (mode *LevelObjectsMode) createPropertyControls(panel *propertyPanel, key s
 		}
 	})
 
+	simplifier.SetSpecialHandler("MaterialOrLevelTexture", func() {
+		selectionBox := panel.NewComboBox(key, "Type", maskedUpdate(7, 0xFF))
+		var selectedItem controls.ComboBoxItem
+		selectedType := -1
+		selectedIndex := 0
+		items := []controls.ComboBoxItem{
+			&enumItem{0, "Material"},
+			&enumItem{1, "Level texture"}}
+
+		if unifiedValue != math.MinInt64 {
+			selectedType = int(unifiedValue >> 7)
+			selectedIndex = int(unifiedValue & 0x7F)
+			selectedItem = items[selectedType]
+		}
+		selectionBox.SetItems(items)
+		selectionBox.SetSelectedItem(selectedItem)
+
+		if selectedType == 0 {
+			slider := panel.NewSlider(key, "Material", maskedUpdate(0, 0x7F))
+			slider.SetRange(0, 127)
+			slider.SetValue(int64(selectedIndex))
+		} else if selectedType == 1 {
+			selector := panel.NewTextureSelector(key, "", maskedUpdate(0, 0x7F), mode.levelTextures)
+			selector.SetSelectedIndex(selectedIndex)
+		}
+	})
+
 	simplifier.SetSpecialHandler("ObjectHeight", func() {
 		slider := panel.NewSlider(key, "", func(currentValue, parameter uint32) uint32 {
 			return parameter
