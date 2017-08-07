@@ -262,6 +262,13 @@ func (adapter *LevelAdapter) LevelObjects(filter func(*LevelObject) bool) []*Lev
 	return result
 }
 
+// LevelObject returns the object for given index. nil if not known.
+func (adapter *LevelAdapter) LevelObject(index int) *LevelObject {
+	objects := adapter.levelObjectsMap()
+
+	return objects[index]
+}
+
 // OnLevelObjectsChanged registers a callback for updates on the list of level objects.
 func (adapter *LevelAdapter) OnLevelObjectsChanged(callback func()) {
 	adapter.levelObjects.addObserver(callback)
