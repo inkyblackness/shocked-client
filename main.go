@@ -34,6 +34,7 @@ func main() {
 	arguments, _ := docopt.Parse(usage(), nil, true, Title, false)
 
 	pathArg := arguments["--path"]
+	autoSaveTimeoutMSec := 5000
 
 	source, srcErr := release.FromAbsolutePaths(pathArg.([]string))
 	if srcErr != nil {
@@ -44,7 +45,7 @@ func main() {
 	deferrer := make(chan func(), 100)
 	defer close(deferrer)
 
-	store := core.NewInplaceDataStore(source, deferrer)
+	store := core.NewInplaceDataStore(source, deferrer, autoSaveTimeoutMSec)
 	app := editor.NewMainApplication(store)
 
 	native.Run(app, deferrer)
