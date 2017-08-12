@@ -946,6 +946,9 @@ func (mode *LevelObjectsMode) createPropertyControls(panel *propertyPanel, key s
 			return uint32(util.ToBinaryCodedDecimal(uint16(parameter)))
 		})
 		slider.SetRange(0, 999)
+		slider.SetValueFormatter(func(value int64) string {
+			return fmt.Sprintf("%03d", value)
+		})
 		if unifiedValue != math.MinInt64 {
 			slider.SetValue(int64(util.FromBinaryCodedDecimal(uint16(unifiedValue))))
 		}
