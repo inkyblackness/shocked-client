@@ -1,6 +1,7 @@
 package editor
 
 import (
+	"github.com/inkyblackness/shocked-client/editor/cmd"
 	"github.com/inkyblackness/shocked-client/editor/display"
 	"github.com/inkyblackness/shocked-client/editor/modes"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
@@ -35,6 +36,7 @@ type rootArea struct {
 	electronicMessagesMode *modeSelector
 	textsMode              *modeSelector
 	allModes               []*modeSelector
+	activeMode             *modeSelector
 }
 
 func newRootArea(context modes.Context) *ui.Area {
@@ -96,7 +98,11 @@ func newRootArea(context modes.Context) *ui.Area {
 		builder.SetBottom(ui.NewOffsetAnchor(topLine.Bottom(), scaled(-2)))
 		builder.WithItems(items)
 		builder.WithSelectionChangeHandler(func(item controls.ComboBoxItem) {
-			root.setActiveMode(item.(*modeSelector))
+			command := cmd.SetEditorModeCommand{
+				Activator: root.setActiveMode,
+				OldMode:   root.activeMode.name,
+				NewMode:   item.(*modeSelector).name}
+			context.Perform(command)
 		})
 		root.modeBox = builder.Build()
 	}
@@ -114,7 +120,7 @@ func newRootArea(context modes.Context) *ui.Area {
 		})
 	}
 
-	root.setActiveMode(root.welcomeMode)
+	root.setActiveMode(root.welcomeMode.name)
 
 	return root.area
 }
@@ -129,12 +135,14 @@ func (root *rootArea) addMode(mode Mode, name string) *modeSelector {
 	return selector
 }
 
-func (root *rootArea) setActiveMode(selector *modeSelector) {
+func (root *rootArea) setActiveMode(name string) {
 	for _, other := range root.allModes {
-		if other != selector {
+		if other.name != name {
 			other.mode.SetActive(false)
+		} else {
+			root.activeMode = other
 		}
 	}
-	root.modeBox.SetSelectedItem(selector)
-	selector.mode.SetActive(true)
+	root.modeBox.SetSelectedItem(root.activeMode)
+	root.activeMode.mode.SetActive(true)
 }
