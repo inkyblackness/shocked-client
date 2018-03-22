@@ -16,11 +16,6 @@ type Stack struct {
 	redoList *stackEntry
 }
 
-// NewStack returns a new instance of a stack.
-func NewStack() *Stack {
-	return &Stack{}
-}
-
 // Perform executes the given command and puts it on the stack
 // if the command was successful.
 // This function also clears the list of commands to be redone.

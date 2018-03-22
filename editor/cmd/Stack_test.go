@@ -41,7 +41,7 @@ func (cmd *TestCommand) run() (err error) {
 type StackSuite struct {
 	suite.Suite
 
-	stack    *Stack
+	stack    Stack
 	commands map[string]*TestCommand
 }
 
@@ -50,49 +50,42 @@ func TestStackSuite(t *testing.T) {
 }
 
 func (suite *StackSuite) SetupTest() {
-	suite.stack = nil
+	suite.stack = Stack{}
 	suite.commands = make(map[string]*TestCommand)
 }
 
 func (suite *StackSuite) TestNewStackCantDoAnything() {
-	suite.whenAnInstanceIsCreated()
 	suite.thenStackShouldNotSupportRedo()
 	suite.thenStackShouldNotSupportUndo()
 }
 
 func (suite *StackSuite) TestPerformExecutesCommand() {
-	suite.givenAnInstance()
 	suite.whenPerforming(suite.aCommand("cmd1"))
 	suite.thenCommandShouldHaveBeenExecuted("cmd1")
 }
 
 func (suite *StackSuite) TestPerformAllowsUndoIfSuccessful() {
-	suite.givenAnInstance()
 	suite.whenPerforming(suite.aCommand("cmd1"))
 	suite.thenStackShouldSupportUndo()
 }
 
 func (suite *StackSuite) TestPerformIgnoresCommandIfItFails() {
-	suite.givenAnInstance()
 	suite.whenPerforming(suite.aCommandReturningError())
 	suite.thenStackShouldNotSupportUndo()
 }
 
 func (suite *StackSuite) TestPerformReturnsErrorOfCommand() {
 	err := fmt.Errorf("fail first time")
-	suite.whenAnInstanceIsCreated()
 	suite.thenPerformShouldReturnError(suite.aCommandReturning(err), err)
 }
 
 func (suite *StackSuite) TestUndoRevertsCommand() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.whenUndoing()
 	suite.thenCommandShouldHaveBeenReverted("cmd1")
 }
 
 func (suite *StackSuite) TestUndoRevertsCommandOnlyOnce() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.givenUndoWasCalledTimes(1)
 	suite.whenUndoing()
@@ -100,7 +93,6 @@ func (suite *StackSuite) TestUndoRevertsCommandOnlyOnce() {
 }
 
 func (suite *StackSuite) TestUndoRevertsCommandsInSequence() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.givenCommandWasPerformed("cmd2")
 
@@ -112,7 +104,6 @@ func (suite *StackSuite) TestUndoRevertsCommandsInSequence() {
 }
 
 func (suite *StackSuite) TestUndoLeavesStackUnchangedIfCommandFails() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.givenCommandWasPerformed("cmd2")
 	suite.givenCommandWillFail("cmd2")
@@ -122,14 +113,12 @@ func (suite *StackSuite) TestUndoLeavesStackUnchangedIfCommandFails() {
 }
 
 func (suite *StackSuite) TestUndoEnablesRedo() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.whenUndoing()
 	suite.thenStackShouldSupportRedo()
 }
 
 func (suite *StackSuite) TestRedoExecutesCommandAgain() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.givenUndoWasCalledTimes(1)
 	suite.whenRedoing()
@@ -137,7 +126,6 @@ func (suite *StackSuite) TestRedoExecutesCommandAgain() {
 }
 
 func (suite *StackSuite) TestRedoExecutesCommandOnlyOnce() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.givenUndoWasCalledTimes(1)
 	suite.givenRedoWasCalledTimes(1)
@@ -146,7 +134,6 @@ func (suite *StackSuite) TestRedoExecutesCommandOnlyOnce() {
 }
 
 func (suite *StackSuite) TestRedoExecutesCommandsInSequence() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.givenCommandWasPerformed("cmd2")
 	suite.givenUndoWasCalledTimes(2)
@@ -159,7 +146,6 @@ func (suite *StackSuite) TestRedoExecutesCommandsInSequence() {
 }
 
 func (suite *StackSuite) TestRedoLeavesStackUnchangedIfCommandFails() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.givenUndoWasCalledTimes(1)
 	suite.givenCommandWillFail("cmd1")
@@ -169,7 +155,6 @@ func (suite *StackSuite) TestRedoLeavesStackUnchangedIfCommandFails() {
 }
 
 func (suite *StackSuite) TestRedoMakesCommandsUndoableAgain() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.givenUndoWasCalledTimes(1)
 	suite.givenRedoWasCalledTimes(1)
@@ -178,7 +163,6 @@ func (suite *StackSuite) TestRedoMakesCommandsUndoableAgain() {
 }
 
 func (suite *StackSuite) TestPerformDropsPendingRedoStack() {
-	suite.givenAnInstance()
 	suite.givenCommandWasPerformed("cmd1")
 	suite.givenUndoWasCalledTimes(1)
 
@@ -238,8 +222,6 @@ func (suite *StackSuite) TestRedoPanicsIfStackIsInUse() {
 }
 
 func (suite *StackSuite) assertPanics(taskFor func(string) func()) {
-	suite.givenAnInstance()
-
 	cmd1 := suite.aCommandExecuting("cmd1", taskFor("Perform"))
 	suite.whenPerforming(cmd1)
 
@@ -251,10 +233,6 @@ func (suite *StackSuite) assertPanics(taskFor func(string) func()) {
 	suite.givenUndoWasCalledTimes(1)
 	suite.givenCommandExecutes("cmd3", taskFor("Redo"))
 	suite.whenRedoing()
-}
-
-func (suite *StackSuite) givenAnInstance() {
-	suite.whenAnInstanceIsCreated()
 }
 
 func (suite *StackSuite) givenCommandWasPerformed(name string) {
@@ -288,10 +266,6 @@ func (suite *StackSuite) whenUndoing() {
 
 func (suite *StackSuite) whenRedoing() {
 	suite.stack.Redo()
-}
-
-func (suite *StackSuite) whenAnInstanceIsCreated() {
-	suite.stack = NewStack()
 }
 
 func (suite *StackSuite) whenPerforming(command Command) {
