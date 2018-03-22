@@ -7,6 +7,7 @@ import (
 
 	mgl "github.com/go-gl/mathgl/mgl32"
 
+	"github.com/inkyblackness/shocked-client/editor/cmd"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/env"
 	"github.com/inkyblackness/shocked-client/env/keys"
@@ -23,14 +24,15 @@ type MainApplication struct {
 	lastElapsedTick time.Time
 	elapsedMSec     int64
 
+	commandStack cmd.Stack
+
 	store        dataModel.DataStore
 	modelAdapter *model.Adapter
 
-	scale                     float32
-	glWindow                  env.OpenGlWindow
-	windowWidth, windowHeight float32
-	gl                        opengl.OpenGl
-	projectionMatrix          mgl.Mat4
+	scale            float32
+	glWindow         env.OpenGlWindow
+	gl               opengl.OpenGl
+	projectionMatrix mgl.Mat4
 
 	mouseX, mouseY      float32
 	mouseButtons        uint32
@@ -286,6 +288,10 @@ func (app *MainApplication) onKey(key keys.Key, modifier keys.Modifier) {
 	} else if key == keys.KeyPaste {
 		app.rootArea.DispatchPositionalEvent(events.NewClipboardEvent(events.ClipboardPasteEventType,
 			app.mouseX, app.mouseY, app.glWindow.Clipboard()))
+	} else if key == keys.KeyUndo {
+		app.undo()
+	} else if key == keys.KeyRedo {
+		app.redo()
 	}
 }
 
@@ -303,6 +309,28 @@ func (app *MainApplication) onFileDrop(filePaths []string) {
 func (app *MainApplication) sendFileDropEvent(filePaths []string) {
 	app.rootArea.DispatchPositionalEvent(events.NewFileDropEvent(
 		app.mouseX, app.mouseY, filePaths))
+}
+
+func (app *MainApplication) undo() {
+	err := app.commandStack.Undo()
+	if err != nil {
+		app.modelAdapter.SetMessage("Failed to undo command.")
+	}
+}
+
+func (app *MainApplication) redo() {
+	err := app.commandStack.Redo()
+	if err != nil {
+		app.modelAdapter.SetMessage("Failed to redo command.")
+	}
+}
+
+// Perform tries to execute the given command and puts it on the command stack.
+func (app *MainApplication) Perform(command cmd.Command) {
+	err := app.commandStack.Perform(command)
+	if err != nil {
+		app.modelAdapter.SetMessage("Failed to perform command.")
+	}
 }
 
 // ModelAdapter implements the Context interface.
