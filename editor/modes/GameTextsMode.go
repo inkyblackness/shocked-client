@@ -5,7 +5,9 @@ import (
 	"os"
 	"path"
 
+	"github.com/inkyblackness/res/audio"
 	"github.com/inkyblackness/res/audio/wav"
+	"github.com/inkyblackness/shocked-client/editor/cmd"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
@@ -26,10 +28,12 @@ type GameTextsMode struct {
 
 	typeLabel            *controls.Label
 	typeBox              *controls.ComboBox
+	typeItems            enumItems
 	selectedResourceType dataModel.ResourceType
 
 	languageLabel *controls.Label
 	languageBox   *controls.ComboBox
+	languageItems enumItems
 	language      dataModel.ResourceLanguage
 
 	selectedTextIDLabel  *controls.Label
@@ -89,34 +93,29 @@ func NewGameTextsMode(context Context, parent *ui.Area) *GameTextsMode {
 	}
 	{
 		panelBuilder := newControlPanelBuilder(mode.propertiesArea, context.ControlFactory())
-		var initialTypeItem controls.ComboBoxItem
-		var initialLanguageItem controls.ComboBoxItem
-
 		{
 			mode.typeLabel, mode.typeBox = panelBuilder.addComboProperty("Text Type", mode.onTextTypeChanged)
-			items := []controls.ComboBoxItem{
-				&enumItem{uint32(dataModel.ResourceTypeTrapMessages), "Trap Messages"},
-				&enumItem{uint32(dataModel.ResourceTypeWords), "Words"},
-				&enumItem{uint32(dataModel.ResourceTypeLogCategories), "Log Categories"},
-				&enumItem{uint32(dataModel.ResourceTypeVariousMessages), "Various Messages"},
-				&enumItem{uint32(dataModel.ResourceTypeScreenMessages), "Screen Messages"},
-				&enumItem{uint32(dataModel.ResourceTypeInfoNodeMessages), "Info Node Messages (8/5/6)"},
-				&enumItem{uint32(dataModel.ResourceTypeAccessCardNames), "Access Card Names"},
-				&enumItem{uint32(dataModel.ResourceTypeDataletMessages), "Datalet Messages (8/5/8)"},
-				&enumItem{uint32(dataModel.ResourceTypePaperTexts), "Paper Texts"},
-				&enumItem{uint32(dataModel.ResourceTypePanelNames), "Panel Names"}}
+			mode.typeItems = []*enumItem{
+				{uint32(dataModel.ResourceTypeTrapMessages), "Trap Messages"},
+				{uint32(dataModel.ResourceTypeWords), "Words"},
+				{uint32(dataModel.ResourceTypeLogCategories), "Log Categories"},
+				{uint32(dataModel.ResourceTypeVariousMessages), "Various Messages"},
+				{uint32(dataModel.ResourceTypeScreenMessages), "Screen Messages"},
+				{uint32(dataModel.ResourceTypeInfoNodeMessages), "Info Node Messages (8/5/6)"},
+				{uint32(dataModel.ResourceTypeAccessCardNames), "Access Card Names"},
+				{uint32(dataModel.ResourceTypeDataletMessages), "Datalet Messages (8/5/8)"},
+				{uint32(dataModel.ResourceTypePaperTexts), "Paper Texts"},
+				{uint32(dataModel.ResourceTypePanelNames), "Panel Names"}}
 
-			mode.typeBox.SetItems(items)
-			initialTypeItem = items[0]
+			mode.typeBox.SetItems(mode.typeItems.forComboBox())
 		}
 		{
 			mode.languageLabel, mode.languageBox = panelBuilder.addComboProperty("Language", mode.onLanguageChanged)
-			items := []controls.ComboBoxItem{
-				&enumItem{uint32(dataModel.ResourceLanguageStandard), "STD"},
-				&enumItem{uint32(dataModel.ResourceLanguageFrench), "FRN"},
-				&enumItem{uint32(dataModel.ResourceLanguageGerman), "GER"}}
-			mode.languageBox.SetItems(items)
-			initialLanguageItem = items[0]
+			mode.languageItems = []*enumItem{
+				{uint32(dataModel.ResourceLanguageStandard), "STD"},
+				{uint32(dataModel.ResourceLanguageFrench), "FRN"},
+				{uint32(dataModel.ResourceLanguageGerman), "GER"}}
+			mode.languageBox.SetItems(mode.languageItems.forComboBox())
 		}
 		{
 			mode.selectedTextIDLabel, mode.selectedTextIDSlider = panelBuilder.addSliderProperty("Selected Text ID",
@@ -139,10 +138,7 @@ func NewGameTextsMode(context Context, parent *ui.Area) *GameTextsMode {
 
 			mode.soundAdapter.OnAudioChanged(mode.onAudioChanged)
 		}
-		mode.languageBox.SetSelectedItem(initialLanguageItem)
-		mode.onLanguageChanged(initialLanguageItem)
-		mode.typeBox.SetSelectedItem(initialTypeItem)
-		mode.onTextTypeChanged(initialTypeItem)
+		mode.setState(dataModel.ResourceTypeTrapMessages, dataModel.ResourceLanguageStandard, 0)
 	}
 	{
 		padding := scaled(5.0)
@@ -170,7 +166,7 @@ func NewGameTextsMode(context Context, parent *ui.Area) *GameTextsMode {
 			displayBuilder.SetFitToWidth()
 			mode.textDrop = dropBuilder.Build()
 			mode.textValue = displayBuilder.Build()
-			mode.textValue.AllowTextChange(mode.onTextModified)
+			mode.textValue.AllowTextChange(mode.requestTextChange)
 		}
 	}
 	mode.context.ModelAdapter().OnProjectChanged(func() {
@@ -188,13 +184,7 @@ func (mode *GameTextsMode) SetActive(active bool) {
 
 func (mode *GameTextsMode) onTextTypeChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.selectedResourceType = dataModel.ResourceType(item.value)
-
-	mode.audioArea.SetVisible(mode.selectedResourceType == dataModel.ResourceTypeTrapMessages)
-	mode.onTextSelected(0)
-	mode.selectedTextIDSlider.SetRange(0, int64(dataModel.MaxEntriesFor(mode.selectedResourceType))-1)
-	mode.selectedTextIDSlider.SetValue(0)
-	mode.requestData()
+	mode.setState(dataModel.ResourceType(item.value), mode.language, 0)
 }
 
 func (mode *GameTextsMode) onLanguageChanged(boxItem controls.ComboBoxItem) {
@@ -221,8 +211,16 @@ func (mode *GameTextsMode) onTextChanged() {
 	mode.textValue.SetText(mode.textAdapter.Text())
 }
 
-func (mode *GameTextsMode) onTextModified(newText string) {
-	mode.textAdapter.RequestTextChange(newText)
+func (mode *GameTextsMode) requestTextChange(newText string) {
+	restoreState := mode.stateSnapshot()
+	mode.context.Perform(&cmd.SetTextCommand{
+		Setter: func(value string) error {
+			restoreState()
+			mode.textAdapter.RequestTextChange(value)
+			return nil
+		},
+		NewValue: newText,
+		OldValue: mode.textAdapter.Text()})
 }
 
 func (mode *GameTextsMode) requestAudio(resourceType dataModel.ResourceType) {
@@ -290,11 +288,56 @@ func (mode *GameTextsMode) importAudio(filePath string) {
 		data, dataErr := wav.Load(file)
 
 		if dataErr == nil {
-			mode.soundAdapter.RequestAudioChange(data)
+			mode.requestAudioChange(data)
 		} else {
 			mode.context.ModelAdapter().SetMessage("File not supported. Only .wav files with 16bit or 8bit LPCM possible.")
 		}
 	} else {
 		mode.context.ModelAdapter().SetMessage(fmt.Sprintf("File could not be opened: %s", filePath))
 	}
+}
+
+func (mode *GameTextsMode) requestAudioChange(newData audio.SoundData) {
+	restoreState := mode.stateSnapshot()
+	mode.context.Perform(&cmd.SetAudioCommand{
+		Setter: func(data audio.SoundData) error {
+			restoreState()
+			mode.soundAdapter.RequestAudioChange(data)
+			return nil
+		},
+		NewValue: newData,
+		OldValue: mode.soundAdapter.Audio()})
+}
+
+func (mode *GameTextsMode) stateSnapshot() func() {
+	currentType := mode.selectedResourceType
+	currentLanguage := mode.language
+	currentID := mode.selectedTextID
+	return func() {
+		mode.setState(currentType, currentLanguage, currentID)
+	}
+}
+
+func (mode *GameTextsMode) setState(resourceType dataModel.ResourceType, language dataModel.ResourceLanguage, id int) {
+	{
+		mode.selectedResourceType = resourceType
+		for _, item := range mode.typeItems {
+			if item.value == uint32(resourceType) {
+				mode.typeBox.SetSelectedItem(item)
+			}
+		}
+		mode.audioArea.SetVisible(mode.selectedResourceType == dataModel.ResourceTypeTrapMessages)
+		mode.selectedTextIDSlider.SetRange(0, int64(dataModel.MaxEntriesFor(mode.selectedResourceType))-1)
+	}
+	{
+		mode.language = language
+		for _, item := range mode.languageItems {
+			if item.value == uint32(language) {
+				mode.languageBox.SetSelectedItem(item)
+			}
+		}
+	}
+	mode.selectedTextID = id
+	mode.selectedTextIDSlider.SetValue(int64(mode.selectedTextID))
+	mode.requestData()
 }
