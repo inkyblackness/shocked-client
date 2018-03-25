@@ -41,11 +41,11 @@ func (texture *GameTexture) AnimationIndex() int {
 }
 
 // Name returns the name of the texture in given language.
-func (texture *GameTexture) Name(language int) string {
-	return *texture.properties.Name[language]
+func (texture *GameTexture) Name(language model.ResourceLanguage) string {
+	return *texture.properties.Name[language.ToIndex()]
 }
 
 // UseText returns the usage text of the texture in given language.
-func (texture *GameTexture) UseText(language int) string {
-	return *texture.properties.CantBeUsed[language]
+func (texture *GameTexture) UseText(language model.ResourceLanguage) string {
+	return *texture.properties.CantBeUsed[language.ToIndex()]
 }
