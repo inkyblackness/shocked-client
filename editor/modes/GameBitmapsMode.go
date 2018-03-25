@@ -242,15 +242,13 @@ func (mode *GameBitmapsMode) requestBitmapChange(newBitmap *dataModel.RawBitmap)
 	restoreState := mode.stateSnapshot()
 	key := dataModel.MakeLocalizedResourceKey(mode.selectedResourceType, mode.selectedLanguage, uint16(mode.selectedBitmapID))
 	mode.context.Perform(&cmd.SetBitmapCommand{
-		Setter: func(bitmapKey dataModel.ResourceKey, bmp *dataModel.RawBitmap) error {
+		Setter: func(bmp *dataModel.RawBitmap) error {
 			restoreState()
-			mode.bitmapsAdapter.RequestBitmapChange(bitmapKey, bmp)
+			mode.bitmapsAdapter.RequestBitmapChange(key, bmp)
 			return nil
 		},
-		Key:      key,
 		NewValue: newBitmap,
 		OldValue: mode.bitmapsAdapter.Bitmap(key)})
-
 }
 
 func (mode *GameBitmapsMode) stateSnapshot() func() {
@@ -283,4 +281,5 @@ func (mode *GameBitmapsMode) setState(resourceType dataModel.ResourceType, langu
 	mode.selectedBitmapID = id
 	mode.bitmapIDSlider.SetValue(int64(mode.selectedBitmapID))
 	mode.bitmapSelector.SetSelectedIndex(mode.selectedBitmapID)
+	mode.bitmapSelector.DisplaySelectedIndex()
 }
