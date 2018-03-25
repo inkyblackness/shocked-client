@@ -411,7 +411,7 @@ func (mode *ElectronicMessagesMode) onVariantChanged(boxItem controls.ComboBoxIt
 
 func (mode *ElectronicMessagesMode) updateMessageText() {
 	languageIndex := mode.language.ToIndex()
-	text := ""
+	var text string
 	if mode.variantTerse {
 		text = mode.messageAdapter.TerseText(languageIndex)
 	} else {
@@ -427,7 +427,7 @@ func (mode *ElectronicMessagesMode) updateMessageText() {
 func (mode *ElectronicMessagesMode) updateMessageAudio() {
 	languageIndex := mode.language.ToIndex()
 	data := mode.messageAdapter.Audio(languageIndex)
-	info := ""
+	var info string
 
 	if data != nil {
 		info = fmt.Sprintf("%.02f sec", float32(data.SampleCount())/data.SampleRate())
