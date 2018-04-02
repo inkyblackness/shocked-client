@@ -13,13 +13,14 @@ import (
 	"github.com/inkyblackness/res"
 	"github.com/inkyblackness/res/data/gameobj"
 	"github.com/inkyblackness/res/data/interpreters"
+	"github.com/inkyblackness/shocked-client/editor/cmd"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
 	"github.com/inkyblackness/shocked-client/ui"
 	"github.com/inkyblackness/shocked-client/ui/events"
 
-	datamodel "github.com/inkyblackness/shocked-model"
+	dataModel "github.com/inkyblackness/shocked-model"
 )
 
 // GameObjectsMode is a mode for game object properties.
@@ -237,7 +238,7 @@ func (mode *GameObjectsMode) onSelectedPropertiesDisplayChanged(item controls.Co
 }
 
 func (mode *GameObjectsMode) updateCommonProperty(fullPath string, parameter uint32, update propertyUpdateFunction) {
-	mode.requestObjectPropertiesChange(func(object *model.GameObject, properties *datamodel.GameObjectProperties) {
+	mode.requestObjectPropertiesChange(func(object *model.GameObject, properties *dataModel.GameObjectProperties) {
 		properties.Data.Common = cloneBytes(object.CommonData())
 		interpreter := gameobj.CommonProperties(properties.Data.Common)
 		mode.updateObjectProperty(interpreter, fullPath, parameter, update)
@@ -245,7 +246,7 @@ func (mode *GameObjectsMode) updateCommonProperty(fullPath string, parameter uin
 }
 
 func (mode *GameObjectsMode) updateGenericProperty(fullPath string, parameter uint32, update propertyUpdateFunction) {
-	mode.requestObjectPropertiesChange(func(object *model.GameObject, properties *datamodel.GameObjectProperties) {
+	mode.requestObjectPropertiesChange(func(object *model.GameObject, properties *dataModel.GameObjectProperties) {
 		properties.Data.Generic = cloneBytes(object.GenericData())
 		interpreter := gameobj.GenericProperties(res.ObjectClass(object.ID().Class()), properties.Data.Generic)
 		mode.updateObjectProperty(interpreter, fullPath, parameter, update)
@@ -253,7 +254,7 @@ func (mode *GameObjectsMode) updateGenericProperty(fullPath string, parameter ui
 }
 
 func (mode *GameObjectsMode) updateSpecificProperty(fullPath string, parameter uint32, update propertyUpdateFunction) {
-	mode.requestObjectPropertiesChange(func(object *model.GameObject, properties *datamodel.GameObjectProperties) {
+	mode.requestObjectPropertiesChange(func(object *model.GameObject, properties *dataModel.GameObjectProperties) {
 		properties.Data.Specific = cloneBytes(object.SpecificData())
 		interpreter := gameobj.SpecificProperties(
 			res.MakeObjectID(res.ObjectClass(object.ID().Class()), res.ObjectSubclass(object.ID().Subclass()), res.ObjectType(object.ID().Type())),
@@ -262,9 +263,9 @@ func (mode *GameObjectsMode) updateSpecificProperty(fullPath string, parameter u
 	})
 }
 
-func (mode *GameObjectsMode) requestObjectPropertiesChange(modifier func(*model.GameObject, *datamodel.GameObjectProperties)) {
+func (mode *GameObjectsMode) requestObjectPropertiesChange(modifier func(*model.GameObject, *dataModel.GameObjectProperties)) {
 	object := mode.objectsAdapter.Object(mode.selectedObjectID)
-	var properties datamodel.GameObjectProperties
+	var properties dataModel.GameObjectProperties
 
 	modifier(object, &properties)
 	mode.objectsAdapter.RequestObjectPropertiesChange(object.ID(), &properties)
@@ -359,11 +360,11 @@ func (mode *GameObjectsMode) importBitmap(filePath string) {
 		mode.context.ModelAdapter().SetMessage(fmt.Sprintf("Could not open file <%v>", filePath))
 	}
 	if err == nil {
-		mode.setBitmap(img)
+		mode.importBitmapImage(img)
 	}
 }
 
-func (mode *GameObjectsMode) setBitmap(img image.Image) {
+func (mode *GameObjectsMode) importBitmapImage(img image.Image) {
 	if mode.selectedBitmapIndex >= 0 {
 		rawPalette := mode.context.ModelAdapter().GamePalette()
 		palette := make([]color.Color, len(rawPalette))
@@ -372,15 +373,27 @@ func (mode *GameObjectsMode) setBitmap(img image.Image) {
 		}
 		bitmapper := graphics.NewStandardBitmapper(palette)
 		gfxBitmap := bitmapper.Map(img)
-		var rawBitmap datamodel.RawBitmap
+		var rawBitmap dataModel.RawBitmap
 
 		rawBitmap.Width = gfxBitmap.Width
 		rawBitmap.Height = gfxBitmap.Height
 		rawBitmap.Pixels = base64.StdEncoding.EncodeToString(gfxBitmap.Pixels)
 
-		key := model.ObjectBitmapID{ObjectID: mode.selectedObjectID, Index: mode.selectedBitmapIndex}
-		mode.objectsAdapter.RequestBitmapChange(key, &rawBitmap)
+		mode.requestBitmapChange(&rawBitmap)
 	}
+}
+
+func (mode *GameObjectsMode) requestBitmapChange(newBitmap *dataModel.RawBitmap) {
+	restoreState := mode.stateSnapshot()
+	key := model.ObjectBitmapID{ObjectID: mode.selectedObjectID, Index: mode.selectedBitmapIndex}
+	mode.context.Perform(&cmd.SetBitmapCommand{
+		Setter: func(bmp *dataModel.RawBitmap) error {
+			restoreState()
+			mode.objectsAdapter.RequestBitmapChange(key, bmp)
+			return nil
+		},
+		NewValue: newBitmap,
+		OldValue: mode.objectsAdapter.Bitmap(key)})
 }
 
 func (mode *GameObjectsMode) stateSnapshot() func() {
