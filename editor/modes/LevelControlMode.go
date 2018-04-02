@@ -77,6 +77,7 @@ type LevelControlMode struct {
 	selectedAnimationGroupIndex int
 	animationGroupIndexLabel    *controls.Label
 	animationGroupIndexBox      *controls.ComboBox
+	animationGroupItems         enumItems
 	animationGroupTimeLabel     *controls.Label
 	animationGroupTimeSlider    *controls.Slider
 	animationGroupFramesLabel   *controls.Label
@@ -93,8 +94,7 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 		levelAdapter:                context.ModelAdapter().ActiveLevel(),
 		mapDisplay:                  mapDisplay,
 		currentLevelTextureIndex:    -1,
-		selectedSurveillanceIndex:   -1,
-		selectedAnimationGroupIndex: -1}
+		selectedAnimationGroupIndex: 1}
 
 	{
 		builder := ui.NewAreaBuilder()
@@ -493,61 +493,75 @@ func (mode *LevelControlMode) onFloorEffectLevelChanged(newValue int64) {
 
 func (mode *LevelControlMode) onLevelTextureAnimationsChanged() {
 	groupCount := mode.levelAdapter.TextureAnimationGroupCount()
-	items := []controls.ComboBoxItem{}
-	var selectedItem controls.ComboBoxItem
-
-	for index := 1; index < groupCount; index++ {
-		item := &enumItem{uint32(index), fmt.Sprintf("Group %v", index)}
-		items = append(items, item)
-		if index == mode.selectedAnimationGroupIndex {
-			selectedItem = item
+	mode.animationGroupItems = nil
+	if groupCount > 0 {
+		mode.animationGroupItems = make([]*enumItem, 0, groupCount-1)
+		for index := 1; index < groupCount; index++ {
+			item := &enumItem{uint32(index), fmt.Sprintf("Group %v", index)}
+			mode.animationGroupItems = append(mode.animationGroupItems, item)
 		}
 	}
-	mode.animationGroupIndexBox.SetItems(items)
-	mode.animationGroupIndexBox.SetSelectedItem(selectedItem)
-	mode.onAnimationGroupIndexChanged(selectedItem)
+	mode.animationGroupIndexBox.SetItems(mode.animationGroupItems.forComboBox())
+	mode.setAnimationGroupState(mode.selectedAnimationGroupIndex)
 }
 
 func (mode *LevelControlMode) onAnimationGroupIndexChanged(boxItem controls.ComboBoxItem) {
 	if boxItem != nil {
 		item := boxItem.(*enumItem)
-		group := mode.levelAdapter.TextureAnimationGroup(int(item.value))
-		mode.selectedAnimationGroupIndex = int(item.value)
-
-		mode.animationGroupFramesSlider.SetValue(int64(group.FrameCount()))
-		mode.animationGroupTimeSlider.SetValue(int64(group.FrameTime()))
-		mode.animationGroupTypeBox.SetSelectedItem(mode.animationGroupTypeItems[group.LoopType()])
+		mode.setAnimationGroupState(int(item.value))
 	} else {
-		mode.animationGroupFramesSlider.SetValueUndefined()
-		mode.animationGroupTimeSlider.SetValueUndefined()
-		mode.animationGroupTypeBox.SetSelectedItem(nil)
-	}
-}
-
-func (mode *LevelControlMode) requestAnimationGroupChange(modifier func(*dataModel.TextureAnimation)) {
-	if mode.selectedAnimationGroupIndex > 0 {
-		var properties dataModel.TextureAnimation
-
-		modifier(&properties)
-		mode.levelAdapter.RequestLevelTextureAnimationGroupChange(mode.selectedAnimationGroupIndex, properties)
+		mode.setAnimationGroupState(-1)
 	}
 }
 
 func (mode *LevelControlMode) onAnimationGroupTimeChanged(newValue int64) {
-	mode.requestAnimationGroupChange(func(properties *dataModel.TextureAnimation) {
-		properties.FrameTime = intAsPointer(int(newValue))
-	})
+	mode.requestAnimationGroupChange(func(properties *dataModel.TextureAnimation, value *int) {
+		properties.FrameTime = value
+	}, int(newValue), mode.levelAdapter.TextureAnimationGroup(mode.selectedAnimationGroupIndex).FrameTime())
 }
 
 func (mode *LevelControlMode) onAnimationGroupFramesChanged(newValue int64) {
-	mode.requestAnimationGroupChange(func(properties *dataModel.TextureAnimation) {
-		properties.FrameCount = intAsPointer(int(newValue))
-	})
+	mode.requestAnimationGroupChange(func(properties *dataModel.TextureAnimation, value *int) {
+		properties.FrameCount = value
+	}, int(newValue), mode.levelAdapter.TextureAnimationGroup(mode.selectedAnimationGroupIndex).FrameCount())
 }
 
 func (mode *LevelControlMode) onAnimationGroupTypeChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.requestAnimationGroupChange(func(properties *dataModel.TextureAnimation) {
-		properties.LoopType = intAsPointer(int(item.value))
-	})
+	mode.requestAnimationGroupChange(func(properties *dataModel.TextureAnimation, value *int) {
+		properties.LoopType = value
+	}, int(item.value), mode.levelAdapter.TextureAnimationGroup(mode.selectedAnimationGroupIndex).LoopType())
+}
+
+func (mode *LevelControlMode) requestAnimationGroupChange(modifier func(*dataModel.TextureAnimation, *int), newValue, oldValue int) {
+	currentAnimationGroupIndex := mode.selectedAnimationGroupIndex
+
+	if currentAnimationGroupIndex >= 0 {
+		mode.context.Perform(&cmd.SetIntPropertyCommand{
+			Setter: func(value int) error {
+				var properties dataModel.TextureAnimation
+				mode.setAnimationGroupState(currentAnimationGroupIndex)
+				modifier(&properties, &value)
+				mode.levelAdapter.RequestLevelTextureAnimationGroupChange(mode.selectedAnimationGroupIndex, properties)
+				return nil
+			},
+			NewValue: newValue,
+			OldValue: oldValue})
+	}
+}
+
+func (mode *LevelControlMode) setAnimationGroupState(groupIndex int) {
+	mode.selectedAnimationGroupIndex = groupIndex
+	if (mode.selectedAnimationGroupIndex >= 1) && (mode.selectedAnimationGroupIndex < mode.levelAdapter.TextureAnimationGroupCount()) {
+		group := mode.levelAdapter.TextureAnimationGroup(mode.selectedAnimationGroupIndex)
+		mode.animationGroupIndexBox.SetSelectedItem(mode.animationGroupItems[mode.selectedAnimationGroupIndex-1])
+		mode.animationGroupFramesSlider.SetValue(int64(group.FrameCount()))
+		mode.animationGroupTimeSlider.SetValue(int64(group.FrameTime()))
+		mode.animationGroupTypeBox.SetSelectedItem(mode.animationGroupTypeItems[group.LoopType()])
+	} else {
+		mode.animationGroupIndexBox.SetSelectedItem(nil)
+		mode.animationGroupFramesSlider.SetValueUndefined()
+		mode.animationGroupTimeSlider.SetValueUndefined()
+		mode.animationGroupTypeBox.SetSelectedItem(nil)
+	}
 }
