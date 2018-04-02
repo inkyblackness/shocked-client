@@ -213,7 +213,7 @@ func (mode *GameTextsMode) onTextChanged() {
 
 func (mode *GameTextsMode) requestTextChange(newText string) {
 	restoreState := mode.stateSnapshot()
-	mode.context.Perform(&cmd.SetTextCommand{
+	mode.context.Perform(&cmd.SetStringPropertyCommand{
 		Setter: func(value string) error {
 			restoreState()
 			mode.textAdapter.RequestTextChange(value)
@@ -271,7 +271,9 @@ func (mode *GameTextsMode) exportAudio(filePath string) {
 		file, err := os.Create(fileName)
 
 		if err == nil {
-			defer file.Close()
+			defer func() {
+				_ = file.Close()
+			}()
 			wav.Save(file, soundData.SampleRate(), soundData.Samples(0, soundData.SampleCount()))
 			mode.context.ModelAdapter().SetMessage(fmt.Sprintf("Exported %s", fileName))
 		} else {
@@ -284,7 +286,9 @@ func (mode *GameTextsMode) importAudio(filePath string) {
 	file, fileErr := os.Open(filePath)
 
 	if (fileErr == nil) && (file != nil) {
-		defer file.Close()
+		defer func() {
+			_ = file.Close()
+		}()
 		data, dataErr := wav.Load(file)
 
 		if dataErr == nil {

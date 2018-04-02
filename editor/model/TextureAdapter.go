@@ -78,6 +78,8 @@ func (adapter *TextureAdapter) GameTexture(id int) (texture *GameTexture) {
 	list := adapter.gameTextureList()
 	if (id >= 0) && (id < len(list)) {
 		texture = list[id]
+	} else {
+		texture = nullGameTexture(id)
 	}
 	return
 }

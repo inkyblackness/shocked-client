@@ -228,15 +228,6 @@ func (mode *GameTexturesMode) onTextureSelected(id int) {
 	mode.updateData()
 }
 
-func (mode *GameTexturesMode) requestTexturePropertiesChange(modifier func(*dataModel.TextureProperties)) {
-	if mode.selectedTextureID >= 0 {
-		var properties dataModel.TextureProperties
-
-		modifier(&properties)
-		mode.textureAdapter.RequestTexturePropertiesChange(mode.selectedTextureID, &properties)
-	}
-}
-
 func (mode *GameTexturesMode) onLanguageChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
 	mode.selectedLanguage = dataModel.ResourceLanguage(item.value)
@@ -280,41 +271,43 @@ func (mode *GameTexturesMode) updateTextureText() {
 }
 
 func (mode *GameTexturesMode) onNameChangeRequested(newValue string) {
-	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
-		properties.Name[mode.selectedLanguage.ToIndex()] = stringAsPointer(newValue)
-	})
+	mode.requestStringPropertyChange(func(properties *dataModel.TextureProperties, value *string) {
+		properties.Name[mode.selectedLanguage.ToIndex()] = value
+	}, newValue, mode.textureAdapter.GameTexture(mode.selectedTextureID).Name(mode.selectedLanguage))
 }
 
 func (mode *GameTexturesMode) onUseTextChangeRequested(newValue string) {
-	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
-		properties.CantBeUsed[mode.selectedLanguage.ToIndex()] = stringAsPointer(newValue)
-	})
+	mode.requestStringPropertyChange(func(properties *dataModel.TextureProperties, value *string) {
+		properties.CantBeUsed[mode.selectedLanguage.ToIndex()] = value
+	}, newValue, mode.textureAdapter.GameTexture(mode.selectedTextureID).UseText(mode.selectedLanguage))
 }
 
 func (mode *GameTexturesMode) onClimbableChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
-		properties.Climbable = boolAsPointer(item.value != 0)
-	})
+	newValue := item.value != 0
+	mode.requestBooleanPropertyChange(func(properties *dataModel.TextureProperties, value *bool) {
+		properties.Climbable = value
+	}, newValue, mode.textureAdapter.GameTexture(mode.selectedTextureID).Climbable())
 }
 
 func (mode *GameTexturesMode) onTransparencyControlChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
-		properties.TransparencyControl = intAsPointer(int(item.value))
-	})
+	newValue := int(item.value)
+	mode.requestIntPropertyChange(func(properties *dataModel.TextureProperties, value *int) {
+		properties.TransparencyControl = value
+	}, newValue, mode.textureAdapter.GameTexture(mode.selectedTextureID).TransparencyControl())
 }
 
 func (mode *GameTexturesMode) onAnimationGroupChanged(newValue int64) {
-	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
-		properties.AnimationGroup = intAsPointer(int(newValue))
-	})
+	mode.requestIntPropertyChange(func(properties *dataModel.TextureProperties, value *int) {
+		properties.AnimationGroup = value
+	}, int(newValue), mode.textureAdapter.GameTexture(mode.selectedTextureID).AnimationGroup())
 }
 
 func (mode *GameTexturesMode) onAnimationIndexChanged(newValue int64) {
-	mode.requestTexturePropertiesChange(func(properties *dataModel.TextureProperties) {
-		properties.AnimationIndex = intAsPointer(int(newValue))
-	})
+	mode.requestIntPropertyChange(func(properties *dataModel.TextureProperties, value *int) {
+		properties.AnimationIndex = value
+	}, int(newValue), mode.textureAdapter.GameTexture(mode.selectedTextureID).AnimationIndex())
 }
 
 func (mode *GameTexturesMode) textureDropHandler(textureSize dataModel.TextureSize) ui.EventHandler {
@@ -326,7 +319,9 @@ func (mode *GameTexturesMode) textureDropHandler(textureSize dataModel.TextureSi
 			var img image.Image
 
 			if err == nil {
-				defer file.Close()
+				defer func() {
+					_ = file.Close()
+				}()
 				img, _, err = image.Decode(file)
 				if err != nil {
 					mode.context.ModelAdapter().SetMessage(fmt.Sprintf("File <%v> has unknown image format", filePaths[0]))
@@ -372,6 +367,60 @@ func (mode *GameTexturesMode) requestTextureBitmapChange(textureSize dataModel.T
 		},
 		NewValue: newBitmap,
 		OldValue: mode.textureAdapter.TextureBitmap(mode.selectedTextureID, textureSize)})
+}
+
+func (mode *GameTexturesMode) requestStringPropertyChange(modifier func(*dataModel.TextureProperties, *string),
+	newValue, oldValue string) {
+	if mode.existingTextureSelected() {
+		restoreState := mode.stateSnapshot()
+
+		mode.context.Perform(&cmd.SetStringPropertyCommand{
+			Setter: func(value string) error {
+				return mode.requestPropertyChange(restoreState, func(properties *dataModel.TextureProperties) { modifier(properties, &value) })
+			},
+			NewValue: newValue,
+			OldValue: oldValue})
+	}
+}
+
+func (mode *GameTexturesMode) requestBooleanPropertyChange(modifier func(*dataModel.TextureProperties, *bool),
+	newValue, oldValue bool) {
+	if mode.existingTextureSelected() {
+		restoreState := mode.stateSnapshot()
+
+		mode.context.Perform(&cmd.SetBooleanPropertyCommand{
+			Setter: func(value bool) error {
+				return mode.requestPropertyChange(restoreState, func(properties *dataModel.TextureProperties) { modifier(properties, &value) })
+			},
+			NewValue: newValue,
+			OldValue: oldValue})
+	}
+}
+
+func (mode *GameTexturesMode) requestIntPropertyChange(modifier func(*dataModel.TextureProperties, *int),
+	newValue, oldValue int) {
+	if mode.existingTextureSelected() {
+		restoreState := mode.stateSnapshot()
+
+		mode.context.Perform(&cmd.SetIntPropertyCommand{
+			Setter: func(value int) error {
+				return mode.requestPropertyChange(restoreState, func(properties *dataModel.TextureProperties) { modifier(properties, &value) })
+			},
+			NewValue: newValue,
+			OldValue: oldValue})
+	}
+}
+
+func (mode *GameTexturesMode) requestPropertyChange(restoreState func(), modifier func(*dataModel.TextureProperties)) error {
+	restoreState()
+	var properties dataModel.TextureProperties
+	modifier(&properties)
+	mode.textureAdapter.RequestTexturePropertiesChange(mode.selectedTextureID, &properties)
+	return nil
+}
+
+func (mode *GameTexturesMode) existingTextureSelected() bool {
+	return (mode.selectedTextureID >= 0) && (mode.selectedTextureID < mode.textureAdapter.WorldTextureCount())
 }
 
 func (mode *GameTexturesMode) stateSnapshot() func() {
