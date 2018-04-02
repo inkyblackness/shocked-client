@@ -43,6 +43,7 @@ type LevelControlMode struct {
 
 	heightShiftLabel *controls.Label
 	heightShiftBox   *controls.ComboBox
+	heightShiftItems enumItems
 
 	realWorldProperties *ui.Area
 
@@ -152,21 +153,20 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 		}
 		{
 			mode.heightShiftLabel, mode.heightShiftBox = panelBuilder.addComboProperty("Tile Height", mode.onHeightShiftChanged)
-			heightShiftItems := make([]controls.ComboBoxItem, 8)
-
-			heightShiftItems[0] = &enumItem{0, "32 Tiles"}
-			heightShiftItems[1] = &enumItem{1, "16 Tiles"}
-			heightShiftItems[2] = &enumItem{2, "8 Tiles"}
-			heightShiftItems[3] = &enumItem{3, "4 Tiles"}
-			heightShiftItems[4] = &enumItem{4, "2 Tiles"}
-			heightShiftItems[5] = &enumItem{5, "1 Tile"}
-			heightShiftItems[6] = &enumItem{6, "1/2 Tile"}
-			heightShiftItems[7] = &enumItem{7, "1/4 Tile"}
-			mode.heightShiftBox.SetItems(heightShiftItems)
+			mode.heightShiftItems = []*enumItem{
+				{0, "32 Tiles"},
+				{1, "16 Tiles"},
+				{2, "8 Tiles"},
+				{3, "4 Tiles"},
+				{4, "2 Tiles"},
+				{5, "1 Tile"},
+				{6, "1/2 Tile"},
+				{7, "1/4 Tile"}}
+			mode.heightShiftBox.SetItems(mode.heightShiftItems.forComboBox())
 			mode.levelAdapter.OnLevelPropertiesChanged(func() {
 				heightShift := mode.levelAdapter.HeightShift()
-				if (heightShift >= 0) && (heightShift < len(heightShiftItems)) {
-					mode.heightShiftBox.SetSelectedItem(heightShiftItems[heightShift])
+				if (heightShift >= 0) && (heightShift < len(mode.heightShiftItems)) {
+					mode.heightShiftBox.SetSelectedItem(mode.heightShiftItems[heightShift])
 				} else {
 					mode.heightShiftBox.SetSelectedItem(nil)
 				}
@@ -338,9 +338,17 @@ func (mode *LevelControlMode) worldTextures() []*graphics.BitmapTexture {
 
 func (mode *LevelControlMode) onHeightShiftChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.levelAdapter.RequestLevelPropertiesChange(func(properties *dataModel.LevelProperties) {
-		properties.HeightShift = intAsPointer(int(item.value))
-	})
+	newValue := int(item.value)
+
+	mode.context.Perform(&cmd.SetIntPropertyCommand{
+		Setter: func(value int) error {
+			mode.levelAdapter.RequestLevelPropertiesChange(func(properties *dataModel.LevelProperties) {
+				properties.HeightShift = intAsPointer(value)
+			})
+			return nil
+		},
+		NewValue: newValue,
+		OldValue: mode.levelAdapter.HeightShift()})
 }
 
 func (mode *LevelControlMode) onSelectedLevelTextureChanged(index int) {
@@ -371,13 +379,24 @@ func (mode *LevelControlMode) onSelectedWorldTextureIDChanged(newValue int64) {
 
 func (mode *LevelControlMode) setLevelTextureID(id int) {
 	levelAdapter := mode.context.ModelAdapter().ActiveLevel()
-	ids := levelAdapter.LevelTextureIDs()
+	oldIDs := levelAdapter.LevelTextureIDs()
 
-	if (mode.currentLevelTextureIndex >= 0) && (mode.currentLevelTextureIndex < len(ids)) {
-		newIDs := make([]int, len(ids))
-		copy(newIDs, ids)
+	if (mode.currentLevelTextureIndex >= 0) && (mode.currentLevelTextureIndex < len(oldIDs)) {
+		newIDs := make([]int, len(oldIDs))
+		copy(newIDs, oldIDs)
 		newIDs[mode.currentLevelTextureIndex] = id
-		levelAdapter.RequestLevelTexturesChange(newIDs)
+
+		mode.context.Perform(&cmd.SetLevelTexturesCommand{
+			Setter: func(textureIDs []int) error {
+				mode.worldTexturesSelector.SetSelectedIndex(textureIDs[mode.currentLevelTextureIndex])
+				mode.worldTexturesIDSlider.SetValue(int64(textureIDs[mode.currentLevelTextureIndex]))
+				mode.levelTexturesSelector.SetSelectedIndex(mode.currentLevelTextureIndex)
+
+				levelAdapter.RequestLevelTexturesChange(textureIDs)
+				return nil
+			},
+			OldTextureIDs: oldIDs,
+			NewTextureIDs: newIDs})
 	}
 }
 
