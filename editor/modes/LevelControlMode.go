@@ -58,6 +58,7 @@ type LevelControlMode struct {
 	selectedSurveillanceIndex    int
 	surveillanceIndexLabel       *controls.Label
 	surveillanceIndexBox         *controls.ComboBox
+	surveillanceIndexItems       enumItems
 	surveillanceSourceLabel      *controls.Label
 	surveillanceSourceSlider     *controls.Slider
 	surveillanceDeathwatchLabel  *controls.Label
@@ -402,43 +403,68 @@ func (mode *LevelControlMode) setLevelTextureID(id int) {
 
 func (mode *LevelControlMode) onLevelSurveillanceChanged() {
 	surveillanceCount := mode.levelAdapter.ObjectSurveillanceCount()
-	items := make([]controls.ComboBoxItem, surveillanceCount)
-	var selectedItem controls.ComboBoxItem
 
+	mode.surveillanceIndexItems = make([]*enumItem, surveillanceCount)
 	for index := 0; index < surveillanceCount; index++ {
 		item := &enumItem{uint32(index), fmt.Sprintf("Object %v", index)}
-		items[index] = item
-		if index == mode.selectedSurveillanceIndex {
-			selectedItem = item
-		}
+		mode.surveillanceIndexItems[index] = item
 	}
 
-	mode.surveillanceIndexBox.SetItems(items)
-	mode.surveillanceIndexBox.SetSelectedItem(selectedItem)
-	mode.onSurveillanceIndexChanged(selectedItem)
+	mode.surveillanceIndexBox.SetItems(mode.surveillanceIndexItems.forComboBox())
+	mode.setSurveillanceState(mode.selectedSurveillanceIndex)
 }
 
 func (mode *LevelControlMode) onSurveillanceIndexChanged(boxItem controls.ComboBoxItem) {
 	if boxItem != nil {
 		item := boxItem.(*enumItem)
-		mode.selectedSurveillanceIndex = int(item.value)
-		sourceIndex, deathwatchIndex := mode.levelAdapter.ObjectSurveillanceInfo(mode.selectedSurveillanceIndex)
-		mode.surveillanceSourceSlider.SetValue(int64(sourceIndex))
-		mode.surveillanceDeathwatchSlider.SetValue(int64(deathwatchIndex))
+		mode.setSurveillanceState(int(item.value))
 	} else {
-		mode.surveillanceSourceSlider.SetValueUndefined()
-		mode.surveillanceDeathwatchSlider.SetValueUndefined()
+		mode.setSurveillanceState(-1)
 	}
 }
 
 func (mode *LevelControlMode) onSurveillanceSourceChanged(newValue int64) {
-	newIndex := int(newValue)
-	mode.levelAdapter.RequestObjectSurveillance(mode.selectedSurveillanceIndex, &newIndex, nil)
+	oldValue, _ := mode.levelAdapter.ObjectSurveillanceInfo(mode.selectedSurveillanceIndex)
+	mode.requestSurveillanceChange(func(value int) error {
+		mode.levelAdapter.RequestObjectSurveillance(mode.selectedSurveillanceIndex, &value, nil)
+		return nil
+	}, int(newValue), oldValue)
 }
 
 func (mode *LevelControlMode) onSurveillanceDeathwatchChanged(newValue int64) {
-	newIndex := int(newValue)
-	mode.levelAdapter.RequestObjectSurveillance(mode.selectedSurveillanceIndex, nil, &newIndex)
+	_, oldValue := mode.levelAdapter.ObjectSurveillanceInfo(mode.selectedSurveillanceIndex)
+	mode.requestSurveillanceChange(func(value int) error {
+		mode.levelAdapter.RequestObjectSurveillance(mode.selectedSurveillanceIndex, nil, &value)
+		return nil
+	}, int(newValue), oldValue)
+}
+
+func (mode *LevelControlMode) requestSurveillanceChange(executor func(value int) error, newValue, oldValue int) {
+	currentSurveillanceIndex := mode.selectedSurveillanceIndex
+
+	if currentSurveillanceIndex >= 0 {
+		mode.context.Perform(&cmd.SetIntPropertyCommand{
+			Setter: func(value int) error {
+				mode.setSurveillanceState(currentSurveillanceIndex)
+				return executor(value)
+			},
+			NewValue: newValue,
+			OldValue: oldValue})
+	}
+}
+
+func (mode *LevelControlMode) setSurveillanceState(objectIndex int) {
+	mode.selectedSurveillanceIndex = objectIndex
+	if (mode.selectedSurveillanceIndex >= 0) && (mode.selectedSurveillanceIndex < len(mode.surveillanceIndexItems)) {
+		mode.surveillanceIndexBox.SetSelectedItem(mode.surveillanceIndexItems[mode.selectedSurveillanceIndex])
+		sourceIndex, deathwatchIndex := mode.levelAdapter.ObjectSurveillanceInfo(mode.selectedSurveillanceIndex)
+		mode.surveillanceSourceSlider.SetValue(int64(sourceIndex))
+		mode.surveillanceDeathwatchSlider.SetValue(int64(deathwatchIndex))
+	} else {
+		mode.surveillanceIndexBox.SetSelectedItem(nil)
+		mode.surveillanceSourceSlider.SetValueUndefined()
+		mode.surveillanceDeathwatchSlider.SetValueUndefined()
+	}
 }
 
 func (mode *LevelControlMode) onLevelFloorPropertyBoxChanged(boxItem controls.ComboBoxItem) {
