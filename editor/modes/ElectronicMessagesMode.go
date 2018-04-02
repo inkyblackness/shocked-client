@@ -411,7 +411,28 @@ func (mode *ElectronicMessagesMode) requestData() {
 }
 
 func (mode *ElectronicMessagesMode) removeMessage() {
-	mode.messageAdapter.RequestRemove()
+	restoreState := mode.stateSnapshot()
+	command := &cmd.RemoveElectronicMessageCommand{
+		RestoreState: restoreState,
+		Store:        mode.messageAdapter}
+
+	command.Properties.NextMessage = intAsPointer(mode.messageAdapter.NextMessage())
+	command.Properties.IsInterrupt = boolAsPointer(mode.messageAdapter.IsInterrupt())
+	command.Properties.ColorIndex = intAsPointer(mode.messageAdapter.ColorIndex())
+	command.Properties.LeftDisplay = intAsPointer(mode.messageAdapter.LeftDisplay())
+	command.Properties.RightDisplay = intAsPointer(mode.messageAdapter.RightDisplay())
+
+	for langIndex := 0; langIndex < dataModel.LanguageCount; langIndex++ {
+		command.Properties.Subject[langIndex] = stringAsPointer(mode.messageAdapter.Subject(langIndex))
+		command.Properties.Sender[langIndex] = stringAsPointer(mode.messageAdapter.Sender(langIndex))
+		command.Properties.Title[langIndex] = stringAsPointer(mode.messageAdapter.Title(langIndex))
+		command.Properties.VerboseText[langIndex] = stringAsPointer(mode.messageAdapter.VerboseText(langIndex))
+		command.Properties.TerseText[langIndex] = stringAsPointer(mode.messageAdapter.TerseText(langIndex))
+
+		command.Audio[langIndex] = mode.messageAdapter.Audio(langIndex)
+	}
+
+	mode.context.Perform(command)
 }
 
 func (mode *ElectronicMessagesMode) onMessageDataChanged() {
