@@ -15,6 +15,13 @@ import (
 	dataModel "github.com/inkyblackness/shocked-model"
 )
 
+type textVariant uint32
+
+const (
+	textVariantVerbose = 0
+	textVariantTerse   = 1
+)
+
 // duplicate to ElectronicMessages.go - so far no need to transport this.
 var messageRanges = map[dataModel.ElectronicMessageType]int64{
 	dataModel.ElectronicMessageTypeMail:     0x09B8 - 0x0989,
@@ -30,26 +37,30 @@ type ElectronicMessagesMode struct {
 
 	propertiesArea *ui.Area
 
-	messageTypeLabel        *controls.Label
-	messageTypeBox          *controls.ComboBox
-	messageType             dataModel.ElectronicMessageType
-	messageTypeByIndex      map[uint32]dataModel.ElectronicMessageType
-	selectedMessageIDLabel  *controls.Label
-	selectedMessageIDSlider *controls.Slider
-	selectedMessageID       int
+	messageTypeLabel    *controls.Label
+	messageTypeBox      *controls.ComboBox
+	messageTypeItems    enumItems
+	selectedMessageType dataModel.ElectronicMessageType
+	messageTypeByIndex  map[uint32]dataModel.ElectronicMessageType
+	messageIDLabel      *controls.Label
+	messageIDSlider     *controls.Slider
+	selectedMessageID   int
 
 	removeLabel  *controls.Label
 	removeButton *controls.TextButton
 
 	propertiesHeader *controls.Label
 
-	languageLabel *controls.Label
-	languageBox   *controls.ComboBox
-	language      dataModel.ResourceLanguage
+	languageLabel    *controls.Label
+	languageBox      *controls.ComboBox
+	languageItems    enumItems
+	selectedLanguage dataModel.ResourceLanguage
 
-	variantLabel      *controls.Label
-	variantBox        *controls.ComboBox
-	variantTerse      bool
+	variantLabel    *controls.Label
+	variantBox      *controls.ComboBox
+	variantItems    enumItems
+	selectedVariant textVariant
+
 	titleLabel        *controls.Label
 	titleValue        *controls.Label
 	nextMessageLabel  *controls.Label
@@ -84,7 +95,7 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		context:            context,
 		messageAdapter:     context.ModelAdapter().ElectronicMessageAdapter(),
 		messageTypeByIndex: make(map[uint32]dataModel.ElectronicMessageType),
-		language:           dataModel.ResourceLanguageStandard,
+		selectedLanguage:   dataModel.ResourceLanguageStandard,
 		selectedMessageID:  -1,
 		isInterruptItems:   make(map[bool]controls.ComboBoxItem)}
 
@@ -133,14 +144,14 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 
 		{
 			mode.messageTypeLabel, mode.messageTypeBox = panelBuilder.addComboProperty("Message Type", mode.onMessageTypeChanged)
-			items := []controls.ComboBoxItem{
-				&enumItem{indexByMessageType[dataModel.ElectronicMessageTypeMail], "Mail"},
-				&enumItem{indexByMessageType[dataModel.ElectronicMessageTypeLog], "Log"},
-				&enumItem{indexByMessageType[dataModel.ElectronicMessageTypeFragment], "Fragment"}}
-			mode.messageTypeBox.SetItems(items)
+			mode.messageTypeItems = []*enumItem{
+				{indexByMessageType[dataModel.ElectronicMessageTypeMail], "Mail"},
+				{indexByMessageType[dataModel.ElectronicMessageTypeLog], "Log"},
+				{indexByMessageType[dataModel.ElectronicMessageTypeFragment], "Fragment"}}
+			mode.messageTypeBox.SetItems(mode.messageTypeItems.forComboBox())
 		}
 		{
-			mode.selectedMessageIDLabel, mode.selectedMessageIDSlider = panelBuilder.addSliderProperty("Selected Message ID",
+			mode.messageIDLabel, mode.messageIDSlider = panelBuilder.addSliderProperty("Selected Message ID",
 				func(newValue int64) { mode.onMessageSelected(int(newValue)) })
 		}
 		{
@@ -149,18 +160,16 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 		mode.propertiesHeader = panelBuilder.addTitle("Properties")
 		{
 			mode.languageLabel, mode.languageBox = panelBuilder.addComboProperty("Language", mode.onLanguageChanged)
-			items := []controls.ComboBoxItem{
-				&enumItem{uint32(dataModel.ResourceLanguageStandard), "STD"},
-				&enumItem{uint32(dataModel.ResourceLanguageFrench), "FRN"},
-				&enumItem{uint32(dataModel.ResourceLanguageGerman), "GER"}}
-			mode.languageBox.SetItems(items)
-			mode.languageBox.SetSelectedItem(items[0])
+			mode.languageItems = []*enumItem{
+				{uint32(dataModel.ResourceLanguageStandard), "STD"},
+				{uint32(dataModel.ResourceLanguageFrench), "FRN"},
+				{uint32(dataModel.ResourceLanguageGerman), "GER"}}
+			mode.languageBox.SetItems(mode.languageItems.forComboBox())
 		}
 		{
 			mode.variantLabel, mode.variantBox = panelBuilder.addComboProperty("Text Variant", mode.onVariantChanged)
-			items := []controls.ComboBoxItem{&enumItem{0, "Verbose"}, &enumItem{1, "Terse"}}
-			mode.variantBox.SetItems(items)
-			mode.variantBox.SetSelectedItem(items[0])
+			mode.variantItems = []*enumItem{{textVariantVerbose, "Verbose"}, {textVariantTerse, "Terse"}}
+			mode.variantBox.SetItems(mode.variantItems.forComboBox())
 		}
 		mode.titleLabel, mode.titleValue = panelBuilder.addInfo("Title")
 		mode.titleValue.AllowTextChange(mode.onTitleChangeRequested)
@@ -283,6 +292,11 @@ func NewElectronicMessagesMode(context Context, parent *ui.Area) *ElectronicMess
 	mode.messageAdapter.OnMessageDataChanged(mode.onMessageDataChanged)
 	mode.messageAdapter.OnMessageAudioChanged(mode.onMessageAudioChanged)
 
+	mode.setState(dataModel.ElectronicMessageTypeMail, 0, dataModel.ResourceLanguageStandard, textVariantVerbose)
+	mode.context.ModelAdapter().OnProjectChanged(func() {
+		mode.requestData()
+	})
+
 	return mode
 }
 
@@ -301,7 +315,7 @@ func (mode *ElectronicMessagesMode) rightDisplayImage() (texture *graphics.Bitma
 
 func (mode *ElectronicMessagesMode) displayImage(index int) (texture *graphics.BitmapTexture) {
 	if (index >= 0) && (index < 0x100) {
-		resourceKey := dataModel.MakeLocalizedResourceKey(dataModel.ResourceTypeMfdDataImages, mode.language, uint16(index))
+		resourceKey := dataModel.MakeLocalizedResourceKey(dataModel.ResourceTypeMfdDataImages, mode.selectedLanguage, uint16(index))
 		texture = mode.context.ForGraphics().BitmapsStore().Texture(graphics.TextureKeyFromInt(resourceKey.ToInt()))
 	}
 	return
@@ -330,11 +344,11 @@ func (mode *ElectronicMessagesMode) onAudioFileDropped(area *ui.Area, event even
 }
 
 func (mode *ElectronicMessagesMode) exportAudio(filePath string) {
-	languageIndex := mode.language.ToIndex()
+	languageIndex := mode.selectedLanguage.ToIndex()
 	soundData := mode.messageAdapter.Audio(languageIndex)
 
 	if soundData != nil {
-		fileName := path.Join(filePath, fmt.Sprintf("%v_%02d_%v.wav", mode.messageType, mode.selectedMessageID, mode.language.ShortName()))
+		fileName := path.Join(filePath, fmt.Sprintf("%v_%02d_%v.wav", mode.selectedMessageType, mode.selectedMessageID, mode.selectedLanguage.ShortName()))
 		file, err := os.Create(fileName)
 
 		if err == nil {
@@ -355,7 +369,7 @@ func (mode *ElectronicMessagesMode) importAudio(filePath string) {
 		data, dataErr := wav.Load(file)
 
 		if dataErr == nil {
-			mode.messageAdapter.RequestAudioChange(mode.language, data)
+			mode.messageAdapter.RequestAudioChange(mode.selectedLanguage, data)
 		} else {
 			mode.context.ModelAdapter().SetMessage("File not supported. Only .wav files with 16bit or 8bit LPCM possible.")
 		}
@@ -366,16 +380,16 @@ func (mode *ElectronicMessagesMode) importAudio(filePath string) {
 
 func (mode *ElectronicMessagesMode) onMessageTypeChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.messageType = mode.messageTypeByIndex[item.value]
-	mode.audioArea.SetVisible(mode.messageType != dataModel.ElectronicMessageTypeFragment)
-	mode.selectedMessageIDSlider.SetValue(0)
-	mode.selectedMessageIDSlider.SetRange(0, messageRanges[mode.messageType]-1)
-	mode.onMessageSelected(0)
+	mode.setState(mode.messageTypeByIndex[item.value], 0, mode.selectedLanguage, mode.selectedVariant)
 }
 
 func (mode *ElectronicMessagesMode) onMessageSelected(id int) {
 	mode.selectedMessageID = id
-	mode.messageAdapter.RequestMessage(mode.messageType, id)
+	mode.requestData()
+}
+
+func (mode *ElectronicMessagesMode) requestData() {
+	mode.messageAdapter.RequestMessage(mode.selectedMessageType, mode.selectedMessageID)
 }
 
 func (mode *ElectronicMessagesMode) removeMessage() {
@@ -384,12 +398,7 @@ func (mode *ElectronicMessagesMode) removeMessage() {
 
 func (mode *ElectronicMessagesMode) onMessageDataChanged() {
 	mode.updateMessageText()
-
-	mode.nextMessageValue.SetValue(int64(mode.messageAdapter.NextMessage()))
-	mode.isInterruptBox.SetSelectedItem(mode.isInterruptItems[mode.messageAdapter.IsInterrupt()])
-	mode.colorValue.SetValue(int64(mode.messageAdapter.ColorIndex()))
-	mode.leftDisplayValue.SetValue(int64(mode.messageAdapter.LeftDisplay()))
-	mode.rightDisplayValue.SetValue(int64(mode.messageAdapter.RightDisplay()))
+	mode.updateMessageData()
 }
 
 func (mode *ElectronicMessagesMode) onMessageAudioChanged() {
@@ -398,21 +407,21 @@ func (mode *ElectronicMessagesMode) onMessageAudioChanged() {
 
 func (mode *ElectronicMessagesMode) onLanguageChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.language = dataModel.ResourceLanguage(item.value)
+	mode.selectedLanguage = dataModel.ResourceLanguage(item.value)
 	mode.updateMessageText()
 	mode.updateMessageAudio()
 }
 
 func (mode *ElectronicMessagesMode) onVariantChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.variantTerse = item.value != 0
+	mode.selectedVariant = textVariant(item.value)
 	mode.updateMessageText()
 }
 
 func (mode *ElectronicMessagesMode) updateMessageText() {
-	languageIndex := mode.language.ToIndex()
+	languageIndex := mode.selectedLanguage.ToIndex()
 	var text string
-	if mode.variantTerse {
+	if mode.selectedVariant == textVariantTerse {
 		text = mode.messageAdapter.TerseText(languageIndex)
 	} else {
 		text = mode.messageAdapter.VerboseText(languageIndex)
@@ -424,8 +433,16 @@ func (mode *ElectronicMessagesMode) updateMessageText() {
 	mode.senderValue.SetText(mode.messageAdapter.Sender(languageIndex))
 }
 
+func (mode *ElectronicMessagesMode) updateMessageData() {
+	mode.nextMessageValue.SetValue(int64(mode.messageAdapter.NextMessage()))
+	mode.isInterruptBox.SetSelectedItem(mode.isInterruptItems[mode.messageAdapter.IsInterrupt()])
+	mode.colorValue.SetValue(int64(mode.messageAdapter.ColorIndex()))
+	mode.leftDisplayValue.SetValue(int64(mode.messageAdapter.LeftDisplay()))
+	mode.rightDisplayValue.SetValue(int64(mode.messageAdapter.RightDisplay()))
+}
+
 func (mode *ElectronicMessagesMode) updateMessageAudio() {
-	languageIndex := mode.language.ToIndex()
+	languageIndex := mode.selectedLanguage.ToIndex()
 	data := mode.messageAdapter.Audio(languageIndex)
 	var info string
 
@@ -438,47 +455,47 @@ func (mode *ElectronicMessagesMode) updateMessageAudio() {
 	mode.audioInfo.SetText(info)
 }
 
-func (mode *ElectronicMessagesMode) updateMessageData(modifier func(*dataModel.ElectronicMessage)) {
+func (mode *ElectronicMessagesMode) requestMessageDataChange(modifier func(*dataModel.ElectronicMessage)) {
 	var properties dataModel.ElectronicMessage
 	modifier(&properties)
 	mode.messageAdapter.RequestMessageChange(properties)
 }
 
 func (mode *ElectronicMessagesMode) onNextMessageChanged(newValue int64) {
-	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
 		properties.NextMessage = intAsPointer(int(newValue))
 	})
 }
 
 func (mode *ElectronicMessagesMode) onIsInterruptChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
 		properties.IsInterrupt = boolAsPointer(item.value != 0)
 	})
 }
 
 func (mode *ElectronicMessagesMode) onColorIndexChanged(newValue int64) {
-	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
 		properties.ColorIndex = intAsPointer(int(newValue))
 	})
 }
 
 func (mode *ElectronicMessagesMode) onLeftDisplayChanged(newValue int64) {
-	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
 		properties.LeftDisplay = intAsPointer(int(newValue))
 	})
 }
 
 func (mode *ElectronicMessagesMode) onRightDisplayChanged(newValue int64) {
-	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
+	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
 		properties.RightDisplay = intAsPointer(int(newValue))
 	})
 }
 
 func (mode *ElectronicMessagesMode) onMessageTextChangeRequested(newText string) {
-	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
-		languageIndex := mode.language.ToIndex()
-		if mode.variantTerse {
+	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
+		languageIndex := mode.selectedLanguage.ToIndex()
+		if mode.selectedVariant == textVariantTerse {
 			properties.TerseText[languageIndex] = stringAsPointer(newText)
 		} else {
 			properties.VerboseText[languageIndex] = stringAsPointer(newText)
@@ -487,22 +504,65 @@ func (mode *ElectronicMessagesMode) onMessageTextChangeRequested(newText string)
 }
 
 func (mode *ElectronicMessagesMode) onSubjectChangeRequested(newText string) {
-	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
-		languageIndex := mode.language.ToIndex()
+	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
+		languageIndex := mode.selectedLanguage.ToIndex()
 		properties.Subject[languageIndex] = stringAsPointer(newText)
 	})
 }
 
 func (mode *ElectronicMessagesMode) onSenderChangeRequested(newText string) {
-	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
-		languageIndex := mode.language.ToIndex()
+	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
+		languageIndex := mode.selectedLanguage.ToIndex()
 		properties.Sender[languageIndex] = stringAsPointer(newText)
 	})
 }
 
 func (mode *ElectronicMessagesMode) onTitleChangeRequested(newText string) {
-	mode.updateMessageData(func(properties *dataModel.ElectronicMessage) {
-		languageIndex := mode.language.ToIndex()
+	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
+		languageIndex := mode.selectedLanguage.ToIndex()
 		properties.Title[languageIndex] = stringAsPointer(newText)
 	})
+}
+
+func (mode *ElectronicMessagesMode) stateSnapshot() func() {
+	currentType := mode.selectedMessageType
+	currentID := mode.selectedMessageID
+	currentLanguage := mode.selectedLanguage
+	currentVariant := mode.selectedVariant
+	return func() {
+		mode.setState(currentType, currentID, currentLanguage, currentVariant)
+	}
+}
+
+func (mode *ElectronicMessagesMode) setState(messageType dataModel.ElectronicMessageType, id int,
+	language dataModel.ResourceLanguage, variant textVariant) {
+	{
+		mode.selectedMessageType = messageType
+		for _, item := range mode.messageTypeItems {
+			if mode.messageTypeByIndex[item.value] == messageType {
+				mode.messageTypeBox.SetSelectedItem(item)
+			}
+		}
+		mode.audioArea.SetVisible(mode.selectedMessageType != dataModel.ElectronicMessageTypeFragment)
+		mode.messageIDSlider.SetRange(0, messageRanges[mode.selectedMessageType]-1)
+	}
+	{
+		mode.selectedLanguage = language
+		for _, item := range mode.languageItems {
+			if item.value == uint32(language) {
+				mode.languageBox.SetSelectedItem(item)
+			}
+		}
+	}
+	{
+		mode.selectedVariant = variant
+		for _, item := range mode.variantItems {
+			if item.value == uint32(variant) {
+				mode.variantBox.SetSelectedItem(item)
+			}
+		}
+	}
+	mode.selectedMessageID = id
+	mode.messageIDSlider.SetValue(int64(mode.selectedMessageID))
+	mode.requestData()
 }
