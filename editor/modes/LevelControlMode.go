@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/inkyblackness/res/data"
+	"github.com/inkyblackness/shocked-client/editor/cmd"
 	"github.com/inkyblackness/shocked-client/editor/display"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
@@ -118,13 +119,27 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 
 		{
 			mode.activeLevelLabel, mode.activeLevelBox = panelBuilder.addComboProperty("Active Level", func(item controls.ComboBoxItem) {
-				context.ModelAdapter().RequestActiveLevel(item.(int))
+				selectedLevelID := item.(int)
+				context.Perform(&cmd.SetActiveLevelCommand{
+					Setter: func(levelID int) error {
+						context.ModelAdapter().RequestActiveLevel(levelID)
+						return nil
+					},
+					OldValue: context.ModelAdapter().ActiveLevel().ID(),
+					NewValue: selectedLevelID})
 			})
 
 			adapter := context.ModelAdapter()
 			activeLevelAdapter := adapter.ActiveLevel()
 			activeLevelAdapter.OnIDChanged(func() {
-				mode.activeLevelBox.SetSelectedItem(activeLevelAdapter.ID())
+				levelID := mode.levelAdapter.ID()
+				isProperLevel := levelID >= 0
+
+				if isProperLevel {
+					mode.activeLevelBox.SetSelectedItem(levelID)
+				} else {
+					mode.activeLevelBox.SetSelectedItem(nil)
+				}
 			})
 			adapter.OnAvailableLevelsChanged(func() {
 				ids := adapter.AvailableLevelIDs()
@@ -282,7 +297,9 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 			}
 		}
 		mode.levelAdapter.OnLevelPropertiesChanged(func() {
-			mode.realWorldProperties.SetVisible(!mode.levelAdapter.IsCyberspace())
+			isProperLevel := mode.levelAdapter.ID() >= 0
+			isRealWorld := !mode.levelAdapter.IsCyberspace()
+			mode.realWorldProperties.SetVisible(isProperLevel && isRealWorld)
 		})
 	}
 
