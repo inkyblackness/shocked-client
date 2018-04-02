@@ -5,7 +5,9 @@ import (
 	"os"
 	"path"
 
+	"github.com/inkyblackness/res/audio"
 	"github.com/inkyblackness/res/audio/wav"
+	"github.com/inkyblackness/shocked-client/editor/cmd"
 	"github.com/inkyblackness/shocked-client/editor/model"
 	"github.com/inkyblackness/shocked-client/graphics"
 	"github.com/inkyblackness/shocked-client/graphics/controls"
@@ -352,7 +354,9 @@ func (mode *ElectronicMessagesMode) exportAudio(filePath string) {
 		file, err := os.Create(fileName)
 
 		if err == nil {
-			defer file.Close()
+			defer func() {
+				_ = file.Close()
+			}()
 			wav.Save(file, soundData.SampleRate(), soundData.Samples(0, soundData.SampleCount()))
 			mode.context.ModelAdapter().SetMessage(fmt.Sprintf("Exported %s", fileName))
 		} else {
@@ -365,17 +369,31 @@ func (mode *ElectronicMessagesMode) importAudio(filePath string) {
 	file, fileErr := os.Open(filePath)
 
 	if (fileErr == nil) && (file != nil) {
-		defer file.Close()
+		defer func() {
+			_ = file.Close()
+		}()
 		data, dataErr := wav.Load(file)
 
 		if dataErr == nil {
-			mode.messageAdapter.RequestAudioChange(mode.selectedLanguage, data)
+			mode.requestAudioChange(data)
 		} else {
 			mode.context.ModelAdapter().SetMessage("File not supported. Only .wav files with 16bit or 8bit LPCM possible.")
 		}
 	} else {
 		mode.context.ModelAdapter().SetMessage(fmt.Sprintf("File could not be opened: %s", filePath))
 	}
+}
+
+func (mode *ElectronicMessagesMode) requestAudioChange(newData audio.SoundData) {
+	restoreState := mode.stateSnapshot()
+	mode.context.Perform(&cmd.SetAudioCommand{
+		Setter: func(data audio.SoundData) error {
+			restoreState()
+			mode.messageAdapter.RequestAudioChange(mode.selectedLanguage, data)
+			return nil
+		},
+		NewValue: newData,
+		OldValue: mode.messageAdapter.Audio(mode.selectedLanguage.ToIndex())})
 }
 
 func (mode *ElectronicMessagesMode) onMessageTypeChanged(boxItem controls.ComboBoxItem) {
@@ -455,73 +473,118 @@ func (mode *ElectronicMessagesMode) updateMessageAudio() {
 	mode.audioInfo.SetText(info)
 }
 
-func (mode *ElectronicMessagesMode) requestMessageDataChange(modifier func(*dataModel.ElectronicMessage)) {
-	var properties dataModel.ElectronicMessage
-	modifier(&properties)
-	mode.messageAdapter.RequestMessageChange(properties)
-}
-
 func (mode *ElectronicMessagesMode) onNextMessageChanged(newValue int64) {
-	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
-		properties.NextMessage = intAsPointer(int(newValue))
-	})
+	mode.requestIntPropertyChange(func(properties *dataModel.ElectronicMessage, value *int) {
+		properties.NextMessage = value
+	}, int(newValue), mode.messageAdapter.NextMessage())
 }
 
 func (mode *ElectronicMessagesMode) onIsInterruptChanged(boxItem controls.ComboBoxItem) {
 	item := boxItem.(*enumItem)
-	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
-		properties.IsInterrupt = boolAsPointer(item.value != 0)
-	})
+	newValue := item.value != 0
+	mode.requestBooleanPropertyChange(func(properties *dataModel.ElectronicMessage, value *bool) {
+		properties.IsInterrupt = value
+	}, newValue, mode.messageAdapter.IsInterrupt())
 }
 
 func (mode *ElectronicMessagesMode) onColorIndexChanged(newValue int64) {
-	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
-		properties.ColorIndex = intAsPointer(int(newValue))
-	})
+	mode.requestIntPropertyChange(func(properties *dataModel.ElectronicMessage, value *int) {
+		properties.ColorIndex = value
+	}, int(newValue), mode.messageAdapter.ColorIndex())
 }
 
 func (mode *ElectronicMessagesMode) onLeftDisplayChanged(newValue int64) {
-	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
-		properties.LeftDisplay = intAsPointer(int(newValue))
-	})
+	mode.requestIntPropertyChange(func(properties *dataModel.ElectronicMessage, value *int) {
+		properties.LeftDisplay = value
+	}, int(newValue), mode.messageAdapter.LeftDisplay())
 }
 
 func (mode *ElectronicMessagesMode) onRightDisplayChanged(newValue int64) {
-	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
-		properties.RightDisplay = intAsPointer(int(newValue))
-	})
+	mode.requestIntPropertyChange(func(properties *dataModel.ElectronicMessage, value *int) {
+		properties.RightDisplay = value
+	}, int(newValue), mode.messageAdapter.RightDisplay())
 }
 
 func (mode *ElectronicMessagesMode) onMessageTextChangeRequested(newText string) {
-	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
-		languageIndex := mode.selectedLanguage.ToIndex()
+	var oldText string
+	languageIndex := mode.selectedLanguage.ToIndex()
+	if mode.selectedVariant == textVariantTerse {
+		oldText = mode.messageAdapter.TerseText(languageIndex)
+	} else {
+		oldText = mode.messageAdapter.VerboseText(languageIndex)
+	}
+	mode.requestStringPropertyChange(func(properties *dataModel.ElectronicMessage, value *string) {
 		if mode.selectedVariant == textVariantTerse {
-			properties.TerseText[languageIndex] = stringAsPointer(newText)
+			properties.TerseText[languageIndex] = value
 		} else {
-			properties.VerboseText[languageIndex] = stringAsPointer(newText)
+			properties.VerboseText[languageIndex] = value
 		}
-	})
+	}, newText, oldText)
 }
 
 func (mode *ElectronicMessagesMode) onSubjectChangeRequested(newText string) {
-	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
-		languageIndex := mode.selectedLanguage.ToIndex()
-		properties.Subject[languageIndex] = stringAsPointer(newText)
-	})
+	languageIndex := mode.selectedLanguage.ToIndex()
+	mode.requestStringPropertyChange(func(properties *dataModel.ElectronicMessage, value *string) {
+		properties.Subject[languageIndex] = value
+	}, newText, mode.messageAdapter.Subject(languageIndex))
 }
 
 func (mode *ElectronicMessagesMode) onSenderChangeRequested(newText string) {
-	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
-		languageIndex := mode.selectedLanguage.ToIndex()
-		properties.Sender[languageIndex] = stringAsPointer(newText)
-	})
+	languageIndex := mode.selectedLanguage.ToIndex()
+	mode.requestStringPropertyChange(func(properties *dataModel.ElectronicMessage, value *string) {
+		properties.Sender[languageIndex] = value
+	}, newText, mode.messageAdapter.Sender(languageIndex))
 }
 
 func (mode *ElectronicMessagesMode) onTitleChangeRequested(newText string) {
-	mode.requestMessageDataChange(func(properties *dataModel.ElectronicMessage) {
-		languageIndex := mode.selectedLanguage.ToIndex()
-		properties.Title[languageIndex] = stringAsPointer(newText)
-	})
+	languageIndex := mode.selectedLanguage.ToIndex()
+	mode.requestStringPropertyChange(func(properties *dataModel.ElectronicMessage, value *string) {
+		properties.Title[languageIndex] = value
+	}, newText, mode.messageAdapter.Title(languageIndex))
+}
+
+func (mode *ElectronicMessagesMode) requestStringPropertyChange(modifier func(*dataModel.ElectronicMessage, *string),
+	newValue, oldValue string) {
+	restoreState := mode.stateSnapshot()
+
+	mode.context.Perform(&cmd.SetStringPropertyCommand{
+		Setter: func(value string) error {
+			return mode.requestPropertyChange(restoreState, func(properties *dataModel.ElectronicMessage) { modifier(properties, &value) })
+		},
+		NewValue: newValue,
+		OldValue: oldValue})
+}
+
+func (mode *ElectronicMessagesMode) requestBooleanPropertyChange(modifier func(*dataModel.ElectronicMessage, *bool),
+	newValue, oldValue bool) {
+	restoreState := mode.stateSnapshot()
+
+	mode.context.Perform(&cmd.SetBooleanPropertyCommand{
+		Setter: func(value bool) error {
+			return mode.requestPropertyChange(restoreState, func(properties *dataModel.ElectronicMessage) { modifier(properties, &value) })
+		},
+		NewValue: newValue,
+		OldValue: oldValue})
+}
+
+func (mode *ElectronicMessagesMode) requestIntPropertyChange(modifier func(*dataModel.ElectronicMessage, *int),
+	newValue, oldValue int) {
+	restoreState := mode.stateSnapshot()
+
+	mode.context.Perform(&cmd.SetIntPropertyCommand{
+		Setter: func(value int) error {
+			return mode.requestPropertyChange(restoreState, func(properties *dataModel.ElectronicMessage) { modifier(properties, &value) })
+		},
+		NewValue: newValue,
+		OldValue: oldValue})
+}
+
+func (mode *ElectronicMessagesMode) requestPropertyChange(restoreState func(), modifier func(*dataModel.ElectronicMessage)) error {
+	restoreState()
+	var properties dataModel.ElectronicMessage
+	modifier(&properties)
+	mode.messageAdapter.RequestMessageChange(properties)
+	return nil
 }
 
 func (mode *ElectronicMessagesMode) stateSnapshot() func() {
