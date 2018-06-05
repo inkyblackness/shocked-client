@@ -39,6 +39,7 @@ type MainApplication struct {
 	mouseButtonsDragged uint32
 	keyModifier         keys.Modifier
 
+	root               *rootArea
 	rootArea           *ui.Area
 	defaultFontPainter graphics.TextPainter
 	uiTextPalette      *graphics.PaletteTexture
@@ -219,7 +220,7 @@ func (app *MainApplication) initInterface() {
 	app.uiTextRenderer = graphics.NewBitmapTextureRenderer(uiRenderContext, app.uiTextPalette)
 	app.worldTextureRenderer = graphics.NewBitmapTextureRenderer(uiRenderContext, app.worldPalette)
 
-	app.rootArea = newRootArea(app)
+	app.root, app.rootArea = newRootArea(app)
 }
 
 func (app *MainApplication) updateElapsedNano() {
@@ -292,6 +293,9 @@ func (app *MainApplication) onKey(key keys.Key, modifier keys.Modifier) {
 		app.undo()
 	} else if key == keys.KeyRedo {
 		app.redo()
+	} else if (key >= keys.KeyF1) && (key <= keys.KeyF9) {
+		modeIndex := key - keys.KeyF1
+		app.root.RequestActiveMode(app.root.ModeNames()[modeIndex])
 	}
 }
 
