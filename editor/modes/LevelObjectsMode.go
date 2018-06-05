@@ -936,7 +936,8 @@ func (mode *LevelObjectsMode) createPropertyControls(panel *propertyPanel, key s
 			&enumItem{2, "Var <= Val"},
 			&enumItem{3, "Var > Val"},
 			&enumItem{4, "Var >= Val"},
-			&enumItem{5, "Var != Val"}}
+			&enumItem{5, "Var != Val"},
+			&enumItem{6, "Val > Random(0..254)"}}
 
 		if unifiedValue != math.MinInt64 {
 			selectedItem = items[unifiedValue>>13]
