@@ -515,7 +515,11 @@ func (mode *LevelObjectsMode) onMouseButtonClicked(area *ui.Area, event events.E
 		consumed = true
 	} else if mouseEvent.AffectedButtons() == env.MouseSecondary {
 		worldX, worldY := mode.mapDisplay.WorldCoordinatesForPixel(mouseEvent.Position())
-		mode.createNewObject(worldX, worldY)
+		atGrid := false
+		if keys.Modifier(mouseEvent.Modifier()) == keys.ModShift {
+			atGrid = true
+		}
+		mode.createNewObject(worldX, worldY, atGrid)
 	}
 
 	return
@@ -1154,8 +1158,8 @@ func (mode *LevelObjectsMode) onNewObjectTypeChanged(item controls.ComboBoxItem)
 	mode.newObjectID = typeItem.id
 }
 
-func (mode *LevelObjectsMode) createNewObject(worldX, worldY float32) {
-	mode.levelAdapter.RequestNewObject(worldX, worldY, mode.newObjectID)
+func (mode *LevelObjectsMode) createNewObject(worldX, worldY float32, atGrid bool) {
+	mode.levelAdapter.RequestNewObject(worldX, worldY, mode.newObjectID, atGrid)
 }
 
 func (mode *LevelObjectsMode) objectItemsForClass(objectClass int) []controls.ComboBoxItem {
