@@ -29,10 +29,11 @@ type MainApplication struct {
 	store        dataModel.DataStore
 	modelAdapter *model.Adapter
 
-	scale            float32
-	glWindow         env.OpenGlWindow
-	gl               opengl.OpenGl
-	projectionMatrix mgl.Mat4
+	scale                float32
+	invertedSliderScroll bool
+	glWindow             env.OpenGlWindow
+	gl                   opengl.OpenGl
+	projectionMatrix     mgl.Mat4
 
 	mouseX, mouseY      float32
 	mouseButtons        uint32
@@ -55,15 +56,16 @@ type MainApplication struct {
 }
 
 // NewMainApplication returns a new instance of MainApplication.
-func NewMainApplication(store dataModel.DataStore, scale float32) *MainApplication {
+func NewMainApplication(store dataModel.DataStore, scale float32, invertedSliderScroll bool) *MainApplication {
 	app := &MainApplication{
-		projectionMatrix:   mgl.Ident4(),
-		lastElapsedTick:    time.Now(),
-		store:              store,
-		scale:              scale,
-		modelAdapter:       model.NewAdapter(store),
-		defaultFontPainter: graphics.NewBitmapTextPainter(defaultFont),
-		worldTextures:      make(map[dataModel.TextureSize]*graphics.BufferedTextureStore)}
+		projectionMatrix:     mgl.Ident4(),
+		lastElapsedTick:      time.Now(),
+		store:                store,
+		scale:                scale,
+		invertedSliderScroll: invertedSliderScroll,
+		modelAdapter:         model.NewAdapter(store),
+		defaultFontPainter:   graphics.NewBitmapTextPainter(defaultFont),
+		worldTextures:        make(map[dataModel.TextureSize]*graphics.BufferedTextureStore)}
 
 	return app
 }
@@ -431,7 +433,7 @@ func (app *MainApplication) ForTextureSelector() *controls.TextureSelectorBuilde
 
 // ForSlider implements the controls.Factory interface.
 func (app *MainApplication) ForSlider() *controls.SliderBuilder {
-	return controls.NewSliderBuilder(app.ForLabel(), app.rectRenderer)
+	return controls.NewSliderBuilder(app.ForLabel(), app.rectRenderer).WithInvertedScroll(app.invertedSliderScroll)
 }
 
 // ForImageDisplay implements the controls.Factory interface.
