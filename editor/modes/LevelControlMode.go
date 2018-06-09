@@ -70,13 +70,15 @@ type LevelControlMode struct {
 
 	realWorldProperties *ui.Area
 
-	levelTexturesLabel       *controls.Label
-	levelTexturesSelector    *controls.TextureSelector
-	currentLevelTextureIndex int
-	worldTexturesLabel       *controls.Label
-	worldTexturesSelector    *controls.TextureSelector
-	worldTexturesIDLabel     *controls.Label
-	worldTexturesIDSlider    *controls.Slider
+	levelGenericTexturesLabel    *controls.Label
+	levelGenericTexturesSelector *controls.TextureSelector
+	levelWallTexturesLabel       *controls.Label
+	levelWallTexturesSelector    *controls.TextureSelector
+	currentLevelTextureIndex     int
+	worldTexturesLabel           *controls.Label
+	worldTexturesSelector        *controls.TextureSelector
+	worldTexturesIDLabel         *controls.Label
+	worldTexturesIDSlider        *controls.Slider
 
 	selectedSurveillanceIndex    int
 	surveillanceIndexLabel       *controls.Label
@@ -204,8 +206,10 @@ func NewLevelControlMode(context Context, parent *ui.Area, mapDisplay *display.M
 			mode.realWorldProperties, realWorldBuilder = panelBuilder.addSection(false)
 
 			{
-				mode.levelTexturesLabel, mode.levelTexturesSelector = realWorldBuilder.addTextureProperty("Level Textures",
-					mode.levelTextures, mode.onSelectedLevelTextureChanged)
+				mode.levelGenericTexturesLabel, mode.levelGenericTexturesSelector = realWorldBuilder.addTextureProperty("Level Textures (floors, ceilings, walls)",
+					mode.genericLevelTextures, mode.onSelectedGenericLevelTextureChanged)
+				mode.levelWallTexturesLabel, mode.levelWallTexturesSelector = realWorldBuilder.addTextureProperty("Level Textures (walls only)",
+					mode.wallLevelTextures, mode.onSelectedWallLevelTextureChanged)
 				mode.worldTexturesLabel, mode.worldTexturesSelector = realWorldBuilder.addTextureProperty("World Textures",
 					mode.worldTextures, mode.onSelectedWorldTextureChanged)
 				mode.worldTexturesIDLabel, mode.worldTexturesIDSlider = realWorldBuilder.addSliderProperty("World Texture ID",
@@ -339,6 +343,22 @@ func (mode *LevelControlMode) levelTextures() []*graphics.BitmapTexture {
 	return textures
 }
 
+func (mode *LevelControlMode) genericLevelTextures() []*graphics.BitmapTexture {
+	textures := mode.levelTextures()
+	if len(textures) > 32 {
+		return textures[:32]
+	}
+	return textures
+}
+
+func (mode *LevelControlMode) wallLevelTextures() []*graphics.BitmapTexture {
+	textures := mode.levelTextures()
+	if len(textures) > 32 {
+		return textures[32:]
+	}
+	return nil
+}
+
 func (mode *LevelControlMode) worldTextures() []*graphics.BitmapTexture {
 	textureCount := mode.context.ModelAdapter().TextureAdapter().WorldTextureCount()
 	textures := make([]*graphics.BitmapTexture, textureCount)
@@ -364,6 +384,16 @@ func (mode *LevelControlMode) onHeightShiftChanged(boxItem controls.ComboBoxItem
 		},
 		NewValue: newValue,
 		OldValue: mode.levelAdapter.HeightShift()})
+}
+
+func (mode *LevelControlMode) onSelectedGenericLevelTextureChanged(index int) {
+	mode.levelWallTexturesSelector.SetSelectedIndex(-1)
+	mode.onSelectedLevelTextureChanged(index)
+}
+
+func (mode *LevelControlMode) onSelectedWallLevelTextureChanged(index int) {
+	mode.levelGenericTexturesSelector.SetSelectedIndex(-1)
+	mode.onSelectedLevelTextureChanged(32 + index)
 }
 
 func (mode *LevelControlMode) onSelectedLevelTextureChanged(index int) {
@@ -405,7 +435,16 @@ func (mode *LevelControlMode) setLevelTextureID(id int) {
 			Setter: func(textureIDs []int) error {
 				mode.worldTexturesSelector.SetSelectedIndex(textureIDs[mode.currentLevelTextureIndex])
 				mode.worldTexturesIDSlider.SetValue(int64(textureIDs[mode.currentLevelTextureIndex]))
-				mode.levelTexturesSelector.SetSelectedIndex(mode.currentLevelTextureIndex)
+				if mode.currentLevelTextureIndex < 32 {
+					mode.levelGenericTexturesSelector.SetSelectedIndex(mode.currentLevelTextureIndex)
+				} else {
+					mode.levelGenericTexturesSelector.SetSelectedIndex(-1)
+				}
+				if mode.currentLevelTextureIndex >= 32 {
+					mode.levelWallTexturesSelector.SetSelectedIndex(mode.currentLevelTextureIndex - 32)
+				} else {
+					mode.levelWallTexturesSelector.SetSelectedIndex(-1)
+				}
 
 				levelAdapter.RequestLevelTexturesChange(textureIDs)
 				return nil
