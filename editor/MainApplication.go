@@ -428,7 +428,7 @@ func (app *MainApplication) ForComboBox() *controls.ComboBoxBuilder {
 
 // ForTextureSelector implements the controls.Factory interface.
 func (app *MainApplication) ForTextureSelector() *controls.TextureSelectorBuilder {
-	return controls.NewTextureSelectorBuilder(app.rectRenderer, app.worldTextureRenderer)
+	return controls.NewTextureSelectorBuilder(app.rectRenderer, app.worldTextureRenderer).WithInvertedScroll(app.invertedSliderScroll)
 }
 
 // ForSlider implements the controls.Factory interface.
